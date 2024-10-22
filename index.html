@@ -2507,7 +2507,7 @@ Feedback:
                             q = l + 1 + g + ga(r.name);
                             g = 0;
                             0 != n ? (a.fillStyle = "rgba(100,49,0,1.0)",
-                            g = n) : a.fillStyle = ra == r.id ? "rgba(255,156,0,1.0)" : "rgba(255,220,0,1.0)";
+                            g = n) : a.fillStyle = ra == r.id ? "rgba(255,156,0,1.0)" : r.isBot ? "rgba(60,255,0,1.0)" : "rgba(255,220,0,1.0)";
                             a.font = k;
                             a.measureText(q);
                             a.fillText(q, d, e + g);
@@ -3008,7 +3008,7 @@ Feedback:
                         a.strokeRect(-c / 2, 20, c, 8)
                     }
                     G && !lb && (a.fillStyle = "rgba(255,255,255,1)",
-                    a.fillStyle = "rgba(255,255,255,1.0)",
+                    a.fillStyle = b.isBot ? "rgba(60,255,0,1.0)" : "rgba(255,255,255,1.0)",
                     a.font = "Bold 15px 'proxima-nova-1','proxima-nova-2', arial, sans-serif",
                     a.textBaseline = "hanging",
                     c = a.measureText(b.name).width,
