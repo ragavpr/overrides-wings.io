@@ -2258,7 +2258,7 @@ Feedback:
                             K.fillText(v.rank + ". You ", e, k + d),
                             g = K.measureText(v.score).width,
                             K.fillText(v.score, b - e - g, k + d);
-                    a.drawImage(r, n, f + 5)
+                    // a.drawImage(r, n, f + 5) //⟐ Disabling 'you' displayed under leaderboard
                 }
             }
             ;
@@ -2467,7 +2467,7 @@ Feedback:
                 e = S += d + g + d;
                 var m = F.length;
                 G && (m = 5);
-                10 < m && (m = 10);
+                // 10 < m && (m = 10); //⟐ Remove Leaderboard limit of top 10
                 for (var I = 0, l = 0; l < m; l++) {
                     var r = B[F[l]];
                     r && (S += h + b,
