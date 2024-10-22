@@ -3076,6 +3076,7 @@ Feedback:
             ;
             this.setName = function(c) {
                 this.name = c;
+                if(this.isBot) this.name += ' 🤖';
                 if ("" == c || null == c)
                     a = new yb,
                     a.fixedColor = !0,
