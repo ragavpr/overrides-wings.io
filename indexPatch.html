@@ -19,6 +19,14 @@
 <link id="favicon" rel="icon" type="image/png" href="images/favicon.png" />
 <style>
 
+    html {
+        background: #041622;
+    }
+    
+    .text-muted {
+        color: #aaa;
+    }
+
     .modalDialog {
         position: fixed;
         font-family: Arial, Helvetica, sans-serif;
@@ -291,7 +299,8 @@
         right: 0;
         height: 84px;
         width: 240px;
-        background-color: #FFF;
+        background-color: #000;
+        color: #fff;
         border-radius: 5px 0px 0px 0px;
         padding: 5px 10px;
         opacity: 0.9;
@@ -313,7 +322,8 @@
         position: absolute;
         top: 0;
         left: 0;
-        background-color: #FFF;
+        background-color: #000;
+        color: #fff;
         border-radius: 0px 0px 5px 0px;
         padding: 5px 10px;
     }
@@ -416,7 +426,7 @@
 <canvas id="canvas"></canvas>
 <div id="fps"></div>
 <div id="overlay" style="display:none; position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: rgba(0,0,0,0.25); z-index: 2;" />
-<div id="mainDialog" style="width:350px;background-color:#FFFFFF;margin:10px auto;border-radius:15px;padding:5px 15px 5px 15px;position:absolute;top:17%;left:50%;transform-origin:top center;transform:translate(-50%,0%);-ms-transform:translate(-50%,0%);-ms-transform-origin:top center;-webkit-transform:translate(-50%,0%);-webkit-transform-origin:top center;">
+<div id="mainDialog" style="width:350px;background-color:#000000;margin:10px auto;border-radius:15px;padding:5px 15px 5px 15px;position:absolute;top:17%;left:50%;transform-origin:top center;transform:translate(-50%,0%);-ms-transform:translate(-50%,0%);-ms-transform-origin:top center;-webkit-transform:translate(-50%,0%);-webkit-transform-origin:top center;">
 <div style="height:80px;">
 <a href="https://mechazilla.io">
 <img src="images/mechazilla_banner.png" style="display:inherit;position:absolute;top:0px;left:102%;width:350px;" />
