@@ -4079,6 +4079,7 @@ Feedback:
                         -1 != O.indexOf("\ufdfd") && (O = "<Unnamed>");
                         C.setColorID(z);
                         C.setDecalID(R);
+                        C.setIsBot(p); //⟐ set isBot before setting name
                         C.setName(O);
                         C.setFlagInfo(S);
                         C.setWeapon(x);
@@ -4093,7 +4094,7 @@ Feedback:
                     C.energy = t,
                     C.setEnergy(t),
                     C.hover = r,
-                    C.setIsBot(p),
+                    // C.setIsBot(p), //⟐ disabled due to precedence change
                     C.setIsShooting(s)),
                     169 == a || 172 == a || 162 == a || 178 == a)
                         C.setScore(ea),
