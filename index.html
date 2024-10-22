@@ -3779,6 +3779,17 @@ Feedback:
                     a.beginPath();
                     a.arc(c, b, 70, 0, 2 * Math.PI);
                     a.fill()
+                    let craters = [
+                        [-30, -15, 15],
+                        [-20, 25, 10],
+                        [10, 0, 12]
+                    ]
+                    a.fillStyle = "rgba(145,145,145,1)";
+                    for (const [x, y, r] of craters) {
+                        a.beginPath();
+                        a.arc(c+x, b+y, r, 0, 2 * Math.PI);
+                        a.fill();
+                    }
                 }
                 ob && !u.isSpaceWars() && f.drawPreRenderedClouds(a)
             }
