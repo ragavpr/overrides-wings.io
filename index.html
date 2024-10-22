@@ -1485,7 +1485,7 @@ Feedback:
                 for (var f = [], d = [], a = 1; 8 >= a; a++) {
                     var c = this.frames["plane" + a];
                     f.push(c);
-                    d.push(c.renderTintedFrame("rgba(0,100,255,1.0)"))
+                    d.push(c.renderTintedFrame("rgba(0,20,35,1.0)"))
                 }
                 this.planeFrames = f;
                 this.planeFramesReflex = d
@@ -1502,8 +1502,8 @@ Feedback:
             ;
             this.loadAnimations = function() {
                 for (var b = new Ub, e = new Ub, f = 0; 13 > f; f++)
-                    b.addFrame(this.frames["s" + f]),
-                    e.addFrame(this.frames["s" + f].renderTintedFrame("#2b9bf5"));
+                    b.addFrame(this.frames["s" + f].renderTintedFrame("#103045")),
+                    e.addFrame(this.frames["s" + f].renderTintedFrame("#102643"));
                 b.setInterval(1E3 / 30);
                 X.addAnimationInfo("splash", b);
                 e.setInterval(1E3 / 30);
@@ -1999,8 +1999,9 @@ Feedback:
             }
             ;
             this.addSplash = function(b, f, d, a) {
+                //return;  //⟐ Disable Splash (sprite is designed for light mode)
                 if (sb && !u.isSpaceWars() && aa(b, f, 100) && la()) {
-                    var c = X.createAnimation("splash")
+                    var c = X.createAnimation("splash") //⟐ Water splash effect - sprite animation
                       , g = X.createAnimation("splashReflex");
                     c.setScale(d);
                     a && (c.scaleX *= 1.2 + .4 * Math.random());
@@ -3311,11 +3312,11 @@ Feedback:
             this.drawBehind = function(a) {
                 var c = E / 2 - H.y
                   , b = .5 + c / (E / 2) * 6;
-                this.drawWaterArea(a, 2 * b, "rgba(9,188,255,1.0)", 100, .25, .6, c);
+                this.drawWaterArea(a, 2 * b, "rgba(0,56,77,0.9)", 100, .25, .6, c); //⟐ Sea
                 c = E / 2 - H.y;
                 b = .5 + c / (E / 2) * 6;
-                this.drawWaterArea(a, 4 * b, "rgba(8,164,254,1.0)", 100, .75, .8, c);
-                this.drawWaterArea(a, 13 * b, "rgba(7,142,252,1.0)", 1E3, 0, 1, c)
+                this.drawWaterArea(a, 4 * b, "rgba(0,48,76,0.9)", 100, .75, .8, c); //⟐ Sea
+                this.drawWaterArea(a, 13 * b, "rgba(1,42,76,0.9)", 1E3, 0, 1, c) //⟐ Sea
             }
             ;
             this.drawFront = function(b) {
@@ -3323,9 +3324,9 @@ Feedback:
                   , e = a * g
                   , f = E / 2 + -30
                   , q = b.createLinearGradient(0, f, 0, f + (600 + 2 * d));
-                q.addColorStop(0, "rgba(7,142,252,1.0)");
-                q.addColorStop(.55, "rgba(0,132,232,1.0)");
-                q.addColorStop(1, "rgba(0,90,190,1.0)");
+                q.addColorStop(0, "rgba(1,42,76,0.9)"); //⟐ Sea
+                q.addColorStop(.55, "rgba(0,43,77,0.95)"); //⟐ Sea
+                q.addColorStop(1, "rgba(0,24,51,1)"); //⟐ Sea
                 b.fillStyle = q;
                 b.beginPath();
                 b.moveTo(e + g - c / 2, f + 30);
@@ -3438,10 +3439,10 @@ Feedback:
                   , p = z.getBounds();
                 l = l > p[1].x || r < p[0].x || y > p[1].y || K < p[0].y ? !1 : !0;
                 l && (a.save(),
-                a.fillStyle = "rgba(190,227,249," + f + ")",
+                a.fillStyle = "rgba(39,62,73," + f + ")", //⟐ Cloud Fill
                 this.drawCloudShape(a, c, g, b[h], e),
                 a.clip(),
-                a.fillStyle = "rgba(179,222,250," + f + ")",
+                a.fillStyle = "rgba(47,72,85," + f + ")",  //⟐ Cloud Fill
                 this.drawCloudShape(a, c + k, g + m, b[h], e),
                 a.restore())
             }
@@ -3512,22 +3513,23 @@ Feedback:
                     var h = e[g][2], q = -d[h][0] + d[h][2], n = -d[h][1] + d[h][3], k;
                     k = x.createElement("canvas");
                     var m = k.getContext("2d")
-                      , l = c = 1
+                      , l = 1
+                      , c = 0.8 //⟐ Cloud Transparency
                       , y = 3
                       , r = 9;
                     0 == g % 2 && 7 != e[g][2] ? (c = .2,
                     l = .7,
                     y = 1,
-                    r = 3) : 7 == e[g][2] && (c = .8);
+                    r = 3) : 7 == e[g][2] && (c = .6);
                     var l = e[g][3] * l
                       , K = -d[h][0] * l
                       , p = -d[h][1] * l;
                     k.width = q * l;
                     k.height = n * l;
-                    m.fillStyle = "rgba(190,227,249," + c + ")";
+                    m.fillStyle = "rgba(39,62,73," + c + ")"; //⟐ Cloud Fill
                     this.drawCloudShape(m, K, p, b[h], l);
                     m.clip();
-                    m.fillStyle = "rgba(179,222,250," + c + ")";
+                    m.fillStyle = "rgba(47,72,85," + c + ")"; //⟐ Cloud Fill
                     this.drawCloudShape(m, K + y, p + r, b[h], l);
                     f.push(k)
                 }
@@ -3687,18 +3689,26 @@ Feedback:
                   , m = 161;
                 u.isSpaceWars() && (f = 0,
                 m = 55);
-                if (0 < e) {
+                if (0 < e) { //⟐ Abandonment check
                     var l = e / 2500;
                     1 < l && (l = 1);
                     f += (255 - f) * l;
                     m += (255 - m) * l
                 }
-                u.isSpaceWars() ? (d.addColorStop(0, "rgba(" + parseInt(f) + ",0,0,1.0)"),
-                d.addColorStop(.3, "rgba(" + parseInt(m) + ",0,55,1.0)"),
-                d.addColorStop(.5, "rgba(" + parseInt(m) + ",0,75,1.0)"),
-                d.addColorStop(.7, "rgba(" + parseInt(m) + ",0,55,1.0)"),
-                d.addColorStop(1, "rgba(" + parseInt(f) + ",0,0,1.0)")) : tb ? (d.addColorStop(0, "rgba(" + parseInt(f) + ",145,202,1.0)"),
-                d.addColorStop(1, "rgba(" + parseInt(m) + ",231,252,1.0)")) : d = "#62bae2";
+                u.isSpaceWars() ?
+                    (
+                        d.addColorStop(0, "rgba(" + parseInt(f) + ",0,0,1.0)"),
+                        d.addColorStop(.3, "rgba(" + parseInt(m) + ",0,55,1.0)"),
+                        d.addColorStop(.5, "rgba(" + parseInt(m) + ",0,75,1.0)"),
+                        d.addColorStop(.7, "rgba(" + parseInt(m) + ",0,55,1.0)"),
+                        d.addColorStop(1, "rgba(" + parseInt(f) + ",0,0,1.0)")
+                    )
+                : tb ? //⟐ Gradient enabled check
+                    (
+                        d.addColorStop(0, "rgba(" + parseInt(f-35) + ",16,22,1.0)"), //⟐ 0.4x #041622
+                        d.addColorStop(1, "rgba(" + parseInt(m-149) + ",48,67,1.0)") //⟐ 1.2x #041622
+                    ) 
+                : d = "#041622"; //⟐ Color when gradient is diasbled (10.2, 40.8, 56.1)
                 a.fillStyle = d;
                 a.fillRect(c - canvas.width / 2 / z.zoom, b - canvas.height / 2 / z.zoom, canvas.width / z.zoom, canvas.height / z.zoom)
             }
@@ -3757,13 +3767,15 @@ Feedback:
                     var c = .97 * z.x + 450
                       , b = .97 * z.y - 100
                       , d = a.createRadialGradient(c, b, 70, c, b, 350);
-                    d.addColorStop(0, "rgba(255,255,255,0.4)");
-                    d.addColorStop(.1, "rgba(255,255,255,0.13)");
-                    d.addColorStop(.15, "rgba(255,255,255,0.05)");
-                    d.addColorStop(.2, "rgba(255,255,255,0)");
+                    //⟐ 'sun' glow
+                    d.addColorStop(0, "rgba(160,160,160,0.4)");
+                    d.addColorStop(.1, "rgba(160,160,160,0.13)");
+                    d.addColorStop(.15, "rgba(160,160,160,0.05)");
+                    d.addColorStop(.2, "rgba(160,160,160,0)");
                     a.fillStyle = d;
                     a.fillRect(c - 175, b - 175, 350, 350);
-                    a.fillStyle = "rgba(255,255,255,1)";
+                    //⟐ 'sun' color
+                    a.fillStyle = "rgba(160,160,160,1)";
                     a.beginPath();
                     a.arc(c, b, 70, 0, 2 * Math.PI);
                     a.fill()
@@ -4764,7 +4776,7 @@ Feedback:
                             ra = b);
                             break
                         }
-                    if (u.isSpaceWars()) {
+                    { //⟐ Initialize Dust (aka) Stars in space
                         for (i in sa) {
                             sa[i].update(z.getBounds(), z.zoom);
                             var f = sa[i];
@@ -4881,10 +4893,10 @@ Feedback:
                     ya.draw(a);
                     var c = z.getBounds()[1].y
                       , e = !1;
-                    if (u.isSpaceWars())
+                    //⟐ Draw dust (aka) Stars in space
                         for (i in sa)
                             sa[i].draw(a);
-                    else
+                    if (!u.isSpaceWars()) //⟐ Draw Sea
                         c > E / 2 - 25 && (e = !0,
                         ya.drawWaterBehind(a));
                     if (xa) {
@@ -5917,7 +5929,7 @@ Feedback:
                     b.globalAlpha = .7 * (1 - f) * c;
                     b.scale(1.1, .6);
                     b.beginPath();
-                    b.fillStyle = "rgba(0,100,255,1.0)";
+                    b.fillStyle = "rgba(0,20,35,1.0)";
                     b.arc(0, 0, 10, 0, 2 * Math.PI);
                     b.fill();
                     b.restore()
