@@ -783,7 +783,7 @@
 <script src="lib/Stats.js"></script>
 <script src="lib/howler.min.js"></script>
 <script>
-    (function(w, x, s) {
+    (function(t, x, s) {
         var Zb, $b;
         function ac(b) {
             bc = b;
@@ -861,12 +861,12 @@
             1 == N ? da = N = 0 : 0 == N && (N = 1,
             da = .05,
             b = "images/sound_on.png");
-            w.localStorage.muteVol = N;
+            t.localStorage.muteVol = N;
             s("#soundImg")[0].src = b
         }
         function Bb() {
-            w.mixpanel && w.mixpanel.track("Ad Impression Opportunity", {
-                domain: w.location.hostname
+            t.mixpanel && t.mixpanel.track("Ad Impression Opportunity", {
+                domain: t.location.hostname
             });
             if (null != adsense && adsense)
                 0 == kc && cpmstarAPI({
@@ -884,12 +884,12 @@
                         }
                     }
                 }),
-                w.googletag && (w.googletag.cmd.push(function() {
+                t.googletag && (t.googletag.cmd.push(function() {
                     Cb && (Cb = !1,
                     setTimeout(function() {
                         Cb = !0
                     }, 6E4 * lc),
-                    w.googletag && w.googletag.pubads && w.googletag.pubads().refresh && w.googletag.pubads().refresh(w.ads))
+                    t.googletag && t.googletag.pubads && t.googletag.pubads().refresh && t.googletag.pubads().refresh(t.ads))
                 }),
                 kc++);
             else {
@@ -909,7 +909,7 @@
         }
         function mc() {
             if (Aa) {
-                var b = Math.floor((T - Eb) / 1E3);
+                var b = Math.floor((S - Eb) / 1E3);
                 0 > b && (b = 0);
                 var e = 10 - b;
                 0 > e ? (Aa = !1,
@@ -948,7 +948,7 @@
                     Aa = !0;
                     s("#beta").hide();
                     var e = s("#curScore")[0], f;
-                    f = u.isInstagib() ? x.createTextNode("Kills: " + b) : x.createTextNode("Current Score: " + b);
+                    f = w.isInstagib() ? x.createTextNode("Kills: " + b) : x.createTextNode("Current Score: " + b);
                     e.replaceChild(f, e.firstChild)
                 }
                 nc = b;
@@ -973,7 +973,7 @@
         }
         function Hb() {
             try {
-                return w.self !== w.top
+                return t.self !== t.top
             } catch (b) {
                 return !0
             }
@@ -995,7 +995,7 @@
             return Math.sqrt((f - b) * (f - b) + (d - e) * (d - e))
         }
         function la() {
-            return 50 > +new Date - T
+            return 50 > +new Date - S
         }
         function aa(b, e, f) {
             var d = z.getBounds();
@@ -1055,9 +1055,9 @@
                 y: b
             }
         }
-        w.location.href.split("/");
-        var Ib = "https:" == w.location.protocol
-          , G = w.location.pathname.indexOf("mobile");
+        t.location.href.split("/");
+        var Ib = "https:" == t.location.protocol
+          , G = t.location.pathname.indexOf("mobile");
         -1 == G && (G = 0);
         var Jb = 1E3 / 30 * 3, Mc = [{
             r: 255,
@@ -1083,11 +1083,11 @@
             r: 236,
             g: 19,
             b: 213
-        }], ha = 2, gb = 0, hb = 0, ma = 0, V, qc = 0, rc = 0, H, ca = {}, Ka, ib, Kb = 1, Z = !1, wa = !0, Lb = !1, T = 0, Mb = 0, E = 1600, Nb = E / 2 - 100, $ = 5E3, ka = 1, Y = !0, Gb = 0, Xa = 0, Ob = !1, jb = 1, bc = 0, dc = 0, qa = 0, sc = 0, Aa = !1, Eb, nc = 0, da = 1, N = w.localStorage.muteVol, tc = 3, uc = 750, vc = 5, wc = 10, xc = 20, yc = 150, t = 1, kb = 0, zc = 0, Ac = .3, La = !1, Ma = null, Ba = !0, lb = !1, mb, ia, na, nb, Cb = !0, lc = 2, xa = !1;
+        }], ha = 2, gb = 0, hb = 0, ma = 0, U, qc = 0, rc = 0, H, ca = {}, Ka, ib, Kb = 1, Z = !1, wa = !0, Lb = !1, S = 0, Mb = 0, E = 1600, Nb = E / 2 - 100, $ = 5E3, ka = 1, Y = !0, Gb = 0, Xa = 0, Ob = !1, jb = 1, bc = 0, dc = 0, qa = 0, sc = 0, Aa = !1, Eb, nc = 0, da = 1, N = t.localStorage.muteVol, tc = 3, uc = 750, vc = 5, wc = 10, xc = 20, yc = 150, u = 1, kb = 0, zc = 0, Ac = .3, La = !1, Ma = null, Ba = !0, lb = !1, mb, ia, na, nb, Cb = !0, lc = 2, xa = !1;
         G && (xa = !0);
-        var kc = 0, ob = !0, Na = !0, pb = !0, qb = !0, rb = !0, Ya = !0, sb = !0, tb = !0, Pb = !0, L, X, p, A, W = {}, B = {}, U = {}, M = {}, ja = [], v, ra, Qb, Oa = 0, z, F, oa, ya, J, Za = {}, ub = 0, u, sa, Pa = {}, eb = !1;
+        var kc = 0, ob = !0, Na = !0, pb = !0, qb = !0, rb = !0, Ya = !0, sb = !0, tb = !0, Pb = !0, L, W, p, A, V = {}, B = {}, T = {}, M = {}, ja = [], v, ra, Qb, Oa = 0, z, F, oa, ya, J, Za = {}, ub = 0, w, sa, Pa = {}, eb = !1;
         (function() {
-            var b = w.location.search;
+            var b = t.location.search;
             "?" == b.charAt(0) && (b = b.slice(1));
             for (var b = b.split("&"), e = 0; e < b.length; e++) {
                 var f = b[e].split("=");
@@ -1095,9 +1095,9 @@
             }
         }
         )();
-        w.stats = Pa.stats ? !0 : !1;
-        "true" == w.localStorage.lq && (Ba = !1);
-        w.mixpanel && w.mixpanel.init("208ce64093308da8075ba320f97c12fd", {
+        t.stats = Pa.stats ? !0 : !1;
+        "true" == t.localStorage.lq && (Ba = !1);
+        t.mixpanel && t.mixpanel.init("208ce64093308da8075ba320f97c12fd", {
             debug: !1,
             track_pageview: !0,
             persistence: "localStorage"
@@ -1108,26 +1108,26 @@
             Ib && (b = "s");
             s.get("http" + b + "://ip2l.wings.io/cc", function(b) {
                 vb = b.substring(0, 2);
-                w.localStorage.wingsCC = vb;
-                w.localStorage.wingsCCTime = +new Date
+                t.localStorage.wingsCC = vb;
+                t.localStorage.wingsCCTime = +new Date
             }, "text")
         };
-        void 0 == w.localStorage.wingsCCTime || void 0 != w.localStorage.wingsCC && 2 != w.localStorage.wingsCC.length ? Bc() : 288E5 < +new Date - w.localStorage.wingsCCTime ? Bc() : vb = w.localStorage.wingsCC;
+        void 0 == t.localStorage.wingsCCTime || void 0 != t.localStorage.wingsCC && 2 != t.localStorage.wingsCC.length ? Bc() : 288E5 < +new Date - t.localStorage.wingsCCTime ? Bc() : vb = t.localStorage.wingsCC;
         var Rb = function() {
-            T = +new Date;
+            S = +new Date;
             var b = 0;
-            0 < Mb && (b = T - Mb);
-            Mb = T;
+            0 < Mb && (b = S - Mb);
+            Mb = S;
             L.update(b);
             L.draw(b);
-            w.requestAnimationFrame && w.requestAnimationFrame(Rb);
+            t.requestAnimationFrame && t.requestAnimationFrame(Rb);
             Lb && (Lb = !1)
         };
         x.body.onselectstart = function() {
             return !1
         }
         ;
-        w.switchSkins = function() {
+        t.switchSkins = function() {
             ec();
             Ob ? (s("#howto").show(),
             s("#skinPanel").hide(),
@@ -1139,26 +1139,26 @@
             Ob = !Ob
         }
         ;
-        w.setSkinColor = function(b) {
+        t.setSkinColor = function(b) {
             ac(b)
         }
         ;
-        w.setDecal = function(b) {
+        t.setDecal = function(b) {
             cc(b)
         }
         ;
-        w.clickPlay = function(b) {
-            Z ? Db() : (w.localStorage.nick = b,
+        t.clickPlay = function(b) {
+            Z ? Db() : (t.localStorage.nick = b,
             x.getElementsByTagName("canvas")[0].style.cursor = "url(images/crosshair.png) 16 16, auto",
             kb++,
-            V.mouseMoved = !1,
+            U.mouseMoved = !1,
             A.sendNick(b, Aa),
             Aa && (Ab(),
             Aa = !1),
-            u.isSpaceWars() ? F.showTip("Hint: Earn points faster by destroying asteroids.") : x.fullscreenElement || x.mozFullScreenElement || x.webkitFullscreenElement || x.msFullscreenElement || 2 != kb && 4 != kb && 6 != kb || F.showTip("Press 'F' to toggle Fullscreen"))
+            w.isSpaceWars() ? F.showTip("Hint: Earn points faster by destroying asteroids.") : x.fullscreenElement || x.mozFullScreenElement || x.webkitFullscreenElement || x.msFullscreenElement || 2 != kb && 4 != kb && 6 != kb || F.showTip("Press 'F' to toggle Fullscreen"))
         }
         ;
-        w.setSpectate = function(b) {
+        t.setSpectate = function(b) {
             xa = !0;
             x.getElementsByTagName("canvas")[0].style.cursor = "default";
             Db();
@@ -1171,21 +1171,21 @@
             zc % 2 || 1 >= Gb ? F.showTip("Press 'ESC' to go back") : F.showTip("Click to follow next player")
         }
         ;
-        w.setContinue = function() {
+        t.setContinue = function() {
             s("#topGui").show();
             s("#roomFailed").hide();
             Hb() || (parent.location.hash = "");
             A.getServerAndConnect()
         }
         ;
-        w.toggleGraphics = function() {
+        t.toggleGraphics = function() {
             Ba = !Ba;
             L.resize();
-            w.localStorage.lq = !Ba;
+            t.localStorage.lq = !Ba;
             gc()
         }
         ;
-        w.copyRoomLink = function() {
+        t.copyRoomLink = function() {
             s("#copyLink").hide();
             s("#copyLinkBox").show();
             var b = s("#roomlinkInput")[0];
@@ -1200,7 +1200,7 @@
             }, 100)
         }
         ;
-        w.setCopy = function() {
+        t.setCopy = function() {
             var b = s("#roomlinkInput")[0];
             b.value = "http://wings.io/#" + A.roomID;
             b.setSelectionRange(0, b.value.length);
@@ -1219,26 +1219,26 @@
         }
         ;
         null != adsense && adsense && Bb();
-        w.clickNoNames = function(b) {
+        t.clickNoNames = function(b) {
             lb = !lb;
             b.checked = lb
         }
         ;
-        w.toggleMute = function() {
+        t.toggleMute = function() {
             jc()
         }
         ;
         void 0 == N && (N = 1);
-        var Cc = w.navigator.userAgent
+        var Cc = t.navigator.userAgent
           , Dc = -1 < Cc.indexOf("MSIE ") || -1 < Cc.indexOf("Trident/");
-        "undefined" === typeof w.orientation || G || (w.location.href = "https://itunes.apple.com/us/app/wings.io/id1098205567?l=pt&ls=1&mt=8");
+        "undefined" === typeof t.orientation || G || (t.location.href = "https://itunes.apple.com/us/app/wings.io/id1098205567?l=pt&ls=1&mt=8");
         if (0 == N || Dc)
             N = 1,
             G || jc();
         Dc && s("#sndIcon").hide();
         var wb;
-        w.onblur = function() {
-            w.didSendLoadingTime = !0;
+        t.onblur = function() {
+            t.didSendLoadingTime = !0;
             wb = setTimeout(Kc, 3E5);
             wa = !1;
             da = 0;
@@ -1249,7 +1249,7 @@
             nb && J.sound.volume(0, nb))
         }
         ;
-        w.onfocus = function() {
+        t.onfocus = function() {
             wb && (clearTimeout(wb),
             wb = null);
             Lb = wa = !0;
@@ -1258,51 +1258,51 @@
                 B[b].clearTrail()
         }
         ;
-        w.connectToServer = function(b) {
+        t.connectToServer = function(b) {
             A.roomNumber = 0;
             A.remoteHost = b;
             A.connect();
             console.log("CONNECTING NOW to " + b)
         }
         ;
-        w.disconnect = function() {
+        t.disconnect = function() {
             A.disconnect();
             console.log("Disconnected.")
         }
         ;
-        w.enterGame = function(b) {
+        t.enterGame = function(b) {
             clickPlay(b);
             onfocus()
         }
         ;
         var Sb = !1;
-        w.setInput = function(b, e, f) {
-            V.angle = b;
-            V.hover = e;
+        t.setInput = function(b, e, f) {
+            U.angle = b;
+            U.hover = e;
             !Sb && f ? A.sendShooting(f) : Sb && !f && A.sendShooting(f);
             Sb = f
         }
         ;
-        w.wasKilled = function(b) {
-            V.angle = Math.PI;
-            V.hover = 1;
+        t.wasKilled = function(b) {
+            U.angle = Math.PI;
+            U.hover = 1;
             G && (Aa = !0,
             b = {
                 score: b
             },
-            "undefined" != typeof messageHandlers && messageHandlers.wasKilled ? messageHandlers.wasKilled(JSON.stringify(b)) : w.webkit.messageHandlers.wasKilled.postMessage(b))
+            "undefined" != typeof messageHandlers && messageHandlers.wasKilled ? messageHandlers.wasKilled(JSON.stringify(b)) : t.webkit.messageHandlers.wasKilled.postMessage(b))
         }
         ;
-        w.connectionClosed = function() {
+        t.connectionClosed = function() {
             console.log("Connection was closed");
-            V.angle = Math.PI;
-            V.hover = 1;
-            G && ("undefined" != typeof messageHandlers && messageHandlers.connectionClosed ? messageHandlers.connectionClosed(JSON.stringify({})) : w.webkit.messageHandlers.connectionClosed.postMessage({}))
+            U.angle = Math.PI;
+            U.hover = 1;
+            G && ("undefined" != typeof messageHandlers && messageHandlers.connectionClosed ? messageHandlers.connectionClosed(JSON.stringify({})) : t.webkit.messageHandlers.connectionClosed.postMessage({}))
         }
         ;
         if (G)
-            w.onblur();
-        w.localStorage.nick && s("#nick")[0] && (s("#nick")[0].value = w.localStorage.nick);
+            t.onblur();
+        t.localStorage.nick && s("#nick")[0] && (s("#nick")[0].value = t.localStorage.nick);
         x.oncontextmenu = function() {
             return !1
         }
@@ -1548,10 +1548,10 @@
                     e.scale(d, d);
                     this._usingFrame && (e.globalAlpha = 1,
                     e.fillStyle = "#000000",
-                    e.moveTo(this._angX, this._angY + 15 * t),
-                    e.lineTo(b.width + this._angX - 4 * t, this._angY + 7 * t),
-                    e.lineTo(b.width + this._angX - 15 * t, b.height + this._angY - 9 * t),
-                    e.lineTo(this._angX + 5 * t, b.height + this._angY - 17 * t),
+                    e.moveTo(this._angX, this._angY + 15 * u),
+                    e.lineTo(b.width + this._angX - 4 * u, this._angY + 7 * u),
+                    e.lineTo(b.width + this._angX - 15 * u, b.height + this._angY - 9 * u),
+                    e.lineTo(this._angX + 5 * u, b.height + this._angY - 17 * u),
                     e.fill());
                     this._usingRoundedFrame && (e.globalAlpha = .3,
                     Ea(e, 0, 0, b.width, b.height, 40),
@@ -1652,9 +1652,9 @@
                     b.addFrame(this.frames["s" + f]),
                     e.addFrame(this.frames["s" + f].renderTintedFrame("#2b9bf5"));
                 b.setInterval(1E3 / 30);
-                X.addAnimationInfo("splash", b);
+                W.addAnimationInfo("splash", b);
                 e.setInterval(1E3 / 30);
-                X.addAnimationInfo("splashReflex", e);
+                W.addAnimationInfo("splashReflex", e);
                 b = new Ub;
                 b.addFrame(this.frames.e0);
                 b.addFrame(this.frames.e0);
@@ -1680,7 +1680,7 @@
                 b.addFrame(this.frames.e21);
                 b.addFrame(this.frames.e22);
                 b.setInterval(1E3 / 30);
-                X.addAnimationInfo("explosion", b)
+                W.addAnimationInfo("explosion", b)
             }
             ;
             this.generateTintedKillIcon = function(b, e, f, d) {
@@ -1904,7 +1904,7 @@
                 Y || 32 != a.keyCode || (Z ? A.sendShooting(!1) : (1 == ka ? (ka = 0,
                 L.followTopPlayer()) : (ka = 1,
                 v = null),
-                u.isSpaceWars() && setTimeout(L.respawnParticles, 500)))
+                w.isSpaceWars() && setTimeout(L.respawnParticles, 500)))
             }
             ;
             b.mousedown = function(a) {
@@ -1989,7 +1989,7 @@
                         e.stroke();
                         a.a -= .04;
                         0 > a.a && f.push(a)
-                    } else if (u.isSpaceWars())
+                    } else if (w.isSpaceWars())
                         c = 45,
                         a.isKing && (c = 90),
                         g = a.curPosition.x,
@@ -2101,7 +2101,7 @@
                             y: 10 * d
                         };
                         g.special = 0;
-                        u.isInstagib() ? g.special = 1 : u.isSpaceWars() && (g.special = 2);
+                        w.isInstagib() ? g.special = 1 : w.isSpaceWars() && (g.special = 2);
                         g.a = 1;
                         g.weapon = a;
                         f = fb(0, -10, c.angle);
@@ -2135,35 +2135,35 @@
                 var d = 10 * b
                   , a = 10 * f;
                 if (aa(d, a, 100) && la()) {
-                    var c = X.createAnimation("explosion");
+                    var c = W.createAnimation("explosion");
                     c.setScale(1);
                     c.posX = 10 * b;
                     c.posY = 10 * f;
-                    X.runAnimationBehind(c);
+                    W.runAnimationBehind(c);
                     d = 1 - va(d, a, H.x, H.y) / Ra;
                     J.playSound(Qc, d, 1, Sa, null)
                 }
             }
             ;
             this.addSplash = function(b, f, d, a) {
-                if (sb && !u.isSpaceWars() && aa(b, f, 100) && la()) {
-                    var c = X.createAnimation("splash")
-                      , g = X.createAnimation("splashReflex");
+                if (sb && !w.isSpaceWars() && aa(b, f, 100) && la()) {
+                    var c = W.createAnimation("splash")
+                      , g = W.createAnimation("splashReflex");
                     c.setScale(d);
                     a && (c.scaleX *= 1.2 + .4 * Math.random());
                     c.posX = b;
                     c.posY = f - 61 * c.scaleY / 2;
-                    X.runAnimation(c);
+                    W.runAnimation(c);
                     g.scaleX = c.scaleX;
                     g.posX = c.posX;
                     g.posY = c.posY + 77;
                     g.scaleY = -2;
-                    X.runAnimationLayer2(g)
+                    W.runAnimationLayer2(g)
                 }
             }
         }
           , Vc = function() {
-            var b, e, f, d = 0, a = !0, c, g, h, q, n = new Sc, k, m, l, y, r, K, pa, s, w, z = -1, ta = !1, F, C, P, R, S, O, Vb, ea = 1, Ga = 0, D, Fa, ua, E, I = 0, Ta, Ha, Ia, H = 0, ab, L, X = -1, U = !1, V = 0, Q, W, $, M, N, da, aa = null, ja = null, ca, fa, ia, ha, wa, na = 0, oa = 0, va = null, la, ma, ya, sa;
+            var b, e, f, d = 0, a = !0, c, g, h, q, n = new Sc, k, m, l, y, r, K, pa, s, t, z = -1, ta = !1, F, C, P, X, R, O, Vb, ea = 1, Ga = 0, D, Fa, ua, E, I = 0, Ta, Ha, Ia, H = 0, ab, L, W = -1, T = !1, U = 0, Q, V, $, M, N, da, aa = null, ja = null, ca, fa, ia, ha, wa, na = 0, oa = 0, va = null, la, ma, ya, sa;
             this.draw = function(I) {
                 if (ta) {
                     C = x.createElement("canvas");
@@ -2178,7 +2178,7 @@
                     C && 0 < Gb && (!Y || Aa) && this.drawLeaderboard(I);
                     if (v && !Y) {
                         I.save();
-                        G ? I.scale(1.5 * t, 1.5 * t) : I.scale(t, t);
+                        G ? I.scale(1.5 * u, 1.5 * u) : I.scale(u, u);
                         var K = p.frames.indicator;
                         I.translate(K.width / 2 + 6, K.height / 2 + 6);
                         K.draw(I);
@@ -2188,17 +2188,17 @@
                         G && (r = 24,
                         P = -5);
                         null == pa && (pa = new Da(r,"#FFFFFF"));
-                        var R = u.isInstagib();
+                        var X = w.isInstagib();
                         if (z != v.GetAmmo() || null == s) {
-                            var S = "\u221e";
-                            R || (z = v.GetAmmo(),
-                            -1 < z && (S = z));
-                            pa.setValue(S);
+                            var R = "\u221e";
+                            X || (z = v.GetAmmo(),
+                            -1 < z && (R = z));
+                            pa.setValue(R);
                             s = pa.render();
-                            w = s.width
+                            t = s.width
                         }
                         I.globalAlpha = 1;
-                        I.drawImage(s, .57 * -w, .19 * K.height + r / 2 + P);
+                        I.drawImage(s, .57 * -t, .19 * K.height + r / 2 + P);
                         I.restore();
                         this.DrawScore(I)
                     }
@@ -2211,13 +2211,13 @@
                         r = !1,
                         f ? (r = 40,
                         G && (r = 50),
-                        q = new ba(r * t,"#FF0000","#990000"),
+                        q = new ba(r * u,"#FF0000","#990000"),
                         q.setValue(f),
                         q.setUsingFrame(!0),
                         r = !0,
                         G ? q.setAddTop(35) : q.setAddTop(25)) : (q = null,
                         P = G ? 45 : 35),
-                        h = new ba(P * t,"#FF0000","#990000"),
+                        h = new ba(P * u,"#FF0000","#990000"),
                         h.setValue(e),
                         h.setUsingFrame(!r));
                         P = .25 * canvas.height;
@@ -2240,11 +2240,11 @@
                     1 < K && (K = 1),
                     g || (r = 30,
                     G && (r = 40),
-                    g = new ba(r * t,"#FF0000","#990000")),
+                    g = new ba(r * u,"#FF0000","#990000")),
                     g.setValue(k),
                     g.setUsingFrame(!0),
                     r = g.render(),
-                    O = .1 * Math.sin(m / 100) * t,
+                    O = .1 * Math.sin(m / 100) * u,
                     I.save(),
                     I.translate(.5 * canvas.width, P),
                     I.scale(1 + O, 1 + O),
@@ -2256,7 +2256,7 @@
                     K = 1,
                     y || (r = 20,
                     G && (r = 30),
-                    y = new ba(r * t,"#FF0000","#990000")),
+                    y = new ba(r * u,"#FF0000","#990000")),
                     y.setValue(l),
                     y.setUsingFrame(!1),
                     r = y.render(),
@@ -2267,14 +2267,14 @@
                     I.globalAlpha = K,
                     I.drawImage(r, 0, 0),
                     I.restore());
-                    A.hasConnection && xa && (u.waiting && !G ? this.DrawWarmupTime(I) : u.isInEvent() ? this.DrawEventLabel(I) : La && !Y && this.DrawLaserDeployed(I));
+                    A.hasConnection && xa && (w.waiting && !G ? this.DrawWarmupTime(I) : w.isInEvent() ? this.DrawEventLabel(I) : La && !Y && this.DrawLaserDeployed(I));
                     null == k && n.shouldDraw() && (I.save(),
                     I.translate(.5 * canvas.width, .67 * canvas.height),
                     n.draw(I),
                     I.restore());
                     Z || Y || (O = "FREE MODE",
                     0 == ka && (O = v ? "Following " + ga(v.name) : "FOLLOW MODE"),
-                    c || (c = new ba(30 * t,"#ffd118","#b56006")),
+                    c || (c = new ba(30 * u,"#ffd118","#b56006")),
                     c.setValue(O),
                     c.setUsingFrame(!0),
                     r = c.render(),
@@ -2283,7 +2283,7 @@
                     I.drawImage(r, .5 * canvas.width - r.width / 2, P));
                     Ta && (4E3 > H ? (null == Ia && (r = 20,
                     G && (r = 30),
-                    Ha = new Da(r * t,"#ffd118",!0,"#633504"),
+                    Ha = new Da(r * u,"#ffd118",!0,"#633504"),
                     Ha.setValue(Ta),
                     Ha.setStrokeWidth(5),
                     Ha.setRoundedFrameOpacity(.5),
@@ -2298,8 +2298,8 @@
                     Y || G || D.draw(I);
                     !Y && 0 < qa && this.DrawKing(I);
                     ta && (ta = !1);
-                    b != t && (c = g = null,
-                    b = t)
+                    b != u && (c = g = null,
+                    b = u)
                 }
             }
             ;
@@ -2312,7 +2312,7 @@
                         I = c.id;
                         d != Fa && (c = 25,
                         G && (c = 35),
-                        ua = new ba(c * t,"#fe9b00","#6e3800"),
+                        ua = new ba(c * u,"#fe9b00","#6e3800"),
                         c = " ",
                         Ba || (c = ""),
                         G && (c = "  "),
@@ -2326,10 +2326,10 @@
                     a.drawImage(E, .5 * canvas.width - E.width / 2, d),
                     c = 20,
                     Ba || (c = 13),
-                    a.translate(.5 * canvas.width - E.width / 2 + c, d + E.height / 2 - 2 * t),
+                    a.translate(.5 * canvas.width - E.width / 2 + c, d + E.height / 2 - 2 * u),
                     d = 1,
                     G && (d = 1.5),
-                    a.scale(t * d, t * d),
+                    a.scale(u * d, u * d),
                     p.frames.crown.draw(a),
                     a.restore())
                 }
@@ -2337,11 +2337,11 @@
             ;
             this.DrawLaserDeployed = function(a) {
                 a.save();
-                if (Ma != X) {
-                    X = Ma;
+                if (Ma != W) {
+                    W = Ma;
                     var c = 25;
                     G && (c = 35);
-                    L = new ba(c * t,"#fbc521","#c78109");
+                    L = new ba(c * u,"#fbc521","#c78109");
                     Ma ? L.setValue("     Super Weapon: " + Ma) : L.setValue("     Find The Super Weapon!");
                     L.setUsingRoundedFrame(!0);
                     ab = L.render()
@@ -2351,7 +2351,7 @@
                 var d = 30;
                 Ba || (d = 20);
                 a.translate(.5 * canvas.width - ab.width / 2 + d, c + ab.height / 2);
-                a.scale(t, t);
+                a.scale(u, u);
                 p.frames.laser.draw(a);
                 a.restore()
             }
@@ -2364,8 +2364,8 @@
                 lastRankNumber != v.rank && (rankCanvasContext.clearRect(0, 0, 200, 200),
                 rankCanvasContext.globalAlpha = .3,
                 rankCanvasContext.fillStyle = "rgba(0,0,0,1.0)",
-                Ea(rankCanvasContext, 0, 0, 200, 200, 30 * t),
-                ca = new Da(15 * t,"#EEEEEE"),
+                Ea(rankCanvasContext, 0, 0, 200, 200, 30 * u),
+                ca = new Da(15 * u,"#EEEEEE"),
                 ca.setValue(v.rank),
                 ca.setUsingRoundedFrame(!1),
                 fa = ca.render(),
@@ -2375,18 +2375,18 @@
             ;
             this.DrawScore = function(a) {
                 if (0 < v.rank) {
-                    var c = 16 * t
+                    var c = 16 * u
                       , d = "Arial Black";
-                    G && (c = 36 * t,
+                    G && (c = 36 * u,
                     d = "Arial-BoldMT");
-                    var b = P * t
+                    var b = P * u
                       , g = b
-                      , h = 30 * t
-                      , e = 5 * t
-                      , k = 10 * t
+                      , h = 30 * u
+                      , e = 5 * u
+                      , k = 10 * u
                       , n = Ka - b - 5
-                      , f = S + 5 + 5;
-                    G && (h = 60 * t,
+                      , f = R + 5 + 5;
+                    G && (h = 60 * u,
                     g = b);
                     void 0 == r && (r = x.createElement("canvas"),
                     K = r.getContext("2d"));
@@ -2396,7 +2396,7 @@
                         K.font = c + "px 'proxima-nova-1','proxima-nova-2', " + d,
                         K.globalAlpha = .3,
                         K.textBaseline = "hanging",
-                        Ea(K, 0, 0, b, h, 30 * t),
+                        Ea(K, 0, 0, b, h, 30 * u),
                         K.globalAlpha = 1,
                         c = 2; 0 <= c; c--)
                             d = 0,
@@ -2410,18 +2410,18 @@
             }
             ;
             this.DrawWarmupTime = function(a) {
-                if (U) {
-                    U = !1;
-                    var c = u.endTime - T;
+                if (T) {
+                    T = !1;
+                    var c = w.endTime - S;
                     if (0 > parseInt(c))
                         return;
-                    W = new ba(23 * t,u.getEventColor(),"#6e3800");
-                    W.setValue(u.getEventName());
-                    N = W.render();
-                    $ = new ba(20 * t,"#fe9b00","#6e3800");
+                    V = new ba(23 * u,w.getEventColor(),"#6e3800");
+                    V.setValue(w.getEventName());
+                    N = V.render();
+                    $ = new ba(20 * u,"#fe9b00","#6e3800");
                     $.setValue("STARTS IN");
                     da = $.render();
-                    Q = new ba(27 * t,"#fe9b00","#6e3800");
+                    Q = new ba(27 * u,"#fe9b00","#6e3800");
                     Q.setValue(oc(c));
                     M = Q.render()
                 }
@@ -2441,15 +2441,15 @@
             }
             ;
             this.DrawEventLabel = function(a) {
-                if (U) {
-                    U = !1;
-                    var c = u.endTime - T;
+                if (T) {
+                    T = !1;
+                    var c = w.endTime - S;
                     0 > parseInt(c) && (c = 0);
-                    W = new ba(25 * t,u.getEventColor(),"#6e3800");
-                    W.setValue(u.getEventName());
-                    N = W.render();
-                    Q = new ba(25 * t,"#fe9b00","#6e3800");
-                    u.isWarship() ? 0 < u.warshipsLeft ? Q.setValue("Warships Left: " + u.warshipsLeft) : 0 == u.warshipsEscaped ? Q.setValue("All Warships Destroyed!") : Q.setValue(u.warshipsDestroyed + " Destroyed, " + u.warshipsEscaped + " Escaped!") : Q.setValue(oc(c));
+                    V = new ba(25 * u,w.getEventColor(),"#6e3800");
+                    V.setValue(w.getEventName());
+                    N = V.render();
+                    Q = new ba(25 * u,"#fe9b00","#6e3800");
+                    w.isWarship() ? 0 < w.warshipsLeft ? Q.setValue("Warships Left: " + w.warshipsLeft) : 0 == w.warshipsEscaped ? Q.setValue("All Warships Destroyed!") : Q.setValue(w.warshipsDestroyed + " Destroyed, " + w.warshipsEscaped + " Escaped!") : Q.setValue(oc(c));
                     M = Q.render()
                 }
                 if (M) {
@@ -2465,10 +2465,10 @@
             }
             ;
             this.DrawWinnerLabel = function(a) {
-                !ia && aa && (ia = new ba(55 * t,"#fe6800","#6e3800"),
+                !ia && aa && (ia = new ba(55 * u,"#fe6800","#6e3800"),
                 ia.setValue("WINNER"),
                 ha = ia.render(),
-                wa = new ba(45 * t,"#fe9b00","#6e3800"),
+                wa = new ba(45 * u,"#fe9b00","#6e3800"),
                 wa.setValue(aa),
                 renderedWinnerNameCachedText = wa.render());
                 if (ha) {
@@ -2484,10 +2484,10 @@
             }
             ;
             this.DrawWarshipDestroyedLabel = function(a) {
-                la || (la = new ba(45 * t,"#fe6800","#6e3800"),
+                la || (la = new ba(45 * u,"#fe6800","#6e3800"),
                 null == va ? la.setValue("WARSHIP") : la.setValue(va),
                 ma = la.render(),
-                ya = new ba(35 * t,"#fe9b00","#6e3800"),
+                ya = new ba(35 * u,"#fe9b00","#6e3800"),
                 null == va ? ya.setValue("ESCAPED!") : ya.setValue("DESTROYED A WARSHIP!"),
                 sa = ya.render());
                 if (ma) {
@@ -2503,14 +2503,14 @@
             }
             ;
             this.DrawLastEventWinner = function(a) {
-                null != aa && aa != ja && (ca = new Da(15 * t,"#EEEEEE"),
+                null != aa && aa != ja && (ca = new Da(15 * u,"#EEEEEE"),
                 ca.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black"),
                 ca.setValue("Last Event Winner: " + ga(aa) + " "),
                 ca.setUsingRoundedFrame(!0),
                 ja = aa,
                 fa = ca.render());
                 if (fa) {
-                    var c = 10 * t;
+                    var c = 10 * u;
                     a.drawImage(fa, canvas.width - fa.width - c, canvas.height - fa.height - c)
                 }
             }
@@ -2595,55 +2595,55 @@
                 H += a;
                 D.update(a);
                 n.update(a);
-                V -= a;
-                0 > V && (V += 1E3,
-                U = !0);
+                U -= a;
+                0 > U && (U += 1E3,
+                T = !0);
                 0 < na && (na -= a);
                 0 < oa && (oa -= a)
             }
             ;
             this.renderLeaderboard = function(a, c) {
                 P = 270;
-                S = 0;
-                var d = 5 * t, b = 10 * t, g = 23 * t, h = 18 * t, e, k = 60 * t, n = 5 * t, f = 32, q = "Arial Black";
+                R = 0;
+                var d = 5 * u, b = 10 * u, g = 23 * u, h = 18 * u, e, k = 60 * u, n = 5 * u, f = 32, q = "Arial Black";
                 G && (f = 42,
                 P = 300,
-                g = 33 * t,
-                h = 28 * t,
+                g = 33 * u,
+                h = 28 * u,
                 q = "Arial-BoldMT");
-                e = S += d + g + d;
+                e = R += d + g + d;
                 var m = F.length;
                 G && (m = 5);
                 10 < m && (m = 10);
                 for (var I = 0, l = 0; l < m; l++) {
                     var r = B[F[l]];
-                    r && (S += h + b,
+                    r && (R += h + b,
                     r = a.measureText(ga(r.name)).width,
                     I < r && (I = r))
                 }
-                S -= b;
+                R -= b;
                 I > k && (P += I - k);
-                R = P * t;
-                S += d;
-                S += n;
-                c.width = R;
-                c.height = S;
+                X = P * u;
+                R += d;
+                R += n;
+                c.width = X;
+                c.height = R;
                 k = h + "px 'proxima-nova-1','proxima-nova-2', " + q;
                 a.fillStyle = "rgba(0,0,0,0.3)";
-                Ea(a, 0, 0, R, S, 30 * t);
+                Ea(a, 0, 0, X, R, 30 * u);
                 a.fillStyle = "rgba(204,84,0,1.0)";
-                pc(a, 0, 2, R, f * t, 30 * t);
+                pc(a, 0, 2, X, f * u, 30 * u);
                 a.fillStyle = "rgba(254,102,3,1.0)";
-                pc(a, 0, 0, R, f * t, 30 * t);
+                pc(a, 0, 0, X, f * u, 30 * u);
                 l = "LEADERBOARD";
-                u.isInstagib() && (l = "KILLS");
+                w.isInstagib() && (l = "KILLS");
                 a.font = g + "px 'proxima-nova-1','proxima-nova-2', " + q;
                 a.textBaseline = "hanging";
                 r = a.measureText(l).width;
                 a.fillStyle = "rgba(255,255,0,0.5)";
-                a.fillText(l, R / 2 - r / 2, d + 1);
+                a.fillText(l, X / 2 - r / 2, d + 1);
                 a.fillStyle = "rgba(178,32,0,1.0)";
-                a.fillText(l, R / 2 - r / 2, d);
+                a.fillText(l, X / 2 - r / 2, d);
                 a.font = k;
                 e += n;
                 for (l = 0; l < m; l++)
@@ -2667,27 +2667,27 @@
                                 r.id == qa && (a.save(),
                                 y = 38,
                                 9 == l && (y = 50),
-                                a.translate(y * t * f + I, e + g + 7 * t * f),
-                                a.scale(t * f, t * f),
+                                a.translate(y * u * f + I, e + g + 7 * u * f),
+                                a.scale(u * f, u * f),
                                 p.frames.crown.draw(a),
                                 a.restore());
                             else {
                                 a.save();
                                 var y = 38;
                                 9 == l && (y = 50);
-                                a.translate(y * t * f + I, e + g + 7 * t * f);
-                                a.scale(t * f, t * f);
+                                a.translate(y * u * f + I, e + g + 7 * u * f);
+                                a.scale(u * f, u * f);
                                 p.frames.skull.draw(a);
                                 a.restore()
                             }
-                            a.fillText(r.score, R - d - q, e + g)
+                            a.fillText(r.score, X - d - q, e + g)
                         }
                         e += h + b
                     }
             }
             ;
             this.drawLeaderboard = function(a) {
-                a.drawImage(C, Ka - R - 5, 5)
+                a.drawImage(C, Ka - X - 5, 5)
             }
             ;
             this.addActivityMessage = function(a) {
@@ -2766,19 +2766,19 @@
             var b = []
               , e = [];
             this.update = function(f) {
-                0 < e.length && 15E3 < T - e[0] && (b.shift(),
+                0 < e.length && 15E3 < S - e[0] && (b.shift(),
                 e.shift())
             }
             ;
             this.draw = function(e) {
                 e.globalAlpha = 1;
-                var d = canvas.height - 180 * t, a;
+                var d = canvas.height - 180 * u, a;
                 for (a in b)
-                    e.drawImage(b[a], 25, d + 26 * t + 5 + 14 * a * t + 15 * a * t)
+                    e.drawImage(b[a], 25, d + 26 * u + 5 + 14 * a * u + 15 * a * u)
             }
             ;
             this.addActivityMessage = function(f) {
-                var d = new Da(14 * t,"#EEEEEE");
+                var d = new Da(14 * u,"#EEEEEE");
                 d.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
                 d.setValue("\u2022 " + f);
                 d.setUsingRoundedFrame(!0);
@@ -2832,7 +2832,7 @@
             var g, h = 0;
             this.weapon = Ja;
             this.ammo = -1;
-            var q = this.laserFrame = this.laserTimer = 0, n, k = 0, m = 0, l = 1, y = 0, r = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1], K, pa = !1, s = 0, w = 0, t = 0, x = 0, z = 0, C = 0, P = 1, R = 0, S = 0, O = !1, G = !0, ea = !1, Ga = 0, D = 0, Fa = 0, ua = null;
+            var q = this.laserFrame = this.laserTimer = 0, n, k = 0, m = 0, l = 1, y = 0, r = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1], K, pa = !1, s = 0, t = 0, u = 0, x = 0, z = 0, C = 0, P = 1, X = 0, R = 0, O = !1, G = !0, ea = !1, Ga = 0, D = 0, Fa = 0, ua = null;
             this.update = function(b) {
                 if (this.inGame) {
                     var g = 400;
@@ -2848,7 +2848,7 @@
                     L.moveLeft && (this.controlAngle += this.rotSpeed);
                     L.moveRight && (this.controlAngle -= this.rotSpeed);
                     360 < this.controlAngle ? this.controlAngle = 0 : 0 > this.controlAngle && (this.controlAngle = 360);
-                    var k = fa((T - this.lastUpdate) / Jb, 0, 1);
+                    var k = fa((S - this.lastUpdate) / Jb, 0, 1);
                     this.prevX = this.x;
                     this.prevY = this.y;
                     var m = k * (this.dstY - this.origY) + this.origY;
@@ -2858,7 +2858,7 @@
                     k = this.x + 12 * Math.sin(-this.angle);
                     m = this.y + 12 * Math.cos(-this.angle);
                     a && (a.setPosition(k, m),
-                    u.isSpaceWars() && (a.width = .6,
+                    w.isSpaceWars() && (a.width = .6,
                     this.id == qa && "#00FF00" != a.style && (a.style = "#00FF00")));
                     c && c.setPosition(k, m);
                     (k = !this.hover && !n && !this.isInvulnerable() && !g) ? 0 == this.hadHover && (this.hadHover = !0,
@@ -2882,17 +2882,17 @@
                     n.setPosition(k, m),
                     n.update(b));
                     v == this && (hb = 0 == ha ? hb + b : 0);
-                    2 != ha ? B[gb] && (w = Math.sqrt(hb / uc),
-                    1 < w && (w = 1),
+                    2 != ha ? B[gb] && (t = Math.sqrt(hb / uc),
+                    1 < t && (t = 1),
                     s -= b,
-                    0 >= s && (0 == ha ? (s = .7 > w ? 200 + s : 80 + s,
+                    0 >= s && (0 == ha ? (s = .7 > t ? 200 + s : 80 + s,
                     J.playSound(Wb, .1, 1, Q, null)) : 1 == ha && (F.showTargetLockedMessage(),
                     s = 50 + s,
                     J.playSound(Wb, .1, 1.58, Q, null)))) : (s = 0,
                     F.clearTargetLockedMessage());
-                    0 < ma ? (t -= b,
-                    0 > t && (t = 100,
-                    J.playSound(Wb, .1, .5, Q, null))) : t = 0;
+                    0 < ma ? (u -= b,
+                    0 > u && (u = 100,
+                    J.playSound(Wb, .1, .5, Q, null))) : u = 0;
                     this == v && (ia || J.playSound(Wc, .6, 1, Q, function(a) {
                         ia = a
                     }),
@@ -2903,12 +2903,12 @@
                     1 < k && (k = 1),
                     ia && (m = J.sound._nodeById(ia),
                     J.sound.volume(.5 * da, ia),
-                    .01 > k && !u.isSpaceWars() ? m && m.bufferSource && (m.bufferSource.playbackRate.value = .1) : (l = this.speed / 30,
+                    .01 > k && !w.isSpaceWars() ? m && m.bufferSource && (m.bufferSource.playbackRate.value = .1) : (l = this.speed / 30,
                     1 < l && (l = 1),
                     x += (.3 + .8 * l - x) / 30,
                     m && m.bufferSource && (m.bufferSource.playbackRate.value = x))),
                     na && (m = 0,
-                    .2 > k && .01 < k && !u.isSpaceWars() && (m = 1.7 * (.2 - k)),
+                    .2 > k && .01 < k && !w.isSpaceWars() && (m = 1.7 * (.2 - k)),
                     J.sound.volume(m * da, na)));
                     g ? (k = va(this.x, this.y, H.x, H.y),
                     g = 1 - k / 3E3,
@@ -2923,7 +2923,7 @@
                     n && this.weapon == bb && 1 < this.ammo && (this.ammo = 1);
                     0 < q && (q -= b);
                     K && K.update(b);
-                    0 < R && (R -= b)
+                    0 < X && (X -= b)
                 }
             }
             ;
@@ -2941,7 +2941,7 @@
                     this.timeToNextFrame -= h,
                     0 >= this.timeToNextFrame && (this.flameState = !this.flameState,
                     this.timeToNextFrame = this.frameSwitchTime),
-                    this.hover && (u.isSpaceWars() ? b.scale(.5, .5) : b.scale(.8, .8)),
+                    this.hover && (w.isSpaceWars() ? b.scale(.5, .5) : b.scale(.8, .8)),
                     this.flameState && b.scale(.88, .88),
                     b.rotate(this.angle - Math.PI / 2),
                     b.translate(-23, 0),
@@ -3018,20 +3018,20 @@
                             ea && (f = Math.sqrt(K * K + s * s) - 10);
                             100 > f && (f = 100);
                             var v = p.frames.laser_opening.height
-                              , R = Fa / 50
-                              , w = 1
-                              , S = .75 * Math.PI
+                              , t = Fa / 50
+                              , X = 1
+                              , R = .75 * Math.PI
                               , K = !1;
-                            R > S ? (R = R < 2 * S ? R - S : S,
-                            w = Math.sin(.04 * Fa)) : K = !0;
+                            t > R ? (t = t < 2 * R ? t - R : R,
+                            X = Math.sin(.04 * Fa)) : K = !0;
                             b.translate(this.x, this.y);
                             b.rotate(this.angle + Math.PI);
                             e ? b.translate(2, 22) : b.translate(-2, 22);
-                            var O = s = Math.sin(R) / Math.sin(S)
-                              , t = !0;
-                            K && (R < .5 * Math.PI ? t = !1 : (R -= .5 * Math.PI,
-                            O = Math.sin(R) / Math.sin(S)));
-                            t && (b.scale((1 + .2 * w) * O, 1),
+                            var O = s = Math.sin(t) / Math.sin(R)
+                              , u = !0;
+                            K && (t < .5 * Math.PI ? u = !1 : (t -= .5 * Math.PI,
+                            O = Math.sin(t) / Math.sin(R)));
+                            u && (b.scale((1 + .2 * X) * O, 1),
                             b.translate(0, v / 2),
                             p.frames.laser_opening.draw(b),
                             f -= v,
@@ -3092,8 +3092,8 @@
             ;
             this.drawInput = function(a) {
                 if (this.inGame) {
-                    var c = -V.angle + Math.PI
-                      , b = !V.hover;
+                    var c = -U.angle + Math.PI
+                      , b = !U.hover;
                     .01 >= b && (b = .3);
                     a.save();
                     a.translate(this.x, this.y);
@@ -3106,11 +3106,11 @@
                     a.lineTo(0, -22 * b);
                     a.fill();
                     a.restore();
-                    2 != ha && (c = B[gb]) && this.DrawLockCrosshair(a, c.x, c.y, w, ha);
+                    2 != ha && (c = B[gb]) && this.DrawLockCrosshair(a, c.x, c.y, t, ha);
                     0 < ma && this.DrawLockCrosshair(a, this.x, this.y, 1, 1);
                     a.lineWidth = 1;
                     a.beginPath();
-                    u.isSpaceWars() ? a.strokeStyle = "rgba(255,255,255,0.3)" : a.strokeStyle = "rgba(0,0,255,0.1)";
+                    w.isSpaceWars() ? a.strokeStyle = "rgba(255,255,255,0.3)" : a.strokeStyle = "rgba(0,0,255,0.1)";
                     a.arc(this.x, this.y, 75, 0, 2 * Math.PI);
                     a.closePath();
                     a.stroke()
@@ -3138,7 +3138,7 @@
                 if (this.inGame && pa) {
                     a.save();
                     a.translate(this.x, this.y);
-                    if (!u.isInstagib()) {
+                    if (!w.isInstagib()) {
                         a.fillStyle = "rgba(126,219,226,1)";
                         a.shadowOffsetX = 0;
                         a.shadowOffsetY = 0;
@@ -3160,14 +3160,14 @@
                     a.textBaseline = "hanging",
                     c = a.measureText(b.name).width,
                     d = 38,
-                    u.isInstagib() && (d = 20),
+                    w.isInstagib() && (d = 20),
                     a.fillText(b.name, -c / 2, d));
                     a.restore();
                     c = !1;
                     qa == this.id && (c = !0);
                     d = !1;
                     ub == this.id && (d = !0);
-                    if (c || 0 < R || O || d)
+                    if (c || 0 < X || O || d)
                         a.save(),
                         a.translate(this.x, this.y - 30),
                         O ? p.frames.pause.draw(a) : c ? p.frames.crown.draw(a) : d ? p.frames.revengeIcon.draw(a) : p.frames.frenzyIcon.draw(a),
@@ -3327,15 +3327,15 @@
             }
             ;
             this.setFrenzy = function() {
-                R = 1E4
+                X = 1E4
             }
             ;
             this.incKills = function() {
-                S++
+                R++
             }
             ;
             this.getKills = function() {
-                return S
+                return R
             }
             ;
             this.setPaused = function(a) {
@@ -3787,9 +3787,9 @@
                                                 for (var r = f.getUint16(g, !0), g = g + 2, p = new d, s = 0; s < r; s++) {
                                                     var v = f.getFloat32(g, !0)
                                                       , g = g + 4
-                                                      , u = f.getFloat32(g, !0)
+                                                      , t = f.getFloat32(g, !0)
                                                       , g = g + 4;
-                                                    p.add(10 * v, 10 * -u, m)
+                                                    p.add(10 * v, 10 * -t, m)
                                                 }
                                                 b.push(p)
                                             }
@@ -3828,11 +3828,11 @@
                 var c = (canvas.width / 2 + (z.x * z.zoom - canvas.width / 2)) / z.zoom
                   , b = (canvas.height / 2 + (z.y * z.zoom - canvas.height / 2)) / z.zoom
                   , d = .75 * E;
-                u.isSpaceWars() && (d = E);
+                w.isSpaceWars() && (d = E);
                 var d = a.createLinearGradient(0, -d, 0, d)
                   , f = 39
                   , m = 161;
-                u.isSpaceWars() && (f = 0,
+                w.isSpaceWars() && (f = 0,
                 m = 55);
                 if (0 < e) {
                     var l = e / 2500;
@@ -3840,7 +3840,7 @@
                     f += (255 - f) * l;
                     m += (255 - m) * l
                 }
-                u.isSpaceWars() ? (d.addColorStop(0, "rgba(" + parseInt(f) + ",0,0,1.0)"),
+                w.isSpaceWars() ? (d.addColorStop(0, "rgba(" + parseInt(f) + ",0,0,1.0)"),
                 d.addColorStop(.3, "rgba(" + parseInt(m) + ",0,55,1.0)"),
                 d.addColorStop(.5, "rgba(" + parseInt(m) + ",0,75,1.0)"),
                 d.addColorStop(.7, "rgba(" + parseInt(m) + ",0,55,1.0)"),
@@ -3875,7 +3875,7 @@
                     p = $ + c,
                     p < d && (l = Math.min(1 - p / d, 1),
                     l *= .2);
-                u.isSpaceWars() && (d = 200,
+                w.isSpaceWars() && (d = 200,
                 0 > b ? (p = E / 2,
                 p += b,
                 p < d && (y = Math.min(1 - p / d, 1),
@@ -3892,15 +3892,15 @@
                 0 < f ? (a.fillStyle = "rgba(200,0,0," + f + ")",
                 a.fillRect($, -e / 2, 2500, e)) : (a.fillStyle = "rgba(200,0,0," + l + ")",
                 a.fillRect(-$ - 2500, -e / 2, 2500, e));
-                u.isSpaceWars() && (0 > b ? (a.fillStyle = "rgba(200,0,0," + y + ")",
+                w.isSpaceWars() && (0 > b ? (a.fillStyle = "rgba(200,0,0," + y + ")",
                 a.fillRect(-$, -E / 2 - 2500, 2 * $, 2500)) : (a.fillStyle = "rgba(200,0,0," + r + ")",
                 a.fillRect(-$, E / 2, 2 * $, 2500)));
-                u.isSpaceWars() || (a.fillStyle = "rgba(255,255,255,0.10)",
+                w.isSpaceWars() || (a.fillStyle = "rgba(255,255,255,0.10)",
                 a.fillRect(c - canvas.width / 2 / z.zoom, -E / 2 - 1, canvas.width / z.zoom, 6))
             }
             ;
             this.draw = function(a) {
-                if (qb && !u.isSpaceWars()) {
+                if (qb && !w.isSpaceWars()) {
                     var c = .97 * z.x + 450
                       , b = .97 * z.y - 100
                       , d = a.createRadialGradient(c, b, 70, c, b, 350);
@@ -3915,7 +3915,7 @@
                     a.arc(c, b, 70, 0, 2 * Math.PI);
                     a.fill()
                 }
-                ob && !u.isSpaceWars() && f.drawPreRenderedClouds(a)
+                ob && !w.isSpaceWars() && f.drawPreRenderedClouds(a)
             }
             ;
             var c = !1;
@@ -3926,7 +3926,7 @@
                     f.update(a),
                     null != v) {
                         var b = v.x < -$ || v.x > $;
-                        u.isSpaceWars() && (b |= v.y > E / 2 || v.y < -E / 2);
+                        w.isSpaceWars() && (b |= v.y > E / 2 || v.y < -E / 2);
                         b ? (0 == e && (J.playSound(gd, 1, 1, 1, null),
                         F.showWarningMessage("YOU ABANDONED THE FIGHT!")),
                         e += a) : (0 < e && F.clearWarningMessage(),
@@ -3955,29 +3955,29 @@
             this.update = function(f) {
                 var p = .06 * f;
                 if (64 != this.type) {
-                    if (!u.isSpaceWars()) {
+                    if (!w.isSpaceWars()) {
                         var s = E / 2 - 20
                           , v = this.y + e;
                         l += f / 400;
                         v < s ? (v > s - 30 && (d = (s - v) / 30),
                         1 > this.alpha && (this.alpha += f / 1E3,
                         1 < this.alpha && (this.alpha = 1)),
-                        e = (T - b) / 1E3 * Ac * 60) : (a += .1 * p,
+                        e = (S - b) / 1E3 * Ac * 60) : (a += .1 * p,
                         e += .1,
                         k -= .008,
                         0 > k && (k = 0),
                         m = Math.sqrt(k))
                     }
-                    this.fadingOut && (y || u.isSpaceWars() || u.isInstagib() ? delete W[this.id] : (e += .25,
+                    this.fadingOut && (y || w.isSpaceWars() || w.isInstagib() ? delete V[this.id] : (e += .25,
                     this.alpha -= f / 1E3,
-                    0 >= this.alpha && delete W[this.id]))
+                    0 >= this.alpha && delete V[this.id]))
                 }
                 this.grabbing && ((f = B[c]) ? (s = Math.pow(g, 2),
                 this.x = h + (f.x - h) * s,
                 this.y = q + (f.y - q) * s,
                 n = 1 - s,
                 g += .07 * p,
-                1 < g && delete W[this.id]) : delete W[this.id])
+                1 < g && delete V[this.id]) : delete V[this.id])
             }
             ;
             this.drawItem = function(c, b) {
@@ -3989,8 +3989,8 @@
                     c.translate(this.x, this.y + e),
                     c.scale((1 + Math.sin(this.sinScaleX) / 6) * n * 1.3, (1 + Math.sin(this.sinScaleY) / 6) * n * 1.3),
                     b.draw(c);
-                else if (y || u.isSpaceWars())
-                    v && u.isSpaceWars() && v.id == qa && (g = .3),
+                else if (y || w.isSpaceWars())
+                    v && w.isSpaceWars() && v.id == qa && (g = .3),
                     c.save(),
                     c.beginPath(),
                     this.sinScaleX += .1,
@@ -4053,10 +4053,10 @@
                 this.y += e;
                 h = this.x;
                 q = this.y;
-                delete W[this.id];
+                delete V[this.id];
                 this.id = "g" + this.id;
-                W[this.id] = this;
-                v && c == v.id && !u.isInstagib() && (64 == this.type ? v.incScore(vc) : v.incScore(wc))
+                V[this.id] = this;
+                v && c == v.id && !w.isInstagib() && (64 == this.type ? v.incScore(vc) : v.incScore(wc))
             }
             ;
             this.setPosition = function(a, c) {
@@ -4066,7 +4066,7 @@
                 b = +new Date
             }
             ;
-            u.isSpaceWars() && (y = !0)
+            w.isSpaceWars() && (y = !0)
         }
           , wd = function() {
             function b(b, a, c) {
@@ -4103,24 +4103,24 @@
                                 M[m] = s;
                                 163 != f && 162 != f && 169 != f || s.setType(l);
                                 var m = B[p]
-                                  , u = !1;
-                                m || (u = !0,
-                                m = U[p]);
+                                  , t = !1;
+                                m || (t = !0,
+                                m = T[p]);
                                 if (m) {
                                     var w = Q
-                                      , t = 1;
-                                    u ? (w = Sa,
-                                    u = va(m.x, m.y, H.x, H.y),
-                                    t = 1 - u / Ra,
-                                    .01 < t && J.playSound(ld, t, 1, w, null),
+                                      , u = 1;
+                                    t ? (w = Sa,
+                                    t = va(m.x, m.y, H.x, H.y),
+                                    u = 1 - t / Ra,
+                                    .01 < u && J.playSound(ld, u, 1, w, null),
                                     m.cannonShoot()) : (v && p == v.id || (w = Sa,
-                                    u = va(m.x, m.y, H.x, H.y),
-                                    t = 1 - u / Ra),
-                                    .01 < t && J.playSound(md, t, 1, w, null),
+                                    t = va(m.x, m.y, H.x, H.y),
+                                    u = 1 - t / Ra),
+                                    .01 < u && J.playSound(md, u, 1, w, null),
                                     m.ammo--)
                                 }
                             }
-                            s.lastUpdate = T;
+                            s.lastUpdate = S;
                             s.setPosition(y, r, p)
                         }
                         if (162 == a || 178 == a || 163 == a || 179 == a || 169 == a || 172 == a)
@@ -4129,15 +4129,15 @@
                                 l += 4;
                                 if (0 == c)
                                     break;
-                                h = U[c];
+                                h = T[c];
                                 if (178 == a || 162 == a)
                                     f = b.getUint8(l, !0),
                                     l += 1,
                                     null == h && (h = new nd,
-                                    U[c] = h,
+                                    T[c] = h,
                                     h.setType(f));
                                 h.id = c;
-                                h.lastUpdate = T;
+                                h.lastUpdate = S;
                                 c = b.getFloat32(l, !0);
                                 l += 4;
                                 f = -b.getFloat32(l, !0);
@@ -4174,9 +4174,9 @@
                     h += 4,
                     w = -b.getFloat32(h, !0),
                     h += 4,
-                    u = b.getFloat32(h, !0),
+                    t = b.getFloat32(h, !0),
                     h += 4,
-                    t = b.getUint8(h, !0),
+                    u = b.getUint8(h, !0),
                     h += 1);
                     var C = B[k]
                       , P = x & 256;
@@ -4184,11 +4184,11 @@
                     C.setPaused(z),
                     v == C)) {
                         var z = x & 8
-                          , R = x & 16
-                          , S = x & 32
+                          , X = x & 16
+                          , R = x & 32
                           , O = x & 128
                           , G = x & 4096;
-                        x & 64 ? F.addBonus(64, 0) : S ? F.addBonus(32, 0) : R ? F.addBonus(16, 0) : z && F.addBonus(8, 0);
+                        x & 64 ? F.addBonus(64, 0) : R ? F.addBonus(32, 0) : X ? F.addBonus(16, 0) : z && F.addBonus(8, 0);
                         G && (F.addBonus(4096, 0),
                         Za[C.id] = 0);
                         O && F.addBonus(128, 0);
@@ -4210,9 +4210,9 @@
                         h += 2;
                         z = b.getUint8(h, !0);
                         h += 1;
-                        R = b.getUint8(h, !0);
+                        X = b.getUint8(h, !0);
                         h += 1;
-                        S = b.getUint32(h, !0);
+                        R = b.getUint32(h, !0);
                         h += 4;
                         for (O = ""; ; ) {
                             G = b.getUint16(h, !0);
@@ -4225,20 +4225,20 @@
                         B[k] = C);
                         -1 != O.indexOf("\ufdfd") && (O = "<Unnamed>");
                         C.setColorID(z);
-                        C.setDecalID(R);
+                        C.setDecalID(X);
                         C.setName(O);
-                        C.setFlagInfo(S);
+                        C.setFlagInfo(R);
                         C.setWeapon(x);
                         C.ammo = P
                     }
                     if (null == C)
                         console.log("ERROR: Receiving data for a player (" + k + ") that does not exist, ignoring!");
                     else if (C.id = k,
-                    C.lastUpdate = T,
+                    C.lastUpdate = S,
                     C.updateBool = A.lastUpdateBool,
-                    y && (C.setPose(m, w, u),
-                    C.energy = t,
-                    C.setEnergy(t),
+                    y && (C.setPose(m, w, t),
+                    C.energy = u,
+                    C.setEnergy(u),
                     C.hover = r,
                     C.setIsBot(p),
                     C.setIsShooting(s)),
@@ -4264,15 +4264,15 @@
                     B[f].setWeapon(q),
                     B[f].ammo = c) : 64 == q ? (B[f].trailEffect(),
                     k = pd,
-                    null != this.lastGrabbedWingTime && (q = T - this.lastGrabbedWingTime,
+                    null != this.lastGrabbedWingTime && (q = S - this.lastGrabbedWingTime,
                     1E3 > q ? A.wingsInARow++ : A.wingsInARow = 0,
                     n = 1 + .05 * A.wingsInARow,
                     1.5 < n && (n = 1.5)),
-                    this.lastGrabbedWingTime = T) : 32 == q && (k = qd);
+                    this.lastGrabbedWingTime = S) : 32 == q && (k = qd);
                     v && f == v.id && J.playSound(k, 1, n, Q, null);
-                    W[e].playerGrab(f)
+                    V[e].playerGrab(f)
                 } else
-                    W[e].fadeOut()
+                    V[e].fadeOut()
             }
             var f;
             this.firstClientListing = !0;
@@ -4369,20 +4369,20 @@
             }
             ;
             this.disconnect = function() {
-                A.directed && (Hb() || (w.location.hash = ""),
+                A.directed && (Hb() || (t.location.hash = ""),
                 A.directed = !1);
                 A.roomID = 0;
                 f && f.close()
             }
             ;
             this.onSocketOpen = function(b) {
-                w.didSendLoadingTime || (b = +new Date - w.startTime,
-                w.stats && console.log("ltct " + b),
-                w.mixpanel.track("Load Time To Play", {
+                t.didSendLoadingTime || (b = +new Date - t.startTime,
+                t.stats && console.log("ltct " + b),
+                t.mixpanel && t.mixpanel.track("Load Time To Play", {
                     deltatime: b,
-                    domain: w.location.hostname
+                    domain: t.location.hostname
                 }),
-                w.didSendLoadingTime = !0);
+                t.didSendLoadingTime = !0);
                 A.connectRetry = 0;
                 A.hasConnection = !0;
                 A.directed = !1;
@@ -4410,7 +4410,7 @@
                 s("#topGuiConnecting").hide();
                 s(".btn-needs-server").removeAttr("disabled");
                 s("#nick").focus();
-                1 == G && ("undefined" != typeof messageHandlers && messageHandlers.didConnect ? messageHandlers.didConnect(JSON.stringify({})) : w.webkit.messageHandlers.didConnect.postMessage({}))
+                1 == G && ("undefined" != typeof messageHandlers && messageHandlers.didConnect ? messageHandlers.didConnect(JSON.stringify({})) : t.webkit.messageHandlers.didConnect.postMessage({}))
             }
             ;
             this.processMessage = function(d) {
@@ -4454,7 +4454,7 @@
                         xc = d
                     } else if (161 == a || 171 == a)
                         xa = !0,
-                        G && ("undefined" != typeof messageHandlers && messageHandlers.didEnterGame ? messageHandlers.didEnterGame(JSON.stringify({})) : w.webkit.messageHandlers.didEnterGame.postMessage({})),
+                        G && ("undefined" != typeof messageHandlers && messageHandlers.didEnterGame ? messageHandlers.didEnterGame(JSON.stringify({})) : t.webkit.messageHandlers.didEnterGame.postMessage({})),
                         c = 1,
                         f = d.getUint32(c, !0),
                         c += 4,
@@ -4508,11 +4508,11 @@
                             !q && Qb && (q = Qb),
                             q && f == q.id && (n = ga(B[a].name),
                             F.addMessage("You killed", !0, n),
-                            u.isInstagib() || (a == qa ? q.incScore(yc) : q.incScore(xc))),
+                            w.isInstagib() || (a == qa ? q.incScore(yc) : q.incScore(xc))),
                             0 < f ? ((f = B[f]) ? (F.addActivityMessage(ga(c.name) + " was Killed by " + ga(f.name)),
                             f.incKills(),
                             Za[c.id] = f.id) : F.addActivityMessage(ga(c.name) + " was Killed"),
-                            X.addExplosion(c.dstX, c.dstY, c.getSpeedDirectionX(), c.getSpeedDirectionY()),
+                            W.addExplosion(c.dstX, c.dstY, c.getSpeedDirectionX(), c.getSpeedDirectionY()),
                             v && v.id == a && (f ? F.addMessage("Killed by", !1, ga(f.name)) : F.addMessage("You were killed", !1, null),
                             Z ? (Z = !1,
                             Qb = v,
@@ -4532,14 +4532,14 @@
                             Fb(d)) : (v = null,
                             L.waitUntilNextFollow())),
                             5 == h ? F.addActivityMessage(ga(c.name) + " left") : 4 == h && F.addActivityMessage(ga(c.name) + " abandoned"),
-                            X.addExplosion(c.dstX, c.dstY, .5 * c.getSpeedDirectionX(), .5 * c.getSpeedDirectionY())),
+                            W.addExplosion(c.dstX, c.dstY, .5 * c.getSpeedDirectionX(), .5 * c.getSpeedDirectionY())),
                             null == c ? console.log("ERROR: Trying to remove a player that didnt exist!") : B[a].cleanup();
-                        else if (d = U[a])
-                            d.type == db && u.isSpaceWars() && (X.addExplosion(d.x, d.y, 0, 0),
+                        else if (d = T[a])
+                            d.type == db && w.isSpaceWars() && (W.addExplosion(d.x, d.y, 0, 0),
                             3 != d.fragment && (d = 1 - va(d.x, d.y, H.x, H.y) / Ra,
                             .01 < d && J.playSound(Fc, d, .4, Sa, null))),
-                            U[a].cleanup(),
-                            delete U[a];
+                            T[a].cleanup(),
+                            delete T[a];
                         Va()
                     } else if (166 == a || 176 == a)
                         for (c = 1,
@@ -4555,18 +4555,18 @@
                             l = Gc;
                             switch (q) {
                             case Ja:
-                                l = u.isSpaceWars() ? qa == n ? sd : Yb : td;
+                                l = w.isSpaceWars() ? qa == n ? sd : Yb : td;
                                 break;
                             case $a:
-                                u.isSpaceWars() ? (m = .7,
+                                w.isSpaceWars() ? (m = .7,
                                 l = Yb) : l = ud;
                                 break;
                             case Qa:
-                                u.isSpaceWars() ? (l = Yb,
+                                w.isSpaceWars() ? (l = Yb,
                                 m = 1.3) : l = vd
                             }
                             k = B[n];
-                            !k && 0 < n && (y = U[n]) && console.log("specialEntity did shoot: " + y.id);
+                            !k && 0 < n && (y = T[n]) && console.log("specialEntity did shoot: " + y.id);
                             y = Q;
                             r = 1;
                             v && n == v.id || !k || (y = Sa,
@@ -4582,17 +4582,17 @@
                                   , c = c + 4
                                   , s = -d.getFloat32(c, !0)
                                   , c = c + 4
-                                  , t = 0
-                                  , t = !1;
+                                  , u = 0
+                                  , u = !1;
                                 if (q != Ua && q != cb)
                                     oa.addShot(n, r, s, q);
                                 else {
-                                    var t = d.getUint32(c, !0)
+                                    var u = d.getUint32(c, !0)
                                       , c = c + 4
-                                      , x = M[t];
-                                    x && (delete M[t],
+                                      , x = M[u];
+                                    x && (delete M[u],
                                     delete x);
-                                    t = !0
+                                    u = !0
                                 }
                                 for (x = !1; ; ) {
                                     var z = d.getUint32(c, !0)
@@ -4601,15 +4601,15 @@
                                         break;
                                     var Ca = B[z]
                                       , ta = !1;
-                                    Ca || (Ca = U[z]) && (ta = !0);
-                                    z == qa || ta || (t = !1);
+                                    Ca || (Ca = T[z]) && (ta = !0);
+                                    z == qa || ta || (u = !1);
                                     Ca && (Ca.hit(q),
                                     k && q == za && (x = !0,
                                     k.laserHit(r, s, !0)),
                                     v && (v.id == z ? J.playSound(Hc, 1, 1, Q, null) : n == v.id && J.playSound(Hc, 1, 2, Q, null)))
                                 }
                                 k && !x && k.laserHit(r, s, !1);
-                                t && oa.addMissileImpact(r, s)
+                                u && oa.addMissileImpact(r, s)
                             }
                             0 < n && (n = B[n]) && q != Ua && q != cb && (n.ammo = m,
                             n.setWeapon(q))
@@ -4628,7 +4628,7 @@
                             n = -d.getFloat32(c, !0);
                             c += 4;
                             k = new jd;
-                            W[f] = k;
+                            V[f] = k;
                             k.id = f;
                             k.setPosition(q, n);
                             k.type = h
@@ -4644,40 +4644,40 @@
                     else if (16 == a)
                         c = d.getUint8(1, !0),
                         a = d.getUint32(2, !0),
-                        u.type = c,
-                        u.waiting = !0,
-                        u.endTime = +new Date + 1E3 * a;
+                        w.type = c,
+                        w.waiting = !0,
+                        w.endTime = +new Date + 1E3 * a;
                     else if (17 == a)
-                        u.type = u.eventType.EVENT_NONE,
-                        u.waiting = !1,
-                        u.endTime = 0;
+                        w.type = w.eventType.EVENT_NONE,
+                        w.waiting = !1,
+                        w.endTime = 0;
                     else if (18 == a || 19 == a)
                         c = 1,
                         f = d.getUint8(c, !0),
                         c++,
                         a = d.getUint32(c, !0),
                         c += 4,
-                        u.waiting = !1,
-                        u.setType(f),
-                        u.type == u.eventType.EVENT_WARSHIP && (h = d.getUint8(c, !0),
+                        w.waiting = !1,
+                        w.setType(f),
+                        w.type == w.eventType.EVENT_WARSHIP && (h = d.getUint8(c, !0),
                         c++,
                         f = d.getUint8(c, !0),
                         c++,
                         d = d.getUint8(c, !0),
-                        u.setWarshipInfo(h, f, d)),
+                        w.setWarshipInfo(h, f, d)),
                         L.whiteFlash = 1,
-                        u.endTime = +new Date + 1E3 * a,
-                        u.isInstagib() ? u.railSwitch = !0 : u.isWarship() ? p.loadWarshipEvent() : u.isSpaceWars() && p.loadAsteroidEvent();
+                        w.endTime = +new Date + 1E3 * a,
+                        w.isInstagib() ? w.railSwitch = !0 : w.isWarship() ? p.loadWarshipEvent() : w.isSpaceWars() && p.loadAsteroidEvent();
                     else if (20 == a) {
-                        u.type != u.eventType.EVENT_WARSHIP && (L.whiteFlash = 1);
-                        u.waiting = !1;
-                        if (u.isInstagib() || u.isSpaceWars())
-                            u.machinegunSwitch = !0;
-                        u.setType(u.eventType.EVENT_NONE)
+                        w.type != w.eventType.EVENT_WARSHIP && (L.whiteFlash = 1);
+                        w.waiting = !1;
+                        if (w.isInstagib() || w.isSpaceWars())
+                            w.machinegunSwitch = !0;
+                        w.setType(w.eventType.EVENT_NONE)
                     } else if (22 == a)
-                        u.waiting = !1,
-                        u.type != u.eventType.EVENT_NONE && (u.type != u.eventType.EVENT_WARSHIP && (L.whiteFlash = 1),
-                        u.setType(u.eventType.EVENT_NONE));
+                        w.waiting = !1,
+                        w.type != w.eventType.EVENT_NONE && (w.type != w.eventType.EVENT_WARSHIP && (L.whiteFlash = 1),
+                        w.setType(w.eventType.EVENT_NONE));
                     else if (23 == a) {
                         c = 1;
                         f = d.getUint32(c, !0);
@@ -4693,7 +4693,7 @@
                         f = d.getUint8(c, !0);
                         c += 1;
                         d = d.getUint8(c, !0);
-                        u.setWarshipInfo(a, f, d)
+                        w.setWarshipInfo(a, f, d)
                     } else if (21 == a) {
                         f = d.getUint8(1, !0);
                         c = 2;
@@ -4749,9 +4749,9 @@
                 var b = new ArrayBuffer(10)
                   , a = new DataView(b);
                 a.setUint8(0, 3);
-                a.setFloat64(1, V.angle, !0);
+                a.setFloat64(1, U.angle, !0);
                 var c = 0;
-                if (V.hover || !wa)
+                if (U.hover || !wa)
                     c |= 1;
                 if (!wa || Y)
                     c |= 2;
@@ -4763,7 +4763,7 @@
                 var b = new ArrayBuffer(9)
                   , a = new DataView(b);
                 a.setUint8(0, 4);
-                a.setFloat64(1, V.angle, !0);
+                a.setFloat64(1, U.angle, !0);
                 f.send(b)
             }
             ;
@@ -4771,7 +4771,7 @@
                 var b = new ArrayBuffer(2)
                   , a = new DataView(b);
                 a.setUint8(0, 6);
-                1 == V.throttle ? a.setUint8(1, 1) : a.setUint8(1, 0);
+                1 == U.throttle ? a.setUint8(1, 1) : a.setUint8(1, 0);
                 f.send(b)
             }
             ;
@@ -4809,7 +4809,7 @@
             function e() {
                 Z && A.hasConnection && A.sendInput()
             }
-            var f = this, d, a, c = 0, g = 0, h = 0, q = !1, n = 1, k, m = 0, l = 0, y = !1, r = 1, x, pa = 0, L = 0, T = !1, Ca = 1, ta;
+            var f = this, d, a, c = 0, g = 0, h = 0, q = !1, n = 1, k, m = 0, l = 0, y = !1, r = 1, x, pa = 0, L = 0, S = !1, Ca = 1, ta;
             this.whiteFlash = 0;
             f.followTopPlayer = function() {
                 var a = -1
@@ -4879,9 +4879,9 @@
                     F && F.update(a);
                     mb && J.sound.volume(da, mb);
                     La = !1;
-                    for (var b in W)
-                        W[b].update(a),
-                        W[b] && !La && W[b].type == za && (La = !0,
+                    for (var b in V)
+                        V[b].update(a),
+                        V[b] && !La && V[b].type == za && (La = !0,
                         Ma = null);
                     var e = null;
                     for (b in M)
@@ -4894,14 +4894,14 @@
                         delete B[b]) : (!La && B[b].weapon == za && B[b].inGame && (La = !0,
                         Ma = ga(B[b].name)),
                         sc == b && B[b].inGame && (e = B[b]),
-                        u.railSwitch ? (B[b].setWeapon(Qa),
-                        B[b].ammo = -1) : u.machinegunSwitch && (B[b].setWeapon(Ja),
+                        w.railSwitch ? (B[b].setWeapon(Qa),
+                        B[b].ammo = -1) : w.machinegunSwitch && (B[b].setWeapon(Ja),
                         B[b].ammo = -1),
                         B[b].update(a));
-                    for (b in U)
-                        U[b].update(a);
-                    u.railSwitch && (u.railSwitch = !1);
-                    u.machinegunSwitch && (u.machinegunSwitch = !1);
+                    for (b in T)
+                        T[b].update(a);
+                    w.railSwitch && (w.railSwitch = !1);
+                    w.machinegunSwitch && (w.machinegunSwitch = !1);
                     z.update(a);
                     if (!Z && 0 == ka && null == v && (c -= a,
                     0 >= c))
@@ -4911,7 +4911,7 @@
                             ra = b);
                             break
                         }
-                    if (u.isSpaceWars()) {
+                    if (w.isSpaceWars()) {
                         for (i in sa) {
                             sa[i].update(z.getBounds(), z.zoom);
                             var f = sa[i];
@@ -4921,14 +4921,14 @@
                         ca.x = 0;
                         ca.y = 0
                     }
-                    X.update(a);
+                    W.update(a);
                     H = {
                         x: (d.width / 2 + (z.x * z.zoom - d.width / 2)) / z.zoom,
                         y: (d.height / 2 + (z.y * z.zoom - d.height / 2)) / z.zoom
                     };
                     ya.update(a);
                     if (!G && null != v)
-                        if (V.mouseMoved) {
+                        if (U.mouseMoved) {
                             a = 1;
                             Ba || (a = 2);
                             Zb = (qc + (z.x * z.zoom - d.width * a / 2)) / z.zoom;
@@ -4938,75 +4938,75 @@
                               , f = Math.sqrt(a * a + s * s);
                             a /= f;
                             s /= f;
-                            V.hover = 75 < f ? 0 : 1;
+                            U.hover = 75 < f ? 0 : 1;
                             var t = f = 0;
                             wa && (f = a,
                             t = -s);
                             0 != f && (a = Math.atan(t / f),
                             0 > f && (a = Math.PI + a),
                             a += Math.PI / 2,
-                            V.angle = a)
+                            U.angle = a)
                         } else
-                            V.hover = 1,
-                            V.angle = Math.PI;
+                            U.hover = 1,
+                            U.angle = Math.PI;
                     t = z.getBounds();
                     a = t[1].x;
                     f = t[0].x;
                     s = t[0].y;
                     t = t[1].y;
                     if (e && !aa(e.x, e.y, 30)) {
-                        var w = H.x - e.x
+                        var u = H.x - e.x
                           , D = H.y - e.y
-                          , C = Math.sqrt(w * w + D * D);
+                          , C = Math.sqrt(u * u + D * D);
                         n = 1;
                         1300 < C && (n = 1300 / C,
                         .4 > n && (n = .4));
-                        D /= w;
+                        D /= u;
                         C = H.y - D * H.x;
-                        h = 0 > w ? D * a + C : D * f + C;
+                        h = 0 > u ? D * a + C : D * f + C;
                         h < s ? h = s : h > t && (h = t);
                         g = (h - C) / D;
                         1 < D ? D = 1 : -1 > D && (D = -1);
                         k = Math.acos(D);
-                        0 > w && (k += Math.PI);
+                        0 > u && (k += Math.PI);
                         q = !0
                     } else
                         q = !1;
-                    var E, w = !1;
+                    var E, u = !1;
                     (ub = v ? Za[v.id] : 0) && 0 < ub && (E = B[ub],
-                    E == e && (w = !0));
-                    !E || aa(E.x, E.y, 30) || w ? y = !1 : (w = H.x - E.x,
+                    E == e && (u = !0));
+                    !E || aa(E.x, E.y, 30) || u ? y = !1 : (u = H.x - E.x,
                     D = H.y - E.y,
-                    E = Math.sqrt(w * w + D * D),
+                    E = Math.sqrt(u * u + D * D),
                     r = 1,
                     1300 < E && (r = 1300 / E,
                     .4 > r && (r = .4)),
-                    D /= w,
+                    D /= u,
                     C = H.y - D * H.x,
-                    l = 0 > w ? D * a + C : D * f + C,
+                    l = 0 > u ? D * a + C : D * f + C,
                     l < s ? l = s : l > t && (l = t),
                     m = (l - C) / D,
                     1 < D ? D = 1 : -1 > D && (D = -1),
                     x = Math.acos(D),
-                    0 > w && (x += Math.PI),
+                    0 > u && (x += Math.PI),
                     y = !0);
-                    if (u.isWarship()) {
+                    if (w.isWarship()) {
                         E = 99999;
                         var e = 0, Q, I, N, Y;
-                        for (b in U)
-                            if (C = U[b],
+                        for (b in T)
+                            if (C = T[b],
                             C.state == Ic && C.x > -$ && C.x < $) {
-                                var w = H.x - C.x
+                                var u = H.x - C.x
                                   , D = H.y - C.y
-                                  , ba = Math.sqrt(w * w + D * D);
+                                  , ba = Math.sqrt(u * u + D * D);
                                 ba < E && (Q = C.x,
                                 I = C.y,
                                 E = ba,
                                 e = b,
-                                N = w,
+                                N = u,
                                 Y = D)
                             }
-                        0 < e ? aa(Q, I, 120) ? T = !1 : (1300 < E && (Ca = 900 / E,
+                        0 < e ? aa(Q, I, 120) ? S = !1 : (1300 < E && (Ca = 900 / E,
                         .3 > Ca && (Ca = .3)),
                         D = Y / N,
                         C = H.y - D * H.x,
@@ -5016,7 +5016,7 @@
                         1 < D ? D = 1 : -1 > D && (D = -1),
                         ta = Math.acos(D),
                         0 > N && (ta += Math.PI),
-                        T = !0) : T = !1
+                        S = !0) : S = !1
                     }
                 }
             }
@@ -5028,15 +5028,15 @@
                     ya.draw(a);
                     var c = z.getBounds()[1].y
                       , e = !1;
-                    if (u.isSpaceWars())
+                    if (w.isSpaceWars())
                         for (i in sa)
                             sa[i].draw(a);
                     else
                         c > E / 2 - 25 && (e = !0,
                         ya.drawWaterBehind(a));
                     if (xa) {
-                        for (var f in W)
-                            W[f].draw(a);
+                        for (var f in V)
+                            V[f].draw(a);
                         oa.draw(a);
                         for (f in M)
                             M[f].draw(a, b);
@@ -5045,25 +5045,25 @@
                         for (f in B)
                             B[f].drawInfo(a);
                         Z && v.drawInput(a);
-                        for (f in U)
-                            U[f].draw(a);
-                        X.drawExplosions(a);
-                        X.drawBehind(a)
+                        for (f in T)
+                            T[f].draw(a);
+                        W.drawExplosions(a);
+                        W.drawBehind(a)
                     }
                     e && ya.drawWaterFront(a);
                     if (xa) {
-                        if (!u.isSpaceWars()) {
+                        if (!w.isSpaceWars()) {
                             for (f in B)
                                 B[f].drawReflection(a, b);
                             for (f in M)
                                 M[f].drawReflection(a, b);
-                            for (f in U)
-                                U[f].drawReflection(a, b)
+                            for (f in T)
+                                T[f].drawReflection(a, b)
                         }
-                        X.drawLayer2(a);
-                        X.draw(a);
-                        for (f in U)
-                            U[f].drawInfo(a);
+                        W.drawLayer2(a);
+                        W.draw(a);
+                        for (f in T)
+                            T[f].drawInfo(a);
                         ya.drawLimits(a);
                         q && (b = 1,
                         c = 0 < qa,
@@ -5105,7 +5105,7 @@
                         a.lineTo(0, -20 * b * e),
                         a.fill(),
                         a.restore());
-                        T && p.warshipIcon && (b = 1,
+                        S && p.warshipIcon && (b = 1,
                         a.save(),
                         a.translate(pa, L),
                         a.scale(Ca, Ca),
@@ -5142,32 +5142,32 @@
                 Z = !1;
                 gb = ma = 0;
                 F && F.clearBonusDisplay();
-                for (id in W)
-                    delete W[id];
-                W = {};
+                for (id in V)
+                    delete V[id];
+                V = {};
                 for (id in M)
                     delete M[id];
                 M = {};
                 for (id in B)
                     delete B[id];
                 B = {};
-                for (id in U)
-                    delete U[id];
-                U = {}
+                for (id in T)
+                    delete T[id];
+                T = {}
             }
             ;
             var N;
             f.resize = function(a) {
                 C();
-                u.isSpaceWars() && (N && clearTimeout(N),
+                w.isSpaceWars() && (N && clearTimeout(N),
                 N = setTimeout(f.respawnParticles, 200))
             }
             ;
             var C = function() {
                 var a = 2;
                 Ba && (a = 1);
-                d.width = w.innerWidth / a;
-                d.height = w.innerHeight / a;
+                d.width = t.innerWidth / a;
+                d.height = t.innerHeight / a;
                 Ka = d.width;
                 ib = d.height;
                 var b = ib * a
@@ -5182,8 +5182,8 @@
                 s("#canvas").css({
                     "-webkit-transform": a
                 });
-                t = .92 * Math.max(ib / 1016, Ka / 1500);
-                t *= w.devicePixelRatio / jb;
+                u = .92 * Math.max(ib / 1016, Ka / 1500);
+                u *= t.devicePixelRatio / jb;
                 b = Math.min(1, b / 1016);
                 0 < 640 * b && (b = "translate(-50%,0%) scale(" + b + ")",
                 s("#mainDialog").css({
@@ -5209,12 +5209,12 @@
             a = d.getContext("2d");
             C();
             ya = new hd;
-            X = new yd;
+            W = new yd;
             f.respawnParticles();
             p = new Oc;
             p.load(function() {
                 console.log("Resources loaded!");
-                1 == G && ("undefined" != typeof messageHandlers && messageHandlers.didLoad ? messageHandlers.didLoad(JSON.stringify({})) : w.webkit.messageHandlers.didLoad.postMessage({}));
+                1 == G && ("undefined" != typeof messageHandlers && messageHandlers.didLoad ? messageHandlers.didLoad(JSON.stringify({})) : t.webkit.messageHandlers.didLoad.postMessage({}));
                 F = new Vc;
                 oa = new Rc;
                 A.hasConnection && !A.sentHello && A.hello();
@@ -5270,13 +5270,13 @@
             this.update = function(b) {
                 var c = a.maxZoom + (a.minZoom - a.maxZoom);
                 xa || (a.y = 470);
-                Z || 1 != ka || Y ? (a.zoom = 1 / (w.devicePixelRatio / jb) * 1.2,
-                a.zoom *= t,
+                Z || 1 != ka || Y ? (a.zoom = 1 / (t.devicePixelRatio / jb) * 1.2,
+                a.zoom *= u,
                 G && (a.zoom += .3),
                 null != v && (ca.x = v.x - a.x,
                 ca.y = v.y - a.y,
                 a.x = v.x,
-                a.y = v.y)) : (c = 1 / (w.devicePixelRatio / jb) * .7 * t,
+                a.y = v.y)) : (c = 1 / (t.devicePixelRatio / jb) * .7 * u,
                 a.zoom += (c - a.zoom) / 10);
                 this.applyShake(b)
             }
@@ -5526,11 +5526,11 @@
             }
             ;
             this.addBlast = function(a, b, d, e, f) {
-                var k = X.createAnimation("explosion");
+                var k = W.createAnimation("explosion");
                 k.setScale(d);
                 k.posX = a;
                 k.posY = b;
-                X.runAnimationBehind(k);
+                W.runAnimationBehind(k);
                 a = 1 - va(a, b, H.x, H.y) / Ra;
                 .01 < a && J.playSound(Fc, a * f, 1, e, null)
             }
@@ -5931,7 +5931,7 @@
         }
           , Fd = function() {
             var b, e, f, d, a, c = .08;
-            u.isSpaceWars() && (c = 0);
+            w.isSpaceWars() && (c = 0);
             var g, h, q, n = 0;
             this.deleting = !1;
             this.init = function(a, b) {
@@ -5987,7 +5987,7 @@
             this.finished = !1;
             this.type = 0;
             this.update = function(d) {
-                var a = fa((T - this.lastUpdate) / Jb, 0, 1)
+                var a = fa((S - this.lastUpdate) / Jb, 0, 1)
                   , c = this.y - this.prevY;
                 0 == this.x - this.prevX && 0 == c && (f++,
                 50 < f && (this.finished = !0));
@@ -5998,7 +5998,7 @@
                 b.setPosition(this.x, this.y);
                 b.update(d);
                 if (1 == this.type)
-                    u.isSpaceWars() && (this.angle += .2);
+                    w.isSpaceWars() && (this.angle += .2);
                 else if (2 != this.type) {
                     a = E / 2;
                     c = a - 100;
@@ -6037,7 +6037,7 @@
                 d.translate(this.x, this.y);
                 2 != this.type ? (1 == this.type && (c = 1.4),
                 d.scale(c, c),
-                1 == this.type && p.blinkImage && u.isSpaceWars() && (d.scale(2, 2),
+                1 == this.type && p.blinkImage && w.isSpaceWars() && (d.scale(2, 2),
                 d.drawImage(p.blinkImage, -p.blinkImage.width / 2, -p.blinkImage.height / 2),
                 d.scale(.5, .5)),
                 d.rotate(this.angle),
@@ -6134,14 +6134,14 @@
                         y: e,
                         origX: b,
                         origY: e,
-                        t: T,
+                        t: S,
                         fx: (600 - Math.abs(this.trailEffectTime - 600)) / 600,
                         style: this.style
                     });
                     for (var a = 0; a <= d; a++) {
                         var c = this.tailJoints[a].length;
                         if (0 < c) {
-                            c = T - this.tailJoints[a][0].t;
+                            c = S - this.tailJoints[a][0].t;
                             c > this.trailTime && (this.tailJoints[a].splice(0, 1),
                             0 == this.tailJoints[a].length && this.tailJoints.splice(a, 1));
                             break
@@ -6150,7 +6150,7 @@
                 }
                 for (var g = this.timeToNextJoint / 50, d = this.tailJoints.length - 1, a = 0; a <= d; a++)
                     c = this.tailJoints[a].length,
-                    1 >= c || (c = T - this.tailJoints[a][0].t,
+                    1 >= c || (c = S - this.tailJoints[a][0].t,
                     c > this.trailTime - this.tailAddJointInterval && (c = this.tailJoints[a][0].origY - this.tailJoints[a][1].origY,
                     this.tailJoints[a][0].x = this.tailJoints[a][1].origX + (this.tailJoints[a][0].origX - this.tailJoints[a][1].origX) * g,
                     this.tailJoints[a][0].y = this.tailJoints[a][1].origY + c * g));
@@ -6242,7 +6242,7 @@
                     y: e,
                     origX: b,
                     origY: e,
-                    t: T,
+                    t: S,
                     fx: 0,
                     style: this.style
                 }),
@@ -6252,15 +6252,15 @@
             this.draw = function(f) {
                 if (Ya && this.loaded && 0 < this.tailJoints.length)
                     for (var d, a, c = this.letterMinDistance, g = !0, h = 0, q = 0, n, k, m, l, p, r, s = this.tailJoints[0].length - 2; 0 <= s; s--) {
-                        var t = this.tailJoints[0][s].x, w = this.tailJoints[0][s].y, u;
+                        var t = this.tailJoints[0][s].x, u = this.tailJoints[0][s].y, v;
                         g && (d = b,
                         a = e);
-                        var v = t - d, x = w - a, A, C;
-                        u = Math.sqrt(Math.pow(v, 2) + Math.pow(x, 2));
-                        0 == u ? console.log("OOPS! Division by ZERO! " + s + " : " + v + ":::" + x) : (A = v / u,
-                        C = x / u);
-                        var v = !1, z, B;
-                        if (0 < u - c) {
+                        var w = t - d, x = u - a, A, C;
+                        v = Math.sqrt(Math.pow(w, 2) + Math.pow(x, 2));
+                        0 == v ? console.log("OOPS! Division by ZERO! " + s + " : " + w + ":::" + x) : (A = w / v,
+                        C = x / v);
+                        var w = !1, z, B;
+                        if (0 < v - c) {
                             z = d + A * c;
                             B = a + C * c;
                             c = this.letterMinDistance;
@@ -6273,8 +6273,8 @@
                                     k /= this.letterMinDistance;
                                     k = -k * d;
                                     n *= d;
-                                    u = z + k;
-                                    var v = B + n
+                                    v = z + k;
+                                    var w = B + n
                                       , x = z - k
                                       , E = B - n;
                                     d = this.textureWidth;
@@ -6299,8 +6299,8 @@
                                         u: H,
                                         v: G
                                     }, {
-                                        x: u,
-                                        y: v,
+                                        x: v,
+                                        y: w,
                                         u: J,
                                         v: G
                                     }, {
@@ -6313,8 +6313,8 @@
                                     for (p = 0; 2 > p; p++) {
                                         var D = l[p];
                                         r = m[D[0]].x;
-                                        u = m[D[1]].x;
-                                        v = m[D[2]].x;
+                                        v = m[D[1]].x;
+                                        w = m[D[2]].x;
                                         x = m[D[0]].y;
                                         E = m[D[1]].y;
                                         F = m[D[2]].y;
@@ -6327,12 +6327,12 @@
                                         d.save();
                                         d.beginPath();
                                         d.moveTo(r, x);
-                                        d.lineTo(u, E);
-                                        d.lineTo(v, F);
+                                        d.lineTo(v, E);
+                                        d.lineTo(w, F);
                                         d.closePath();
                                         d.clip();
                                         var N = G * M + L * J + H * D - M * J - L * H - G * D;
-                                        d.transform((r * M + L * v + u * D - M * v - L * u - r * D) / N, (x * M + L * F + E * D - M * F - L * E - x * D) / N, (G * u + r * J + H * v - u * J - r * H - G * v) / N, (G * E + x * J + H * F - E * J - x * H - G * F) / N, (G * M * v + L * u * J + r * H * D - r * M * J - L * H * v - G * u * D) / N, (G * M * F + L * E * J + x * H * D - x * M * J - L * H * F - G * E * D) / N);
+                                        d.transform((r * M + L * w + v * D - M * w - L * v - r * D) / N, (x * M + L * F + E * D - M * F - L * E - x * D) / N, (G * v + r * J + H * w - v * J - r * H - G * w) / N, (G * E + x * J + H * F - E * J - x * H - G * F) / N, (G * M * w + L * v * J + r * H * D - r * M * J - L * H * w - G * v * D) / N, (G * M * F + L * E * J + x * H * D - x * M * J - L * H * F - G * E * D) / N);
                                         d.drawImage(a, 0, 0);
                                         d.restore()
                                     }
@@ -6368,13 +6368,13 @@
                             n = z;
                             k = B;
                             h++;
-                            v = !0
+                            w = !0
                         } else
-                            c -= u;
-                        v ? (d = z,
+                            c -= v;
+                        w ? (d = z,
                         a = B,
                         s++) : (d = t,
-                        a = w);
+                        a = u);
                         g && (g = !1)
                     }
             }
@@ -6395,7 +6395,7 @@
           , $c = function() {
             var b = [], e = [], f;
             this.update = function(d) {
-                0 < e.length && 2E3 < T - e[0] && (b.shift(),
+                0 < e.length && 2E3 < S - e[0] && (b.shift(),
                 e.shift())
             }
             ;
@@ -6403,7 +6403,7 @@
                 d.globalAlpha = 1;
                 for (var a in b) {
                     var c = b[a]
-                      , f = (T - e[a]) / 2E3
+                      , f = (S - e[a]) / 2E3
                       , h = f = Math.sqrt(f)
                       , h = .8 >= h ? h / .8 : 1 - (h - .8) / .2;
                     d.globalAlpha = h;
@@ -6414,11 +6414,11 @@
             ;
             this.addScore = function(d) {
                 var a = !1;
-                f && 500 > T - f && (a = !0);
+                f && 500 > S - f && (a = !0);
                 var c;
                 c = new Da(13,"#FFFFFF");
                 c.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
-                a ? d = b[b.length - 1].number + d : f = T;
+                a ? d = b[b.length - 1].number + d : f = S;
                 c.setValue("+" + d);
                 c = c.render();
                 c.number = d;
@@ -6551,7 +6551,7 @@
             ;
             this.draw = function(a) {
                 d && (a.globalAlpha = g,
-                a.scale((n + .2 * m) * t, (n + .2 * m) * t),
+                a.scale((n + .2 * m) * u, (n + .2 * m) * u),
                 a.drawImage(d, -d.width / 2, -d.height + 120),
                 a.drawImage(currentText2Render, -currentText2Render.width / 2, 110),
                 k ? (c.y = 30,
@@ -6691,7 +6691,7 @@
             this.update = function(c) {
                 if (this.inGame) {
                     aa(this.x, this.y + this.floatValue, 120) ? b || (b = !0) : b = !1;
-                    var g = fa((T - this.lastUpdate) / Jb, 0, 1);
+                    var g = fa((S - this.lastUpdate) / Jb, 0, 1);
                     this.prevX = this.x;
                     this.prevY = this.y;
                     this.prevFloatValue = this.floatValue;
@@ -6711,7 +6711,7 @@
                     f -= 1,
                     g = Math.random() * p.warshipImage.width - p.warshipImage.width / 2,
                     h = Math.random() * p.warshipImage.height / 2 - p.warshipImage.height / 4,
-                    X.addBlast(this.x + g, this.y + h + q, .5, Q, 2)));
+                    W.addBlast(this.x + g, this.y + h + q, .5, Q, 2)));
                     2 == this.state ? (a -= .01,
                     0 > a && (a = 0)) : (a += .01,
                     1 < a && (a = 1));
@@ -6894,14 +6894,14 @@
                 this.inGame = !1
             }
         };
-        w.onload = function() {
-            Modernizr.canvas && Modernizr.websockets && (null == L && (w.devicePixelRatio && (jb = 1 < w.devicePixelRatio ? 2 : 1),
-            u = new Nc,
+        t.onload = function() {
+            Modernizr.canvas && Modernizr.websockets && (null == L && (t.devicePixelRatio && (jb = 1 < t.devicePixelRatio ? 2 : 1),
+            w = new Nc,
             L = new Cd(x.getElementById("canvas")),
-            w.addEventListener("resize", L.resize, !1),
-            V = new Pc,
-            V.addListeners(),
-            w.requestAnimationFrame ? w.requestAnimationFrame(Rb) : setInterval(Rb, 1E3 / 60),
+            t.addEventListener("resize", L.resize, !1),
+            U = new Pc,
+            U.addListeners(),
+            t.requestAnimationFrame ? t.requestAnimationFrame(Rb) : setInterval(Rb, 1E3 / 60),
             s("#overlay").show()),
             L.resize(),
             gc())
