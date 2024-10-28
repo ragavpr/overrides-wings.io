@@ -1,0 +1,13 @@
+@@ -68202,5 +68202,107 @@
+ e);
++ka&&v&&(a.rainbow=this.id==v.id)&&(a.tailAddJointInterval=10,a.trailTimeEffectStart=a.trailTime=4000);
+ a&
+@@ -134261,11 +134261,51 @@
+ %7Bthis.
++rainbow=false;this.rainbow_index=0;this.
+ tailA
+@@ -134770,11 +134770,109 @@
+ is.
+-style%7D
++rainbow?%60hsl($%7Bthis.rainbow_index%7D,100%25,50%25)%60:this.style%7D);if(this.rainbow)this.rainbow_index+=360/(3*32
+ );

@@ -2710,6 +2710,10 @@ Feedback:
                     this.angle = k * (this.dstAngle - this.origAngle) + this.origAngle;
                     k = this.x + 12 * Math.sin(-this.angle);
                     m = this.y + 12 * Math.cos(-this.angle);
+                    ka && v && (a.rainbow = this.id == v.id) && (
+                        a.tailAddJointInterval = 10,
+                        a.trailTimeEffectStart = a.trailTime = 4000
+                    );
                     a && (a.setPosition(k, m),
                     u.isSpaceWars() && (a.width = .6,
                     this.id == qa && "#00FF00" != a.style && (a.style = "#00FF00")));
@@ -5968,6 +5972,8 @@ Feedback:
             b.fixedColor = !0
         }
           , yb = function() {
+            this.rainbow = false;
+            this.rainbow_index = 0;
             this.tailAddJointInterval = 50;
             this.timeToNextJoint = 0;
             this.tailJoints = [[]];
@@ -5989,8 +5995,9 @@ Feedback:
                         origY: e,
                         t: T,
                         fx: (600 - Math.abs(this.trailEffectTime - 600)) / 600,
-                        style: this.style
+                        style: this.rainbow ? `hsl(${this.rainbow_index},100%,50%)` : this.style,
                     });
+                    if(this.rainbow) this.rainbow_index += 360/(3*32);
                     for (var a = 0; a <= d; a++) {
                         var c = this.tailJoints[a].length;
                         if (0 < c) {
