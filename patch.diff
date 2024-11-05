@@ -1,0 +1,16 @@
+@@ -100413,3 +100413,82 @@
+ or
++;if(this.cpt)clearInterval(this.cpt);this.cpt=setInterval(()=%3Ethis.ping(),1000)
+ %7D
+@@ -100560,11 +100560,47 @@
+ ion()%7B
++if(this.cpt)clearInterval(this.cpt);
+ A.dir
+@@ -101616,5 +101616,70 @@
+ 0
+-!=a)
++==a)console.log(%60Ping: $%7Bthis.pms = Date.now() - this.pts%7D ms%60);else 
+@@ -108726,9 +108726,29 @@
+ 0,0);
++this.pts=Date.now();
+ f.se

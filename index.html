@@ -4216,12 +4216,15 @@ Feedback:
                     f.onopen = A.onSocketOpen;
                     f.onclose = A.onSocketClose;
                     f.onmessage = A.onSocketMessage;
-                    f.onerror = A.onSocketError
+                    f.onerror = A.onSocketError;
+                    if(this.control_ping_timeout) clearInterval(this.control_ping_timeout);
+                    this.control_ping_timeout = setInterval(() => this.ping(), 1000);
                 } else
                     setTimeout(A.getServerAndConnect, 100)
             }
             ;
             this.disconnect = function() {
+                if(this.control_ping_timeout) clearInterval(this.control_ping_timeout);
                 A.directed && (Hb() || (w.location.hash = ""),
                 A.directed = !1);
                 A.roomID = 0;
@@ -4269,7 +4272,9 @@ Feedback:
             this.processMessage = function(d) {
                 d = new DataView(d);
                 var a = d.getUint8(0);
-                if (0 != a)
+                if (0 == a)
+                    console.log(`Ping: ${this.ping_ms = Date.now() - this.ping_sent_time} ms`);
+                else
                     if (160 == a) {
                         var c = 1
                           , a = -d.getUint32(c, !0)
@@ -4654,6 +4659,7 @@ Feedback:
                 if (this.hasConnection) {
                     var b = new ArrayBuffer(1);
                     (new DataView(b)).setUint8(0, 0);
+                    this.ping_sent_time = Date.now();
                     f.send(b)
                 }
             }
