@@ -1,16 +1,39 @@
-@@ -100413,3 +100413,82 @@
- or
+@@ -54707,6 +54707,17 @@
+ 1,
+-F,
++sit=!1,F,C,si
+ C,
+@@ -54975,8 +54975,103 @@
+ %7Dif(
++sit)%7BsiC=x.createElement(%22canvas%22);var sir=siC.getContext(%222d%22);this.renderSrvinfo(sir,siC)%7Dif(
+ 0%3Cna
+@@ -55194,8 +55194,49 @@
+ (I);
++siC&&0%3CGb&&(!Y%7C%7CAa)&&this.drawSrvinfo(I);
+ if(v
+@@ -65211,50 +65211,978 @@
+ .
+-drawLeaderboard=function(a)%7Ba.drawImage(C,Ka-R-5
++renderSrvinfo=function(a,c)%7Blet l,r,R=270*t,S=40*t,z=30*t,d=5*t,g=(G?33:23)*t,h=21*t,q=G?%22Arial-BoldMT%22:%22Arial Black%22;c.width=R;c.height=S;a.fillStyle=%22rgba(0,0,0,0.3)%22;Ea(a,0,0,R,S,z);a.fillStyle=%22rgba(204,84,0,1.0)%22;Ea(a,R*0.5,S*0.04,R*0.5,S*0.96,z);a.fillStyle=%22rgba(254,102,3,1.0)%22;Ea(a,R*0.5,0,R*0.5,S*0.96,z);a.textBaseline=%22hanging%22;a.font=g+%22px 'proxima-nova-1','proxima-nova-2', %22+q;l=%60#$%7BA.roomID%7D %7C $%7BA.roomNumber%7D%60;r=a.measureText(l).width;a.fillStyle=%22rgba(255,255,0,0.5)%22;a.fillText(l,R*0.75-r/2,12*t+1);a.fillStyle=%22rgba(178,32,0,1.0)%22;a.fillText(l,R*0.75-r/2,12*t);%0Aa.font=h+%22px 'proxima-nova-1','proxima-nova-2', %22+q;l=%60$%7BA.pms%7D ms%60;r=a.measureText(l).width;let col=120-0.24*Math.min(Math.max(A.pms,0),500);a.fillStyle=%60hsla($%7Bcol%7D,100%25,40%25,1)%60;a.fillText(l,R*0.25-r/2,12*t+1);a.fillStyle=%60hsla($%7Bcol%7D,100%25,60%25,1)%60;a.fillText(l,R*0.25-r/2,12*t);%7D;this.drawLeaderboard=function(a)%7Ba.drawImage(C,Ka-R-5,5)%7D;this.drawSrvinfo=function(a)%7Ba.drawImage(siC,Ka-2*R-10
+ ,
+@@ -66669,12 +66669,51 @@
+ ;this.
++refreshSrvinfo=function()%7Bsit=!0%7D;this.
+ addBon
+@@ -101526,6 +101526,85 @@
+ ror
 +;if(this.cpt)clearInterval(this.cpt);this.cpt=setInterval(()=%3Ethis.ping(),1000)
- %7D
-@@ -100560,11 +100560,47 @@
+ %7Del
+@@ -101674,12 +101674,48 @@
  ion()%7B
 +if(this.cpt)clearInterval(this.cpt);
- A.dir
-@@ -101616,5 +101616,70 @@
+ A.dire
+@@ -102730,6 +102730,60 @@
  0
 -!=a)
-+==a)console.log(%60Ping: $%7Bthis.pms = Date.now() - this.pts%7D ms%60);else 
-@@ -108726,9 +108726,29 @@
- 0,0);
++==a)%7Bthis.pms=Date.now()-this.pts;F.refreshSrvinfo()%7Delse 
+ i
+@@ -109828,12 +109828,32 @@
+ (0,0);
 +this.pts=Date.now();
- f.se
+ f.send

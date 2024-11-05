@@ -2016,12 +2016,17 @@ Feedback:
             }
         }
           , Vc = function() {
-            var b, e, f, d = 0, a = !0, c, g, h, q, n = new Sc, k, m, l, y, r, K, pa, s, w, z = -1, ta = !1, F, C, P, R, S, O, Vb, ea = 1, Ga = 0, D, Fa, ua, E, I = 0, Ta, Ha, Ia, H = 0, ab, L, X = -1, U = !1, V = 0, Q, W, $, M, N, da, aa = null, ja = null, ca, fa, ia, ha, wa, na = 0, oa = 0, va = null, la, ma, ya, sa;
+            var b, e, f, d = 0, a = !0, c, g, h, q, n = new Sc, k, m, l, y, r, K, pa, s, w, z = -1, ta = !1, sit = !1, F, C, siC, P, R, S, O, Vb, ea = 1, Ga = 0, D, Fa, ua, E, I = 0, Ta, Ha, Ia, H = 0, ab, L, X = -1, U = !1, V = 0, Q, W, $, M, N, da, aa = null, ja = null, ca, fa, ia, ha, wa, na = 0, oa = 0, va = null, la, ma, ya, sa;
             this.draw = function(I) {
                 if (ta) {
                     C = x.createElement("canvas");
                     var r = C.getContext("2d");
                     this.renderLeaderboard(r, C)
+                }
+                if (sit) {
+                    siC = x.createElement("canvas");
+                    var sir = siC.getContext("2d");
+                    this.renderSrvinfo(sir, siC)
                 }
                 if (0 < na)
                     this.DrawWinnerLabel(I);
@@ -2029,6 +2034,7 @@ Feedback:
                     this.DrawWarshipDestroyedLabel(I);
                 else {
                     C && 0 < Gb && (!Y || Aa) && this.drawLeaderboard(I);
+                    siC && 0 < Gb && (!Y || Aa) && this.drawSrvinfo(I);
                     if (v && !Y) {
                         I.save();
                         G ? I.scale(1.5 * t, 1.5 * t) : I.scale(t, t);
@@ -2539,8 +2545,49 @@ Feedback:
                     }
             }
             ;
+            this.renderSrvinfo = function(a, c) {
+                let R = 270 * t;
+                let S = 40 * t;
+                let z = 30 * t;
+                c.width = R;
+                c.height = S;
+                
+                let d = 5 * t;
+                let g = (G ? 33 : 23) * t;
+                let h = 21 * t;
+                let q = G ? "Arial-BoldMT" : "Arial Black";
+                
+                a.fillStyle = "rgba(0,0,0,0.3)";
+                Ea(a, 0, 0, R, S, z);
+                a.fillStyle = "rgba(204,84,0,1.0)";
+                Ea(a, R*0.5, S*0.04, R*0.5, S*0.96, z);
+                a.fillStyle = "rgba(254,102,3,1.0)";
+                Ea(a, R*0.5, 0, R*0.5, S*0.96, z); 
+                a.textBaseline = "hanging";
+                
+                a.font = g + "px 'proxima-nova-1','proxima-nova-2', " + q;
+                let l = `#${A.roomID} | ${A.roomNumber}`
+                let r = a.measureText(l).width;
+                a.fillStyle = "rgba(255,255,0,0.5)";
+                a.fillText(l, R*0.75 - r / 2, 12*t+1);
+                a.fillStyle = "rgba(178,32,0,1.0)";
+                a.fillText(l, R*0.75 - r / 2, 12*t);
+                
+                a.font = h + "px 'proxima-nova-1','proxima-nova-2', " + q;
+                l = `${A.ping_ms} ms`
+                r = a.measureText(l).width;
+                let col = 120-0.24*Math.min(Math.max(A.ping_ms, 0), 500);
+                a.fillStyle = `hsla(${col},100%,40%,1)`
+                a.fillText(l, R*0.25 - r / 2, 12*t+1    );
+                a.fillStyle = `hsla(${col},100%,60%,1)`
+                a.fillText(l, R*0.25 - r / 2, 12*t);
+
+            }
             this.drawLeaderboard = function(a) {
                 a.drawImage(C, Ka - R - 5, 5)
+            }
+            this.drawSrvinfo = function(a) {
+                a.drawImage(siC, Ka - 2*R - 10, 5)
             }
             ;
             this.addActivityMessage = function(a) {
@@ -2586,6 +2633,9 @@ Feedback:
             this.refreshLeaderboard = function(a) {
                 F = a;
                 ta = !0
+            }
+            this.refreshSrvinfo = function() {
+                sit = !0
             }
             ;
             this.addBonus = function(a, c) {
@@ -4272,8 +4322,10 @@ Feedback:
             this.processMessage = function(d) {
                 d = new DataView(d);
                 var a = d.getUint8(0);
-                if (0 == a)
-                    console.log(`Ping: ${this.ping_ms = Date.now() - this.ping_sent_time} ms`);
+                if (0 == a) {
+                    this.ping_ms = Date.now() - this.ping_sent_time;
+                    F.refreshSrvinfo();
+                }
                 else
                     if (160 == a) {
                         var c = 1
