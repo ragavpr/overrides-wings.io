@@ -1476,6 +1476,7 @@ Feedback:
                     d.setFrameInfo(f, this.gameSheet);
                     this.frames[f[0]] = d
                 }
+                this.frames["bomb"] = this.frames["bomb"].renderTintedFrame("#FFFFFF77");
                 for (e = 1; 8 >= e; e++)
                     b = this.frames["plane" + e].renderTintedFrame("#FFFFFF").canvas,
                     this.whitePlaneImages["plane" + e] = b;
