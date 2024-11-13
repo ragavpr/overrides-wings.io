@@ -640,8 +640,9 @@ Feedback:
         let Zb, $b;
         function ac(b) {
             bc = b;
-            for (var e = 0; 5 >= e; e++) {
-                var f = e
+            let e;
+            for (e = 0; 5 >= e; e++) {
+                let f = e
                   , d = p.planes[f][b][7]
                   , a = x.createElement("canvas")
                   , c = a.getContext("2d")
@@ -655,7 +656,7 @@ Feedback:
                 a = void 0;
                 c = x.styleSheets.length;
                 for (g = 0; g < c; g++) {
-                    var h = x.styleSheets[g];
+                    let h = x.styleSheets[g];
                     if (null == h.href) {
                         a = h;
                         break
@@ -669,7 +670,7 @@ Feedback:
         }
         function cc(b) {
             dc = b;
-            for (var e = 0; 5 >= e; e++)
+            for (let e = 0; 5 >= e; e++)
                 s("#checkD" + e).hide();
             s("#checkD" + b).show()
         }
@@ -679,15 +680,15 @@ Feedback:
             Ab()
         }
         function fc() {
-            var b = -1 < navigator.userAgent.indexOf("Chrome")
+            let b = -1 < navigator.userAgent.indexOf("Chrome")
               , e = -1 < navigator.userAgent.indexOf("Safari");
             b && e && (e = !1);
             return e
         }
         function gc() {
-            var b = "Low";
+            let b = "Low";
             Ba && (b = "High");
-            var e = s("#graphicsID")[0];
+            let e = s("#graphicsID")[0];
             e && (e.childNodes[0].data = "Graphics: " + b)
         }
         function hc() {
@@ -710,7 +711,7 @@ Feedback:
             eb = !1
         }
         function jc() {
-            var b = "images/sound_off.png";
+            let b = "images/sound_off.png";
             1 == N ? da = N = 0 : 0 == N && (N = 1,
             da = .05,
             b = "images/sound_on.png");
@@ -747,7 +748,7 @@ Feedback:
                 kc++);
             else {
                 s("#mpu-top").show();
-                var b = s("#ldr-top");
+                let b = s("#ldr-top");
                 b && b.show();
                 refreshSlots()
             }
@@ -762,9 +763,9 @@ Feedback:
         }
         function mc() {
             if (Aa) {
-                var b = Math.floor((T - Eb) / 1E3);
+                let b = Math.floor((T - Eb) / 1E3);
                 0 > b && (b = 0);
-                var e = 10 - b;
+                let e = 10 - b;
                 0 > e ? (Aa = !1,
                 Ab()) : (b = s("#countdownText")[0],
                 e = x.createTextNode(e),
@@ -800,7 +801,7 @@ Feedback:
                 if (0 <= b) {
                     Aa = !0;
                     s("#beta").hide();
-                    var e = s("#curScore")[0], f;
+                    let e = s("#curScore")[0], f;
                     f = u.isInstagib() ? x.createTextNode("Kills: " + b) : x.createTextNode("Current Score: " + b);
                     e.replaceChild(f, e.firstChild)
                 }
@@ -832,14 +833,14 @@ Feedback:
             }
         }
         function Wa(b) {
-            var e = "";
+            let e = "";
             10 > b && (e = "0");
             return e + parseInt(b)
         }
         function oc(b) {
-            var e = parseInt(b / 1E3);
+            let e = parseInt(b / 1E3);
             b = parseInt(e / 60);
-            var e = e - 60 * b
+            e = e - 60 * b
               , f = parseInt(b / 60);
             b -= 60 * f;
             return 0 == f ? Wa(b) + ":" + Wa(e) : Wa(f) + ":" + Wa(b) + ":" + Wa(e)
@@ -851,7 +852,7 @@ Feedback:
             return 50 > +new Date - T
         }
         function aa(b, e, f) {
-            var d = z.getBounds();
+            let d = z.getBounds();
             return b + f >= d[0].x && b - f <= d[1].x && e + f >= d[0].y && e - f <= d[1].y ? !0 : !1
         }
         function fa(b, e, f) {
@@ -901,7 +902,7 @@ Feedback:
             b.fill()
         }
         function fb(b, e, f) {
-            var d = b * Math.cos(f) - e * Math.sin(f);
+            let d = b * Math.cos(f) - e * Math.sin(f);
             b = e * Math.cos(f) + b * Math.sin(f);
             return {
                 x: d,
@@ -940,10 +941,11 @@ Feedback:
         G && (xa = !0);
         let kc = 0, ob = !0, Na = !0, pb = !0, qb = !0, rb = !0, Ya = !0, sb = !0, tb = !0, Pb = !0, L, X, p, A, W = {}, B = {}, U = {}, M = {}, ja = [], v, ra, Qb, Oa = 0, z, F, oa, ya, J, Za = {}, ub = 0, u, sa, Pa = {}, eb = !1;
         (function() {
-            var b = w.location.search;
+            let b = w.location.search;
             "?" == b.charAt(0) && (b = b.slice(1));
-            for (var b = b.split("&"), e = 0; e < b.length; e++) {
-                var f = b[e].split("=");
+            b = b.split("&")
+            for (let e = 0; e < b.length; e++) {
+                let f = b[e].split("=");
                 Pa[f[0]] = f[1]
             }
         }
@@ -957,7 +959,7 @@ Feedback:
         });
         let vb = null
           , Bc = function() {
-            var b = "";
+            let b = "";
             Ib && (b = "s");
             s.get("http" + b + "://ip2l.wings.io/cc", function(b) {
                 vb = b.substring(0, 2);
@@ -968,7 +970,7 @@ Feedback:
         void 0 == w.localStorage.wingsCCTime || void 0 != w.localStorage.wingsCC && 2 != w.localStorage.wingsCC.length ? Bc() : 288E5 < +new Date - w.localStorage.wingsCCTime ? Bc() : vb = w.localStorage.wingsCC;
         let Rb = function() {
             T = +new Date;
-            var b = 0;
+            let b = 0;
             0 < Mb && (b = T - Mb);
             Mb = T;
             L.update(b);
@@ -1041,7 +1043,7 @@ Feedback:
         w.copyRoomLink = function() {
             s("#copyLink").hide();
             s("#copyLinkBox").show();
-            var b = s("#roomlinkInput")[0];
+            let b = s("#roomlinkInput")[0];
             b.value = "http://classic.wings.io/#" + A.roomID;
             eb = !0;
             fc() && (s("#copyButton")[0].childNodes[0].data = "Close",
@@ -1054,7 +1056,7 @@ Feedback:
         }
         ;
         w.setCopy = function() {
-            var b = s("#roomlinkInput")[0];
+            let b = s("#roomlinkInput")[0];
             b.value = "http://wings.io/#" + A.roomID;
             b.setSelectionRange(0, b.value.length);
             b.select();
@@ -1107,7 +1109,7 @@ Feedback:
             wb = null);
             Lb = wa = !0;
             da = 1 * N;
-            for (var b in B)
+            for (let b in B)
                 B[b].clearTrail()
         }
         ;
