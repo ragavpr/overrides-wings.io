@@ -365,18 +365,19 @@
 <script src="lib/advertisement.js"></script>
 <script async="async" src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
 <script>
-        var debug = false;
-        var queryString = {};
-        var adsense = true;
-        var showads = false;
+        let debug = false;
+        let queryString = {};
+        let adsense = true;
+        let showads = false;
+        let googletag, hasTopAd, hasAdblock;
         (function(){
-            var suffix = window.location.search;
+            let suffix = window.location.search;
             if(suffix.charAt(0) == '?')
                 suffix = suffix.slice(1);
-            var array = suffix.split('&');
-            for (var i = 0; i < array.length; i++) {
-                var suffixPart = array[i].split('=');
-                var p2 = suffixPart[1];
+            let array = suffix.split('&');
+            for (let i = 0; i < array.length; i++) {
+                let suffixPart = array[i].split('=');
+                let p2 = suffixPart[1];
                 if(!p2) p2 = 1;
                 queryString[suffixPart[0]] = p2;
             }
@@ -384,8 +385,8 @@
         if(!showads)
         {
             window['ads'] = [];
-            var hasAdblock = (document.getElementById("ads") == null);
-            var hasTopAd = false;
+            hasAdblock = (document.getElementById("ads") == null);
+            hasTopAd = false;
             if(window.innerHeight > 980){
                 hasTopAd = true;
             }
@@ -393,7 +394,7 @@
                 hasTopAd = false;
             }
 
-            var googletag = googletag || {};
+            googletag = googletag || {};
             googletag.cmd = googletag.cmd || [];
             googletag.cmd.push(function() {
                 window['ads'].push(googletag.defineSlot('/77853486/wings_mainpage_300x250', [300, 250], 'mpu-top').addService(googletag.pubads()));
