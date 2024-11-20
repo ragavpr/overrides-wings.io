@@ -773,9 +773,6 @@ Feedback:
           , za = 16
           , bb = 128
           , cb = 256
-          , b = []
-          , e = []
-          , f
           , td = "shot"
           , Yb = "laser"
           , sd = "kinglaser"
@@ -2305,9 +2302,10 @@ Feedback:
               , ya
               , sa;
             this.draw = function(I) {
+                let r, K, P, O, R, S;
                 if (ta) {
                     C = x.createElement("canvas");
-                    var r = C.getContext("2d");
+                    r = C.getContext("2d");
                     this.renderLeaderboard(r, C)
                 }
                 if (0 < na)
@@ -2319,18 +2317,18 @@ Feedback:
                     if (v && !Y) {
                         I.save();
                         G ? I.scale(1.5 * t, 1.5 * t) : I.scale(t, t);
-                        var K = p.frames.indicator;
+                        K = p.frames.indicator;
                         I.translate(K.width / 2 + 6, K.height / 2 + 6);
                         K.draw(I);
                         this.DrawCurrentWeaponIcon(I, v.weapon);
-                        var r = 19
+                            r = 19
                           , P = 0;
                         G && (r = 24,
                         P = -5);
                         null == pa && (pa = new Da(r,"#FFFFFF"));
-                        var R = u.isInstagib();
+                        R = u.isInstagib();
                         if (z != v.GetAmmo() || null == s) {
-                            var S = "\u221e";
+                            S = "\u221e";
                             R || (z = v.GetAmmo(),
                             -1 < z && (S = z));
                             pa.setValue(S);
@@ -2368,7 +2366,7 @@ Feedback:
                         h.setSecondColor("#a20400"),
                         q && (q.setColor("#ff0608"),
                         q.setSecondColor("#a20400")));
-                        var r = h.render(), O;
+                        r = h.render(), O;
                         f && (O = q.render());
                         I.globalAlpha = K;
                         O && I.drawImage(O, .5 * canvas.width - O.width / 2, P - 5);
@@ -2444,9 +2442,9 @@ Feedback:
             };
             this.DrawKing = function(a) {
                 if (F && 0 < F.length && 0 < Object.keys(B).length) {
-                    var c = B[F[0]];
+                    let c = B[F[0]], d;
                     if (c) {
-                        var d = ga(c.name);
+                        d = ga(c.name);
                         v && I != c.id && c.id == v.id && J.playSound(Tc, 1, 1, 1, null);
                         I = c.id;
                         d != Fa && (c = 25,
@@ -2475,9 +2473,10 @@ Feedback:
             };
             this.DrawLaserDeployed = function(a) {
                 a.save();
+                let c, d;
                 if (Ma != X) {
                     X = Ma;
-                    var c = 25;
+                    c = 25;
                     G && (c = 35);
                     L = new ba(c * t,"#fbc521","#c78109");
                     Ma ? L.setValue("     Super Weapon: " + Ma) : L.setValue("     Find The Super Weapon!");
@@ -2486,7 +2485,7 @@ Feedback:
                 }
                 c = .05 * canvas.height;
                 a.drawImage(ab, .5 * canvas.width - ab.width / 2, c);
-                var d = 30;
+                d = 30;
                 Ba || (d = 20);
                 a.translate(.5 * canvas.width - ab.width / 2 + d, c + ab.height / 2);
                 a.scale(t, t);
@@ -2511,11 +2510,11 @@ Feedback:
             };
             this.DrawScore = function(a) {
                 if (0 < v.rank) {
-                    var c = 16 * t
+                    let c = 16 * t
                       , d = "Arial Black";
                     G && (c = 36 * t,
                     d = "Arial-BoldMT");
-                    var b = P * t
+                    let b = P * t
                       , g = b
                       , h = 30 * t
                       , e = 5 * t
@@ -2547,7 +2546,7 @@ Feedback:
             this.DrawWarmupTime = function(a) {
                 if (U) {
                     U = !1;
-                    var c = u.endTime - T;
+                    let c = u.endTime - T;
                     if (0 > parseInt(c))
                         return;
                     W = new ba(23 * t,u.getEventColor(),"#6e3800");
@@ -2561,8 +2560,8 @@ Feedback:
                     M = Q.render()
                 }
                 if (M) {
-                    var c = .8 * canvas.height
-                      , d = N.width
+                    let c = .8 * canvas.height, d;
+                        d = N.width
                       , d = da.width > d ? da.width : d
                       , d = M.width > d ? M.width : d;
                     a.fillStyle = "#000000";
@@ -2577,7 +2576,7 @@ Feedback:
             this.DrawEventLabel = function(a) {
                 if (U) {
                     U = !1;
-                    var c = u.endTime - T;
+                    let c = u.endTime - T;
                     0 > parseInt(c) && (c = 0);
                     W = new ba(25 * t,u.getEventColor(),"#6e3800");
                     W.setValue(u.getEventName());
@@ -2587,7 +2586,7 @@ Feedback:
                     M = Q.render()
                 }
                 if (M) {
-                    var c = .04 * canvas.height
+                    let c = .04 * canvas.height
                       , d = M.width < N.width ? N.width : M.width;
                     a.fillStyle = "#000000";
                     a.globalAlpha = .3;
@@ -2605,7 +2604,7 @@ Feedback:
                 wa.setValue(aa),
                 renderedWinnerNameCachedText = wa.render());
                 if (ha) {
-                    var c = .13 * canvas.height
+                    let c = .13 * canvas.height
                       , d = ha.width > renderedWinnerNameCachedText.width ? ha.width : renderedWinnerNameCachedText.width;
                     a.fillStyle = "#000000";
                     a.globalAlpha = .3;
@@ -2623,7 +2622,7 @@ Feedback:
                 null == va ? ya.setValue("ESCAPED!") : ya.setValue("DESTROYED A WARSHIP!"),
                 sa = ya.render());
                 if (ma) {
-                    var c = .13 * canvas.height
+                    let c = .13 * canvas.height
                       , d = ma.width > sa.width ? ma.width : sa.width;
                     a.fillStyle = "#000000";
                     a.globalAlpha = .3;
@@ -2641,7 +2640,7 @@ Feedback:
                 ja = aa,
                 fa = ca.render());
                 if (fa) {
-                    var c = 10 * t;
+                    let c = 10 * t;
                     a.drawImage(fa, canvas.width - fa.width - c, canvas.height - fa.height - c)
                 }
             };
@@ -2654,7 +2653,7 @@ Feedback:
                 Ga = 2)) : 2 == Ga && (ea += .15,
                 1 <= ea && (ea = 1,
                 Ga = 0));
-                var d = 0, b = 0, g = 0, h, e = !0;
+                let d = 0, b = 0, g = 0, h, e = !0;
                 switch (O) {
                 case Ua:
                     d = 254;
@@ -2698,7 +2697,7 @@ Feedback:
                     return
                 }
                 a.save();
-                var k = Math.sqrt(ea);
+                let k = Math.sqrt(ea);
                 a.translate(0, -16);
                 a.scale(k, k);
                 a.translate(0, 16);
@@ -2733,18 +2732,18 @@ Feedback:
             this.renderLeaderboard = function(a, c) {
                 P = 270;
                 S = 0;
-                var d = 5 * t, b = 10 * t, g = 23 * t, h = 18 * t, e, k = 60 * t, n = 5 * t, f = 32, q = "Arial Black";
+                let d = 5 * t, b = 10 * t, g = 23 * t, h = 18 * t, e, k = 60 * t, n = 5 * t, f = 32, q = "Arial Black", I = 0, l, r, y, m;
                 G && (f = 42,
                 P = 300,
                 g = 33 * t,
                 h = 28 * t,
                 q = "Arial-BoldMT");
                 e = S += d + g + d;
-                var m = F.length;
+                m = F.length;
                 G && (m = 5);
                 10 < m && (m = 10);
-                for (var I = 0, l = 0; l < m; l++) {
-                    var r = B[F[l]];
+                for (l = 0; l < m; l++) {
+                    r = B[F[l]];
                     r && (S += h + b,
                     r = a.measureText(ga(r.name)).width,
                     I < r && (I = r))
@@ -2801,7 +2800,7 @@ Feedback:
                                 a.restore());
                             else {
                                 a.save();
-                                var y = 38;
+                                y = 38;
                                 9 == l && (y = 50);
                                 a.translate(y * t * f + I, e + g + 7 * t * f);
                                 a.scale(t * f, t * f);
@@ -2882,12 +2881,12 @@ Feedback:
             };
             this.draw = function(e) {
                 e.globalAlpha = 1;
-                var d = canvas.height - 180 * t, a;
+                let d = canvas.height - 180 * t, a;
                 for (a in b)
                     e.drawImage(b[a], 25, d + 26 * t + 5 + 14 * a * t + 15 * a * t)
             };
             this.addActivityMessage = function(f) {
-                var d = new Da(14 * t,"#EEEEEE");
+                let d = new Da(14 * t,"#EEEEEE");
                 d.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
                 d.setValue("\u2022 " + f);
                 d.setUsingRoundedFrame(!0);
@@ -2899,7 +2898,7 @@ Feedback:
                 5 < b.length && (b.shift(),
                 e.shift());
                 f = 0;
-                for (var a in b)
+                for (let a in b)
                     d = b[a].width + 5 + 5,
                     d > f && (f = d)
             }
@@ -2982,7 +2981,7 @@ Feedback:
             this.ammo = -1;
             this.update = function(b) {
                 if (this.inGame) {
-                    var g = 400;
+                    let g = 400, l;
                     ea && this.weapon == za && (g = 800);
                     aa(this.x, this.y, g) ? pa || (a && a.clear(),
                     c && c.clear(),
@@ -2995,10 +2994,10 @@ Feedback:
                     L.moveLeft && (this.controlAngle += this.rotSpeed);
                     L.moveRight && (this.controlAngle -= this.rotSpeed);
                     360 < this.controlAngle ? this.controlAngle = 0 : 0 > this.controlAngle && (this.controlAngle = 360);
-                    var k = fa((T - this.lastUpdate) / Jb, 0, 1);
+                    let k = fa((T - this.lastUpdate) / Jb, 0, 1);
                     this.prevX = this.x;
                     this.prevY = this.y;
-                    var m = k * (this.dstY - this.origY) + this.origY;
+                    let m = k * (this.dstY - this.origY) + this.origY;
                     this.x = k * (this.dstX - this.origX) + this.origX;
                     this.y = m;
                     this.angle = k * (this.dstAngle - this.origAngle) + this.origAngle;
@@ -3018,7 +3017,7 @@ Feedback:
                     m = k - 150;
                     if (this.y > m && this.y < k && 0 >= h) {
                         h = 5;
-                        var l = Math.random() / 2
+                        l = Math.random() / 2
                           , m = (.5 + (.5 - (k - this.y) / (k - m) * .5)) * (.95 + l)
                           , l = 20 * Math.sin(this.angle);
                         oa.addSplash(this.x - l, k + 5 * Math.random(), m, !0)
@@ -3079,6 +3078,7 @@ Feedback:
             };
             this.draw = function(b, h) {
                 if (this.inGame && pa) {
+                    let e, f, K, s, v, R, w, S, O, t;
                     a && a.draw(b);
                     c && c.draw(b);
                     n || (b.save(),
@@ -3102,7 +3102,7 @@ Feedback:
                         b.scale(.8, .8 * this.flipLastImage);
                         b.rotate((this.angle - Math.PI / 2) * this.flipLastImage);
                         b.translate(-15, -4);
-                        var e = 1;
+                        e = 1;
                         60 > q ? e = q / 60 : 240 < q && (e = (300 - q) / 60);
                         b.globalAlpha = e;
                         p.frames.punch.draw(b);
@@ -3125,7 +3125,7 @@ Feedback:
                     void 0 == this.lastImageReflex && (this.lastImageReflex = this.planeImagesReflex[0]);
                     this.isInvulnerable() && d && (b.globalAlpha = .3);
                     this.lastImage.draw(b);
-                    var f = this.decalFrames[e - 1];
+                    f = this.decalFrames[e - 1];
                     void 0 == f && (f = this.decalFrames[0]);
                     f.draw(b);
                     16 < this.speed ? (C += .06,
@@ -3157,12 +3157,12 @@ Feedback:
                         g > .5 * Math.PI && g < .5 * Math.PI + Math.PI || (e = !0);
                         if (this.isShooting) {
                             b.save();
-                            var K = this.x - 10 * Ga
+                                K = this.x - 10 * Ga
                               , s = this.y - 10 * D
                               , f = 500;
                             ea && (f = Math.sqrt(K * K + s * s) - 10);
                             100 > f && (f = 100);
-                            var v = p.frames.laser_opening.height
+                                v = p.frames.laser_opening.height
                               , R = Fa / 50
                               , w = 1
                               , S = .75 * Math.PI
@@ -3172,7 +3172,7 @@ Feedback:
                             b.translate(this.x, this.y);
                             b.rotate(this.angle + Math.PI);
                             e ? b.translate(2, 22) : b.translate(-2, 22);
-                            var O = s = Math.sin(R) / Math.sin(S)
+                                O = s = Math.sin(R) / Math.sin(S)
                               , t = !0;
                             K && (R < .5 * Math.PI ? t = !1 : (R -= .5 * Math.PI,
                             O = Math.sin(R) / Math.sin(S)));
@@ -3217,10 +3217,10 @@ Feedback:
             };
             this.drawReflection = function(a, c) {
                 if (this.inGame && pa) {
-                    var b = E / 2
+                    let b = E / 2
                       , d = b - this.y;
                     if (!(0 > d || 170 < d)) {
-                        var h = d / 170;
+                        let h = d / 170;
                         a.save();
                         a.translate(this.x, b + d - 25);
                         a.scale(.8, .8 * -this.flipLastImage * (1 + 4 * h));
@@ -3235,7 +3235,7 @@ Feedback:
             };
             this.drawInput = function(a) {
                 if (this.inGame) {
-                    var c = -V.angle + Math.PI
+                    let c = -V.angle + Math.PI
                       , b = !V.hover;
                     .01 >= b && (b = .3);
                     a.save();
@@ -3263,7 +3263,7 @@ Feedback:
                 if (this.inGame) {
                     a.lineWidth = 4;
                     a.save();
-                    var h = 1;
+                    let h = 1;
                     0 == ha && (h = 1 + 2 * (1 - d));
                     a.beginPath();
                     d = "hsla(43,100%," + (100 - 40 * d) + "%,1.0)";
@@ -3277,6 +3277,7 @@ Feedback:
             };
             this.drawInfo = function(a) {
                 if (this.inGame && pa) {
+                    let c, d;
                     a.save();
                     a.translate(this.x, this.y);
                     if (!u.isInstagib()) {
@@ -3286,9 +3287,9 @@ Feedback:
                         a.shadowBlur = 0;
                         a.shadowColor = "rgba(255, 255, 255, 0.7)";
                         a.lineWidth = 1;
-                        var c = 28;
+                        c = 28;
                         qa == this.id && (c *= 2);
-                        var d = 127.5;
+                        d = 127.5;
                         127.5 > this.energy && 63.75 < this.energy ? d = 30 : 63.75 > this.energy && (d = 0);
                         a.fillStyle = "hsl(" + d + ", 100%, 50%)";
                         a.fillRect(-c / 2 + 0, 20, this.energy / 255 * c, 8);
@@ -3348,7 +3349,7 @@ Feedback:
                 la() && (this.highlightValue = 1)
             };
             this.setScore = function(a) {
-                var c = a - this.score;
+                let c = a - this.score;
                 0 < c && this == v && (K || (K = new $c),
                 la() && K.addScore(c));
                 this.score = a
@@ -3366,11 +3367,11 @@ Feedback:
             };
             this.setFlagInfo = function(b) {
                 if (0 < b) {
-                    var d = b & 255;
+                    let d = b & 255;
                     b >>= 8;
-                    var g = b & 255;
+                    let g = b & 255;
                     b >>= 8;
-                    var h = 0 < (b & 4) ? !0 : !1
+                    let h = 0 < (b & 4) ? !0 : !1
                       , e = 0 < (b & 2) ? !0 : !1;
                     G = 0 < (b & 8) ? !0 : !1;
                     c = new ad;
@@ -3492,6 +3493,7 @@ Feedback:
                 0 <= a && 24 > a && (f[a] += c)
             }
             this.update = function(b) {
+                let k, m, l, y;
                 c = 1.1 * canvas.width / z.zoom;
                 g = c / 25;
                 a = Math.floor(H.x / g);
@@ -3503,17 +3505,17 @@ Feedback:
                 e.splice(0, 1),
                 e.push(0)));
                 d = a;
-                for (var k = 0; 25 > k; k++)
+                for (k = 0; 25 > k; k++)
                     e[k] = 2 * f[k] - e[k];
                 k = f;
                 f = e;
                 e = k;
-                var k = f[0]
+                    k = f[0]
                   , m = f[0]
                   , l = f[1];
                 f[0] = .99 * (.9 * m + .5 * (k + l) * (1 - .9));
                 f[0] = fa(f[0], -100, 100);
-                for (var y = 1; 24 > y; ++y)
+                for (y = 1; 24 > y; ++y)
                     k = m,
                     m = l,
                     l = f[y + 1],
@@ -3564,7 +3566,7 @@ Feedback:
                 }
             };
             this.drawBehind = function(a) {
-                var c = E / 2 - H.y
+                let c = E / 2 - H.y
                   , b = .5 + c / (E / 2) * 6;
                 this.drawWaterArea(a, 2 * b, "rgba(9,188,255,1.0)", 100, .25, .6, c);
                 c = E / 2 - H.y;
@@ -3573,7 +3575,7 @@ Feedback:
                 this.drawWaterArea(a, 13 * b, "rgba(7,142,252,1.0)", 1E3, 0, 1, c)
             };
             this.drawFront = function(b) {
-                var d = E / 2 - H.y
+                let d = E / 2 - H.y
                   , e = a * g
                   , f = E / 2 + -30
                   , q = b.createLinearGradient(0, f, 0, f + (600 + 2 * d));
@@ -3594,15 +3596,13 @@ Feedback:
             };
             this.drawWaterArea = function(b, d, h, e, q, r, K) {
                 K = a * g;
-                var p = E / 2 + -30;
+                let p = E / 2 + -30;
                 b.save();
                 b.fillStyle = h;
                 b.beginPath();
                 b.moveTo(K + g - c / 2, f[0] * r + p + d);
                 for (h = 1; 25 > h; h++) {
-                    var s = h
-                      , s = s + parseInt(25 * q)
-                      , s = s % 25;
+                    let s = (h + parseInt(25 * q)) % 25;
                     b.lineTo(K + (h + 1) * g - c / 2, f[s] * r + d + p)
                 }
                 b.lineTo(K + 25 * g - c / 2, e + d + p);
@@ -3611,8 +3611,7 @@ Feedback:
                 b.restore()
             };
             this.disturbSurface = function(c, d) {
-                var h = 12.5
-                  , h = Math.floor(c / g) - a + 12.5;
+                let h = Math.floor(c / g) - a + 12.5;
                 b(h - 2, d / 2);
                 b(h - 1, d / 2);
                 b(h, d);
@@ -3622,7 +3621,7 @@ Feedback:
             (function() {
                 e = [];
                 f = [];
-                for (var a = 0; 25 > a; a++)
+                for (let a = 0; 25 > a; a++)
                     e.push(0),
                     f.push(0)
             }
@@ -3655,18 +3654,19 @@ Feedback:
             };
             this.draw = function(d, h) {
                 if (!this.deleting) {
+                    let q, n;
                     d.save();
-                    var q = Math.sin(c);
+                    q = Math.sin(c);
                     d.globalAlpha = Math.sqrt(q);
                     d.translate(e, f - 4 * c + h / 500 * 150 * a);
                     d.scale(0 + 1 * q, 0 + .8 * q);
                     d.translate(0, -20);
                     d.fillStyle = "#b3dff9";
                     d.beginPath();
-                    var q = b.length
+                        q = b.length
                       , n = .1 + .9 * a;
                     d.moveTo(b[0] * n + 0, b[1] * n + 0);
-                    for (var k = 2; k < q; k += 6)
+                    for (let k = 2; k < q; k += 6)
                         d.bezierCurveTo(b[k] * n + 0, b[k + 1] * n + 0, b[k + 2] * n + 0, b[k + 3] * n + 0, b[k + 4] * n + 0, b[k + 5] * n + 0);
                     d.fill();
                     d.restore()
@@ -3842,16 +3842,16 @@ Feedback:
               , d = [];
             this.drawCloudShape = function(a, c, b, d, e) {
                 a.beginPath();
-                var f = d.length;
+                let f = d.length;
                 a.moveTo(d[0] * e + c, d[1] * e + b);
-                for (var k = 2; k < f; k += 6)
+                for (let k = 2; k < f; k += 6)
                     a.bezierCurveTo(d[k] * e + c, d[k + 1] * e + b, d[k + 2] * e + c, d[k + 3] * e + b, d[k + 4] * e + c, d[k + 5] * e + b);
                 a.fill()
             };
             this.drawCloud = function(a, c, g, h, e, f, k, m) {
                 -7E3 > c && (c = (-c + 7E3) % 14E3,
                 c = 7E3 - c);
-                var l = c + d[h][0] * e
+                let l = c + d[h][0] * e
                   , y = g + d[h][1] * e
                   , r = c + d[h][2] * e
                   , K = g + d[h][3] * e
@@ -3868,13 +3868,13 @@ Feedback:
             this.drawPreRenderedCloud = function(a, c, b, e, q, n) {
                 -7E3 > c && (c = (-c + 7E3) % 14E3,
                 c = 7E3 - c);
-                var k = d[q][0]
+                let k = d[q][0]
                   , m = d[q][1]
                   , l = c + k * n
                   , y = b + m * n
                   , r = c + d[q][2] * n;
                 q = b + d[q][3] * n;
-                var K = z.getBounds();
+                let K = z.getBounds();
                 l = l > K[1].x || r < K[0].x || y > K[1].y || q < K[0].y ? !1 : !0;
                 l && a.drawImage(f[e], c + k * n, b + m * n)
             };
@@ -3882,8 +3882,8 @@ Feedback:
                 Xa -= .03 * a
             };
             this.drawClouds = function(a) {
-                for (var c = e.length, b = 0; b < c; b++) {
-                    var d = 2
+                for (let c = e.length, b = 0; b < c; b++) {
+                    let d = 2
                       , f = e[b][0]
                       , n = e[b][1]
                       , k = 1
@@ -3903,13 +3903,13 @@ Feedback:
                 }
             };
             this.drawPreRenderedClouds = function(a) {
-                var c = e.length
+                let c = e.length
                   , b = Xa
                   , d = Kb;
                 xa || (d = .6,
                 b = 200);
-                for (var f = 0; f < c; f++) {
-                    var n = 2
+                for (let f = 0; f < c; f++) {
+                    let n = 2
                       , k = e[f][0]
                       , m = e[f][1]
                       , l = 1;
@@ -3923,10 +3923,10 @@ Feedback:
             };
             this.preRender = function(a) {
                 a = e.length;
-                for (var c = 1, g = 0; g < a; g++) {
-                    var h = e[g][2], q = -d[h][0] + d[h][2], n = -d[h][1] + d[h][3], k;
+                for (let c = 1, g = 0; g < a; g++) {
+                    let h = e[g][2], q = -d[h][0] + d[h][2], n = -d[h][1] + d[h][3], k;
                     k = x.createElement("canvas");
-                    var m = k.getContext("2d")
+                    let m = k.getContext("2d")
                       , l = c = 1
                       , y = 3
                       , r = 9;
@@ -3934,8 +3934,8 @@ Feedback:
                     l = .7,
                     y = 1,
                     r = 3) : 7 == e[g][2] && (c = .8);
-                    var l = e[g][3] * l
-                      , K = -d[h][0] * l
+                        l = e[g][3] * l;
+                    let K = -d[h][0] * l
                       , p = -d[h][1] * l;
                     k.width = q * l;
                     k.height = n * l;
@@ -3948,9 +3948,10 @@ Feedback:
                 }
             };
             (function() {
-                for (var a = 0; a < b.length; a++) {
-                    for (var c = b[a], e = c.length, h = 9999, f = 9999, n = -9999, k = -9999, m = !0, l = 0; l < e; l++) {
-                        var y = c[l];
+                for (let a = 0; a < b.length; a++) {
+                    let c = b[a], e = c.length, h = 9999, f = 9999, n = -9999, k = -9999, m = !0;
+                    for (let l = 0; l < e; l++) {
+                        let y = c[l];
                         m ? (y < h && (h = y),
                         y > n && (n = y)) : (y < f && (f = y),
                         y > k && (k = y));
@@ -3991,11 +3992,11 @@ Feedback:
                     1 != c)
                         return;
                     a.beginPath();
-                    var b = this.vertexes.length
+                    let b = this.vertexes.length
                       , d = this.vertexes[0];
                     a.moveTo(d.x, d.y);
                     for (d = 1; d < b; d++) {
-                        var e = this.vertexes[d];
+                        let e = this.vertexes[d];
                         a.lineTo(e.x, e.y)
                     }
                     a.closePath();
@@ -4014,20 +4015,21 @@ Feedback:
                 }
             };
             this.loadColliders = function(c) {
-                var e = new XMLHttpRequest;
+                let e = new XMLHttpRequest;
                 e.open("GET", c, !0);
                 e.responseType = "arraybuffer";
                 e.onload = function(c) {
                     if (c = e.response) {
+                        let g, f, m, l, y, v, u;
                         c = new DataView(c);
-                        var g = 0
+                            g = 0
                           , f = c.getUint8(g, !0)
                           , g = g + 1;
                         if (191 != f)
                             console.log("ERROR LOADING MAP FILE");
                         else
                             for (; ; ) {
-                                var m = c.getUint8(g, !0)
+                                    m = c.getUint8(g, !0)
                                   , g = g + 1;
                                 if (0 == m)
                                     break;
@@ -4035,7 +4037,7 @@ Feedback:
                                     if (f = c.getUint8(g, !0),
                                     g += 1,
                                     1 == f) {
-                                        var f = c
+                                            f = c
                                           , m = new a
                                           , l = f.getFloat32(g, !0)
                                           , g = g + 4
@@ -4053,8 +4055,8 @@ Feedback:
                                             l = f.getUint16(g, !0),
                                             g += 2,
                                             y = 0; y < l; y++) {
-                                                for (var r = f.getUint16(g, !0), g = g + 2, p = new d, s = 0; s < r; s++) {
-                                                    var v = f.getFloat32(g, !0)
+                                                for (let r = f.getUint16(g, !0), g = g + 2, p = new d, s = 0; s < r; s++) {
+                                                        v = f.getFloat32(g, !0)
                                                       , g = g + 4
                                                       , u = f.getFloat32(g, !0)
                                                       , g = g + 4;
@@ -4076,30 +4078,31 @@ Feedback:
                 console.log("Map loaded!")
             };
             this.drawColliders = function(a) {
-                for (var c = b.length, d = 0; d < c; d++)
+                for (let c = b.length, d = 0; d < c; d++)
                     b[d].draw(a, 1)
             };
             this.drawWater = function(a) {
                 if (Na)
-                    for (var c = b.length, d = 0; d < c; d++)
+                    for (let c = b.length, d = 0; d < c; d++)
                         b[d].draw(a, 2)
             };
             this.drawGrassSand = function(a) {
-                for (var c = b.length, d = 0; d < c; d++)
+                for (let c = b.length, d = 0; d < c; d++)
                     b[d].draw(a, 3)
             };
             this.drawGradient = function(a) {
-                var c = (canvas.width / 2 + (z.x * z.zoom - canvas.width / 2)) / z.zoom
+                let c, b, d, f, m;
+                    c = (canvas.width / 2 + (z.x * z.zoom - canvas.width / 2)) / z.zoom
                   , b = (canvas.height / 2 + (z.y * z.zoom - canvas.height / 2)) / z.zoom
                   , d = .75 * E;
                 u.isSpaceWars() && (d = E);
-                var d = a.createLinearGradient(0, -d, 0, d)
+                    d = a.createLinearGradient(0, -d, 0, d)
                   , f = 39
                   , m = 161;
                 u.isSpaceWars() && (f = 0,
                 m = 55);
                 if (0 < e) {
-                    var l = e / 2500;
+                    let l = e / 2500;
                     1 < l && (l = 1);
                     f += (255 - f) * l;
                     m += (255 - m) * l
@@ -4120,16 +4123,17 @@ Feedback:
                 Na && this.waves.drawFront(a)
             };
             this.drawLimits = function(a) {
-                var c = (canvas.width / 2 + (z.x * z.zoom - canvas.width / 2)) / z.zoom
+                let c = (canvas.width / 2 + (z.x * z.zoom - canvas.width / 2)) / z.zoom
                   , b = (canvas.height / 2 + (z.y * z.zoom - canvas.height / 2)) / z.zoom
                   , d = 500
                   , e = 2 * E
                   , f = 0
                   , l = 0
                   , y = 0
-                  , r = 0;
+                  , r = 0
+                  , p;
                 if (0 < c) {
-                    var p = $ - c;
+                    p = $ - c;
                     p < d && (f = Math.min(1 - p / d, 1),
                     f *= .2)
                 } else
@@ -4161,7 +4165,7 @@ Feedback:
             };
             this.draw = function(a) {
                 if (qb && !u.isSpaceWars()) {
-                    var c = .97 * z.x + 450
+                    let c = .97 * z.x + 450
                       , b = .97 * z.y - 100
                       , d = a.createRadialGradient(c, b, 70, c, b, 350);
                     d.addColorStop(0, "rgba(255,255,255,0.4)");
@@ -4183,7 +4187,7 @@ Feedback:
                     this.waves.update(a),
                     f.update(a),
                     null != v) {
-                        var b = v.x < -$ || v.x > $;
+                        let b = v.x < -$ || v.x > $;
                         u.isSpaceWars() && (b |= v.y > E / 2 || v.y < -E / 2);
                         b ? (0 == e && (J.playSound(gd, 1, 1, 1, null),
                         F.showWarningMessage("YOU ABANDONED THE FIGHT!")),
@@ -6598,6 +6602,9 @@ Feedback:
             }
         }
           , $c = function() {
+            let b = []
+              , e = []
+              , f;
             this.update = function(d) {
                 0 < e.length && 2E3 < T - e[0] && (b.shift(),
                 e.shift())
