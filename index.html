@@ -638,7 +638,325 @@ Feedback:
 <script src="lib/howler.min.js"></script>
 <script>
     (function(w, x, s) {
-        let Zb, $b;
+        let Zb
+          , $b
+          , Ib = "https:" == w.location.protocol
+          , G = w.location.pathname.indexOf("mobile")
+          , Jb = 1E3 / 30 * 3
+          , Mc = [
+                {
+                    r: 255,
+                    g: 0,
+                    b: 0
+                }, {
+                    r: 255,
+                    g: 119,
+                    b: 0
+                }, {
+                    r: 255,
+                    g: 202,
+                    b: 0
+                }, {
+                    r: 174,
+                    g: 231,
+                    b: 24
+                }, {
+                    r: 0,
+                    g: 119,
+                    b: 255
+                }, {
+                    r: 236,
+                    g: 19,
+                    b: 213
+                }
+            ]
+          , ha = 2
+          , gb = 0
+          , hb = 0
+          , ma = 0
+          , V
+          , qc = 0
+          , rc = 0
+          , H
+          , ca = {}
+          , Ka
+          , ib
+          , Kb = 1
+          , Z = !1
+          , wa = !0
+          , Lb = !1
+          , T = 0
+          , Mb = 0
+          , E = 1600
+          , Nb = E / 2 - 100
+          , $ = 5E3
+          , ka = 1
+          , Y = !0
+          , Gb = 0
+          , Xa = 0
+          , Ob = !1
+          , jb = 1
+          , bc = 0
+          , dc = 0
+          , qa = 0
+          , sc = 0
+          , Aa = !1
+          , Eb
+          , nc = 0
+          , da = 1
+          , N = w.localStorage.muteVol
+          , tc = 3
+          , uc = 750
+          , vc = 5
+          , wc = 10
+          , xc = 20
+          , yc = 150
+          , t = 1
+          , kb = 0
+          , zc = 0
+          , Ac = .3
+          , La = !1
+          , Ma = null
+          , Ba = !0
+          , lb = !1
+          , mb
+          , ia
+          , na
+          , nb
+          , Cb = !0
+          , lc = 2
+          , xa = !1
+          , kc = 0
+          , ob = !0
+          , Na = !0
+          , pb = !0
+          , qb = !0
+          , rb = !0
+          , Ya = !0
+          , sb = !0
+          , tb = !0
+          , Pb = !0
+          , L
+          , X
+          , p
+          , A
+          , W = {}
+          , B = {}
+          , U = {}
+          , M = {}
+          , ja = []
+          , v
+          , ra
+          , Qb
+          , Oa = 0
+          , z
+          , F
+          , oa
+          , ya
+          , J
+          , Za = {}
+          , ub = 0
+          , u
+          , sa
+          , Pa = {}
+          , eb = !1
+          , vb = null
+          , Cc = w.navigator.userAgent
+          , Dc = -1 < Cc.indexOf("MSIE ") || -1 < Cc.indexOf("Trident/")
+          , wb
+          , Sb = !1
+          , Tb = "Arial Black"
+          , Ja = 1
+          , $a = 2
+          , Ua = 4
+          , Qa = 8
+          , za = 16
+          , bb = 128
+          , cb = 256
+          , b = []
+          , e = []
+          , f
+          , td = "shot"
+          , Yb = "laser"
+          , sd = "kinglaser"
+          , ud = "trishot"
+          , vd = "rail"
+          , md = "mlaunch"
+          , Qc = "mexpl"
+          , Fc = "mexpl"
+          , Hc = "phit"
+          , od = "weapgrab"
+          , qd = "hgrab"
+          , pd = "winggrab"
+          , gd = "warn"
+          , Wb = "lockon"
+          , Tc = "king"
+          , Wc = "planeloop"
+          , Xc = "waterloop"
+          , Ad = "env"
+          , rd = "bigsplash"
+          , bd = "crash"
+          , Yc = "lasershot"
+          , Zc = "laserloop"
+          , cd = "woosh"
+          , ld = "cannonshoot"
+          , Gc = ""
+          , Q = 0
+          , Sa = 3
+          , Ra = 600
+          , zb = 1
+          , db = 2
+          , Ic = 0
+          , gameSheetInfo = [
+            ["bomb",                     522,      34,      11,       8,        .545,       .5],
+            ["bombdrop",                 887,     196,      23,      23,        .5,         .5],
+            ["crown",                    775,     232,      23,      19,        .5,         .5],
+            ["decal0_1",                 991,     205,      30,       9,        .417,       .556],
+            ["decal0_2",                1023,     210,      29,       8,        .397,       .5],
+            ["decal0_3",                 991,     231,      27,      12,        .352,       .5],
+            ["decal0_4",                 241,     239,      28,      15,        .375,       .467],
+            ["decal0_5",                 882,      23,      26,      18,        .327,       .5],
+            ["decal0_6",                 785,      23,      30,      19,        .417,       .474],
+            ["decal0_7",                 622,      23,      28,      20,        .375,       .5],
+            ["decal0_8",                 351,     232,      29,      22,        .397,       .5],
+            ["decal1_1",                1030,     200,      31,       8,        .565,       .625],
+            ["decal1_2",                1034,     189,      32,       9,        .516,       .778],
+            ["decal1_3",                1030,     200,      31,       8,        .532,       .5],
+            ["decal1_4",                 978,     174,      32,      13,        .516,       .538],
+            ["decal1_5",                 209,     239,      30,      15,        .55,        .6],
+            ["decal1_6",                 978,     118,      25,      18,        .7,         .5],
+            ["decal1_7",                 751,      23,      32,      19,        .547,       .474],
+            ["decal1_8",                 716,      23,      33,      19,        .53,        .474],
+            ["decal2_1",                   2,     243,      35,      11,        .5,         .727],
+            ["decal2_2",                  39,     243,      35,      11,        .5,         .636],
+            ["decal2_3",                 135,     242,      35,      12,        .5,         .583],
+            ["decal2_4",                 172,     242,      35,      12,        .5,         .5],
+            ["decal2_5",                1005,     132,      35,       9,        .5,         .444],
+            ["decal2_6",                1003,     143,      35,       9,        .5,         .444],
+            ["decal2_7",                 651,     247,      35,       7,        .5,         .571],
+            ["decal2_8",                1005,     120,      35,      10,        .5,         .5],
+            ["decal3_1",                 991,     189,      15,       8,        .833,       .625],
+            ["decal3_2",                 523,       2,      13,       8,        .808,       .625],
+            ["decal3_3",                 977,      86,      12,      10,        .708,       .6],
+            ["decal3_4",                 978,      23,      11,      13,        .773,       .538],
+            ["decal3_5",                 715,     239,      12,      15,        .792,       .533],
+            ["decal3_6",                 977,      68,      12,      16,        .792,       .5],
+            ["decal3_7",                 977,      48,      12,      18,        .792,       .5],
+            ["decal3_8",                 523,      12,      12,      20,        .792,       .5],
+            ["decal4_1",                 688,     247,      25,       7,        .62,        .714],
+            ["decal4_2",                 978,     138,      23,       9,        .587,       .667],
+            ["decal4_3",                1042,     220,      20,      10,        .525,       .6],
+            ["decal4_4",                 113,     243,      20,      11,        .525,       .545],
+            ["decal4_5",                1020,     220,      20,      11,        .525,       .545],
+            ["decal4_6",                1008,     191,      20,      12,        .525,       .5],
+            ["decal4_7",                1012,     175,      20,      14,        .525,       .5],
+            ["decal4_8",                 271,     239,      21,      15,        .548,       .467],
+            ["decal5_1",                 991,     245,      27,       8,        .648,       .5],
+            ["decal5_2",                 393,     224,      27,       6,        .648,       .333],
+            ["decal5_3",                 991,     216,      27,      13,        .648,       .538],
+            ["decal5_4",                1039,     171,      27,      16,        .648,       .5],
+            ["decal5_5",                 977,      98,      26,      18,        .635,       .5],
+            ["decal5_6",                 817,      23,      26,      19,        .635,       .474],
+            ["decal5_7",                 652,      23,      25,      20,        .66,        .5],
+            ["decal5_8",                 382,     232,      28,      22,        .589,       .5],
+            ["e0",                       384,      87,      51,      51,        .549,       .51],
+            ["e10",                      207,       2,      88,      85,        .489,       .541],
+            ["e11",                      659,      45,      92,      79,        .511,       .494],
+            ["e13",                      810,     121,      91,      73,        .527,       .562],
+            ["e14",                      825,      44,      79,      72,        .57,        .444],
+            ["e15",                      912,     189,      77,      65,        .597,       .385],
+            ["e16",                      207,      89,      80,      57,        .613,       .491],
+            ["e17",                      903,     118,      73,      69,        .671,       .406],
+            ["e18",                      991,      23,      73,      65,        .411,       .692],
+            ["e19",                      422,     224,      40,      29,        .425,       .448],
+            ["e2",                       597,     129,      83,      80,        .566,       .537],
+            ["e20",                      800,     231,      34,      23,        .5,         .565],
+            ["e21",                      836,     231,      32,      23,        .5,         .522],
+            ["e22",                      870,     222,      31,      23,        .516,       .522],
+            ["e3",                       303,     147,      88,      83,        .557,       .53],
+            ["e4",                       384,       2,      88,      83,        .557,       .53],
+            ["e5",                       297,       2,      85,      84,        .541,       .5],
+            ["e7",                       205,     151,      96,      86,        .448,       .488],
+            ["e9",                       118,     151,      85,      89,        .482,       .483],
+            ["frenzy",                   393,     140,     128,      82,        .5,         .5],
+            ["frenzyIcon",               956,      23,      20,      23,        .5,         .5],
+            ["health",                   906,      90,      23,      23,        .5,         .5],
+            ["iconBombdrop",             347,      88,      35,      52,        .486,       .452],
+            ["iconLaserFull",            753,      44,      70,      75,        .5,         .5],
+            ["iconMachinegun",           622,     211,      27,      36,        .519,       .5],
+            ["iconMelee",                729,     203,      39,      32,        .5,         .5],
+            ["iconRailgun",              546,      87,      42,      42,        .5,         .5],
+            ["iconRocket",               625,      45,      32,      37,        .5,         .541],
+            ["iconTrishoot",             474,      45,      40,      40,        .5,         .475],
+            ["iconkill",                 682,     126,     126,      75,        .5,         .5],
+            ["indicator",                  2,       2,     203,     147,        .5,         .5],
+            ["killR",                    729,     237,      44,      17,        .364,      1.794],
+            ["laser",                    289,      89,      56,      56,        .5,         .5],
+            ["laser_collision0",         799,     203,      36,      26,        .542,       .442],
+            ["laser_collision1",         464,     224,      37,      27,        .473,       .426],
+            ["laser_collision2",         503,     224,      34,      27,        .485,       .426],
+            ["laser_opening",            956,      48,      19,      67,        .5,         .5],
+            ["laser_stretch",            207,     148,      19,       1,        .5,         .5],
+            ["laserfade",                539,       2,     527,      19,        .5,         .5],
+            ["laserplug",                294,     239,      18,      15,        .5,         .5],
+            ["melee",                    931,      90,      23,      23,        .5,         .5],
+            ["missile",                  906,      56,      23,      23,        .5,         .5],
+            ["missile_attack",          1019,     165,      18,       8,        .5,         .5],
+            ["nearmiss",                   2,     151,     114,      90,        .5,         .5],
+            ["parachute",                837,     196,      25,      25,        .5,         .5],
+            ["pause",                    697,     203,      30,      34,        .5,         .735],
+            ["plane1",                  1005,     106,      35,      12,        .5,         .667],
+            ["plane2",                    76,     243,      35,      11,        .5,         .636],
+            ["plane3",                   910,      41,      35,      13,        .5,         .538],
+            ["plane4",                   910,      23,      35,      16,        .5,         .5],
+            ["plane5",                   845,      23,      35,      18,        .5,         .5],
+            ["plane6",                   679,      23,      35,      19,        .5,         .474],
+            ["plane7",                   585,      23,      35,      20,        .5,         .5],
+            ["plane8",                   314,     232,      35,      22,        .5,         .5],
+            ["punch",                    539,     218,      81,      36,        .5,         .5],
+            ["railgun",                  931,      56,      23,      23,        .5,         .5],
+            ["revenge",                  523,     134,      72,      82,        .514,       .5],
+            ["revengeIcon",              978,     149,      20,      23,        .5,         .5],
+            ["s0",                       1E3,     154,      17,      18,        .647,      -.361],
+            ["s1",                       864,     196,      21,      24,        .619,      -.063],
+            ["s10",                      474,       2,      47,      14,        .489,     -1.036],
+            ["s11",                     1005,      90,      52,      14,        .5,       -1.107],
+            ["s12",                     1019,     154,      19,       9,        .526,     -1.944],
+            ["s2",                       516,      45,      30,      40,        .467,       .363],
+            ["s3",                       514,      87,      30,      45,        .5,         .433],
+            ["s4",                       437,      87,      34,      50,        .529,       .45],
+            ["s5",                       473,      87,      39,      46,        .513,       .38],
+            ["s6",                       548,      45,      39,      39,        .513,       .269],
+            ["s7",                       651,     211,      44,      34,        .523,       .162],
+            ["s8",                       474,      18,      46,      25,        .522,      -.14],
+            ["s9",                       537,      23,      46,      20,        .5,        -.475],
+            ["skull",                   1040,     146,      20,      23,        .5,         .5],
+            ["throttleFlame",           1042,     131,      23,      13,        .5,         .5],
+            ["trishoot",                1042,     106,      23,      23,        .5,         .5],
+            ["turbo0",                   590,      86,      30,      41,        .467,       .5],
+            ["turbo1",                   589,      45,      34,      39,        .559,       .526],
+            ["turbo2",                   622,      86,      23,      39,        .348,       .5],
+            ["wing",                     770,     203,      27,      27,        .5,         .5]
+        ];
+        let Bc = function() {
+                let b = "";
+                Ib && (b = "s");
+                s.get("http" + b + "://ip2l.wings.io/cc", function(b) {
+                    vb = b.substring(0, 2);
+                    w.localStorage.wingsCC = vb;
+                    w.localStorage.wingsCCTime = +new Date
+                }, "text")
+            }
+          , Rb = function() {
+                T = +new Date;
+                let b = 0;
+                0 < Mb && (b = T - Mb);
+                Mb = T;
+                L.update(b);
+                L.draw(b);
+                w.requestAnimationFrame && w.requestAnimationFrame(Rb);
+                Lb && (Lb = !1)
+            };
         function ac(b) {
             bc = b;
             let e;
@@ -911,36 +1229,8 @@ Feedback:
             }
         }
         w.location.href.split("/");
-        let Ib = "https:" == w.location.protocol
-          , G = w.location.pathname.indexOf("mobile");
         -1 == G && (G = 0);
-        let Jb = 1E3 / 30 * 3, Mc = [{
-            r: 255,
-            g: 0,
-            b: 0
-        }, {
-            r: 255,
-            g: 119,
-            b: 0
-        }, {
-            r: 255,
-            g: 202,
-            b: 0
-        }, {
-            r: 174,
-            g: 231,
-            b: 24
-        }, {
-            r: 0,
-            g: 119,
-            b: 255
-        }, {
-            r: 236,
-            g: 19,
-            b: 213
-        }], ha = 2, gb = 0, hb = 0, ma = 0, V, qc = 0, rc = 0, H, ca = {}, Ka, ib, Kb = 1, Z = !1, wa = !0, Lb = !1, T = 0, Mb = 0, E = 1600, Nb = E / 2 - 100, $ = 5E3, ka = 1, Y = !0, Gb = 0, Xa = 0, Ob = !1, jb = 1, bc = 0, dc = 0, qa = 0, sc = 0, Aa = !1, Eb, nc = 0, da = 1, N = w.localStorage.muteVol, tc = 3, uc = 750, vc = 5, wc = 10, xc = 20, yc = 150, t = 1, kb = 0, zc = 0, Ac = .3, La = !1, Ma = null, Ba = !0, lb = !1, mb, ia, na, nb, Cb = !0, lc = 2, xa = !1;
         G && (xa = !0);
-        let kc = 0, ob = !0, Na = !0, pb = !0, qb = !0, rb = !0, Ya = !0, sb = !0, tb = !0, Pb = !0, L, X, p, A, W = {}, B = {}, U = {}, M = {}, ja = [], v, ra, Qb, Oa = 0, z, F, oa, ya, J, Za = {}, ub = 0, u, sa, Pa = {}, eb = !1;
         (function() {
             let b = w.location.search;
             "?" == b.charAt(0) && (b = b.slice(1));
@@ -958,31 +1248,10 @@ Feedback:
             track_pageview: !0,
             persistence: "localStorage"
         });
-        let vb = null
-          , Bc = function() {
-            let b = "";
-            Ib && (b = "s");
-            s.get("http" + b + "://ip2l.wings.io/cc", function(b) {
-                vb = b.substring(0, 2);
-                w.localStorage.wingsCC = vb;
-                w.localStorage.wingsCCTime = +new Date
-            }, "text")
-        };
         void 0 == w.localStorage.wingsCCTime || void 0 != w.localStorage.wingsCC && 2 != w.localStorage.wingsCC.length ? Bc() : 288E5 < +new Date - w.localStorage.wingsCCTime ? Bc() : vb = w.localStorage.wingsCC;
-        let Rb = function() {
-            T = +new Date;
-            let b = 0;
-            0 < Mb && (b = T - Mb);
-            Mb = T;
-            L.update(b);
-            L.draw(b);
-            w.requestAnimationFrame && w.requestAnimationFrame(Rb);
-            Lb && (Lb = !1)
-        };
         x.body.onselectstart = function() {
             return !1
-        }
-        ;
+        };
         w.switchSkins = function() {
             ec();
             Ob ? (s("#howto").show(),
@@ -993,16 +1262,13 @@ Feedback:
             s("#divOff").hide(),
             s("#divOn").show());
             Ob = !Ob
-        }
-        ;
+        };
         w.setSkinColor = function(b) {
             ac(b)
-        }
-        ;
+        };
         w.setDecal = function(b) {
             cc(b)
-        }
-        ;
+        };
         w.clickPlay = function(b) {
             Z ? Db() : (w.localStorage.nick = b,
             x.getElementsByTagName("canvas")[0].style.cursor = "url(images/crosshair.png) 16 16, auto",
@@ -1012,8 +1278,7 @@ Feedback:
             Aa && (Ab(),
             Aa = !1),
             u.isSpaceWars() ? F.showTip("Hint: Earn points faster by destroying asteroids.") : x.fullscreenElement || x.mozFullScreenElement || x.webkitFullscreenElement || x.msFullscreenElement || 2 != kb && 4 != kb && 6 != kb || F.showTip("Press 'F' to toggle Fullscreen"))
-        }
-        ;
+        };
         w.setSpectate = function(b) {
             xa = !0;
             x.getElementsByTagName("canvas")[0].style.cursor = "default";
@@ -1025,22 +1290,19 @@ Feedback:
             L.waitUntilNextFollow()) : L.followTopPlayer();
             ka = 0;
             zc % 2 || 1 >= Gb ? F.showTip("Press 'ESC' to go back") : F.showTip("Click to follow next player")
-        }
-        ;
+        };
         w.setContinue = function() {
             s("#topGui").show();
             s("#roomFailed").hide();
             Hb() || (parent.location.hash = "");
             A.getServerAndConnect()
-        }
-        ;
+        };
         w.toggleGraphics = function() {
             Ba = !Ba;
             L.resize();
             w.localStorage.lq = !Ba;
             gc()
-        }
-        ;
+        };
         w.copyRoomLink = function() {
             s("#copyLink").hide();
             s("#copyLinkBox").show();
@@ -1054,8 +1316,7 @@ Feedback:
                 b.select();
                 b.focus()
             }, 100)
-        }
-        ;
+        };
         w.setCopy = function() {
             let b = s("#roomlinkInput")[0];
             b.value = "http://wings.io/#" + A.roomID;
@@ -1072,27 +1333,21 @@ Feedback:
                 } catch (e) {}
                 ic()
             }
-        }
-        ;
+        };
         null != adsense && adsense && Bb();
         w.clickNoNames = function(b) {
             lb = !lb;
             b.checked = lb
-        }
-        ;
+        };
         w.toggleMute = function() {
             jc()
-        }
-        ;
+        };
         void 0 == N && (N = 1);
-        let Cc = w.navigator.userAgent
-          , Dc = -1 < Cc.indexOf("MSIE ") || -1 < Cc.indexOf("Trident/");
         "undefined" === typeof w.orientation || G || (w.location.href = "https://itunes.apple.com/us/app/wings.io/id1098205567?l=pt&ls=1&mt=8");
         if (0 == N || Dc)
             N = 1,
             G || jc();
         Dc && s("#sndIcon").hide();
-        let wb;
         w.onblur = function() {
             w.didSendLoadingTime = !0;
             wb = setTimeout(Kc, 3E5);
@@ -1103,8 +1358,7 @@ Feedback:
             J.sound.volume(0, ia),
             J.sound.volume(0, na),
             nb && J.sound.volume(0, nb))
-        }
-        ;
+        };
         w.onfocus = function() {
             wb && (clearTimeout(wb),
             wb = null);
@@ -1112,33 +1366,27 @@ Feedback:
             da = 1 * N;
             for (let b in B)
                 B[b].clearTrail()
-        }
-        ;
+        };
         w.connectToServer = function(b) {
             A.roomNumber = 0;
             A.remoteHost = b;
             A.connect();
             console.log("CONNECTING NOW to " + b)
-        }
-        ;
+        };
         w.disconnect = function() {
             A.disconnect();
             console.log("Disconnected.")
-        }
-        ;
+        };
         w.enterGame = function(b) {
             clickPlay(b);
             onfocus()
-        }
-        ;
-        let Sb = !1;
+        };
         w.setInput = function(b, e, f) {
             V.angle = b;
             V.hover = e;
             !Sb && f ? A.sendShooting(f) : Sb && !f && A.sendShooting(f);
             Sb = f
-        }
-        ;
+        };
         w.wasKilled = function(b) {
             V.angle = Math.PI;
             V.hover = 1;
@@ -1147,84 +1395,19 @@ Feedback:
                 score: b
             },
             "undefined" != typeof messageHandlers && messageHandlers.wasKilled ? messageHandlers.wasKilled(JSON.stringify(b)) : w.webkit.messageHandlers.wasKilled.postMessage(b))
-        }
-        ;
+        };
         w.connectionClosed = function() {
             console.log("Connection was closed");
             V.angle = Math.PI;
             V.hover = 1;
             G && ("undefined" != typeof messageHandlers && messageHandlers.connectionClosed ? messageHandlers.connectionClosed(JSON.stringify({})) : w.webkit.messageHandlers.connectionClosed.postMessage({}))
-        }
-        ;
+        };
         if (G)
             w.onblur();
         w.localStorage.nick && s("#nick")[0] && (s("#nick")[0].value = w.localStorage.nick);
         x.oncontextmenu = function() {
             return !1
-        }
-        ;
-        let Nc = function() {
-            this.eventType = {
-                EVENT_NONE: 0,
-                EVENT_WAITING: 1,
-                EVENT_WARSHIP: 2,
-                EVENT_INSTAGIB: 3,
-                EVENT_GLADIATOR: 4,
-                EVENT_SPACEWARS: 5
-            };
-            this.type = this.eventType.EVENT_NONE;
-            this.endTime = 0;
-            this.waiting = this.machinegunSwitch = this.railSwitch = !1;
-            this.warshipsLeft = 3;
-            this.warshipsEscaped = this.warshipsDestroyed = 0;
-            this.setType = function(b) {
-                this.type = b;
-                this.isSpaceWars() ? (s("#pfText").css({
-                    "-webkit-filter": "brightness(100%)"
-                }),
-                s("#pfArrow").css({
-                    "-webkit-filter": "brightness(100%)"
-                })) : (s("#pfText").css({
-                    "-webkit-filter": "brightness(0%)"
-                }),
-                s("#pfArrow").css({
-                    "-webkit-filter": "brightness(0%)"
-                }));
-                this.isWarship() && (this.warshipsLeft = 3,
-                this.warshipsEscaped = this.warshipsDestroyed = 0)
-            }
-            ;
-            this.isInEvent = function() {
-                return this.type != this.eventType.EVENT_NONE && 0 == this.waiting
-            }
-            ;
-            this.isInstagib = function() {
-                return this.type == this.eventType.EVENT_INSTAGIB && 0 == this.waiting
-            }
-            ;
-            this.isSpaceWars = function() {
-                return this.type == this.eventType.EVENT_SPACEWARS && 0 == this.waiting
-            }
-            ;
-            this.isWarship = function() {
-                return this.type == this.eventType.EVENT_WARSHIP && 0 == this.waiting
-            }
-            ;
-            this.getEventName = function() {
-                return this.type == this.eventType.EVENT_INSTAGIB ? "SUDDEN DEATH" : this.type == this.eventType.EVENT_SPACEWARS ? "SPACE WARS" : this.type == this.eventType.EVENT_WARSHIP ? "WARSHIP ATTACK" : "NEW EVENT"
-            }
-            ;
-            this.getEventColor = function() {
-                return this.type == this.eventType.EVENT_SPACEWARS ? "#FF3300" : "#fe6800"
-            }
-            ;
-            this.setWarshipInfo = function(b, e, f) {
-                this.warshipsLeft = b;
-                this.warshipsDestroyed = e;
-                this.warshipsEscaped = f
-            }
-        }
-          , Tb = "Arial Black";
+        };
         G && (Tb = "Arial-BoldMT");
         Da.prototype = {
             _value: "",
@@ -1425,7 +1608,68 @@ Feedback:
                 return this._canvas
             }
         };
-        let Oc = function() {
+        let Nc = function() {
+            this.eventType = {
+                EVENT_NONE: 0,
+                EVENT_WAITING: 1,
+                EVENT_WARSHIP: 2,
+                EVENT_INSTAGIB: 3,
+                EVENT_GLADIATOR: 4,
+                EVENT_SPACEWARS: 5
+            };
+            this.type = this.eventType.EVENT_NONE;
+            this.endTime = 0;
+            this.waiting = this.machinegunSwitch = this.railSwitch = !1;
+            this.warshipsLeft = 3;
+            this.warshipsEscaped = this.warshipsDestroyed = 0;
+            this.setType = function(b) {
+                this.type = b;
+                this.isSpaceWars() ? (s("#pfText").css({
+                    "-webkit-filter": "brightness(100%)"
+                }),
+                s("#pfArrow").css({
+                    "-webkit-filter": "brightness(100%)"
+                })) : (s("#pfText").css({
+                    "-webkit-filter": "brightness(0%)"
+                }),
+                s("#pfArrow").css({
+                    "-webkit-filter": "brightness(0%)"
+                }));
+                this.isWarship() && (this.warshipsLeft = 3,
+                this.warshipsEscaped = this.warshipsDestroyed = 0)
+            }
+            ;
+            this.isInEvent = function() {
+                return this.type != this.eventType.EVENT_NONE && 0 == this.waiting
+            }
+            ;
+            this.isInstagib = function() {
+                return this.type == this.eventType.EVENT_INSTAGIB && 0 == this.waiting
+            }
+            ;
+            this.isSpaceWars = function() {
+                return this.type == this.eventType.EVENT_SPACEWARS && 0 == this.waiting
+            }
+            ;
+            this.isWarship = function() {
+                return this.type == this.eventType.EVENT_WARSHIP && 0 == this.waiting
+            }
+            ;
+            this.getEventName = function() {
+                return this.type == this.eventType.EVENT_INSTAGIB ? "SUDDEN DEATH" : this.type == this.eventType.EVENT_SPACEWARS ? "SPACE WARS" : this.type == this.eventType.EVENT_WARSHIP ? "WARSHIP ATTACK" : "NEW EVENT"
+            }
+            ;
+            this.getEventColor = function() {
+                return this.type == this.eventType.EVENT_SPACEWARS ? "#FF3300" : "#fe6800"
+            }
+            ;
+            this.setWarshipInfo = function(b, e, f) {
+                this.warshipsLeft = b;
+                this.warshipsDestroyed = e;
+                this.warshipsEscaped = f
+            }
+        }
+          , Oc = function() {
             this.loaded = !1;
             this.onLoad = null;
             this.spriteSheetLoaded = !1;
@@ -3793,13 +4037,6 @@ Feedback:
             this.waves = new ed;
             f = new fd
         }
-          , Ja = 1
-          , $a = 2
-          , Ua = 4
-          , Qa = 8
-          , za = 16
-          , bb = 128
-          , cb = 256
           , jd = function() {
             this.id = -1;
             this.y = this.x = 0;
@@ -5530,9 +5767,8 @@ Feedback:
             this.setInterval = function(b) {
                 this.interval = b
             }
-        };
-        gameSheetInfo = [["bomb", 522, 34, 11, 8, .545, .5], ["bombdrop", 887, 196, 23, 23, .5, .5], ["crown", 775, 232, 23, 19, .5, .5], ["decal0_1", 991, 205, 30, 9, .417, .556], ["decal0_2", 1023, 210, 29, 8, .397, .5], ["decal0_3", 991, 231, 27, 12, .352, .5], ["decal0_4", 241, 239, 28, 15, .375, .467], ["decal0_5", 882, 23, 26, 18, .327, .5], ["decal0_6", 785, 23, 30, 19, .417, .474], ["decal0_7", 622, 23, 28, 20, .375, .5], ["decal0_8", 351, 232, 29, 22, .397, .5], ["decal1_1", 1030, 200, 31, 8, .565, .625], ["decal1_2", 1034, 189, 32, 9, .516, .778], ["decal1_3", 1030, 200, 31, 8, .532, .5], ["decal1_4", 978, 174, 32, 13, .516, .538], ["decal1_5", 209, 239, 30, 15, .55, .6], ["decal1_6", 978, 118, 25, 18, .7, .5], ["decal1_7", 751, 23, 32, 19, .547, .474], ["decal1_8", 716, 23, 33, 19, .53, .474], ["decal2_1", 2, 243, 35, 11, .5, .727], ["decal2_2", 39, 243, 35, 11, .5, .636], ["decal2_3", 135, 242, 35, 12, .5, .583], ["decal2_4", 172, 242, 35, 12, .5, .5], ["decal2_5", 1005, 132, 35, 9, .5, .444], ["decal2_6", 1003, 143, 35, 9, .5, .444], ["decal2_7", 651, 247, 35, 7, .5, .571], ["decal2_8", 1005, 120, 35, 10, .5, .5], ["decal3_1", 991, 189, 15, 8, .833, .625], ["decal3_2", 523, 2, 13, 8, .808, .625], ["decal3_3", 977, 86, 12, 10, .708, .6], ["decal3_4", 978, 23, 11, 13, .773, .538], ["decal3_5", 715, 239, 12, 15, .792, .533], ["decal3_6", 977, 68, 12, 16, .792, .5], ["decal3_7", 977, 48, 12, 18, .792, .5], ["decal3_8", 523, 12, 12, 20, .792, .5], ["decal4_1", 688, 247, 25, 7, .62, .714], ["decal4_2", 978, 138, 23, 9, .587, .667], ["decal4_3", 1042, 220, 20, 10, .525, .6], ["decal4_4", 113, 243, 20, 11, .525, .545], ["decal4_5", 1020, 220, 20, 11, .525, .545], ["decal4_6", 1008, 191, 20, 12, .525, .5], ["decal4_7", 1012, 175, 20, 14, .525, .5], ["decal4_8", 271, 239, 21, 15, .548, .467], ["decal5_1", 991, 245, 27, 8, .648, .5], ["decal5_2", 393, 224, 27, 6, .648, .333], ["decal5_3", 991, 216, 27, 13, .648, .538], ["decal5_4", 1039, 171, 27, 16, .648, .5], ["decal5_5", 977, 98, 26, 18, .635, .5], ["decal5_6", 817, 23, 26, 19, .635, .474], ["decal5_7", 652, 23, 25, 20, .66, .5], ["decal5_8", 382, 232, 28, 22, .589, .5], ["e0", 384, 87, 51, 51, .549, .51], ["e10", 207, 2, 88, 85, .489, .541], ["e11", 659, 45, 92, 79, .511, .494], ["e13", 810, 121, 91, 73, .527, .562], ["e14", 825, 44, 79, 72, .57, .444], ["e15", 912, 189, 77, 65, .597, .385], ["e16", 207, 89, 80, 57, .613, .491], ["e17", 903, 118, 73, 69, .671, .406], ["e18", 991, 23, 73, 65, .411, .692], ["e19", 422, 224, 40, 29, .425, .448], ["e2", 597, 129, 83, 80, .566, .537], ["e20", 800, 231, 34, 23, .5, .565], ["e21", 836, 231, 32, 23, .5, .522], ["e22", 870, 222, 31, 23, .516, .522], ["e3", 303, 147, 88, 83, .557, .53], ["e4", 384, 2, 88, 83, .557, .53], ["e5", 297, 2, 85, 84, .541, .5], ["e7", 205, 151, 96, 86, .448, .488], ["e9", 118, 151, 85, 89, .482, .483], ["frenzy", 393, 140, 128, 82, .5, .5], ["frenzyIcon", 956, 23, 20, 23, .5, .5], ["health", 906, 90, 23, 23, .5, .5], ["iconBombdrop", 347, 88, 35, 52, .486, .452], ["iconLaserFull", 753, 44, 70, 75, .5, .5], ["iconMachinegun", 622, 211, 27, 36, .519, .5], ["iconMelee", 729, 203, 39, 32, .5, .5], ["iconRailgun", 546, 87, 42, 42, .5, .5], ["iconRocket", 625, 45, 32, 37, .5, .541], ["iconTrishoot", 474, 45, 40, 40, .5, .475], ["iconkill", 682, 126, 126, 75, .5, .5], ["indicator", 2, 2, 203, 147, .5, .5], ["killR", 729, 237, 44, 17, .364, 1.794], ["laser", 289, 89, 56, 56, .5, .5], ["laser_collision0", 799, 203, 36, 26, .542, .442], ["laser_collision1", 464, 224, 37, 27, .473, .426], ["laser_collision2", 503, 224, 34, 27, .485, .426], ["laser_opening", 956, 48, 19, 67, .5, .5], ["laser_stretch", 207, 148, 19, 1, .5, .5], ["laserfade", 539, 2, 527, 19, .5, .5], ["laserplug", 294, 239, 18, 15, .5, .5], ["melee", 931, 90, 23, 23, .5, .5], ["missile", 906, 56, 23, 23, .5, .5], ["missile_attack", 1019, 165, 18, 8, .5, .5], ["nearmiss", 2, 151, 114, 90, .5, .5], ["parachute", 837, 196, 25, 25, .5, .5], ["pause", 697, 203, 30, 34, .5, .735], ["plane1", 1005, 106, 35, 12, .5, .667], ["plane2", 76, 243, 35, 11, .5, .636], ["plane3", 910, 41, 35, 13, .5, .538], ["plane4", 910, 23, 35, 16, .5, .5], ["plane5", 845, 23, 35, 18, .5, .5], ["plane6", 679, 23, 35, 19, .5, .474], ["plane7", 585, 23, 35, 20, .5, .5], ["plane8", 314, 232, 35, 22, .5, .5], ["punch", 539, 218, 81, 36, .5, .5], ["railgun", 931, 56, 23, 23, .5, .5], ["revenge", 523, 134, 72, 82, .514, .5], ["revengeIcon", 978, 149, 20, 23, .5, .5], ["s0", 1E3, 154, 17, 18, .647, -.361], ["s1", 864, 196, 21, 24, .619, -.063], ["s10", 474, 2, 47, 14, .489, -1.036], ["s11", 1005, 90, 52, 14, .5, -1.107], ["s12", 1019, 154, 19, 9, .526, -1.944], ["s2", 516, 45, 30, 40, .467, .363], ["s3", 514, 87, 30, 45, .5, .433], ["s4", 437, 87, 34, 50, .529, .45], ["s5", 473, 87, 39, 46, .513, .38], ["s6", 548, 45, 39, 39, .513, .269], ["s7", 651, 211, 44, 34, .523, .162], ["s8", 474, 18, 46, 25, .522, -.14], ["s9", 537, 23, 46, 20, .5, -.475], ["skull", 1040, 146, 20, 23, .5, .5], ["throttleFlame", 1042, 131, 23, 13, .5, .5], ["trishoot", 1042, 106, 23, 23, .5, .5], ["turbo0", 590, 86, 30, 41, .467, .5], ["turbo1", 589, 45, 34, 39, .559, .526], ["turbo2", 622, 86, 23, 39, .348, .5], ["wing", 770, 203, 27, 27, .5, .5]];
-        let Ed = function() {
+        }
+          , Ed = function() {
             this.color = {
                 h: "61",
                 s: "100%",
@@ -6249,7 +6485,6 @@ Feedback:
             }
         }
           , $c = function() {
-            let b = [], e = [], f;
             this.update = function(d) {
                 0 < e.length && 2E3 < T - e[0] && (b.shift(),
                 e.shift())
@@ -6283,34 +6518,6 @@ Feedback:
                 e.push(+new Date))
             }
         }
-          , td = "shot"
-          , Yb = "laser"
-          , sd = "kinglaser"
-          , ud = "trishot"
-          , vd = "rail"
-          , md = "mlaunch"
-          , Qc = "mexpl"
-          , Fc = "mexpl"
-          , Hc = "phit"
-          , od = "weapgrab"
-          , qd = "hgrab"
-          , pd = "winggrab"
-          , gd = "warn"
-          , Wb = "lockon"
-          , Tc = "king"
-          , Wc = "planeloop"
-          , Xc = "waterloop"
-          , Ad = "env"
-          , rd = "bigsplash"
-          , bd = "crash"
-          , Yc = "lasershot"
-          , Zc = "laserloop"
-          , cd = "woosh"
-          , ld = "cannonshoot"
-          , Gc = ""
-          , Q = 0
-          , Sa = 3
-          , Ra = 600
           , zd = function() {
             this.sound;
             let b = !1
@@ -6521,9 +6728,6 @@ Feedback:
                 e.fill()
             }
         }
-          , zb = 1
-          , db = 2
-          , Ic = 0
           , nd = function() {
             this.lastUpdate = this.highlightValue = this.state = 0;
             this.id = -1;
