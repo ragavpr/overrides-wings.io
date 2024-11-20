@@ -1637,32 +1637,25 @@ Feedback:
                 }));
                 this.isWarship() && (this.warshipsLeft = 3,
                 this.warshipsEscaped = this.warshipsDestroyed = 0)
-            }
-            ;
+            };
             this.isInEvent = function() {
                 return this.type != this.eventType.EVENT_NONE && 0 == this.waiting
-            }
-            ;
+            };
             this.isInstagib = function() {
                 return this.type == this.eventType.EVENT_INSTAGIB && 0 == this.waiting
-            }
-            ;
+            };
             this.isSpaceWars = function() {
                 return this.type == this.eventType.EVENT_SPACEWARS && 0 == this.waiting
-            }
-            ;
+            };
             this.isWarship = function() {
                 return this.type == this.eventType.EVENT_WARSHIP && 0 == this.waiting
-            }
-            ;
+            };
             this.getEventName = function() {
                 return this.type == this.eventType.EVENT_INSTAGIB ? "SUDDEN DEATH" : this.type == this.eventType.EVENT_SPACEWARS ? "SPACE WARS" : this.type == this.eventType.EVENT_WARSHIP ? "WARSHIP ATTACK" : "NEW EVENT"
-            }
-            ;
+            };
             this.getEventColor = function() {
                 return this.type == this.eventType.EVENT_SPACEWARS ? "#FF3300" : "#fe6800"
-            }
-            ;
+            };
             this.setWarshipInfo = function(b, e, f) {
                 this.warshipsLeft = b;
                 this.warshipsDestroyed = e;
@@ -1704,8 +1697,7 @@ Feedback:
                     p.loaded = !0;
                     p.onLoad()
                 }
-            }
-            ;
+            };
             this.loadGameSpritesheetFrames = function() {
                 for (var b = gameSheetInfo.length, e = 0; e < b; e++) {
                     var f = gameSheetInfo[e]
@@ -1726,8 +1718,7 @@ Feedback:
                     this.loadPlaneDecal(3, e),
                     this.loadPlaneDecal(4, e),
                     this.loadPlaneDecal(5, e)
-            }
-            ;
+            };
             this.loadPlaneImages = function(b, e) {
                 for (var f = [], d = [], a = 1; 8 >= a; a++) {
                     var c = this.frames["plane" + a];
@@ -1736,8 +1727,7 @@ Feedback:
                 }
                 this.planeFrames = f;
                 this.planeFramesReflex = d
-            }
-            ;
+            };
             this.loadPlaneDecal = function(b, e) {
                 for (var f = Mc[e], d = [], a = 1; 8 >= a; a++) {
                     var c;
@@ -1745,8 +1735,7 @@ Feedback:
                     d.push(c)
                 }
                 this.planes[b][e] = d
-            }
-            ;
+            };
             this.loadAnimations = function() {
                 for (var b = new Ub, e = new Ub, f = 0; 13 > f; f++)
                     b.addFrame(this.frames["s" + f]),
@@ -1781,8 +1770,7 @@ Feedback:
                 b.addFrame(this.frames.e22);
                 b.setInterval(1E3 / 30);
                 X.addAnimationInfo("explosion", b)
-            }
-            ;
+            };
             this.generateTintedKillIcon = function(b, e, f, d) {
                 var a;
                 a = p.frames.iconkill;
@@ -1799,8 +1787,7 @@ Feedback:
                 d.y = a.height / 2;
                 d.draw(e);
                 return b
-            }
-            ;
+            };
             this.generateHudIcons = function() {
                 var b = 30
                   , e = 0
@@ -1895,13 +1882,11 @@ Feedback:
                 a = g.width / 2 - c.width / 2;
                 h.drawImage(e.canvas, a, 1.5 * shift2Y);
                 this.multiKillCanvas = g
-            }
-            ;
+            };
             this.load = function(b) {
                 this.onLoad = b;
                 this.loadGameSpritesheet()
-            }
-            ;
+            };
             this.loadTintImage = function(b, e, f) {
                 var d = x.createElement("canvas")
                   , a = d.getContext("2d")
@@ -1920,12 +1905,10 @@ Feedback:
                 a.globalAlpha = 1;
                 a.drawImage(h, 0, 0);
                 e(d)
-            }
-            ;
+            };
             this.verifyWarshipLoaded = function() {
                 3 == this.warshipTextureLoadCount && (this.warshipLoaded = !0)
-            }
-            ;
+            };
             this.loadWarshipEvent = function() {
                 this.warshipLoaded || (this.warshipImage = new Image,
                 this.warshipImage.src = "images/events/battleship.png",
@@ -1952,8 +1935,7 @@ Feedback:
                     p.verifyWarshipLoaded()
                 }
                 )
-            }
-            ;
+            };
             this.loadAsteroidEvent = function() {
                 this.asteroidLoaded || (this.asteroidImage = new Image,
                 this.asteroidImage.src = "images/events/asteroid.png",
@@ -1998,25 +1980,21 @@ Feedback:
                 Z || (ka = 1,
                 v = null)) : 70 == a.keyCode && (x.fullscreenElement || x.mozFullScreenElement || x.webkitFullscreenElement || x.msFullscreenElement ? x.exitFullscreen ? x.exitFullscreen() : x.msExitFullscreen ? x.msExitFullscreen() : x.mozCancelFullScreen ? x.mozCancelFullScreen() : x.webkitExitFullscreen && x.webkitExitFullscreen() : x.documentElement.requestFullscreen ? x.documentElement.requestFullscreen() : x.documentElement.msRequestFullscreen ? x.documentElement.msRequestFullscreen() : x.documentElement.mozRequestFullScreen ? x.documentElement.mozRequestFullScreen() : x.documentElement.webkitRequestFullscreen && x.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT),
                 F.clearTip())))
-            }
-            ;
+            };
             b.keyup = function(a) {
                 Y || 32 != a.keyCode || (Z ? A.sendShooting(!1) : (1 == ka ? (ka = 0,
                 L.followTopPlayer()) : (ka = 1,
                 v = null),
                 u.isSpaceWars() && setTimeout(L.respawnParticles, 500)))
-            }
-            ;
+            };
             b.mousedown = function(a) {
                 Y || (Z ? 0 == a.button && A.sendShooting(!0) : 0 == ka ? 0 == a.button ? L.PlayerFollowing(!0) : 2 == a.button && L.PlayerFollowing(!1) : (e = !0,
                 f = a.clientX,
                 d = a.clientY))
-            }
-            ;
+            };
             b.mouseup = function(a) {
                 Y || (Z ? 0 == a.button && A.sendShooting(!1) : e = !1)
-            }
-            ;
+            };
             b.mousemove = function(a) {
                 if (!Y && (b.mouseMoved = !0,
                 qc = a.clientX,
@@ -2033,8 +2011,7 @@ Feedback:
                     f = a.clientX;
                     d = a.clientY
                 }
-            }
-            ;
+            };
             this.addListeners = function() {
                 x.addEventListener("mousedown", b.mousedown, !1);
                 x.addEventListener("mousemove", b.mousemove, !1);
@@ -2186,8 +2163,7 @@ Feedback:
                     e = b.indexOf(f[c]),
                     b.splice(e, 1);
                 f.length = 0
-            }
-            ;
+            };
             this.addShot = function(e, f, d, a) {
                 if (la() && xa) {
                     var c = B[e];
@@ -2229,8 +2205,7 @@ Feedback:
                         oa.addSplash((a - (g.hitPosition.y - e * g.hitPosition.x)) / e, a + 6, 1, !1))
                     }
                 }
-            }
-            ;
+            };
             this.addMissileImpact = function(b, f) {
                 var d = 10 * b
                   , a = 10 * f;
@@ -2243,8 +2218,7 @@ Feedback:
                     d = 1 - va(d, a, H.x, H.y) / Ra;
                     J.playSound(Qc, d, 1, Sa, null)
                 }
-            }
-            ;
+            };
             this.addSplash = function(b, f, d, a) {
                 if (sb && !u.isSpaceWars() && aa(b, f, 100) && la()) {
                     var c = X.createAnimation("splash")
@@ -2263,7 +2237,70 @@ Feedback:
             }
         }
           , Vc = function() {
-            let b, e, f, d = 0, a = !0, c, g, h, q, n = new Sc, k, m, l, y, r, K, pa, s, w, z = -1, ta = !1, F, C, P, R, S, O, Vb, ea = 1, Ga = 0, D, Fa, ua, E, I = 0, Ta, Ha, Ia, H = 0, ab, L, X = -1, U = !1, V = 0, Q, W, $, M, N, da, aa = null, ja = null, ca, fa, ia, ha, wa, na = 0, oa = 0, va = null, la, ma, ya, sa;
+            let b
+              , e
+              , f
+              , d = 0
+              , a = !0
+              , c
+              , g
+              , h
+              , q
+              , n = new Sc
+              , k
+              , m
+              , l
+              , y
+              , r
+              , K
+              , pa
+              , s
+              , w
+              , z = -1
+              , ta = !1
+              , F
+              , C
+              , P
+              , R
+              , S
+              , O
+              , Vb
+              , ea = 1
+              , Ga = 0
+              , D = new Uc
+              , Fa
+              , ua
+              , E
+              , I = 0
+              , Ta
+              , Ha
+              , Ia
+              , H = 0
+              , ab
+              , L
+              , X = -1
+              , U = !1
+              , V = 0
+              , Q
+              , W
+              , $
+              , M
+              , N
+              , da
+              , aa = null
+              , ja = null
+              , ca
+              , fa
+              , ia
+              , ha
+              , wa
+              , na = 0
+              , oa = 0
+              , va = null
+              , la
+              , ma
+              , ya
+              , sa;
             this.draw = function(I) {
                 if (ta) {
                     C = x.createElement("canvas");
@@ -2401,8 +2438,7 @@ Feedback:
                     b != t && (c = g = null,
                     b = t)
                 }
-            }
-            ;
+            };
             this.DrawKing = function(a) {
                 if (F && 0 < F.length && 0 < Object.keys(B).length) {
                     var c = B[F[0]];
@@ -2433,8 +2469,7 @@ Feedback:
                     p.frames.crown.draw(a),
                     a.restore())
                 }
-            }
-            ;
+            };
             this.DrawLaserDeployed = function(a) {
                 a.save();
                 if (Ma != X) {
@@ -2454,8 +2489,7 @@ Feedback:
                 a.scale(t, t);
                 p.frames.laser.draw(a);
                 a.restore()
-            }
-            ;
+            };
             this.DrawRank = function(a) {
                 0 < v.rank && (void 0 == rankCanvas && (rankCanvas = x.createElement("canvas"),
                 rankCanvas.width = 200,
@@ -2471,8 +2505,7 @@ Feedback:
                 fa = ca.render(),
                 lastRankNumber = v.rank),
                 a.drawImage(rankCanvas, Ka - 200, ib - 200))
-            }
-            ;
+            };
             this.DrawScore = function(a) {
                 if (0 < v.rank) {
                     var c = 16 * t
@@ -2507,8 +2540,7 @@ Feedback:
                             K.fillText(v.score, b - e - g, k + d);
                     a.drawImage(r, n, f + 5)
                 }
-            }
-            ;
+            };
             this.DrawWarmupTime = function(a) {
                 if (U) {
                     U = !1;
@@ -2538,8 +2570,7 @@ Feedback:
                     a.drawImage(da, canvas.width - d / 2 - da.width / 2 - 20, c + 36);
                     a.drawImage(M, canvas.width - d / 2 - M.width / 2 - 20, c + 60)
                 }
-            }
-            ;
+            };
             this.DrawEventLabel = function(a) {
                 if (U) {
                     U = !1;
@@ -2562,8 +2593,7 @@ Feedback:
                     a.drawImage(N, canvas.width / 2 - N.width / 2, c);
                     a.drawImage(M, canvas.width / 2 - M.width / 2, c + 30)
                 }
-            }
-            ;
+            };
             this.DrawWinnerLabel = function(a) {
                 !ia && aa && (ia = new ba(55 * t,"#fe6800","#6e3800"),
                 ia.setValue("WINNER"),
@@ -2581,8 +2611,7 @@ Feedback:
                     a.drawImage(ha, canvas.width / 2 - ha.width / 2, c);
                     a.drawImage(renderedWinnerNameCachedText, canvas.width / 2 - renderedWinnerNameCachedText.width / 2, c + 70)
                 }
-            }
-            ;
+            };
             this.DrawWarshipDestroyedLabel = function(a) {
                 la || (la = new ba(45 * t,"#fe6800","#6e3800"),
                 null == va ? la.setValue("WARSHIP") : la.setValue(va),
@@ -2600,8 +2629,7 @@ Feedback:
                     a.drawImage(ma, canvas.width / 2 - ma.width / 2, c);
                     a.drawImage(sa, canvas.width / 2 - sa.width / 2, c + 60)
                 }
-            }
-            ;
+            };
             this.DrawLastEventWinner = function(a) {
                 null != aa && aa != ja && (ca = new Da(15 * t,"#EEEEEE"),
                 ca.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black"),
@@ -2613,8 +2641,7 @@ Feedback:
                     var c = 10 * t;
                     a.drawImage(fa, canvas.width - fa.width - c, canvas.height - fa.height - c)
                 }
-            }
-            ;
+            };
             this.DrawCurrentWeaponIcon = function(a, c) {
                 Vb != c && (Vb = c,
                 Ga = 1);
@@ -2688,8 +2715,7 @@ Feedback:
                 a.translate(-1, -16);
                 h.draw(a);
                 a.restore()
-            }
-            ;
+            };
             this.update = function(a) {
                 m += a;
                 H += a;
@@ -2700,8 +2726,7 @@ Feedback:
                 U = !0);
                 0 < na && (na -= a);
                 0 < oa && (oa -= a)
-            }
-            ;
+            };
             this.renderLeaderboard = function(a, c) {
                 P = 270;
                 S = 0;
@@ -2784,83 +2809,66 @@ Feedback:
                         }
                         e += h + b
                     }
-            }
-            ;
+            };
             this.drawLeaderboard = function(a) {
                 a.drawImage(C, Ka - R - 5, 5)
-            }
-            ;
+            };
             this.addActivityMessage = function(a) {
                 G || D.addActivityMessage(a)
-            }
-            ;
+            };
             this.addMessage = function(c, b, g) {
                 e = c;
                 h = null;
                 f = g;
                 d = +new Date;
                 a = b
-            }
-            ;
+            };
             this.showTip = function(a) {
                 G || (Ta && this.clearTip(),
                 Ta = a,
                 H = 0,
                 Ia = null)
-            }
-            ;
+            };
             this.clearTip = function() {
                 Ta = null
-            }
-            ;
+            };
             this.showTargetLockedMessage = function() {
                 l || (l = "[ LOCKED ]")
-            }
-            ;
+            };
             this.clearTargetLockedMessage = function() {
                 l = null
-            }
-            ;
+            };
             this.showWarningMessage = function(a) {
                 k = a;
                 m = 0
-            }
-            ;
+            };
             this.clearWarningMessage = function() {
                 k = null
-            }
-            ;
+            };
             this.refreshLeaderboard = function(a) {
                 F = a;
                 ta = !0
-            }
-            ;
+            };
             this.addBonus = function(a, c) {
                 n.push(a, c)
-            }
-            ;
+            };
             this.clearBonusDisplay = function() {
                 n.clear()
-            }
-            ;
+            };
             this.clearNearMiss = function() {
                 n.clearNearMiss()
-            }
-            ;
+            };
             this.setLastWinner = function(a, c) {
                 aa = ga(a);
                 console.log("Last Event Winner: " + a);
                 c && (ia = null,
                 na = 6E3)
-            }
-            ;
+            };
             this.setWarshipRemoved = function(a) {
                 va = a;
                 oa = 5E3;
                 la = null
-            }
-            ;
-            D = new Uc
+            };
         }
           , Uc = function() {
             let b = []
@@ -2868,15 +2876,13 @@ Feedback:
             this.update = function(f) {
                 0 < e.length && 15E3 < T - e[0] && (b.shift(),
                 e.shift())
-            }
-            ;
+            };
             this.draw = function(e) {
                 e.globalAlpha = 1;
                 var d = canvas.height - 180 * t, a;
                 for (a in b)
                     e.drawImage(b[a], 25, d + 26 * t + 5 + 14 * a * t + 15 * a * t)
-            }
-            ;
+            };
             this.addActivityMessage = function(f) {
                 var d = new Da(14 * t,"#EEEEEE");
                 d.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
@@ -2896,7 +2902,48 @@ Feedback:
             }
         }
           , Xb = function() {
-            let b = this;
+            let b = this
+              , e = 0
+              , f = 100
+              , d = !1
+              , a = new yb
+              , c
+              , g
+              , h = 0
+              , q = this.laserFrame = this.laserTimer = 0
+              , n
+              , k = 0
+              , m = 0
+              , l = 1
+              , y = 0
+              , r = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1]
+              , K
+              , pa = !1
+              , s = 0
+              , w = 0
+              , t = 0
+              , x = 0
+              , z = 0
+              , C = 0
+              , P = 1
+              , R = 0
+              , S = 0
+              , O = !1
+              , G = !0
+              , ea = !1
+              , Ga = 0
+              , D = 0
+              , Fa = 0
+              , ua = null
+              , M = {
+                    1: "rgba(255, 255, 255, 0.6)",
+                    2: "rgba(255, 156, 0, 1.0)",
+                    4: "rgba(255, 43, 0, 1.0)",
+                    8: "rgba(0, 140, 255, 1.0)",
+                    16: "rgba(255, 255, 0, 1.0)",
+                    128: "rgba(255, 0, 255, 1.0)",
+                    256: "rgba(137, 137, 137, 1.0)"
+                };
             this.lastUpdate = this.highlightValue = 0;
             this.id = -1;
             this.dstY = this.dstX = this.origY = this.origX = this.prevY = this.prevX = this.y = this.x = 0;
@@ -2927,12 +2974,9 @@ Feedback:
             this.decalFrames;
             this.decalID = this.colorID = 0;
             this.isShooting = this.isBot = this.hadHover = this.hover = !1;
-            let e = 0, f = 100, d = !1, a = new yb, c;
             a.fixedColor = !0;
-            let g, h = 0;
             this.weapon = Ja;
             this.ammo = -1;
-            let q = this.laserFrame = this.laserTimer = 0, n, k = 0, m = 0, l = 1, y = 0, r = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1], K, pa = !1, s = 0, w = 0, t = 0, x = 0, z = 0, C = 0, P = 1, R = 0, S = 0, O = !1, G = !0, ea = !1, Ga = 0, D = 0, Fa = 0, ua = null;
             this.update = function(b) {
                 if (this.inGame) {
                     var g = 400;
@@ -3025,13 +3069,11 @@ Feedback:
                     K && K.update(b);
                     0 < R && (R -= b)
                 }
-            }
-            ;
+            };
             this.getCurrentFrameNum = function(a) {
                 a = parseInt(g / (2 * Math.PI / 28)) + 1;
                 return a = r[(a - 1) % 14]
-            }
-            ;
+            };
             this.draw = function(b, h) {
                 if (this.inGame && pa) {
                     a && a.draw(b);
@@ -3169,8 +3211,7 @@ Feedback:
                         b.restore()
                     }
                 }
-            }
-            ;
+            };
             this.drawReflection = function(a, c) {
                 if (this.inGame && pa) {
                     var b = E / 2
@@ -3188,8 +3229,7 @@ Feedback:
                         a.restore()
                     }
                 }
-            }
-            ;
+            };
             this.drawInput = function(a) {
                 if (this.inGame) {
                     var c = -V.angle + Math.PI
@@ -3215,8 +3255,7 @@ Feedback:
                     a.closePath();
                     a.stroke()
                 }
-            }
-            ;
+            };
             this.DrawLockCrosshair = function(a, c, b, d, g) {
                 if (this.inGame) {
                     a.lineWidth = 4;
@@ -3232,8 +3271,7 @@ Feedback:
                     a.stroke();
                     a.restore()
                 }
-            }
-            ;
+            };
             this.drawInfo = function(a) {
                 if (this.inGame && pa) {
                     a.save();
@@ -3279,8 +3317,7 @@ Feedback:
                     K.draw(a),
                     a.restore())
                 }
-            }
-            ;
+            };
             this.setPose = function(b, d, g, h) {
                 this.origX = this.x;
                 this.origY = this.y;
@@ -3300,27 +3337,22 @@ Feedback:
                 this.inGame || (this.inGame = !0,
                 a && a.clear(),
                 c && c.clear())
-            }
-            ;
+            };
             this.trailEffect = function() {
                 wa && a && a.trailEffect()
-            }
-            ;
+            };
             this.hit = function(a) {
                 la() && (this.highlightValue = 1)
-            }
-            ;
+            };
             this.setScore = function(a) {
                 var c = a - this.score;
                 0 < c && this == v && (K || (K = new $c),
                 la() && K.addScore(c));
                 this.score = a
-            }
-            ;
+            };
             this.incScore = function(a) {
                 this.setScore(this.score + a)
-            }
-            ;
+            };
             this.setName = function(c) {
                 this.name = c;
                 if ("" == c || null == c)
@@ -3328,8 +3360,7 @@ Feedback:
                     a.fixedColor = !0,
                     a.style = M[Ja],
                     a.clear()
-            }
-            ;
+            };
             this.setFlagInfo = function(b) {
                 if (0 < b) {
                     var d = b & 255;
@@ -3351,8 +3382,7 @@ Feedback:
                 a.fixedColor = !0;
                 a.style = M[Ja];
                 a.clear()
-            }
-            ;
+            };
             this.setEnergy = function(a) {
                 this.energy = a;
                 25 > a && !n ? (n = new Ec,
@@ -3363,58 +3393,39 @@ Feedback:
                 F.clearNearMiss())) : 25 <= a && n && (delete n,
                 n = null,
                 l = 1)
-            }
-            ;
+            };
             this.GetAmmo = function() {
                 return 1 == this.weapon ? -1 : this.ammo
-            }
-            ;
+            };
             this.setColorID = function(a) {
                 this.colorID = a;
                 this.decalFrames = p.planes[this.decalID][this.colorID]
-            }
-            ;
+            };
             this.setDecalID = function(a) {
                 this.decalID = a;
                 this.decalFrames = p.planes[this.decalID][this.colorID]
-            }
-            ;
+            };
             this.setColorHue = function(a) {
                 this.colorHue = a
-            }
-            ;
+            };
             this.getSpeedDirectionX = function() {
                 return this.x - this.prevX
-            }
-            ;
+            };
             this.getSpeedDirectionY = function() {
                 return this.y - this.prevY
-            }
-            ;
+            };
             this.setRank = function(a) {
                 this.rank = a
-            }
-            ;
+            };
             this.isInvulnerable = function() {
                 return 0 < e
-            }
-            ;
-            let M = {
-                1: "rgba(255, 255, 255, 0.6)",
-                2: "rgba(255, 156, 0, 1.0)",
-                4: "rgba(255, 43, 0, 1.0)",
-                8: "rgba(0, 140, 255, 1.0)",
-                16: "rgba(255, 255, 0, 1.0)",
-                128: "rgba(255, 0, 255, 1.0)",
-                256: "rgba(137, 137, 137, 1.0)"
             };
             a.style = M[Ja];
             this.setWeapon = function(c) {
                 a.style = M[c];
                 a.width = 1;
                 this.weapon = c
-            }
-            ;
+            };
             this.cleanup = function() {
                 ia && J.sound.stop(ia);
                 na && J.sound.stop(na);
@@ -3424,64 +3435,59 @@ Feedback:
                 this.inGame = !1;
                 F.clearTargetLockedMessage();
                 ma = 0
-            }
-            ;
+            };
             this.setFrenzy = function() {
                 R = 1E4
-            }
-            ;
+            };
             this.incKills = function() {
                 S++
-            }
-            ;
+            };
             this.getKills = function() {
                 return S
-            }
-            ;
+            };
             this.setPaused = function(a) {
                 O = a ? !0 : !1
-            }
-            ;
+            };
             this.setIsBot = function(a) {
                 this.isBot = a
-            }
-            ;
+            };
             this.setIsShooting = function(a) {
                 !a && this.isShooting && (this.laserTimer = Fa = 0);
                 this.isShooting = a
-            }
-            ;
+            };
             this.laserHit = function(a, c, b) {
                 Ga = a;
                 D = c;
                 ea = b
-            }
-            ;
-            this.prepareFollow = function() {}
-            ;
+            };
+            this.prepareFollow = function() {};
             this.stopLaserSound = function() {
                 ua && (J.sound.stop(ua),
                 ua = nb = null)
-            }
-            ;
+            };
             this.dash = function() {
                 this == v && J.playSound(cd, .15, 1, Q, null);
                 q = 300
-            }
-            ;
+            };
             this.dashing = function() {
                 return 0 < q
-            }
-            ;
+            };
             this.clearTrail = function() {
                 a && a.clear()
             }
         }
           , ed = function() {
+            let e
+              , f
+              , d
+              , a
+              , c
+              , g
+              , h = []
+              , q = 0;
             function b(a, c) {
                 0 <= a && 24 > a && (f[a] += c)
             }
-            let e, f, d, a, c, g, h = [], q = 0;
             this.update = function(b) {
                 c = 1.1 * canvas.width / z.zoom;
                 g = c / 25;
@@ -3553,8 +3559,7 @@ Feedback:
                         h.splice(k, 1);
                     l.length = 0
                 }
-            }
-            ;
+            };
             this.drawBehind = function(a) {
                 var c = E / 2 - H.y
                   , b = .5 + c / (E / 2) * 6;
@@ -3563,8 +3568,7 @@ Feedback:
                 b = .5 + c / (E / 2) * 6;
                 this.drawWaterArea(a, 4 * b, "rgba(8,164,254,1.0)", 100, .75, .8, c);
                 this.drawWaterArea(a, 13 * b, "rgba(7,142,252,1.0)", 1E3, 0, 1, c)
-            }
-            ;
+            };
             this.drawFront = function(b) {
                 var d = E / 2 - H.y
                   , e = a * g
@@ -3584,8 +3588,7 @@ Feedback:
                 e = h.length;
                 for (f = 0; f < e; f++)
                     h[f].draw(b, d)
-            }
-            ;
+            };
             this.drawWaterArea = function(b, d, h, e, q, r, K) {
                 K = a * g;
                 var p = E / 2 + -30;
@@ -3603,8 +3606,7 @@ Feedback:
                 b.lineTo(K + g - c / 2, e + d + p);
                 b.fill();
                 b.restore()
-            }
-            ;
+            };
             this.disturbSurface = function(c, d) {
                 var h = 12.5
                   , h = Math.floor(c / g) - a + 12.5;
@@ -3613,8 +3615,7 @@ Feedback:
                 b(h, d);
                 b(h + 1, d / 2);
                 b(h + 2, d / 2)
-            }
-            ;
+            };
             (function() {
                 e = [];
                 f = [];
@@ -3625,22 +3626,30 @@ Feedback:
             )()
         }
           , dd = function() {
-            let b = [118.17, 11.98, 26.9, -3.43, 1.91, -19.41, .45, -19.48, -.82, -19.55, -52.05, 2.79, -118.88, 11.55, -121.21, 11.85, -.57, -3.74, .26, -4.04, .57, -4.15, 121.8, 12.59, 118.17, 11.98], e, f, d, a;
+            let b = [
+                        118.17, 11.98,
+                        26.9, -3.43, 1.91, -19.41, .45, -19.48,
+                        -.82, -19.55, -52.05, 2.79, -118.88, 11.55,
+                        -121.21, 11.85, -.57, -3.74, .26, -4.04,
+                        .57, -4.15, 121.8, 12.59, 118.17, 11.98
+                    ]
+              , e
+              , f
+              , d
+              , a
+              , c = 0;
             this.deleting = !1;
-            let c = 0;
             this.speed = .02;
             this.setPosition = function(c, b, q) {
                 e = c;
                 f = b;
                 d = q;
                 a = d / 250
-            }
-            ;
+            };
             this.update = function(a) {
                 c += a / 1E3 * this.speed * 60;
                 c >= Math.PI && (this.deleting = !0)
-            }
-            ;
+            };
             this.draw = function(d, h) {
                 if (!this.deleting) {
                     d.save();
@@ -3662,8 +3671,170 @@ Feedback:
             }
         }
           , fd = function() {
-            let b = [[-142.21, -1.18, -143.28, .36, -123.09, 11.23, -103.01, 13.96, -81.96, 16.82, -65.17, 14.9, -64.36, 15.65, -41.42, 37.12, -28.62, 36.17, -16.75, 36.02, 18.19, 35.56, 38.19, 16.67, 39.3, 18.03, 50.57, 31.83, 67.87, 39.26, 84.68, 33.47, 95.27, 29.83, 123.57, 5.67, 121.35, -3.74, 118.45, -15.98, 89.66, -8.14, 88.44, -10.77, 74.28, -41.45, 51.47, -22.75, 50.8, -23.76, 38.13, -43.02, 24.97, -62.52, -2.75, -60.1, -31.37, -57.6, -55.13, -17.35, -55.49, -17.57, -98.49, -44.18, -132.86, -14.55, -142.21, -1.18], [-162.55, -1.68, -169.22, -19.07, -134.4, -35.44, -105.42, -35.13, -45.5, -34.48, -16.08, -8.51, 20.84, -12.63, 32.11, -13.89, 20.28, -39.57, 35.04, -45.63, 50.56, -52, 67.52, -44.38, 81.19, -32.08, 94.38, -20.22, 83.96, -10.24, 86.36, -8.17, 92.3, -3.06, 110.55, -8.9, 114.01, -1.75, 116.98, 4.4, 87.88, 27.98, 55.69, 21.98, 53.83, 21.64, 55.47, 33.56, 20.71, 36.54, 5.28, 37.87, -8.91, 30.47, -14.55, 25.77, -17.17, 23.58, -33.82, 38.42, -52.98, 36.38, -65.86, 35.01, -74.62, 20.26, -78.34, 16.38, -80.92, 13.67, -151.51, 27.09, -162.55, -1.68], [-132.9, 30.86, -125.9, 10.58, -96.55, -22.97, -85.94, -23.79, -61.71, -25.67, -53.16, -17.53, -50.03, -17.63, -46.79, -17.74, -37.17, -49.76, -6.45, -50.02, 26.73, -50.29, 38.01, -16.34, 44.61, -16.75, 52.59, -17.25, 57.84, -24.32, 79.01, -23.54, 98.83, -22.8, 96.09, -12.23, 103.77, -9.21, 111.97, -5.97, 134.38, -11.68, 144.73, 7.12, 152.17, 20.65, 110.44, 38.48, 91.74, 39.3, 47.05, 41.27, -50.64, 19.62, -67.45, 24.81, -90.4, 31.9, -100.01, 37.45, -121.08, 38.84, -125.4, 39.13, -134.8, 36.38, -132.9, 30.86], [-142.3, 3.86, -142.68, -5.86, -66.59, -26.42, -45.57, -34.65, -22.55, -43.64, -21.3, -84.89, 5.81, -86.9, 25.18, -88.34, 99.82, -49.94, 103.2, -10.26, 104.1, .3, 137.86, -21.94, 136.83, -10.3, 133.75, 24.38, 117.81, 21.85, 111.08, 24.7, 107.63, 26.15, 88.76, 26.4, 83.17, 23.68, 82.44, 23.32, 49.7, 40.09, 19.75, 36.6, -18.88, 32.08, -37.22, 21.23, -53.51, 11.08, -57.67, 8.49, -66.63, 26.07, -94.62, 26.33, -103.38, 26.41, -112.73, 24.98, -123.85, 15.85, -126.35, 13.8, -141.87, 14.59, -142.3, 3.86], [-142.63, 14.15, -142.06, 12.44, -131.98, 6.01, -92.96, -13.64, -80.08, -20.13, -78.45, -40.22, -32.37, -45.14, 6.08, -49.25, 5.44, -26.43, 8.78, -26.51, 11.15, -26.56, 20.61, -40.86, 44.75, -43.15, 61.05, -44.69, 72.86, -34.19, 77.21, -31.3, 84.42, -26.5, 149.08, -20.62, 150.6, .29, 152.12, 21.2, 123.52, 42.13, 64.54, 49.68, 23.28, 54.96, 37.73, 31.1, 25.32, 30.57, 13.73, 30.07, -6.57, 48.69, -21.45, 46.17, -44.71, 42.24, -48.23, 33.33, -81.8, 18.87, -122.06, 1.53, -142.83, 14.75, -142.63, 14.15], [-128.91, -3.91, -100.79, -29.51, -75.44, -28.12, -55.48, -25.64, -35.53, -23.16, -10.93, -12.78, 7.7, -16, 15.92, -17.42, 33.99, -43.08, 54.49, -43.88, 83.11, -44.99, 85.4, -21.07, 89.46, -21.25, 94.52, -21.48, 107.89, -29.23, 117.73, -3.17, 118.89, -.07, 136.54, 16.66, 149.39, 19.53, 149.68, 19.59, 95.95, 10.58, 17.5, 16.07, -5.04, 17.65, -60.8, 45.1, -108.87, 48.31, -130.84, 49.78, -145.13, 42.1, -143.01, 29.93, -140.38, 14.79, -134.29, .99, -128.91, -3.91], [-105.63, 33.5, -112.73, 24.78, -104.42, 20.23, -104.9, 18.35, -106.19, 13.28, -101.31, -5.25, -88.8, -11.01, -73.37, -18.1, -65.27, -18.01, -49.55, -16.92, -46.11, -16.68, -52.73, -32.67, -37.48, -39.53, -19.05, -47.81, 18.24, -26.76, 24.38, -21.56, 26.14, -20.07, 44.72, -32.26, 63.81, -26.11, 106.07, -12.51, 112.47, 3.21, 124.03, 10.2, 146.91, 24.05, 177.98, 16.35, 176.28, 17.17, 108.58, 50.11, -.39, 35.83, -2.15, 35.9, -18.66, 36.6, -90.36, 52.25, -105.63, 33.5], [-515.42, -79.84, -511.96, -82.38, -492.91, -99.15, -444.49, -84.74, -379.42, -65.39, -353.57, -29.63, -347.84, -16.74, -347.52, -16.02, -326.45, -32.16, -294.56, -21.93, -266.34, -12.88, -255.45, 16.99, -233.61, 34.9, -195.97, 65.76, -153.63, 30.14, -135.04, 43.22, -79.08, 82.59, .11, -91.66, 104.06, 4.27, 177.97, 72.49, 215.12, 9.81, 234.44, 16.08, 252.34, 21.9, 289.03, 43.31, 332.29, 27.33, 368.2, 14.06, 416.81, -38.28, 429.68, -21.59, 445.63, -.91, 440.5, -8.41, 442.5, -17, 454.3, -67.56, 497.46, -97.75, 506.29, -79.88, 515.12, -62.02, 527.33, 105.09, 482.02, 105.88, 436.97, 106.67, -558.17, 136.12, -560.32, 90.04, -566.63, -45.23, -534.53, -65.79, -515.42, -79.84]]
-              , e = [[876.66, -374.819, 1, 1.26], [97.633, -380.736, 0, 1], [192.926, 241.051, 2, 1], [-600.648, -471.205, 3, 1], [-1012.119, -182.729, 4, 1], [-309.131, -16.817, 5, 1], [-909.922, 275.895, 6, 1], [433.972, -27.105, 4, .82], [1061.589, 28.127, 5, 1], [1393.747, -174.289, 5, .61], [1571.903, 160.019, 0, 1.4], [2070.708, -424.461, 5, 1], [1890.094, -38.011, 3, .74], [2641.256, 167.835, 2, 1.3], [2775.003, -273.566, 1, 1.73], [3600.865, -10.901, 6, 1], [4304.657, -434.446, 3, 1.02], [4514.504, 49.961, 5, 1.34], [-1873.248, 78.997, 2, 1.85], [-1738.956, -423.752, 0, 1], [-2562.487, -248.492, 5, 1], [-2908.07, 273.062, 1, 1], [-3511.442, -140.75, 3, 1], [-3067.546, -513.007, 5, 1], [-4294.653, 81.801, 4, 1.18], [-4341.772, -444.099, 2, 1.49], [4534.451, 552.148, 7, 1], [3523.869, 548.891, 7, 1], [2523.538, 545.869, 7, 1], [1527.226, 539.951, 7, 1], [524.44, 534.033, 7, 1], [-491.107, 531.244, 7, 1], [-1491.259, 530.667, 7, 1], [-2491.026, 527.456, 7, 1], [-3488.818, 522.618, 7, 1], [-4489.133, 520.724, 7, 1], [5540.582, 549.447, 7, 1], [6532.003, 553.506, 7, 1], [5332.871, -202.519, 3, .92], [6297.753, -518.992, 0, 1.4], [6571.46, 146.567, 1, 1], [-5608.643, -91.44, 1, 1], [-6554.049, -474.834, 5, 1], [-6324.28, 338.097, 5, 1], [-5497.194, 515.894, 7, 1], [-6495.769, 511.43, 7, 1]]
+            let b = [
+                        [
+                            -142.21, -1.18,
+                            -143.28, .36, -123.09, 11.23, -103.01, 13.96,
+                            -81.96, 16.82, -65.17, 14.9, -64.36, 15.65,
+                            -41.42, 37.12, -28.62, 36.17, -16.75, 36.02,
+                            18.19, 35.56, 38.19, 16.67, 39.3, 18.03,
+                            50.57, 31.83, 67.87, 39.26, 84.68, 33.47,
+                            95.27, 29.83, 123.57, 5.67, 121.35, -3.74,
+                            118.45, -15.98, 89.66, -8.14, 88.44, -10.77,
+                            74.28, -41.45, 51.47, -22.75, 50.8, -23.76,
+                            38.13, -43.02, 24.97, -62.52, -2.75, -60.1,
+                            -31.37, -57.6, -55.13, -17.35, -55.49, -17.57,
+                            -98.49, -44.18, -132.86, -14.55, -142.21, -1.18
+                        ],
+                        [
+                            -162.55, -1.68, 
+                            -169.22, -19.07, -134.4, -35.44, -105.42, -35.13,
+                            -45.5, -34.48, -16.08, -8.51, 20.84, -12.63,
+                            32.11, -13.89, 20.28, -39.57, 35.04, -45.63,
+                            50.56, -52, 67.52, -44.38, 81.19, -32.08,
+                            94.38, -20.22, 83.96, -10.24, 86.36, -8.17,
+                            92.3, -3.06, 110.55, -8.9, 114.01, -1.75,
+                            116.98, 4.4, 87.88, 27.98, 55.69, 21.98,
+                            53.83, 21.64, 55.47, 33.56, 20.71, 36.54,
+                            5.28, 37.87, -8.91, 30.47, -14.55, 25.77,
+                            -17.17, 23.58, -33.82, 38.42, -52.98, 36.38,
+                            -65.86, 35.01, -74.62, 20.26, -78.34, 16.38,
+                            -80.92, 13.67, -151.51, 27.09, -162.55, -1.68
+                        ],
+                        [
+                            -132.9, 30.86,
+                            -125.9, 10.58, -96.55, -22.97, -85.94, -23.79, 
+                            -61.71, -25.67, -53.16, -17.53, -50.03, -17.63, 
+                            -46.79, -17.74, -37.17, -49.76, -6.45, -50.02, 
+                            26.73, -50.29, 38.01, -16.34, 44.61, -16.75, 
+                            52.59, -17.25, 57.84, -24.32, 79.01, -23.54, 
+                            98.83, -22.8, 96.09, -12.23, 103.77, -9.21, 
+                            111.97, -5.97, 134.38, -11.68, 144.73, 7.12, 
+                            152.17, 20.65, 110.44, 38.48, 91.74, 39.3, 
+                            47.05, 41.27, -50.64, 19.62, -67.45, 24.81, 
+                            -90.4, 31.9, -100.01, 37.45, -121.08, 38.84, 
+                            -125.4, 39.13, -134.8, 36.38, -132.9, 30.86
+                        ],
+                        [
+                            -142.3, 3.86,
+                            -142.68, -5.86, -66.59, -26.42, -45.57, -34.65, 
+                            -22.55, -43.64, -21.3, -84.89, 5.81, -86.9, 
+                            25.18, -88.34, 99.82, -49.94, 103.2, -10.26, 
+                            104.1, .3, 137.86, -21.94, 136.83, -10.3, 
+                            133.75, 24.38, 117.81, 21.85, 111.08, 24.7, 
+                            107.63, 26.15, 88.76, 26.4, 83.17, 23.68, 
+                            82.44, 23.32, 49.7, 40.09, 19.75, 36.6, 
+                            -18.88, 32.08, -37.22, 21.23, -53.51, 11.08, 
+                            -57.67, 8.49, -66.63, 26.07, -94.62, 26.33, 
+                            -103.38, 26.41, -112.73, 24.98, -123.85, 15.85, 
+                            -126.35, 13.8, -141.87, 14.59, -142.3, 3.86
+                        ],
+                        [
+                            -142.63, 14.15,
+                            -142.06, 12.44, -131.98, 6.01, -92.96, -13.64, 
+                            -80.08, -20.13, -78.45, -40.22, -32.37, -45.14, 
+                            6.08, -49.25, 5.44, -26.43, 8.78, -26.51, 
+                            11.15, -26.56, 20.61, -40.86, 44.75, -43.15, 
+                            61.05, -44.69, 72.86, -34.19, 77.21, -31.3, 
+                            84.42, -26.5, 149.08, -20.62, 150.6, .29, 
+                            152.12, 21.2, 123.52, 42.13, 64.54, 49.68, 
+                            23.28, 54.96, 37.73, 31.1, 25.32, 30.57, 
+                            13.73, 30.07, -6.57, 48.69, -21.45, 46.17, 
+                            -44.71, 42.24, -48.23, 33.33, -81.8, 18.87, 
+                            -122.06, 1.53, -142.83, 14.75, -142.63, 14.15
+                        ],
+                        [
+                            -128.91, -3.91,
+                            -100.79, -29.51, -75.44, -28.12, -55.48, -25.64, 
+                            -35.53, -23.16, -10.93, -12.78, 7.7, -16, 
+                            15.92, -17.42, 33.99, -43.08, 54.49, -43.88, 
+                            83.11, -44.99, 85.4, -21.07, 89.46, -21.25, 
+                            94.52, -21.48, 107.89, -29.23, 117.73, -3.17, 
+                            118.89, -.07, 136.54, 16.66, 149.39, 19.53, 
+                            149.68, 19.59, 95.95, 10.58, 17.5, 16.07, 
+                            -5.04, 17.65, -60.8, 45.1, -108.87, 48.31, 
+                            -130.84, 49.78, -145.13, 42.1, -143.01, 29.93, 
+                            -140.38, 14.79, -134.29, .99, -128.91, -3.91
+                        ],
+                        [
+                            -105.63, 33.5,
+                            -112.73, 24.78, -104.42, 20.23, -104.9, 18.35, 
+                            -106.19, 13.28, -101.31, -5.25, -88.8, -11.01, 
+                            -73.37, -18.1, -65.27, -18.01, -49.55, -16.92, 
+                            -46.11, -16.68, -52.73, -32.67, -37.48, -39.53, 
+                            -19.05, -47.81, 18.24, -26.76, 24.38, -21.56, 
+                            26.14, -20.07, 44.72, -32.26, 63.81, -26.11, 
+                            106.07, -12.51, 112.47, 3.21, 124.03, 10.2, 
+                            146.91, 24.05, 177.98, 16.35, 176.28, 17.17, 
+                            108.58, 50.11, -.39, 35.83, -2.15, 35.9, 
+                            -18.66, 36.6, -90.36, 52.25, -105.63, 33.5
+                        ],
+                        [
+                            -515.42, -79.84,
+                            -511.96, -82.38, -492.91, -99.15, -444.49, -84.74, 
+                            -379.42, -65.39, -353.57, -29.63, -347.84, -16.74, 
+                            -347.52, -16.02, -326.45, -32.16, -294.56, -21.93, 
+                            -266.34, -12.88, -255.45, 16.99, -233.61, 34.9, 
+                            -195.97, 65.76, -153.63, 30.14, -135.04, 43.22, 
+                            -79.08, 82.59, .11, -91.66, 104.06, 4.27, 
+                            177.97, 72.49, 215.12, 9.81, 234.44, 16.08, 
+                            252.34, 21.9, 289.03, 43.31, 332.29, 27.33, 
+                            368.2, 14.06, 416.81, -38.28, 429.68, -21.59, 
+                            445.63, -.91, 440.5, -8.41, 442.5, -17, 
+                            454.3, -67.56, 497.46, -97.75, 506.29, -79.88, 
+                            515.12, -62.02, 527.33, 105.09, 482.02, 105.88, 
+                            436.97, 106.67, -558.17, 136.12, -560.32, 90.04, 
+                            -566.63, -45.23, -534.53, -65.79, -515.42, -79.84
+                        ]
+                    ]
+              , e = [
+                        [876.66, -374.819, 1, 1.26],
+                        [97.633, -380.736, 0, 1],
+                        [192.926, 241.051, 2, 1],
+                        [-600.648, -471.205, 3, 1],
+                        [-1012.119, -182.729, 4, 1],
+                        [-309.131, -16.817, 5, 1],
+                        [-909.922, 275.895, 6, 1],
+                        [433.972, -27.105, 4, .82],
+                        [1061.589, 28.127, 5, 1],
+                        [1393.747, -174.289, 5, .61],
+                        [1571.903, 160.019, 0, 1.4],
+                        [2070.708, -424.461, 5, 1],
+                        [1890.094, -38.011, 3, .74],
+                        [2641.256, 167.835, 2, 1.3],
+                        [2775.003, -273.566, 1, 1.73],
+                        [3600.865, -10.901, 6, 1],
+                        [4304.657, -434.446, 3, 1.02],
+                        [4514.504, 49.961, 5, 1.34],
+                        [-1873.248, 78.997, 2, 1.85],
+                        [-1738.956, -423.752, 0, 1],
+                        [-2562.487, -248.492, 5, 1],
+                        [-2908.07, 273.062, 1, 1],
+                        [-3511.442, -140.75, 3, 1],
+                        [-3067.546, -513.007, 5, 1],
+                        [-4294.653, 81.801, 4, 1.18],
+                        [-4341.772, -444.099, 2, 1.49],
+                        [4534.451, 552.148, 7, 1],
+                        [3523.869, 548.891, 7, 1],
+                        [2523.538, 545.869, 7, 1],
+                        [1527.226, 539.951, 7, 1],
+                        [524.44, 534.033, 7, 1],
+                        [-491.107, 531.244, 7, 1],
+                        [-1491.259, 530.667, 7, 1],
+                        [-2491.026, 527.456, 7, 1],
+                        [-3488.818, 522.618, 7, 1],
+                        [-4489.133, 520.724, 7, 1],
+                        [5540.582, 549.447, 7, 1],
+                        [6532.003, 553.506, 7, 1],
+                        [5332.871, -202.519, 3, .92],
+                        [6297.753, -518.992, 0, 1.4],
+                        [6571.46, 146.567, 1, 1],
+                        [-5608.643, -91.44, 1, 1],
+                        [-6554.049, -474.834, 5, 1],
+                        [-6324.28, 338.097, 5, 1],
+                        [-5497.194, 515.894, 7, 1],
+                        [-6495.769, 511.43, 7, 1]
+                    ]
               , f = []
               , d = [];
             this.drawCloudShape = function(a, c, b, d, e) {
@@ -3673,8 +3844,7 @@ Feedback:
                 for (var k = 2; k < f; k += 6)
                     a.bezierCurveTo(d[k] * e + c, d[k + 1] * e + b, d[k + 2] * e + c, d[k + 3] * e + b, d[k + 4] * e + c, d[k + 5] * e + b);
                 a.fill()
-            }
-            ;
+            };
             this.drawCloud = function(a, c, g, h, e, f, k, m) {
                 -7E3 > c && (c = (-c + 7E3) % 14E3,
                 c = 7E3 - c);
@@ -3691,8 +3861,7 @@ Feedback:
                 a.fillStyle = "rgba(179,222,250," + f + ")",
                 this.drawCloudShape(a, c + k, g + m, b[h], e),
                 a.restore())
-            }
-            ;
+            };
             this.drawPreRenderedCloud = function(a, c, b, e, q, n) {
                 -7E3 > c && (c = (-c + 7E3) % 14E3,
                 c = 7E3 - c);
@@ -3705,12 +3874,10 @@ Feedback:
                 var K = z.getBounds();
                 l = l > K[1].x || r < K[0].x || y > K[1].y || q < K[0].y ? !1 : !0;
                 l && a.drawImage(f[e], c + k * n, b + m * n)
-            }
-            ;
+            };
             this.update = function(a) {
                 Xa -= .03 * a
-            }
-            ;
+            };
             this.drawClouds = function(a) {
                 for (var c = e.length, b = 0; b < c; b++) {
                     var d = 2
@@ -3731,8 +3898,7 @@ Feedback:
                     n = Nb);
                     this.drawCloud(a, f + Xa / 4 * d, n, e[b][2], e[b][3] * m, k, l, y)
                 }
-            }
-            ;
+            };
             this.drawPreRenderedClouds = function(a) {
                 var c = e.length
                   , b = Xa
@@ -3751,8 +3917,7 @@ Feedback:
                     l = .7) : 7 == e[f][2] && (m = Nb);
                     this.drawPreRenderedCloud(a, k + b / 4 * n, m, f, e[f][2], e[f][3] * l)
                 }
-            }
-            ;
+            };
             this.preRender = function(a) {
                 a = e.length;
                 for (var c = 1, g = 0; g < a; g++) {
@@ -3778,8 +3943,7 @@ Feedback:
                     this.drawCloudShape(m, K + y, p + r, b[h], l);
                     f.push(k)
                 }
-            }
-            ;
+            };
             (function() {
                 for (var a = 0; a < b.length; a++) {
                     for (var c = b[a], e = c.length, h = 9999, f = 9999, n = -9999, k = -9999, m = !0, l = 0; l < e; l++) {
@@ -3796,8 +3960,11 @@ Feedback:
             this.preRender()
         }
           , hd = function() {
-            let b = [], e = 0, f;
-            this.waves;
+            let b = []
+              , e = 0
+              , f = new fd
+              , c = !1;
+            this.waves = new ed;
             let d = function() {
                 this.vertexes = [];
                 this.type = 0;
@@ -3807,8 +3974,7 @@ Feedback:
                         y: c
                     });
                     this.type = b
-                }
-                ;
+                };
                 this.draw = function(a, c) {
                     if (7 == this.type) {
                         if (a.fillStyle = "#F0F000",
@@ -3902,28 +4068,23 @@ Feedback:
                                     g += 4)
                             }
                     }
-                }
-                ;
+                };
                 e.send(null);
                 console.log("Map loaded!")
-            }
-            ;
+            };
             this.drawColliders = function(a) {
                 for (var c = b.length, d = 0; d < c; d++)
                     b[d].draw(a, 1)
-            }
-            ;
+            };
             this.drawWater = function(a) {
                 if (Na)
                     for (var c = b.length, d = 0; d < c; d++)
                         b[d].draw(a, 2)
-            }
-            ;
+            };
             this.drawGrassSand = function(a) {
                 for (var c = b.length, d = 0; d < c; d++)
                     b[d].draw(a, 3)
-            }
-            ;
+            };
             this.drawGradient = function(a) {
                 var c = (canvas.width / 2 + (z.x * z.zoom - canvas.width / 2)) / z.zoom
                   , b = (canvas.height / 2 + (z.y * z.zoom - canvas.height / 2)) / z.zoom
@@ -3948,16 +4109,13 @@ Feedback:
                 d.addColorStop(1, "rgba(" + parseInt(m) + ",231,252,1.0)")) : d = "#62bae2";
                 a.fillStyle = d;
                 a.fillRect(c - canvas.width / 2 / z.zoom, b - canvas.height / 2 / z.zoom, canvas.width / z.zoom, canvas.height / z.zoom)
-            }
-            ;
+            };
             this.drawWaterBehind = function(a) {
                 Na && this.waves.drawBehind(a)
-            }
-            ;
+            };
             this.drawWaterFront = function(a) {
                 Na && this.waves.drawFront(a)
-            }
-            ;
+            };
             this.drawLimits = function(a) {
                 var c = (canvas.width / 2 + (z.x * z.zoom - canvas.width / 2)) / z.zoom
                   , b = (canvas.height / 2 + (z.y * z.zoom - canvas.height / 2)) / z.zoom
@@ -3997,8 +4155,7 @@ Feedback:
                 a.fillRect(-$, E / 2, 2 * $, 2500)));
                 u.isSpaceWars() || (a.fillStyle = "rgba(255,255,255,0.10)",
                 a.fillRect(c - canvas.width / 2 / z.zoom, -E / 2 - 1, canvas.width / z.zoom, 6))
-            }
-            ;
+            };
             this.draw = function(a) {
                 if (qb && !u.isSpaceWars()) {
                     var c = .97 * z.x + 450
@@ -4016,9 +4173,7 @@ Feedback:
                     a.fill()
                 }
                 ob && !u.isSpaceWars() && f.drawPreRenderedClouds(a)
-            }
-            ;
-            let c = !1;
+            };
             this.update = function(a) {
                 if (xa || !c)
                     if (c = !0,
@@ -4032,19 +4187,29 @@ Feedback:
                         e += a) : (0 < e && F.clearWarningMessage(),
                         e = 0)
                     }
-            }
-            ;
-            this.waves = new ed;
-            f = new fd
+            };
         }
           , jd = function() {
+            let b = this.alpha = 0
+              , e = 0
+              , f = Math.random() * Math.PI * 2
+              , d = 1
+              , a = 0
+              , c = 0
+              , g = 0
+              , h
+              , q
+              , n = 1
+              , k = 1
+              , m = 1
+              , l = 0
+              , y = !1;
             this.id = -1;
             this.y = this.x = 0;
             this.radius = 1.5;
             this.type;
             this.sinScaleY = this.sinScaleX = 0;
             this.fadingOut = this.grabbing = !1;
-            let b = this.alpha = 0, e = 0, f = Math.random() * Math.PI * 2, d = 1, a = 0, c = 0, g = 0, h, q, n = 1, k = 1, m = 1, l = 0, y = !1;
             this.update = function(f) {
                 var p = .06 * f;
                 if (64 != this.type) {
@@ -4071,8 +4236,7 @@ Feedback:
                 n = 1 - s,
                 g += .07 * p,
                 1 < g && delete W[this.id]) : delete W[this.id])
-            }
-            ;
+            };
             this.drawItem = function(c, b) {
                 if (64 == this.type)
                     c.save(),
@@ -4118,8 +4282,7 @@ Feedback:
                     c.globalAlpha = 1
                 }
                 c.restore()
-            }
-            ;
+            };
             this.draw = function(a) {
                 if (rb) {
                     var c = 40, b;
@@ -4134,12 +4297,10 @@ Feedback:
                         return;
                     this.drawItem(a, b)
                 }
-            }
-            ;
+            };
             this.fadeOut = function() {
                 this.fadingOut = !0
-            }
-            ;
+            };
             this.playerGrab = function(a) {
                 this.grabbing = !0;
                 c = a;
@@ -4150,18 +4311,17 @@ Feedback:
                 this.id = "g" + this.id;
                 W[this.id] = this;
                 v && c == v.id && !u.isInstagib() && (64 == this.type ? v.incScore(vc) : v.incScore(wc))
-            }
-            ;
+            };
             this.setPosition = function(a, c) {
                 this.x = 10 * a;
                 this.y = 10 * c;
                 this.y > -E / 2 && (this.alpha = 1);
                 b = +new Date
-            }
-            ;
+            };
             u.isSpaceWars() && (y = !0)
         }
           , wd = function() {
+            let f;
             function b(b, a, c) {
                 169 != a && 172 != a && 162 != a && 178 != a || c || (ja = []);
                 var e = !1
@@ -4367,7 +4527,6 @@ Feedback:
                 } else
                     W[e].fadeOut()
             }
-            let f;
             this.firstClientListing = !0;
             this.sentHello = this.hasConnection = !1;
             this.lastGrabbedWingTime = this.remoteHost = null;
@@ -4432,8 +4591,7 @@ Feedback:
                         })
                     }
                 }
-            }
-            ;
+            };
             this.connect = function() {
                 if (wa || G) {
                     var b = "ws://" + A.remoteHost;
@@ -4459,15 +4617,13 @@ Feedback:
                     f.onerror = A.onSocketError
                 } else
                     setTimeout(A.getServerAndConnect, 100)
-            }
-            ;
+            };
             this.disconnect = function() {
                 A.directed && (Hb() || (w.location.hash = ""),
                 A.directed = !1);
                 A.roomID = 0;
                 f && f.close()
-            }
-            ;
+            };
             this.onSocketOpen = function(b) {
                 w.didSendLoadingTime || (b = +new Date - w.startTime,
                 w.stats && console.log("ltct " + b),
@@ -4480,20 +4636,16 @@ Feedback:
                 A.hasConnection = !0;
                 A.directed = !1;
                 p.loaded && A.hello()
-            }
-            ;
+            };
             this.onSocketClose = function(b) {
                 A.connectionClosed()
-            }
-            ;
+            };
             this.onSocketMessage = function(b) {
                 A.processMessage(b.data)
-            }
-            ;
+            };
             this.onSocketError = function(b) {
                 console.log("socket error")
-            }
-            ;
+            };
             this.hello = function() {
                 G ? A.sendSingleByte(32) : A.sendSingleByte(1);
                 A.ping();
@@ -4504,8 +4656,7 @@ Feedback:
                 s(".btn-needs-server").removeAttr("disabled");
                 s("#nick").focus();
                 1 == G && ("undefined" != typeof messageHandlers && messageHandlers.didConnect ? messageHandlers.didConnect(JSON.stringify({})) : w.webkit.messageHandlers.didConnect.postMessage({}))
-            }
-            ;
+            };
             this.processMessage = function(d) {
                 d = new DataView(d);
                 var a = d.getUint8(0);
@@ -4799,8 +4950,7 @@ Feedback:
                         }
                         F.setLastWinner(a, f)
                     }
-            }
-            ;
+            };
             this.connectionClosed = function() {
                 L.gameCleanup();
                 A.sentHello = !1;
@@ -4816,14 +4966,12 @@ Feedback:
                 5 < b && (b = 5);
                 setTimeout(this.getServerAndConnect, 1E3 + 1E3 * b);
                 A.connectRetry++
-            }
-            ;
+            };
             this.sendSingleByte = function(b) {
                 var a = new ArrayBuffer(1);
                 (new DataView(a)).setUint8(0, b);
                 f.send(a)
-            }
-            ;
+            };
             this.sendNick = function(b, a) {
                 myName = b;
                 var c = new ArrayBuffer(3 + 2 * b.length)
@@ -4836,8 +4984,7 @@ Feedback:
                 for (h = 0; h < b.length; ++h)
                     e.setUint16(3 + 2 * h, b.charCodeAt(h), !0);
                 f.send(c)
-            }
-            ;
+            };
             this.sendInput = function() {
                 var b = new ArrayBuffer(10)
                   , a = new DataView(b);
@@ -4850,46 +4997,40 @@ Feedback:
                     c |= 2;
                 a.setUint8(9, c, !0);
                 f.send(b)
-            }
-            ;
+            };
             this.sendDirection = function() {
                 var b = new ArrayBuffer(9)
                   , a = new DataView(b);
                 a.setUint8(0, 4);
                 a.setFloat64(1, V.angle, !0);
                 f.send(b)
-            }
-            ;
+            };
             this.sendThrottle = function() {
                 var b = new ArrayBuffer(2)
                   , a = new DataView(b);
                 a.setUint8(0, 6);
                 1 == V.throttle ? a.setUint8(1, 1) : a.setUint8(1, 0);
                 f.send(b)
-            }
-            ;
+            };
             this.sendBraking = function(b) {
                 var a = new ArrayBuffer(2)
                   , c = new DataView(a);
                 c.setUint8(0, 4);
                 b ? c.setUint8(1, 1) : c.setUint8(1, 0);
                 f.send(a)
-            }
-            ;
+            };
             this.sendShooting = function(b) {
                 var a = new ArrayBuffer(2)
                   , c = new DataView(a);
                 c.setUint8(0, 5);
                 b ? c.setUint8(1, 1) : c.setUint8(1, 0);
                 f.send(a)
-            }
-            ;
+            };
             this.leave = function() {
                 var b = new ArrayBuffer(1);
                 (new DataView(b)).setUint8(0, 7);
                 f.send(b)
-            }
-            ;
+            };
             this.ping = function() {
                 if (this.hasConnection) {
                     var b = new ArrayBuffer(1);
@@ -4899,10 +5040,29 @@ Feedback:
             }
         }
           , Cd = function(b) {
+            let f = this
+              , d
+              , a
+              , c = 0
+              , g = 0
+              , h = 0
+              , q = !1
+              , n = 1
+              , k
+              , m = 0
+              , l = 0
+              , y = !1
+              , r = 1
+              , x
+              , pa = 0
+              , L = 0
+              , T = !1
+              , Ca = 1
+              , ta
+              , N;
             function e() {
                 Z && A.hasConnection && A.sendInput()
             }
-            let f = this, d, a, c = 0, g = 0, h = 0, q = !1, n = 1, k, m = 0, l = 0, y = !1, r = 1, x, pa = 0, L = 0, T = !1, Ca = 1, ta;
             this.whiteFlash = 0;
             f.followTopPlayer = function() {
                 var a = -1
@@ -4916,8 +5076,7 @@ Feedback:
                 b && (v = B[b],
                 v.prepareFollow(),
                 Oa = ra = b)
-            }
-            ;
+            };
             f.PlayerFollowing = function(a) {
                 c = 0;
                 if (0 == ja.length)
@@ -4959,12 +5118,10 @@ Feedback:
                     v.prepareFollow();
                     Oa = a
                 }
-            }
-            ;
+            };
             f.waitUntilNextFollow = function() {
                 c = 3E3
-            }
-            ;
+            };
             f.update = function(a) {
                 if (p.loaded) {
                     v && !v.inGame && 0 == ka && (v = null,
@@ -5112,8 +5269,7 @@ Feedback:
                         T = !0) : T = !1
                     }
                 }
-            }
-            ;
+            };
             f.draw = function(b) {
                 if (p.loaded) {
                     z.setupContext();
@@ -5227,8 +5383,7 @@ Feedback:
                     a.restore(),
                     this.whiteFlash -= .015)
                 }
-            }
-            ;
+            };
             f.gameCleanup = function() {
                 v = void 0;
                 ra = 0;
@@ -5247,15 +5402,12 @@ Feedback:
                 for (id in U)
                     delete U[id];
                 U = {}
-            }
-            ;
-            let N;
+            };
             f.resize = function(a) {
                 C();
                 u.isSpaceWars() && (N && clearTimeout(N),
                 N = setTimeout(f.respawnParticles, 200))
-            }
-            ;
+            };
             let C = function() {
                 var a = 2;
                 Ba && (a = 1);
@@ -5296,8 +5448,7 @@ Feedback:
                 sa = [];
                 for (var a = 0; 150 > a; a++)
                     sa.push(new xd)
-            }
-            ;
+            };
             d = b;
             a = d.getContext("2d");
             C();
@@ -5328,13 +5479,18 @@ Feedback:
             A.getServerAndConnect()
         }
           , Bd = function(b, e, f, d) {
-            let a = this;
+            let a = this
+              , c = 0
+              , g
+              , h = 0
+              , q = 0
+              , n = 0
+              , k = 0;
             this.x = f;
             this.y = d;
             this.minZoom = 1;
             this.maxZoom = 2;
             this.zoom = this.minZoom;
-            let c = 0, g, h = 0, q = 0, n = 0, k = 0;
             this.setupContext = function() {
                 var c = a.zoom
                   , d = b.width / 2 - a.x * c
@@ -5342,8 +5498,7 @@ Feedback:
                 e.setTransform(1, 0, 0, 1, 0, 0);
                 e.translate(d + n, f + k);
                 e.scale(c, c)
-            }
-            ;
+            };
             this.applyShake = function(a) {
                 if (xa)
                     if (0 < c) {
@@ -5358,8 +5513,7 @@ Feedback:
                         c -= a
                     } else
                         k = n = 0
-            }
-            ;
+            };
             this.update = function(b) {
                 var c = a.maxZoom + (a.minZoom - a.maxZoom);
                 xa || (a.y = 470);
@@ -5372,20 +5526,17 @@ Feedback:
                 a.y = v.y)) : (c = 1 / (w.devicePixelRatio / jb) * .7 * t,
                 a.zoom += (c - a.zoom) / 10);
                 this.applyShake(b)
-            }
-            ;
+            };
             this.setPosition = function(b, c) {
                 ca.x = b - a.x;
                 ca.y = c - a.y;
                 a.x = b;
                 a.y = c
-            }
-            ;
+            };
             this.shake = function() {
                 xa && (c = 500,
                 g = 7)
-            }
-            ;
+            };
             this.getBounds = function() {
                 return [{
                     x: a.x - b.width / 2 / a.zoom,
@@ -5394,8 +5545,7 @@ Feedback:
                     x: a.x + b.width / 2 / a.zoom,
                     y: a.y + b.height / 2 / a.zoom
                 }]
-            }
-            ;
+            };
             this.getOuterBounds = function() {
                 return [{
                     x: a.x - b.width / 2 / a.minZoom,
@@ -5404,8 +5554,7 @@ Feedback:
                     x: a.x + b.width / 2 / a.minZoom,
                     y: a.y + b.height / 2 / a.minZoom
                 }]
-            }
-            ;
+            };
             this.getInnerBounds = function() {
                 return [{
                     x: a.x - b.width / 2 / a.maxZoom,
@@ -5414,18 +5563,22 @@ Feedback:
                     x: a.x + b.width / 2 / a.maxZoom,
                     y: a.y + b.height / 2 / a.maxZoom
                 }]
-            }
-            ;
+            };
             this.startUILayer = function() {
                 e.setTransform(1, 0, 0, 1, 0, 0)
             }
         }
           , xb = function() {
+            let b
+              , e
+              , f
+              , d
+              , a = void 0
+              , c
+              , g;
             this.width;
             this.height;
-            let b, e, f, d, a = void 0;
             this.y = this.x = 0;
-            let c, g;
             this.canvas;
             this.frameWithCanvas = function(a, b, d) {
                 this.width = a.width;
@@ -5433,8 +5586,7 @@ Feedback:
                 this.canvas = a;
                 c = b;
                 g = d
-            }
-            ;
+            };
             this.setFrameInfo = function(h, q) {
                 a = q;
                 b = h[1];
@@ -5445,12 +5597,10 @@ Feedback:
                 d = h[6];
                 c = -this.width * f;
                 g = -this.height * d
-            }
-            ;
+            };
             this.draw = function(d) {
                 a ? d.drawImage(a, b, e, this.width, this.height, c + this.x, g + this.y, this.width, this.height) : d.drawImage(this.canvas, 0, 0, this.width, this.height, c + this.x, g + this.y, this.width, this.height)
-            }
-            ;
+            };
             this.renderTintedFrame = function(d) {
                 var f = x.createElement("canvas")
                   , n = f.getContext("2d");
@@ -5469,8 +5619,7 @@ Feedback:
                 d = new xb;
                 d.frameWithCanvas(f, c, g);
                 return d
-            }
-            ;
+            };
             this.getImageCopy = function() {
                 var c = x.createElement("canvas");
                 c.width = this.width;
@@ -5484,8 +5633,7 @@ Feedback:
                     toData: f.data,
                     to: f
                 }
-            }
-            ;
+            };
             this.generateTintImage2 = function(d, f, n, k) {
                 var m = x.createElement("canvas");
                 m.width = this.width;
@@ -5501,8 +5649,7 @@ Feedback:
                 d = new xb;
                 d.frameWithCanvas(m, c, g);
                 return d
-            }
-            ;
+            };
             this.generateTintImage = function(a, b, d, e) {
                 var f = x.createElement("canvas");
                 f.width = this.width;
@@ -5521,8 +5668,7 @@ Feedback:
                 a = new xb;
                 a.frameWithCanvas(f, c, g);
                 return a
-            }
-            ;
+            };
             this.generateRGBKs = function() {
                 var c = []
                   , d = x.createElement("canvas");
@@ -5568,8 +5714,7 @@ Feedback:
                 c.push(l);
                 c.push(p);
                 return c
-            }
-            ;
+            };
             this.renderToCanvas = function() {
                 var c = x.createElement("canvas")
                   , d = c.getContext("2d");
@@ -5593,31 +5738,25 @@ Feedback:
               , a = [];
             this.addAnimationInfo = function(a, d) {
                 b[a] = d
-            }
-            ;
+            };
             this.setAnimationInterval = function(a, d) {
                 b[a].setInterval(d)
-            }
-            ;
+            };
             this.createAnimation = function(a) {
                 a = b[a];
                 var d = new Jc;
                 d.setup(a);
                 return d
-            }
-            ;
+            };
             this.runAnimation = function(a) {
                 e.push(a)
-            }
-            ;
+            };
             this.runAnimationLayer2 = function(a) {
                 f.push(a)
-            }
-            ;
+            };
             this.runAnimationBehind = function(a) {
                 d.push(a)
-            }
-            ;
+            };
             this.addBlast = function(a, b, d, e, f) {
                 var k = X.createAnimation("explosion");
                 k.setScale(d);
@@ -5626,8 +5765,7 @@ Feedback:
                 X.runAnimationBehind(k);
                 a = 1 - va(a, b, H.x, H.y) / Ra;
                 .01 < a && J.playSound(Fc, a * f, 1, e, null)
-            }
-            ;
+            };
             this.addExplosion = function(b, d, e, f) {
                 if (pb && aa(b, d, 100) && la()) {
                     if (1 >= a.length) {
@@ -5638,8 +5776,7 @@ Feedback:
                     this.addBlast(b, d, 1, Sa, 1);
                     z.shake()
                 }
-            }
-            ;
+            };
             this.update = function(b) {
                 for (var g in e) {
                     var h = e[g];
@@ -5662,8 +5799,7 @@ Feedback:
                     g.update(b),
                     g.deleting && (a.splice(q, 1),
                     delete g)
-            }
-            ;
+            };
             this.drawBehind = function(a) {
                 for (var b in d) {
                     var e = d[b];
@@ -5674,8 +5810,7 @@ Feedback:
                     e.draw(a);
                     a.restore()
                 }
-            }
-            ;
+            };
             this.drawLayer2 = function(a) {
                 for (var b in f) {
                     var d = f[b];
@@ -5686,8 +5821,7 @@ Feedback:
                     d.draw(a);
                     a.restore()
                 }
-            }
-            ;
+            };
             this.draw = function(a) {
                 for (var b in e) {
                     var d = e[b];
@@ -5698,8 +5832,7 @@ Feedback:
                     d.draw(a);
                     a.restore()
                 }
-            }
-            ;
+            };
             this.drawExplosions = function(b) {
                 for (var d in a)
                     a[d].draw(b)
@@ -5729,29 +5862,24 @@ Feedback:
                 b.alpha = this.alpha;
                 b.setInterval(e);
                 return b
-            }
-            ;
+            };
             this.setup = function(b) {
                 e = b.interval;
                 this.frames = b.frames;
                 this.frameCount = b.frames.length
-            }
-            ;
+            };
             this.setInterval = function(b) {
                 e = b
-            }
-            ;
+            };
             this.update = function(d) {
                 this.deleting || (f > e && (b++,
                 f -= e),
                 f += d,
                 b >= this.frameCount && (this.deleting = !0))
-            }
-            ;
+            };
             this.setScale = function(b) {
                 this.scaleY = this.scaleX = b
-            }
-            ;
+            };
             this.draw = function(d) {
                 1 > this.alpha && (d.globalAlpha = this.alpha);
                 this.frames[b].draw(d)
@@ -5762,8 +5890,7 @@ Feedback:
             this.interval = 0;
             this.addFrame = function(b) {
                 this.frames.push(b)
-            }
-            ;
+            };
             this.setInterval = function(b) {
                 this.interval = b
             }
@@ -5810,9 +5937,12 @@ Feedback:
             let b = 0
               , e = 0
               , f = []
-              , d = 0;
+              , d = 0
+              , a
+              , c
+              , g
+              , h;
             this.life = 400;
-            let a, c, g, h;
             this.debreeAge = 0;
             this.alpha = 1;
             this.init = function(q, n, k) {
@@ -5829,8 +5959,7 @@ Feedback:
                     k.active = !1,
                     k.time = q * n,
                     f.push(k)
-            }
-            ;
+            };
             this.resetParticle = function(a) {
                 a.pos.x = b;
                 a.pos.y = e;
@@ -5840,8 +5969,7 @@ Feedback:
                 a.color.a = 1;
                 a.rotationSpeed = (Math.random() - .5) / 10;
                 a.rotation = 360 * Math.random()
-            }
-            ;
+            };
             this.update = function(b) {
                 b = 1E3 / 60;
                 for (var e = 0; e < d; e++) {
@@ -5875,8 +6003,7 @@ Feedback:
                         g.speed.y += 1 * c
                     }
                 }
-            }
-            ;
+            };
             this.updateExplosion = function(b) {
                 b = 1E3 / 60;
                 for (var e = 0; e < d; e++) {
@@ -5914,8 +6041,7 @@ Feedback:
                         g.speed.y += 1 * c
                     }
                 }
-            }
-            ;
+            };
             this.updateMissileSmoke = function(b) {
                 b = 1E3 / 60;
                 for (var e = 0; e < d; e++) {
@@ -5950,17 +6076,14 @@ Feedback:
                         g.speed.y += 1 * c
                     }
                 }
-            }
-            ;
+            };
             this.setPosition = function(a, c) {
                 b = a;
                 e = c
-            }
-            ;
+            };
             this.setLife = function(a) {
                 this.life = a
-            }
-            ;
+            };
             this.draw = function(a) {
                 for (var b = d - 1; 0 <= b; b--) {
                     var c = f[b];
@@ -5969,11 +6092,13 @@ Feedback:
             }
         }
           , Dd = function() {
+            let e = []
+              , f
+              , d;
             function b(a) {
                 return Math.random() * a - a / 2
             }
             this.deleting = !1;
-            let e = [], f, d;
             this.init = function(a, c, e, h) {
                 f = a;
                 d = c;
@@ -5995,15 +6120,13 @@ Feedback:
                 this.addDebree(l * a + e, m * a + h);
                 this.addDebree(r * c + e, p * c + h);
                 this.addDebree(n * q + e, k * q + h)
-            }
-            ;
+            };
             this.addDebree = function(a, b) {
                 var g = new Fd;
                 g.init(f, d);
                 g.setSpeed(a, b);
                 e.push(g)
-            }
-            ;
+            };
             this.update = function(a) {
                 var b = 0;
                 for (debreeID in e) {
@@ -6014,33 +6137,38 @@ Feedback:
                     b++
                 }
                 0 == b && (this.deleting = !0)
-            }
-            ;
+            };
             this.draw = function(a) {
                 for (debreeID in e)
                     e[debreeID].draw(a)
             }
         }
           , Fd = function() {
-            let b, e, f, d, a, c = .08;
+            let b
+              , e
+              , f
+              , d
+              , a
+              , c = .08
+              , g
+              , h
+              , q
+              , n = 0;
             u.isSpaceWars() && (c = 0);
-            let g, h, q, n = 0;
             this.deleting = !1;
             this.init = function(a, b) {
                 g = a;
                 h = b;
                 q = new Ec;
                 q.init(15, g, h)
-            }
-            ;
+            };
             this.setSpeed = function(c, g) {
                 b = c;
                 e = g;
                 f = 0;
                 d = .2 * b;
                 a = .2 * e
-            }
-            ;
+            };
             this.update = function(k) {
                 f += c;
                 g += b;
@@ -6056,13 +6184,15 @@ Feedback:
                 this.deleting = !0);
                 this.deleting || (q.setPosition(g, h),
                 q.updateExplosion(k))
-            }
-            ;
+            };
             this.draw = function(a) {
                 this.deleting || q.draw(a)
             }
         }
           , kd = function() {
+            let b = new yb
+              , e = 0
+              , f = 0;
             this.lastUpdate = 0;
             this.id = -1;
             this.angle = this.speed = this.dstY = this.dstX = this.origY = this.origX = this.prevY = this.prevX = this.y = this.x = 0;
@@ -6073,9 +6203,6 @@ Feedback:
             this.lastImage;
             this.first_set = !0;
             this.colorHue = 0;
-            let b = new yb
-              , e = 0
-              , f = 0;
             this.finished = !1;
             this.type = 0;
             this.update = function(d) {
@@ -6103,8 +6230,7 @@ Feedback:
                     }
                     e -= d
                 }
-            }
-            ;
+            };
             this.draw = function(d, a) {
                 var c = 1;
                 this.timeToNextFrame -= a;
@@ -6142,8 +6268,7 @@ Feedback:
                 d.arc(0, 0, 4, 0, 2 * Math.PI),
                 d.fill());
                 d.restore()
-            }
-            ;
+            };
             this.drawReflection = function(b, a) {
                 var c = E / 2
                   , e = c - this.y;
@@ -6161,8 +6286,7 @@ Feedback:
                     b.fill();
                     b.restore()
                 }
-            }
-            ;
+            };
             this.setPosition = function(b, a, c) {
                 this.origX = this.dstX;
                 this.origY = this.dstY;
@@ -6181,25 +6305,20 @@ Feedback:
                 0 == this.type && (b = this.dstX - this.origX,
                 a = this.dstY - this.origY,
                 this.angle = 0 <= b ? Math.atan(a / b) : Math.atan(a / b) + Math.PI)
-            }
-            ;
+            };
             this.setColorHue = function(b) {
                 this.colorHue = b
-            }
-            ;
+            };
             this.setType = function(d) {
                 this.type = d;
                 0 != d && delete b
-            }
-            ;
+            };
             this.getSpeedDirectionX = function() {
                 return this.x - this.prevX
-            }
-            ;
+            };
             this.getSpeedDirectionY = function() {
                 return this.y - this.prevY
-            }
-            ;
+            };
             b.tailAddJointInterval = 30;
             b.enabled = !0;
             b.trailTime = 100;
@@ -6207,6 +6326,8 @@ Feedback:
             b.fixedColor = !0
         }
           , yb = function() {
+            let b
+              , e;
             this.tailAddJointInterval = 50;
             this.timeToNextJoint = 0;
             this.tailJoints = [[]];
@@ -6214,7 +6335,6 @@ Feedback:
             this.trailEffectTime = 0;
             this.enabled = !1;
             this.width = 1;
-            let b, e;
             this.fixedColor = !1;
             this.style;
             this.update = function(f) {
@@ -6248,8 +6368,7 @@ Feedback:
                     this.tailJoints[a][0].y = this.tailJoints[a][1].origY + c * g));
                 this.timeToNextJoint -= f;
                 this.trailEffectTime = 0 > this.trailEffectTime ? 0 : this.trailEffectTime - f
-            }
-            ;
+            };
             this.draw = function(b) {
                 if (Ya)
                     for (var d = this.tailJoints.length, a = 0; a < d; a++)
@@ -6263,26 +6382,24 @@ Feedback:
                             b.lineTo(this.tailJoints[a][e + 1].x, this.tailJoints[a][e + 1].y);
                             b.stroke()
                         }
-            }
-            ;
+            };
             this.setPosition = function(f, d) {
                 b = f;
                 e = d
-            }
-            ;
+            };
             this.push = function() {
                 this.tailJoints.push([])
-            }
-            ;
+            };
             this.trailEffect = function() {
                 this.trailEffectTime = 1200
-            }
-            ;
+            };
             this.clear = function() {
                 this.tailJoints = [[]]
             }
         }
           , ad = function() {
+            let b
+              , e;
             this.tailJoints = [[]];
             this.maxPoints = 1;
             this.flagDivisions = 5;
@@ -6292,7 +6409,6 @@ Feedback:
             this.textureHeight;
             this.loaded = this.enabled = !1;
             this.width = 1;
-            let b, e;
             this.style;
             this.flagHeight;
             this.flipX = !1;
@@ -6315,8 +6431,7 @@ Feedback:
                     d.enabled = !0;
                     d.loaded = !0
                 }
-            }
-            ;
+            };
             this.update = function(f) {
                 f = !1;
                 var d = this.tailJoints[0].length;
@@ -6339,8 +6454,7 @@ Feedback:
                     style: this.style
                 }),
                 d > this.maxPoints && this.tailJoints[0].splice(0, 1))
-            }
-            ;
+            };
             this.draw = function(f) {
                 if (Ya && this.loaded && 0 < this.tailJoints.length)
                     for (var d, a, c = this.letterMinDistance, g = !0, h = 0, q = 0, n, k, m, l, p, r, s = this.tailJoints[0].length - 2; 0 <= s; s--) {
@@ -6469,17 +6583,13 @@ Feedback:
                         a = w);
                         g && (g = !1)
                     }
-            }
-            ;
+            };
             this.setPosition = function(f, d) {
                 b = f;
                 e = d
-            }
-            ;
-            this.push = function() {}
-            ;
-            this.trailEffect = function() {}
-            ;
+            };
+            this.push = function() {};
+            this.trailEffect = function() {};
             this.clear = function() {
                 this.tailJoints = [[]]
             }
@@ -6488,8 +6598,7 @@ Feedback:
             this.update = function(d) {
                 0 < e.length && 2E3 < T - e[0] && (b.shift(),
                 e.shift())
-            }
-            ;
+            };
             this.draw = function(d) {
                 d.globalAlpha = 1;
                 for (var a in b) {
@@ -6501,8 +6610,7 @@ Feedback:
                     d.drawImage(c, -c.width / 2, 40 * -f - 10)
                 }
                 d.globalAlpha = 1
-            }
-            ;
+            };
             this.addScore = function(d) {
                 var a = !1;
                 f && 500 > T - f && (a = !0);
@@ -6519,7 +6627,6 @@ Feedback:
             }
         }
           , zd = function() {
-            this.sound;
             let b = !1
               , e = {}
               , f = {
@@ -6547,6 +6654,7 @@ Feedback:
                 winggrab: [52E3, 111.97278911564723],
                 woosh: [54E3, 486.2585034013591]
             };
+            this.sound;
             this.load = function(d) {
                 this.sound = new Howl({
                     urls: ["sounds/out.ogg", "sounds/out.m4a", "sounds/out.mp3", "sounds/out.ac3"],
@@ -6556,8 +6664,7 @@ Feedback:
                         d && d()
                     }
                 })
-            }
-            ;
+            };
             this.playSound = function(d, a, c, g, h) {
                 if (b && 0 != N && wa) {
                     a *= da;
@@ -6575,12 +6682,10 @@ Feedback:
                         g != Q && e[d]--
                     }, q))
                 }
-            }
-            ;
+            };
             this.stop = function(d) {
                 b && d.stop()
-            }
-            ;
+            };
             this.setVolume = function(b) {
                 this.sound.volume(b)
             }
@@ -6609,8 +6714,7 @@ Feedback:
                 m = -(1 - g)) : (1 > g && (g += .2,
                 1 < g && (g = 1)),
                 m = 1 - (1.5 * g - .75) / .75)
-            }
-            ;
+            };
             this.draw = function(a) {
                 d && (a.globalAlpha = g,
                 a.scale((n + .2 * m) * t, (n + .2 * m) * t),
@@ -6618,8 +6722,7 @@ Feedback:
                 a.drawImage(currentText2Render, -currentText2Render.width / 2, 110),
                 k ? (c.y = 30,
                 c.draw(a)) : a.drawImage(c, -c.width / 2 - 5, -c.height - d.height + 120))
-            }
-            ;
+            };
             this.replaceCode = function(a) {
                 for (var c in b) {
                     if (64 >= b[c] && 64 >= a)
@@ -6629,15 +6732,13 @@ Feedback:
                         return c
                 }
                 return -1
-            }
-            ;
+            };
             this.push = function(a, c) {
                 256 == a && (l = c);
                 var d = this.replaceCode(a);
                 -1 == d ? (b.push(a),
                 1 == b.length && this.processCode(a)) : 0 == d && this.processCode(a)
-            }
-            ;
+            };
             this.processCode = function(b) {
                 q = !1;
                 g = h = 0;
@@ -6682,21 +6783,18 @@ Feedback:
                 a.setValue(m),
                 a.setStrokeWidth(10),
                 currentText2Render = a.render())
-            }
-            ;
+            };
             this.clearNearMiss = function() {
                 for (var a in b)
                     if (128 == b[a]) {
                         0 == a ? h = e : b.splice(a, 1);
                         break
                     }
-            }
-            ;
+            };
             this.clear = function() {
                 b = [];
                 null != d && (q = !0)
-            }
-            ;
+            };
             this.shouldDraw = function() {
                 return g
             }
@@ -6718,8 +6816,7 @@ Feedback:
                 b.y < e[0].y && (b.y += Math.ceil((e[0].y - b.y) / d) * d);
                 b.x > e[1].x && (b.x -= Math.ceil((b.x - e[1].x) / f) * f);
                 b.y > e[1].y && (b.y -= Math.ceil((b.y - e[1].y) / d) * d)
-            }
-            ;
+            };
             b.draw = function(e) {
                 e.fillStyle = "rgba(226,219,226," + b.opacity + ")";
                 e.beginPath();
@@ -6729,6 +6826,11 @@ Feedback:
             }
         }
           , nd = function() {
+            let e = 1
+              , f = 20
+              , d = 100
+              , a = 1
+              , b = this.isShooting = this.isBot = !1;
             this.lastUpdate = this.highlightValue = this.state = 0;
             this.id = -1;
             this.dstFloatValue = this.dstY = this.dstX = this.origFloatValue = this.origY = this.origX = this.prevFloatValue = this.prevY = this.prevX = this.floatValue = this.y = this.x = 0;
@@ -6738,13 +6840,8 @@ Feedback:
             this.dstAngle = this.origAngle = this.angle = Math.PI / 2;
             this.name = "";
             this.first_set = !0;
-            let b = this.isShooting = this.isBot = !1;
             this.type = 0;
             this.warshipContext = this.warshipCanvas = null;
-            let e = 1
-              , f = 20
-              , d = 100
-              , a = 1;
             this.fragment = 1;
             this.recoilTime = this.cannonAngle = 0;
             this.update = function(c) {
@@ -6776,8 +6873,7 @@ Feedback:
                     1 < a && (a = 1));
                     this.recoilTime = 0 < this.recoilTime ? this.recoilTime - c : 0
                 }
-            }
-            ;
+            };
             this.loadWarshipCanvas = function() {
                 var a = x.createElement("canvas")
                   , b = a.getContext("2d")
@@ -6786,8 +6882,7 @@ Feedback:
                 a.height = d;
                 this.warshipCanvas = a;
                 this.warshipContext = b
-            }
-            ;
+            };
             this.draw = function(c) {
                 if (this.inGame && b)
                     if (this.type == zb && p.warshipLoaded) {
@@ -6836,8 +6931,7 @@ Feedback:
                         c.drawImage(p.whiteAsteroidImage, -p.asteroidImage.width / 2, -p.asteroidImage.height / 2),
                         c.globalAlpha = 1),
                         c.restore())
-            }
-            ;
+            };
             this.drawReflection = function(c, d) {
                 this.inGame && b && this.type == zb && p.warshipLoaded && (c.save(),
                 c.globalAlpha = .15 * a,
@@ -6856,10 +6950,8 @@ Feedback:
                 c.fill(),
                 c.restore(),
                 c.globalAlpha = 1)
-            }
-            ;
-            this.drawInput = function(a) {}
-            ;
+            };
+            this.drawInput = function(a) {};
             this.drawInfo = function(a) {
                 if (this.inGame && b && this.state == Ic && 65535 != this.energy) {
                     a.save();
@@ -6882,13 +6974,11 @@ Feedback:
                     a.strokeRect(-d / 2, e, d, 8);
                     a.restore()
                 }
-            }
-            ;
+            };
             this.hit = function(a) {
                 la() && (this.highlightValue = a == Ua || this.type == db ? this.highlightValue + 1 : this.highlightValue + .3,
                 1 < this.highlightValue && (this.highlightValue = 1))
-            }
-            ;
+            };
             this.setPose = function(a, b, d) {
                 this.origX = this.x;
                 this.origY = this.y;
@@ -6905,49 +6995,39 @@ Feedback:
                 b = this.dstY - this.origY,
                 this.speed = Math.sqrt(a * a + b * b) / 3);
                 this.inGame || (this.inGame = !0)
-            }
-            ;
+            };
             this.setFloatValue = function(a) {
                 this.origFloatValue = this.floatValue;
                 this.dstFloatValue = 10 * a;
                 this.first_set && (this.floatValue = this.dstFloatValue)
-            }
-            ;
+            };
             this.setType = function(a) {
                 this.type = a
-            }
-            ;
+            };
             this.setState = function(a) {
                 this.state = a
-            }
-            ;
+            };
             this.setEnergy = function(a) {
                 this.energy = a
-            }
-            ;
+            };
             this.setFragment = function(b) {
                 this.fragment = b;
                 3 != b && 1 == b && (a = 0)
-            }
-            ;
+            };
             this.setCannonAngle = function(a) {
                 this.origCannonAngle = this.cannonAngle;
                 this.dstCannonAngle = a;
                 this.first_set && (this.cannonAngle = this.dstCannonAngle)
-            }
-            ;
+            };
             this.cannonShoot = function() {
                 this.recoilTime = 200
-            }
-            ;
+            };
             this.getSpeedDirectionX = function() {
                 return this.x - this.prevX
-            }
-            ;
+            };
             this.getSpeedDirectionY = function() {
                 return this.y - this.prevY
-            }
-            ;
+            };
             this.cleanup = function() {
                 this.first_set = !0;
                 this.inGame = !1
