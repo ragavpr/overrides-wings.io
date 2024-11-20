@@ -4218,10 +4218,10 @@ Feedback:
             this.sinScaleY = this.sinScaleX = 0;
             this.fadingOut = this.grabbing = !1;
             this.update = function(f) {
-                var p = .06 * f;
+                let p = .06 * f, s, v;
                 if (64 != this.type) {
                     if (!u.isSpaceWars()) {
-                        var s = E / 2 - 20
+                            s = E / 2 - 20
                           , v = this.y + e;
                         l += f / 400;
                         v < s ? (v > s - 30 && (d = (s - v) / 30),
@@ -4245,6 +4245,7 @@ Feedback:
                 1 < g && delete W[this.id]) : delete W[this.id])
             };
             this.drawItem = function(c, b) {
+                let g;
                 if (64 == this.type)
                     c.save(),
                     c.beginPath(),
@@ -4267,9 +4268,9 @@ Feedback:
                     c.scale(.5, .5),
                     b.draw(c);
                 else {
-                    var g = 1;
+                    g = 1;
                     !v || v.weapon != za || this.type != $a && this.type != Ua && this.type != Qa && this.type != bb && this.type != cb || (g = .3);
-                    var h = p.frames.parachute;
+                    let h = p.frames.parachute;
                     h.y = -h.height / 2 + 100 * (1 - m);
                     c.save();
                     this.grabbing ? c.translate(this.x, this.y) : c.translate(this.x, this.y + e);
@@ -4292,10 +4293,10 @@ Feedback:
             };
             this.draw = function(a) {
                 if (rb) {
-                    var c = 40, b;
+                    let c = 40, b;
                     32 == this.type ? b = p.frames.health : this.type == $a ? b = p.frames.trishoot : this.type == Qa ? b = p.frames.railgun : this.type == Ua ? b = p.frames.missile : this.type == bb ? b = p.frames.melee : this.type == cb ? b = p.frames.bombdrop : this.type == za ? b = p.frames.laser : 64 == this.type && (c = 10,
                     b = p.frames.wing);
-                    var d = this.y;
+                    let d = this.y;
                     this.grabbing || (d += e);
                     if (!this.grabbing) {
                         if (!aa(this.x, d, c))
@@ -5072,11 +5073,11 @@ Feedback:
             }
             this.whiteFlash = 0;
             f.followTopPlayer = function() {
-                var a = -1
+                let a = -1
                   , b = 0;
                 for (id in B)
                     if (B[id].inGame) {
-                        var c = B[id].score;
+                        let c = B[id].score;
                         a < c && (a = c,
                         b = id)
                     }
@@ -5086,17 +5087,18 @@ Feedback:
             };
             f.PlayerFollowing = function(a) {
                 c = 0;
+                let b, d, e;
                 if (0 == ja.length)
                     ra = 0,
                     v = null;
                 else {
-                    var b = !1;
+                    b = !1;
                     0 == Oa && (b = !0);
                     if (!b) {
-                        var b = !1, d;
+                        b = !1, d;
                         for (d in ja) {
                             if (b) {
-                                var e = B[ja[d]];
+                                e = B[ja[d]];
                                 if (!e.inGame)
                                     continue;
                                 ra = ja[d];
@@ -5130,17 +5132,18 @@ Feedback:
                 c = 3E3
             };
             f.update = function(a) {
+                let b, e, f, s, t, w, D, C, E, Q, I, N, Y, ba;
                 if (p.loaded) {
                     v && !v.inGame && 0 == ka && (v = null,
                     ra = 0);
                     F && F.update(a);
                     mb && J.sound.volume(da, mb);
                     La = !1;
-                    for (var b in W)
+                    for (b in W)
                         W[b].update(a),
                         W[b] && !La && W[b].type == za && (La = !0,
                         Ma = null);
-                    var e = null;
+                    e = null;
                     for (b in M)
                         M[b].update(a),
                         M[b].finished && (e = b);
@@ -5171,7 +5174,7 @@ Feedback:
                     if (u.isSpaceWars()) {
                         for (i in sa) {
                             sa[i].update(z.getBounds(), z.zoom);
-                            var f = sa[i];
+                            f = sa[i];
                             .1 < Math.abs(ca.x) + Math.abs(ca.y) && (f.x -= (f.z - 1) * ca.x * .5,
                             f.y -= (f.z - 1) * ca.y * .5)
                         }
@@ -5191,12 +5194,12 @@ Feedback:
                             Zb = (qc + (z.x * z.zoom - d.width * a / 2)) / z.zoom;
                             $b = (rc + (z.y * z.zoom - d.height * a / 2)) / z.zoom;
                             a = Zb - v.x;
-                            var s = $b - v.y
+                                s = $b - v.y
                               , f = Math.sqrt(a * a + s * s);
                             a /= f;
                             s /= f;
                             V.hover = 75 < f ? 0 : 1;
-                            var t = f = 0;
+                            t = f = 0;
                             wa && (f = a,
                             t = -s);
                             0 != f && (a = Math.atan(t / f),
@@ -5212,7 +5215,7 @@ Feedback:
                     s = t[0].y;
                     t = t[1].y;
                     if (e && !aa(e.x, e.y, 30)) {
-                        var w = H.x - e.x
+                            w = H.x - e.x
                           , D = H.y - e.y
                           , C = Math.sqrt(w * w + D * D);
                         n = 1;
@@ -5229,7 +5232,7 @@ Feedback:
                         q = !0
                     } else
                         q = !1;
-                    var E, w = !1;
+                        E, w = !1;
                     (ub = v ? Za[v.id] : 0) && 0 < ub && (E = B[ub],
                     E == e && (w = !0));
                     !E || aa(E.x, E.y, 30) || w ? y = !1 : (w = H.x - E.x,
@@ -5249,11 +5252,11 @@ Feedback:
                     y = !0);
                     if (u.isWarship()) {
                         E = 99999;
-                        var e = 0, Q, I, N, Y;
+                        e = 0, Q, I, N, Y;
                         for (b in U)
                             if (C = U[b],
                             C.state == Ic && C.x > -$ && C.x < $) {
-                                var w = H.x - C.x
+                                    w = H.x - C.x
                                   , D = H.y - C.y
                                   , ba = Math.sqrt(w * w + D * D);
                                 ba < E && (Q = C.x,
@@ -5282,8 +5285,9 @@ Feedback:
                     z.setupContext();
                     ya.drawGradient(a);
                     ya.draw(a);
-                    var c = z.getBounds()[1].y
-                      , e = !1;
+                    let c = z.getBounds()[1].y
+                      , e = !1
+                      , f;
                     if (u.isSpaceWars())
                         for (i in sa)
                             sa[i].draw(a);
@@ -5291,7 +5295,7 @@ Feedback:
                         c > E / 2 - 25 && (e = !0,
                         ya.drawWaterBehind(a));
                     if (xa) {
-                        for (var f in W)
+                        for (f in W)
                             W[f].draw(a);
                         oa.draw(a);
                         for (f in M)
@@ -5416,13 +5420,13 @@ Feedback:
                 N = setTimeout(f.respawnParticles, 200))
             };
             let C = function() {
-                var a = 2;
+                let a = 2, b, c;
                 Ba && (a = 1);
                 d.width = w.innerWidth / a;
                 d.height = w.innerHeight / a;
                 Ka = d.width;
                 ib = d.height;
-                var b = ib * a
+                    b = ib * a
                   , c = -50 + 50 * a + "%"
                   , a = "translate(" + c + "," + c + ") scale(" + a + ")";
                 s("#canvas").css({
@@ -5453,7 +5457,7 @@ Feedback:
             };
             f.respawnParticles = function() {
                 sa = [];
-                for (var a = 0; 150 > a; a++)
+                for (let a = 0; 150 > a; a++)
                     sa.push(new xd)
             };
             d = b;
@@ -5499,7 +5503,7 @@ Feedback:
             this.maxZoom = 2;
             this.zoom = this.minZoom;
             this.setupContext = function() {
-                var c = a.zoom
+                let c = a.zoom
                   , d = b.width / 2 - a.x * c
                   , f = b.height / 2 - a.y * c;
                 e.setTransform(1, 0, 0, 1, 0, 0);
@@ -5509,11 +5513,11 @@ Feedback:
             this.applyShake = function(a) {
                 if (xa)
                     if (0 < c) {
-                        var b = g;
+                        let b = g, d;
                         250 > c && (b = c / 1E3 / .5 * g);
                         h += 1;
                         q += 1.1;
-                        var d = Math.sin(h) * (b / 4)
+                            d = Math.sin(h) * (b / 4)
                           , b = Math.cos(q) * b;
                         n = d;
                         k = b;
@@ -5522,7 +5526,7 @@ Feedback:
                         k = n = 0
             };
             this.update = function(b) {
-                var c = a.maxZoom + (a.minZoom - a.maxZoom);
+                let c = a.maxZoom + (a.minZoom - a.maxZoom);
                 xa || (a.y = 470);
                 Z || 1 != ka || Y ? (a.zoom = 1 / (w.devicePixelRatio / jb) * 1.2,
                 a.zoom *= t,
@@ -5609,14 +5613,14 @@ Feedback:
                 a ? d.drawImage(a, b, e, this.width, this.height, c + this.x, g + this.y, this.width, this.height) : d.drawImage(this.canvas, 0, 0, this.width, this.height, c + this.x, g + this.y, this.width, this.height)
             };
             this.renderTintedFrame = function(d) {
-                var f = x.createElement("canvas")
+                let f = x.createElement("canvas")
                   , n = f.getContext("2d");
                 f.width = this.width;
                 f.height = this.height;
-                var k = x.createElement("canvas");
+                let k = x.createElement("canvas");
                 k.width = this.width;
                 k.height = this.height;
-                var m = k.getContext("2d");
+                let m = k.getContext("2d");
                 m.fillStyle = d;
                 m.fillRect(0, 0, k.width, k.height);
                 m.globalCompositeOperation = "destination-atop";
@@ -5628,12 +5632,12 @@ Feedback:
                 return d
             };
             this.getImageCopy = function() {
-                var c = x.createElement("canvas");
+                let c = x.createElement("canvas");
                 c.width = this.width;
                 c.height = this.height;
-                var d = c.getContext("2d");
+                let d = c.getContext("2d");
                 d.drawImage(a, b, e, this.width, this.height, 0, 0, this.width, this.height);
-                var f = d.getImageData(0, 0, this.width, this.height);
+                let f = d.getImageData(0, 0, this.width, this.height);
                 return {
                     canvas: c,
                     ctx: d,
@@ -5642,12 +5646,13 @@ Feedback:
                 }
             };
             this.generateTintImage2 = function(d, f, n, k) {
-                var m = x.createElement("canvas");
+                let m = x.createElement("canvas");
                 m.width = this.width;
                 m.height = this.height;
-                var l = m.getContext("2d");
+                let l = m.getContext("2d");
                 l.drawImage(a, b, e, this.width, this.height, 0, 0, this.width, this.height);
-                for (var p = l.getImageData(0, 0, this.width, this.height), r = p.data, s = r.length, t = 0; t < s; )
+                let p, r, s, t;
+                for (p = l.getImageData(0, 0, this.width, this.height), r = p.data, s = r.length, t = 0; t < s; )
                     r[t] = r[t++] * (1 - k) + d * k,
                     r[t] = r[t++] * (1 - k) + f * k,
                     r[t] = r[t++] * (1 - k) + n * k,
@@ -5658,10 +5663,10 @@ Feedback:
                 return d
             };
             this.generateTintImage = function(a, b, d, e) {
-                var f = x.createElement("canvas");
+                let f = x.createElement("canvas");
                 f.width = this.width;
                 f.height = this.height;
-                var l = f.getContext("2d");
+                let l = f.getContext("2d");
                 l.globalAlpha = 1;
                 l.globalCompositeOperation = "copy";
                 l.drawImage(a[3], 0, 0);
@@ -5677,7 +5682,7 @@ Feedback:
                 return a
             };
             this.generateRGBKs = function() {
-                var c = []
+                let c = []
                   , d = x.createElement("canvas");
                 d.getContext("2d");
                 d.width = this.width;
@@ -5687,7 +5692,9 @@ Feedback:
                 d.height = this.height;
                 d = d.getContext("2d");
                 d.drawImage(a, b, e, this.width, this.height, 0, 0, this.width, this.height);
-                for (var f = d.getImageData(0, 0, this.width, this.height).data, g = f.length, m = this.getImageCopy(), l = this.getImageCopy(), p = this.getImageCopy(), d = this.getImageCopy(), r = 0; r < g; r += 4)
+                let f = d.getImageData(0, 0, this.width, this.height).data, g = f.length, m = this.getImageCopy(), l = this.getImageCopy(), p = this.getImageCopy();
+                d = this.getImageCopy();
+                for (let r = 0; r < g; r += 4)
                     m.toData[r] = f[r],
                     m.toData[r + 1] = 0,
                     m.toData[r + 2] = 0,
@@ -5723,11 +5730,11 @@ Feedback:
                 return c
             };
             this.renderToCanvas = function() {
-                var c = x.createElement("canvas")
+                let c = x.createElement("canvas")
                   , d = c.getContext("2d");
                 c.width = this.width;
                 c.height = this.height;
-                var f = x.createElement("canvas");
+                let f = x.createElement("canvas");
                 f.width = this.width;
                 f.height = this.height;
                 f.getContext("2d");
@@ -5751,7 +5758,7 @@ Feedback:
             };
             this.createAnimation = function(a) {
                 a = b[a];
-                var d = new Jc;
+                let d = new Jc;
                 d.setup(a);
                 return d
             };
@@ -5765,7 +5772,7 @@ Feedback:
                 d.push(a)
             };
             this.addBlast = function(a, b, d, e, f) {
-                var k = X.createAnimation("explosion");
+                let k = X.createAnimation("explosion");
                 k.setScale(d);
                 k.posX = a;
                 k.posY = b;
@@ -5776,7 +5783,7 @@ Feedback:
             this.addExplosion = function(b, d, e, f) {
                 if (pb && aa(b, d, 100) && la()) {
                     if (1 >= a.length) {
-                        var n = new Dd;
+                        let n = new Dd;
                         n.init(b, d, e, f);
                         a.push(n)
                     }
@@ -5785,8 +5792,9 @@ Feedback:
                 }
             };
             this.update = function(b) {
-                for (var g in e) {
-                    var h = e[g];
+                let g, h, q;
+                for (g in e) {
+                    h = e[g];
                     h.update(b);
                     h.deleting && (e.splice(g, 1),
                     delete h)
@@ -5801,15 +5809,15 @@ Feedback:
                     h.update(b),
                     h.deleting && (f.splice(g, 1),
                     delete h);
-                for (var q in a)
+                for (q in a)
                     g = a[q],
                     g.update(b),
                     g.deleting && (a.splice(q, 1),
                     delete g)
             };
             this.drawBehind = function(a) {
-                for (var b in d) {
-                    var e = d[b];
+                for (let b in d) {
+                    let e = d[b];
                     a.save();
                     a.translate(e.posX, e.posY);
                     a.scale(e.scaleX, e.scaleY);
@@ -5819,8 +5827,8 @@ Feedback:
                 }
             };
             this.drawLayer2 = function(a) {
-                for (var b in f) {
-                    var d = f[b];
+                for (let b in f) {
+                    let d = f[b];
                     a.save();
                     a.translate(d.posX, d.posY);
                     a.scale(d.scaleX, d.scaleY);
@@ -5830,8 +5838,8 @@ Feedback:
                 }
             };
             this.draw = function(a) {
-                for (var b in e) {
-                    var d = e[b];
+                for (let b in e) {
+                    let d = e[b];
                     a.save();
                     a.translate(d.posX, d.posY);
                     a.scale(d.scaleX, d.scaleY);
@@ -5841,7 +5849,7 @@ Feedback:
                 }
             };
             this.drawExplosions = function(b) {
-                for (var d in a)
+                for (let d in a)
                     a[d].draw(b)
             }
         }
@@ -5927,7 +5935,7 @@ Feedback:
                 b.translate(this.pos.x, this.pos.y);
                 b.scale(this.scale, this.scale);
                 b.rotate(this.rotation);
-                var e = "hsla(" + this.color.h + "," + this.color.s + "," + this.color.l + "," + this.color.a + ")";
+                let e = "hsla(" + this.color.h + "," + this.color.s + "," + this.color.l + "," + this.color.a + ")";
                 b.translate(20, -2);
                 b.beginPath();
                 b.arc(0, 0, 25, 0, 2 * Math.PI, !1);
@@ -5979,19 +5987,20 @@ Feedback:
             };
             this.update = function(b) {
                 b = 1E3 / 60;
-                for (var e = 0; e < d; e++) {
-                    var g = f[e];
+                let e, g, h, l;
+                for (e = 0; e < d; e++) {
+                    g = f[e];
                     g.time >= this.life && (g.active || (g.active = !0,
                     g.time %= this.life),
                     this.resetParticle(g));
                     g.time += b;
                     if (g.active) {
-                        var h = g.time / this.life;
+                        h = g.time / this.life;
                         1 < h && (h = 1);
                         g.pos.x += 1 * g.speed.x;
                         g.pos.y += 1 * g.speed.y;
                         if (0 <= h && .1 > h) {
-                            var l = h / .1;
+                            l = h / .1;
                             g.scale = .2
                         } else
                             g.scale = .2 + (h - .1);
@@ -6013,19 +6022,20 @@ Feedback:
             };
             this.updateExplosion = function(b) {
                 b = 1E3 / 60;
-                for (var e = 0; e < d; e++) {
-                    var g = f[e];
+                let e, g, h, l;
+                for (e = 0; e < d; e++) {
+                    g = f[e];
                     g.time >= this.life && (g.active || (g.active = !0,
                     g.time %= this.life),
                     this.resetParticle(g));
                     g.time += b;
                     if (g.active) {
-                        var h = g.time / this.life;
+                        h = g.time / this.life;
                         1 < h && (h = 1);
                         g.pos.x += 1 * g.speed.x;
                         g.pos.y += 1 * g.speed.y;
                         if (0 <= h && .1 > h) {
-                            var l = h / .1;
+                            l = h / .1;
                             g.scale = .25
                         } else
                             g.scale = .25 + (h - .1);
@@ -6051,19 +6061,20 @@ Feedback:
             };
             this.updateMissileSmoke = function(b) {
                 b = 1E3 / 60;
-                for (var e = 0; e < d; e++) {
-                    var g = f[e];
+                let e, g, h, l;
+                for (e = 0; e < d; e++) {
+                    g = f[e];
                     g.time >= this.life && (g.active || (g.active = !0,
                     g.time %= this.life),
                     this.resetParticle(g));
                     g.time += b;
                     if (g.active) {
-                        var h = g.time / this.life;
+                        h = g.time / this.life;
                         1 < h && (h = 1);
                         g.pos.x += 1 * g.speed.x;
                         g.pos.y += 1 * g.speed.y;
                         if (0 <= h && .1 > h) {
-                            var l = h / .1;
+                            l = h / .1;
                             g.scale = .2
                         } else
                             g.scale = .2 + .1 * (h - .1);
@@ -6092,8 +6103,8 @@ Feedback:
                 this.life = a
             };
             this.draw = function(a) {
-                for (var b = d - 1; 0 <= b; b--) {
-                    var c = f[b];
+                for (let b = d - 1; 0 <= b; b--) {
+                    let c = f[b];
                     c.active && c.draw(a)
                 }
             }
@@ -6107,13 +6118,14 @@ Feedback:
             }
             this.deleting = !1;
             this.init = function(a, c, e, h) {
+                let q, n, k, m, l, p, r;
                 f = a;
                 d = c;
                 a = 2 + 4 * Math.random();
                 c = 2 + 4 * Math.random();
-                var q = 2 + 4 * Math.random();
+                q = 2 + 4 * Math.random();
                 Math.random();
-                var n = Math.PI / 4
+                    n = Math.PI / 4
                   , k = b(Math.PI / 2)
                   , m = b(n) + k
                   , l = Math.cos(m)
@@ -6129,15 +6141,15 @@ Feedback:
                 this.addDebree(n * q + e, k * q + h)
             };
             this.addDebree = function(a, b) {
-                var g = new Fd;
+                let g = new Fd;
                 g.init(f, d);
                 g.setSpeed(a, b);
                 e.push(g)
             };
             this.update = function(a) {
-                var b = 0;
+                let b = 0;
                 for (debreeID in e) {
-                    var d = e[debreeID];
+                    let d = e[debreeID];
                     d.update(a);
                     d.deleting && (e.splice(debreeID, 1),
                     delete d);
@@ -6213,8 +6225,9 @@ Feedback:
             this.finished = !1;
             this.type = 0;
             this.update = function(d) {
-                var a = fa((T - this.lastUpdate) / Jb, 0, 1)
-                  , c = this.y - this.prevY;
+                let a = fa((T - this.lastUpdate) / Jb, 0, 1)
+                  , c = this.y - this.prevY
+                  , g;
                 0 == this.x - this.prevX && 0 == c && (f++,
                 50 < f && (this.finished = !0));
                 this.prevX = this.x;
@@ -6230,7 +6243,7 @@ Feedback:
                     c = a - 100;
                     if (this.y > c && this.y < a && 0 >= e) {
                         e = 5;
-                        var g = Math.random() / 2
+                            g = Math.random() / 2
                           , c = (.2 + (.5 - (a - this.y) / (a - c) * .5)) * (.95 + g)
                           , g = 20 * Math.sin(this.angle);
                         oa.addSplash(this.x - g, a + 5 * Math.random(), c, !0)
@@ -6239,11 +6252,11 @@ Feedback:
                 }
             };
             this.draw = function(d, a) {
-                var c = 1;
+                let c = 1;
                 this.timeToNextFrame -= a;
                 0 >= this.timeToNextFrame && (this.flameState = !this.flameState,
                 this.timeToNextFrame = this.frameSwitchTime);
-                var e = .7;
+                let e = .7;
                 this.flameState && (e = 1);
                 0 == this.type && (b.width = 1.5 * e,
                 b.style = "rgba(247, 189, 57, 1.0)",
@@ -6277,10 +6290,10 @@ Feedback:
                 d.restore()
             };
             this.drawReflection = function(b, a) {
-                var c = E / 2
+                let c = E / 2
                   , e = c - this.y;
                 if (!(0 > e || 170 < e)) {
-                    var f = e / 170;
+                    let f = e / 170;
                     b.save();
                     b.translate(this.x, c + e - 25);
                     c = 1;
@@ -6345,7 +6358,7 @@ Feedback:
             this.fixedColor = !1;
             this.style;
             this.update = function(f) {
-                var d = this.tailJoints.length - 1;
+                let d = this.tailJoints.length - 1, c, g, a;
                 if (0 >= this.timeToNextJoint && -1 < d) {
                     this.timeToNextJoint = this.tailAddJointInterval;
                     this.enabled && this.tailJoints[d].push({
@@ -6357,8 +6370,8 @@ Feedback:
                         fx: (600 - Math.abs(this.trailEffectTime - 600)) / 600,
                         style: this.style
                     });
-                    for (var a = 0; a <= d; a++) {
-                        var c = this.tailJoints[a].length;
+                    for (a = 0; a <= d; a++) {
+                        c = this.tailJoints[a].length;
                         if (0 < c) {
                             c = T - this.tailJoints[a][0].t;
                             c > this.trailTime && (this.tailJoints[a].splice(0, 1),
@@ -6367,7 +6380,7 @@ Feedback:
                         }
                     }
                 }
-                for (var g = this.timeToNextJoint / 50, d = this.tailJoints.length - 1, a = 0; a <= d; a++)
+                for (g = this.timeToNextJoint / 50, d = this.tailJoints.length - 1, a = 0; a <= d; a++)
                     c = this.tailJoints[a].length,
                     1 >= c || (c = T - this.tailJoints[a][0].t,
                     c > this.trailTime - this.tailAddJointInterval && (c = this.tailJoints[a][0].origY - this.tailJoints[a][1].origY,
@@ -6378,10 +6391,10 @@ Feedback:
             };
             this.draw = function(b) {
                 if (Ya)
-                    for (var d = this.tailJoints.length, a = 0; a < d; a++)
-                        for (var c = this.tailJoints[a].length, e = 0; e < c - 1; e++) {
+                    for (let d = this.tailJoints.length, a = 0; a < d; a++)
+                        for (let c = this.tailJoints[a].length, e = 0; e < c - 1; e++) {
                             b.strokeStyle = this.tailJoints[a][e].style;
-                            var h = e / c * (8 + 8 * this.tailJoints[a][e].fx);
+                            let h = e / c * (8 + 8 * this.tailJoints[a][e].fx);
                             0 == h && (h = .1);
                             b.lineWidth = h * this.width;
                             b.beginPath();
@@ -6424,13 +6437,13 @@ Feedback:
             this.setTexture = function(b) {
                 this.texture = new Image;
                 this.texture.src = "flags/" + b.toLowerCase() + ".png";
-                var d = this;
+                let d = this;
                 this.texture.onload = function() {
                     d.textureWidth = d.texture.width;
                     d.textureHeight = d.texture.height;
                     d.maxPoints = parseInt(d.textureWidth / 12);
                     d.flagDivisions = d.maxPoints - 1;
-                    var a = d.scale;
+                    let a = d.scale;
                     d.flagHeight = .5 * d.textureHeight * a;
                     a = d.textureWidth * a / d.flagDivisions;
                     d.pointMinDistance = a;
@@ -6441,11 +6454,11 @@ Feedback:
             };
             this.update = function(f) {
                 f = !1;
-                var d = this.tailJoints[0].length;
+                let d = this.tailJoints[0].length;
                 if (0 == d)
                     f = !0;
                 else {
-                    var a = this.tailJoints[0][d - 1]
+                    let a = this.tailJoints[0][d - 1]
                       , c = a = Math.sqrt(Math.pow(a.x - b, 2) + Math.pow(a.y - e, 2));
                     1 < d && (c = this.tailJoints[0][d - 2],
                     c = Math.sqrt(Math.pow(c.x - b, 2) + Math.pow(c.y - e, 2)));
@@ -6464,15 +6477,15 @@ Feedback:
             };
             this.draw = function(f) {
                 if (Ya && this.loaded && 0 < this.tailJoints.length)
-                    for (var d, a, c = this.letterMinDistance, g = !0, h = 0, q = 0, n, k, m, l, p, r, s = this.tailJoints[0].length - 2; 0 <= s; s--) {
-                        var t = this.tailJoints[0][s].x, w = this.tailJoints[0][s].y, u;
+                    for (let d, a, c = this.letterMinDistance, g = !0, h = 0, q = 0, n, k, m, l, p, r, s = this.tailJoints[0].length - 2; 0 <= s; s--) {
+                        let t = this.tailJoints[0][s].x, w = this.tailJoints[0][s].y, u;
                         g && (d = b,
                         a = e);
-                        var v = t - d, x = w - a, A, C;
+                        let v = t - d, x = w - a, A, C, z, B, E;
                         u = Math.sqrt(Math.pow(v, 2) + Math.pow(x, 2));
                         0 == u ? console.log("OOPS! Division by ZERO! " + s + " : " + v + ":::" + x) : (A = v / u,
                         C = x / u);
-                        var v = !1, z, B;
+                        v = !1;
                         if (0 < u - c) {
                             z = d + A * c;
                             B = a + C * c;
@@ -6487,12 +6500,12 @@ Feedback:
                                     k = -k * d;
                                     n *= d;
                                     u = z + k;
-                                    var v = B + n
+                                        v = B + n
                                       , x = z - k
                                       , E = B - n;
                                     d = this.textureWidth;
                                     a = this.textureHeight;
-                                    var F, G, H, J;
+                                    let F, G, H, J;
                                     this.flipY && 0 < A ? (F = 0,
                                     G = a) : (F = a,
                                     G = 0);
@@ -6524,7 +6537,7 @@ Feedback:
                                     }];
                                     l = [[0, 1, 2], [2, 3, 0]];
                                     for (p = 0; 2 > p; p++) {
-                                        var D = l[p];
+                                        let D = l[p];
                                         r = m[D[0]].x;
                                         u = m[D[1]].x;
                                         v = m[D[2]].x;
@@ -6534,9 +6547,9 @@ Feedback:
                                         G = m[D[0]].u;
                                         H = m[D[1]].u;
                                         J = m[D[2]].u;
-                                        var L = m[D[0]].v
-                                          , M = m[D[1]].v
-                                          , D = m[D[2]].v;
+                                        let L = m[D[0]].v
+                                          , M = m[D[1]].v;
+                                            D = m[D[2]].v;
                                         d.save();
                                         d.beginPath();
                                         d.moveTo(r, x);
@@ -6544,7 +6557,7 @@ Feedback:
                                         d.lineTo(v, F);
                                         d.closePath();
                                         d.clip();
-                                        var N = G * M + L * J + H * D - M * J - L * H - G * D;
+                                        let N = G * M + L * J + H * D - M * J - L * H - G * D;
                                         d.transform((r * M + L * v + u * D - M * v - L * u - r * D) / N, (x * M + L * F + E * D - M * F - L * E - x * D) / N, (G * u + r * J + H * v - u * J - r * H - G * v) / N, (G * E + x * J + H * F - E * J - x * H - G * F) / N, (G * M * v + L * u * J + r * H * D - r * M * J - L * H * v - G * u * D) / N, (G * M * F + L * E * J + x * H * D - x * M * J - L * H * F - G * E * D) / N);
                                         d.drawImage(a, 0, 0);
                                         d.restore()
@@ -6611,20 +6624,18 @@ Feedback:
             };
             this.draw = function(d) {
                 d.globalAlpha = 1;
-                for (var a in b) {
-                    var c = b[a]
-                      , f = (T - e[a]) / 2E3
-                      , h = f = Math.sqrt(f)
-                      , h = .8 >= h ? h / .8 : 1 - (h - .8) / .2;
+                for (let a in b) {
+                    let c = b[a]
+                      , f = Math.sqrt((T - e[a]) / 2E3)
+                      , h = .8 >= f ? f / .8 : 1 - (f - .8) / .2;
                     d.globalAlpha = h;
                     d.drawImage(c, -c.width / 2, 40 * -f - 10)
                 }
                 d.globalAlpha = 1
             };
             this.addScore = function(d) {
-                var a = !1;
+                let a = !1, c;
                 f && 500 > T - f && (a = !0);
-                var c;
                 c = new Da(13,"#FFFFFF");
                 c.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
                 a ? d = b[b.length - 1].number + d : f = T;
@@ -6678,10 +6689,10 @@ Feedback:
             this.playSound = function(d, a, c, g, h) {
                 if (b && 0 != N && wa) {
                     a *= da;
-                    var q = f[d];
+                    let q = f[d];
                     e[d] || (e[d] = 0);
                     0 < g && e[d] >= g || (this.sound.play(d, function(b) {
-                        var d = J.sound._nodeById(b);
+                        d = J.sound._nodeById(b);
                         d && d.bufferSource && (d.bufferSource.playbackRate.value = c);
                         J.sound.volume(a, b);
                         h && h(b)
@@ -6734,7 +6745,7 @@ Feedback:
                 c.draw(a)) : a.drawImage(c, -c.width / 2 - 5, -c.height - d.height + 120))
             };
             this.replaceCode = function(a) {
-                for (var c in b) {
+                for (let c in b) {
                     if (64 >= b[c] && 64 >= a)
                         return b[c] < a ? (b[c] = a,
                         c) : -2;
@@ -6745,14 +6756,14 @@ Feedback:
             };
             this.push = function(a, c) {
                 256 == a && (l = c);
-                var d = this.replaceCode(a);
+                let d = this.replaceCode(a);
                 -1 == d ? (b.push(a),
                 1 == b.length && this.processCode(a)) : 0 == d && this.processCode(a)
             };
             this.processCode = function(b) {
                 q = !1;
                 g = h = 0;
-                var e = "", m = "KILL", s;
+                let e = "", m = "KILL", s;
                 k = !1;
                 8 == b ? (e = "DOUBLE",
                 s = "#cd9a6d",
@@ -6795,7 +6806,7 @@ Feedback:
                 currentText2Render = a.render())
             };
             this.clearNearMiss = function() {
-                for (var a in b)
+                for (let a in b)
                     if (128 == b[a]) {
                         0 == a ? h = e : b.splice(a, 1);
                         break
@@ -6820,7 +6831,7 @@ Feedback:
                 if (0 == b.x || 0 == b.y)
                     b.x = Math.random() * (e[1].x - e[0].x) + e[0].x,
                     b.y = Math.random() * (e[1].y - e[0].y) + e[0].y;
-                var f = e[1].x - e[0].x
+                let f = e[1].x - e[0].x
                   , d = e[1].y - e[0].y;
                 b.x < e[0].x && (b.x += Math.ceil((e[0].x - b.x) / f) * f);
                 b.y < e[0].y && (b.y += Math.ceil((e[0].y - b.y) / d) * d);
@@ -6857,11 +6868,11 @@ Feedback:
             this.update = function(c) {
                 if (this.inGame) {
                     aa(this.x, this.y + this.floatValue, 120) ? b || (b = !0) : b = !1;
-                    var g = fa((T - this.lastUpdate) / Jb, 0, 1);
+                    let g = fa((T - this.lastUpdate) / Jb, 0, 1);
                     this.prevX = this.x;
                     this.prevY = this.y;
                     this.prevFloatValue = this.floatValue;
-                    var h = g * (this.dstY - this.origY) + this.origY
+                    let h = g * (this.dstY - this.origY) + this.origY
                       , q = g * (this.dstFloatValue - this.origFloatValue) + this.origFloatValue;
                     this.x = g * (this.dstX - this.origX) + this.origX;
                     this.y = h;
@@ -6885,7 +6896,7 @@ Feedback:
                 }
             };
             this.loadWarshipCanvas = function() {
-                var a = x.createElement("canvas")
+                let a = x.createElement("canvas")
                   , b = a.getContext("2d")
                   , d = p.warshipImage.height;
                 a.width = p.warshipImage.width;
@@ -6902,7 +6913,7 @@ Feedback:
                             c.globalAlpha = a;
                             c.translate(this.x, this.y - 4);
                             this.warshipContext.clearRect(0, 0, this.warshipCanvas.width, this.warshipCanvas.height);
-                            var d = .267 * this.warshipCanvas.width
+                            let d = .267 * this.warshipCanvas.width
                               , e = .63 * this.warshipCanvas.height;
                             this.warshipContext.save();
                             this.warshipContext.translate(0, this.floatValue + 4);
@@ -6972,11 +6983,11 @@ Feedback:
                     a.shadowBlur = 0;
                     a.shadowColor = "rgba(255, 255, 255, 0.7)";
                     a.lineWidth = 1;
-                    var d = 28, e;
+                    let d = 28, e;
                     this.type == db ? (e = 50 / this.fragment,
                     d *= 3 / this.fragment) : (e = 55,
                     d *= 5);
-                    var f = 512;
+                    let f = 512;
                     32767.5 > this.energy && 16383.75 < this.energy ? f = 30 : 16383.75 > this.energy && (f = 0);
                     a.fillStyle = "hsl(" + f + ", 100%, 50%)";
                     a.fillRect(-d / 2 + 0, e + 0, this.energy / 65535 * d, 8);
