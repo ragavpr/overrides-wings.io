@@ -4332,14 +4332,15 @@ Feedback:
             let f;
             function b(b, a, c) {
                 169 != a && 172 != a && 162 != a && 178 != a || c || (ja = []);
-                var e = !1
+                let e, h, f, n, k, m, l, y, r, p, s, u, w, t, x, z, C, P, R, S, O, G, ea;
+                    e = !1
                   , h = 1
                   , f = 1
                   , n = 0;
                 c || (A.lastUpdateBool = !A.lastUpdateBool);
                 for (; ; ) {
                     n++;
-                    var k = b.getUint32(h, !0)
+                        k = b.getUint32(h, !0)
                       , h = h + 4;
                     if (0 == k) {
                         c = b;
@@ -4347,12 +4348,12 @@ Feedback:
                         n = c.getUint8(h, !0);
                         h += 1;
                         for (k = 0; k < n; k++) {
-                            var m = c.getUint32(h, !0)
+                                m = c.getUint32(h, !0)
                               , h = h + 4;
                             if (163 == f || 162 == f || 169 == f)
-                                var l = c.getUint8(h, !0)
+                                    l = c.getUint8(h, !0)
                                   , h = h + 1;
-                            var y = c.getFloat32(h, !0)
+                                y = c.getFloat32(h, !0)
                               , h = h + 4
                               , r = -c.getFloat32(h, !0)
                               , h = h + 4
@@ -4363,12 +4364,12 @@ Feedback:
                                 s = new kd;
                                 M[m] = s;
                                 163 != f && 162 != f && 169 != f || s.setType(l);
-                                var m = B[p]
+                                    m = B[p]
                                   , u = !1;
                                 m || (u = !0,
                                 m = U[p]);
                                 if (m) {
-                                    var w = Q
+                                        w = Q
                                       , t = 1;
                                     u ? (w = Sa,
                                     u = va(m.x, m.y, H.x, H.y),
@@ -4423,7 +4424,7 @@ Feedback:
                             }
                         break
                     }
-                    var x = b.getUint16(h, !0)
+                        x = b.getUint16(h, !0)
                       , h = h + 2
                       , y = x & 1
                       , r = x & 2
@@ -4439,12 +4440,12 @@ Feedback:
                     h += 4,
                     t = b.getUint8(h, !0),
                     h += 1);
-                    var C = B[k]
+                        C = B[k]
                       , P = x & 256;
                     if (C && (P && C.setFrenzy(),
                     C.setPaused(z),
                     v == C)) {
-                        var z = x & 8
+                            z = x & 8
                           , R = x & 16
                           , S = x & 32
                           , O = x & 128
@@ -4455,7 +4456,7 @@ Feedback:
                         O && F.addBonus(128, 0);
                         P && F.addBonus(256, C.getKills())
                     }
-                    var ea;
+                        ea;
                     if (162 == a || 178 == a || 169 == a || 172 == a)
                         ea = b.getUint32(h, !0),
                         h += 4;
@@ -4514,12 +4515,13 @@ Feedback:
                 e && F.refreshLeaderboard(ja)
             }
             function e(b, a) {
-                var c = 1, e = b.getUint16(c, !0), c = c + 2, f = b.getUint32(c, !0), c = c + 4, q;
+                let c, e, f, q, n, k;
+                    c = 1, e = b.getUint16(c, !0), c = c + 2, f = b.getUint32(c, !0), c = c + 4, q;
                 168 == a ? (q = b.getUint8(c, !0),
                 c += 1) : (q = b.getUint16(c, !0),
                 c += 2);
                 if (0 < f) {
-                    var n = 1
+                        n = 1
                       , k = od;
                     32 > q || 128 == q || 256 == q ? (c = b.getUint16(c, !0),
                     B[f].setWeapon(q),
@@ -4544,8 +4546,9 @@ Feedback:
             this.directed = !1;
             this.roomID = 0;
             this.getServerAndConnect = function() {
+                let b, c, a;
                 if (!G) {
-                    var b = null, b = "", a;
+                        b = null, b = "", a;
                     Hb() || (a = parent.location.hash);
                     if (a)
                         b = a,
@@ -4564,7 +4567,7 @@ Feedback:
                     if (void 0 == a)
                         setTimeout(A.getServerAndConnect, 200);
                     else {
-                        var c = "";
+                            c = "";
                         Ib && (c = "s");
                         s.ajax({
                             url: "http" + c + "://master.wings.io/",
@@ -4578,7 +4581,7 @@ Feedback:
                                     a = a.split("!");
                                     A.roomID = 0;
                                     1 < a.length && (A.roomID = a[1]);
-                                    var c = a[0];
+                                        c = a[0];
                                     a = c.split("/");
                                     A.roomNumber = 0;
                                     1 < a.length && (A.roomNumber = a[1],
@@ -4601,11 +4604,12 @@ Feedback:
                 }
             };
             this.connect = function() {
+                let b;
                 if (wa || G) {
-                    var b = "ws://" + A.remoteHost;
+                        b = "ws://" + A.remoteHost;
                     console.log("fullhost: " + b);
                     if (Ib) {
-                        var b = A.remoteHost.split(":")[0].split(".")
+                            b = A.remoteHost.split(":")[0].split(".")
                           , a = parseInt(A.roomNumber) + 8079 + 1E3
                           , b = "wss://ip-" + b[0] + "-" + b[1] + "-" + b[2] + "-" + b[3] + ".wings.io:" + a;
                         console.log("isSecure RoomNumber: " + A.roomNumber)
@@ -4666,11 +4670,12 @@ Feedback:
                 1 == G && ("undefined" != typeof messageHandlers && messageHandlers.didConnect ? messageHandlers.didConnect(JSON.stringify({})) : w.webkit.messageHandlers.didConnect.postMessage({}))
             };
             this.processMessage = function(d) {
+                let a, c, f, h, q, n, k, m, l, y, r, s, t, x, z, Ca, ta;
                 d = new DataView(d);
-                var a = d.getUint8(0);
+                    a = d.getUint8(0);
                 if (0 != a)
                     if (160 == a) {
-                        var c = 1
+                            c = 1
                           , a = -d.getUint32(c, !0)
                           , c = c + 4
                           , f = d.getFloat32(c, !0)
@@ -4830,7 +4835,7 @@ Feedback:
                             l = d.getUint8(c, !0);
                             c += 1;
                             for (y = 0; y < l; y++) {
-                                var r = d.getFloat32(c, !0)
+                                    r = d.getFloat32(c, !0)
                                   , c = c + 4
                                   , s = -d.getFloat32(c, !0)
                                   , c = c + 4
@@ -4839,7 +4844,7 @@ Feedback:
                                 if (q != Ua && q != cb)
                                     oa.addShot(n, r, s, q);
                                 else {
-                                    var t = d.getUint32(c, !0)
+                                        t = d.getUint32(c, !0)
                                       , c = c + 4
                                       , x = M[t];
                                     x && (delete M[t],
@@ -4847,11 +4852,11 @@ Feedback:
                                     t = !0
                                 }
                                 for (x = !1; ; ) {
-                                    var z = d.getUint32(c, !0)
+                                        z = d.getUint32(c, !0)
                                       , c = c + 4;
                                     if (0 == z)
                                         break;
-                                    var Ca = B[z]
+                                        Ca = B[z]
                                       , ta = !1;
                                     Ca || (Ca = U[z]) && (ta = !0);
                                     z == qa || ta || (t = !1);
@@ -4970,19 +4975,19 @@ Feedback:
                 s("#topGuiConnecting").show();
                 s("#copyLink").fadeOut(300);
                 s(".btn-needs-server").attr("disabled", "disabled");
-                var b = this.connectRetry;
+                let b = this.connectRetry;
                 5 < b && (b = 5);
                 setTimeout(this.getServerAndConnect, 1E3 + 1E3 * b);
                 A.connectRetry++
             };
             this.sendSingleByte = function(b) {
-                var a = new ArrayBuffer(1);
+                let a = new ArrayBuffer(1);
                 (new DataView(a)).setUint8(0, b);
                 f.send(a)
             };
             this.sendNick = function(b, a) {
                 myName = b;
-                var c = new ArrayBuffer(3 + 2 * b.length)
+                let c = new ArrayBuffer(3 + 2 * b.length)
                   , e = new DataView(c)
                   , h = 2;
                 a && (h = 8);
@@ -4994,11 +4999,11 @@ Feedback:
                 f.send(c)
             };
             this.sendInput = function() {
-                var b = new ArrayBuffer(10)
+                let b = new ArrayBuffer(10)
                   , a = new DataView(b);
                 a.setUint8(0, 3);
                 a.setFloat64(1, V.angle, !0);
-                var c = 0;
+                let c = 0;
                 if (V.hover || !wa)
                     c |= 1;
                 if (!wa || Y)
@@ -5007,41 +5012,41 @@ Feedback:
                 f.send(b)
             };
             this.sendDirection = function() {
-                var b = new ArrayBuffer(9)
+                let b = new ArrayBuffer(9)
                   , a = new DataView(b);
                 a.setUint8(0, 4);
                 a.setFloat64(1, V.angle, !0);
                 f.send(b)
             };
             this.sendThrottle = function() {
-                var b = new ArrayBuffer(2)
+                let b = new ArrayBuffer(2)
                   , a = new DataView(b);
                 a.setUint8(0, 6);
                 1 == V.throttle ? a.setUint8(1, 1) : a.setUint8(1, 0);
                 f.send(b)
             };
             this.sendBraking = function(b) {
-                var a = new ArrayBuffer(2)
+                let a = new ArrayBuffer(2)
                   , c = new DataView(a);
                 c.setUint8(0, 4);
                 b ? c.setUint8(1, 1) : c.setUint8(1, 0);
                 f.send(a)
             };
             this.sendShooting = function(b) {
-                var a = new ArrayBuffer(2)
+                let a = new ArrayBuffer(2)
                   , c = new DataView(a);
                 c.setUint8(0, 5);
                 b ? c.setUint8(1, 1) : c.setUint8(1, 0);
                 f.send(a)
             };
             this.leave = function() {
-                var b = new ArrayBuffer(1);
+                let b = new ArrayBuffer(1);
                 (new DataView(b)).setUint8(0, 7);
                 f.send(b)
             };
             this.ping = function() {
                 if (this.hasConnection) {
-                    var b = new ArrayBuffer(1);
+                    let b = new ArrayBuffer(1);
                     (new DataView(b)).setUint8(0, 0);
                     f.send(b)
                 }
