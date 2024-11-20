@@ -637,11 +637,11 @@ Feedback:
 <script src="lib/Stats.js"></script>
 <script src="lib/howler.min.js"></script>
 <script>
-    (function(w, x, s) {
+    (function(window, document, $) {
         let Zb
           , $b
-          , Ib = "https:" == w.location.protocol
-          , G = w.location.pathname.indexOf("mobile")
+          , Ib = "https:" == window.location.protocol
+          , G = window.location.pathname.indexOf("mobile")
           , Jb = 1E3 / 30 * 3
           , Mc = [
                 {
@@ -689,7 +689,7 @@ Feedback:
           , Mb = 0
           , E = 1600
           , Nb = E / 2 - 100
-          , $ = 5E3
+          , $_sub = 5E3
           , ka = 1
           , Y = !0
           , Gb = 0
@@ -704,7 +704,7 @@ Feedback:
           , Eb
           , nc = 0
           , da = 1
-          , N = w.localStorage.muteVol
+          , N = window.localStorage.muteVol
           , tc = 3
           , uc = 750
           , vc = 5
@@ -761,7 +761,7 @@ Feedback:
           , Pa = {}
           , eb = !1
           , vb = null
-          , Cc = w.navigator.userAgent
+          , Cc = window.navigator.userAgent
           , Dc = -1 < Cc.indexOf("MSIE ") || -1 < Cc.indexOf("Trident/")
           , wb
           , Sb = !1
@@ -938,10 +938,10 @@ Feedback:
         let Bc = function() {
                 let b = "";
                 Ib && (b = "s");
-                s.get("http" + b + "://ip2l.wings.io/cc", function(b) {
+                $.get("http" + b + "://ip2l.wings.io/cc", function(b) {
                     vb = b.substring(0, 2);
-                    w.localStorage.wingsCC = vb;
-                    w.localStorage.wingsCCTime = +new Date
+                    window.localStorage.wingsCC = vb;
+                    window.localStorage.wingsCCTime = +new Date
                 }, "text")
             }
           , Rb = function() {
@@ -951,7 +951,7 @@ Feedback:
                 Mb = T;
                 L.update(b);
                 L.draw(b);
-                w.requestAnimationFrame && w.requestAnimationFrame(Rb);
+                window.requestAnimationFrame && window.requestAnimationFrame(Rb);
                 Lb && (Lb = !1)
             };
         function ac(b) {
@@ -960,7 +960,7 @@ Feedback:
             for (e = 0; 5 >= e; e++) {
                 let f = e
                   , d = p.planes[f][b][7]
-                  , a = x.createElement("canvas")
+                  , a = document.createElement("canvas")
                   , c = a.getContext("2d")
                   , g = p.frames.plane8;
                 a.width = g.width;
@@ -970,9 +970,9 @@ Feedback:
                 d.draw(c);
                 d = a.toDataURL("image/png");
                 a = void 0;
-                c = x.styleSheets.length;
+                c = document.styleSheets.length;
                 for (g = 0; g < c; g++) {
-                    let h = x.styleSheets[g];
+                    let h = document.styleSheets[g];
                     if (null == h.href) {
                         a = h;
                         break
@@ -981,18 +981,18 @@ Feedback:
                 a.addRule ? a.addRule(".btn-decal" + (f + 1) + ":before", "background-image: url(" + d + ")") : a.insertRule(".btn-decal" + (f + 1) + ":before{background-image: url(" + d + ")}", a.cssRules.length)
             }
             for (e = 0; 5 >= e; e++)
-                s("#check" + e).hide();
-            s("#check" + b).show()
+                $("#check" + e).hide();
+            $("#check" + b).show()
         }
         function cc(b) {
             dc = b;
             for (let e = 0; 5 >= e; e++)
-                s("#checkD" + e).hide();
-            s("#checkD" + b).show()
+                $("#checkD" + e).hide();
+            $("#checkD" + b).show()
         }
         function ec() {
             Aa = !1;
-            s("#beta").show();
+            $("#beta").show();
             Ab()
         }
         function fc() {
@@ -1004,25 +1004,25 @@ Feedback:
         function gc() {
             let b = "Low";
             Ba && (b = "High");
-            let e = s("#graphicsID")[0];
+            let e = $("#graphicsID")[0];
             e && (e.childNodes[0].data = "Graphics: " + b)
         }
         function hc() {
-            s("#pfArrow").show();
-            s("#pfText").show()
+            $("#pfArrow").show();
+            $("#pfText").show()
         }
         function ic() {
-            s("#copycheckimage").hide();
-            s("#copyLink").show();
-            s("#copyLinkBox").hide();
-            s("#overlay2").fadeIn(200);
-            s("#pfArrow").hide();
-            s("#pfText").hide();
+            $("#copycheckimage").hide();
+            $("#copyLink").show();
+            $("#copyLinkBox").hide();
+            $("#overlay2").fadeIn(200);
+            $("#pfArrow").hide();
+            $("#pfText").hide();
             setTimeout(function() {
-                s("#copycheckimage").fadeIn(300)
+                $("#copycheckimage").fadeIn(300)
             }, 200);
             setTimeout(function() {
-                s("#overlay2").fadeOut(200)
+                $("#overlay2").fadeOut(200)
             }, 1E3);
             eb = !1
         }
@@ -1031,12 +1031,12 @@ Feedback:
             1 == N ? da = N = 0 : 0 == N && (N = 1,
             da = .05,
             b = "images/sound_on.png");
-            w.localStorage.muteVol = N;
-            s("#soundImg")[0].src = b
+            window.localStorage.muteVol = N;
+            $("#soundImg")[0].src = b
         }
         function Bb() {
-            w.mixpanel && w.mixpanel.track("Ad Impression Opportunity", {
-                domain: w.location.hostname
+            window.mixpanel && window.mixpanel.track("Ad Impression Opportunity", {
+                domain: window.location.hostname
             });
             if (null != adsense && adsense)
                 0 == kc && cpmstarAPI({
@@ -1054,17 +1054,17 @@ Feedback:
                         }
                     }
                 }),
-                w.googletag && (w.googletag.cmd.push(function() {
+                window.googletag && (window.googletag.cmd.push(function() {
                     Cb && (Cb = !1,
                     setTimeout(function() {
                         Cb = !0
                     }, 6E4 * lc),
-                    w.googletag && w.googletag.pubads && w.googletag.pubads().refresh && w.googletag.pubads().refresh(w.ads))
+                    window.googletag && window.googletag.pubads && window.googletag.pubads().refresh && window.googletag.pubads().refresh(window.ads))
                 }),
                 kc++);
             else {
-                s("#mpu-top").show();
-                let b = s("#ldr-top");
+                $("#mpu-top").show();
+                let b = $("#ldr-top");
                 b && b.show();
                 refreshSlots()
             }
@@ -1074,7 +1074,7 @@ Feedback:
         }
         function Db() {
             da = 1 * N;
-            s("#overlay").hide();
+            $("#overlay").hide();
             Y = !1
         }
         function mc() {
@@ -1083,24 +1083,24 @@ Feedback:
                 0 > b && (b = 0);
                 let e = 10 - b;
                 0 > e ? (Aa = !1,
-                Ab()) : (b = s("#countdownText")[0],
-                e = x.createTextNode(e),
+                Ab()) : (b = $("#countdownText")[0],
+                e = document.createTextNode(e),
                 b.replaceChild(e, b.firstChild),
                 setTimeout(mc, 500))
             }
         }
         function Lc() {
             Bb();
-            0 < nc && (s("#continueTop").show(),
-            s("#continueBR").show(),
-            s("#continue").show(),
-            s("#nickInput").hide(),
-            s("#skinPanel").hide(),
-            s("#howto").hide(),
+            0 < nc && ($("#continueTop").show(),
+            $("#continueBR").show(),
+            $("#continue").show(),
+            $("#nickInput").hide(),
+            $("#skinPanel").hide(),
+            $("#howto").hide(),
             Aa = !0,
             Eb = +new Date,
             mc());
-            s("#overlay").fadeIn(500);
+            $("#overlay").fadeIn(500);
             da = .05 * N;
             F.clearBonusDisplay()
         }
@@ -1116,9 +1116,9 @@ Feedback:
                 hc();
                 if (0 <= b) {
                     Aa = !0;
-                    s("#beta").hide();
-                    let e = s("#curScore")[0], f;
-                    f = u.isInstagib() ? x.createTextNode("Kills: " + b) : x.createTextNode("Current Score: " + b);
+                    $("#beta").hide();
+                    let e = $("#curScore")[0], f;
+                    f = u.isInstagib() ? document.createTextNode("Kills: " + b) : document.createTextNode("Current Score: " + b);
                     e.replaceChild(f, e.firstChild)
                 }
                 nc = b;
@@ -1126,24 +1126,24 @@ Feedback:
             }
         }
         function Ab() {
-            s("#continueTop").hide();
-            s("#continueBR").hide();
-            s("#continue").hide();
-            s("#nickInput").show();
-            s("#skinPanel").hide();
-            s("#divOff").show();
-            s("#divOn").hide();
-            s("#howto").show();
-            s("#beta").show();
+            $("#continueTop").hide();
+            $("#continueBR").hide();
+            $("#continue").hide();
+            $("#nickInput").show();
+            $("#skinPanel").hide();
+            $("#divOff").show();
+            $("#divOn").hide();
+            $("#howto").show();
+            $("#beta").show();
             Eb = +new Date
         }
         function Va() {
             Gb = Object.keys(B).length;
-            x.title = "Wings!"
+            document.title = "Wings!"
         }
         function Hb() {
             try {
-                return w.self !== w.top
+                return window.self !== window.top
             } catch (b) {
                 return !0
             }
@@ -1225,11 +1225,11 @@ Feedback:
                 y: b
             }
         }
-        w.location.href.split("/");
+        window.location.href.split("/");
         -1 == G && (G = 0);
         G && (xa = !0);
         (function() {
-            let b = w.location.search;
+            let b = window.location.search;
             "?" == b.charAt(0) && (b = b.slice(1));
             b = b.split("&")
             for (let e = 0; e < b.length; e++) {
@@ -1238,47 +1238,47 @@ Feedback:
             }
         }
         )();
-        w.stats = Pa.stats ? !0 : !1;
-        "true" == w.localStorage.lq && (Ba = !1);
-        w.mixpanel && w.mixpanel.init("208ce64093308da8075ba320f97c12fd", {
+        window.stats = Pa.stats ? !0 : !1;
+        "true" == window.localStorage.lq && (Ba = !1);
+        window.mixpanel && window.mixpanel.init("208ce64093308da8075ba320f97c12fd", {
             debug: !1,
             track_pageview: !0,
             persistence: "localStorage"
         });
-        void 0 == w.localStorage.wingsCCTime || void 0 != w.localStorage.wingsCC && 2 != w.localStorage.wingsCC.length ? Bc() : 288E5 < +new Date - w.localStorage.wingsCCTime ? Bc() : vb = w.localStorage.wingsCC;
-        x.body.onselectstart = function() {
+        void 0 == window.localStorage.wingsCCTime || void 0 != window.localStorage.wingsCC && 2 != window.localStorage.wingsCC.length ? Bc() : 288E5 < +new Date - window.localStorage.wingsCCTime ? Bc() : vb = window.localStorage.wingsCC;
+        document.body.onselectstart = function() {
             return !1
         };
-        w.switchSkins = function() {
+        window.switchSkins = function() {
             ec();
-            Ob ? (s("#howto").show(),
-            s("#skinPanel").hide(),
-            s("#divOff").show(),
-            s("#divOn").hide()) : (s("#howto").hide(),
-            s("#skinPanel").show(),
-            s("#divOff").hide(),
-            s("#divOn").show());
+            Ob ? ($("#howto").show(),
+            $("#skinPanel").hide(),
+            $("#divOff").show(),
+            $("#divOn").hide()) : ($("#howto").hide(),
+            $("#skinPanel").show(),
+            $("#divOff").hide(),
+            $("#divOn").show());
             Ob = !Ob
         };
-        w.setSkinColor = function(b) {
+        window.setSkinColor = function(b) {
             ac(b)
         };
-        w.setDecal = function(b) {
+        window.setDecal = function(b) {
             cc(b)
         };
-        w.clickPlay = function(b) {
-            Z ? Db() : (w.localStorage.nick = b,
-            x.getElementsByTagName("canvas")[0].style.cursor = "url(images/crosshair.png) 16 16, auto",
+        window.clickPlay = function(b) {
+            Z ? Db() : (window.localStorage.nick = b,
+            document.getElementsByTagName("canvas")[0].style.cursor = "url(images/crosshair.png) 16 16, auto",
             kb++,
             V.mouseMoved = !1,
             A.sendNick(b, Aa),
             Aa && (Ab(),
             Aa = !1),
-            u.isSpaceWars() ? F.showTip("Hint: Earn points faster by destroying asteroids.") : x.fullscreenElement || x.mozFullScreenElement || x.webkitFullscreenElement || x.msFullscreenElement || 2 != kb && 4 != kb && 6 != kb || F.showTip("Press 'F' to toggle Fullscreen"))
+            u.isSpaceWars() ? F.showTip("Hint: Earn points faster by destroying asteroids.") : document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement || 2 != kb && 4 != kb && 6 != kb || F.showTip("Press 'F' to toggle Fullscreen"))
         };
-        w.setSpectate = function(b) {
+        window.setSpectate = function(b) {
             xa = !0;
-            x.getElementsByTagName("canvas")[0].style.cursor = "default";
+            document.getElementsByTagName("canvas")[0].style.cursor = "default";
             Db();
             zc++;
             ec();
@@ -1288,65 +1288,65 @@ Feedback:
             ka = 0;
             zc % 2 || 1 >= Gb ? F.showTip("Press 'ESC' to go back") : F.showTip("Click to follow next player")
         };
-        w.setContinue = function() {
-            s("#topGui").show();
-            s("#roomFailed").hide();
+        window.setContinue = function() {
+            $("#topGui").show();
+            $("#roomFailed").hide();
             Hb() || (parent.location.hash = "");
             A.getServerAndConnect()
         };
-        w.toggleGraphics = function() {
+        window.toggleGraphics = function() {
             Ba = !Ba;
             L.resize();
-            w.localStorage.lq = !Ba;
+            window.localStorage.lq = !Ba;
             gc()
         };
-        w.copyRoomLink = function() {
-            s("#copyLink").hide();
-            s("#copyLinkBox").show();
-            let b = s("#roomlinkInput")[0];
+        window.copyRoomLink = function() {
+            $("#copyLink").hide();
+            $("#copyLinkBox").show();
+            let b = $("#roomlinkInput")[0];
             b.value = "http://classic.wings.io/#" + A.roomID;
             eb = !0;
-            fc() && (s("#copyButton")[0].childNodes[0].data = "Close",
-            s("#safariTooltip").show());
+            fc() && ($("#copyButton")[0].childNodes[0].data = "Close",
+            $("#safariTooltip").show());
             setTimeout(function() {
                 b.setSelectionRange(0, b.value.length);
                 b.select();
                 b.focus()
             }, 100)
         };
-        w.setCopy = function() {
-            let b = s("#roomlinkInput")[0];
+        window.setCopy = function() {
+            let b = $("#roomlinkInput")[0];
             b.value = "http://wings.io/#" + A.roomID;
             b.setSelectionRange(0, b.value.length);
             b.select();
             b.focus();
             if (fc())
-                s("#copyLinkBox").hide(),
-                s("#copyLink").show(),
+                $("#copyLinkBox").hide(),
+                $("#copyLink").show(),
                 eb = !1;
             else {
                 try {
-                    x.execCommand("copy")
+                    document.execCommand("copy")
                 } catch (e) {}
                 ic()
             }
         };
         null != adsense && adsense && Bb();
-        w.clickNoNames = function(b) {
+        window.clickNoNames = function(b) {
             lb = !lb;
             b.checked = lb
         };
-        w.toggleMute = function() {
+        window.toggleMute = function() {
             jc()
         };
         void 0 == N && (N = 1);
-        "undefined" === typeof w.orientation || G || (w.location.href = "https://itunes.apple.com/us/app/wings.io/id1098205567?l=pt&ls=1&mt=8");
+        "undefined" === typeof window.orientation || G || (window.location.href = "https://itunes.apple.com/us/app/wings.io/id1098205567?l=pt&ls=1&mt=8");
         if (0 == N || Dc)
             N = 1,
             G || jc();
-        Dc && s("#sndIcon").hide();
-        w.onblur = function() {
-            w.didSendLoadingTime = !0;
+        Dc && $("#sndIcon").hide();
+        window.onblur = function() {
+            window.didSendLoadingTime = !0;
             wb = setTimeout(Kc, 3E5);
             wa = !1;
             da = 0;
@@ -1356,7 +1356,7 @@ Feedback:
             J.sound.volume(0, na),
             nb && J.sound.volume(0, nb))
         };
-        w.onfocus = function() {
+        window.onfocus = function() {
             wb && (clearTimeout(wb),
             wb = null);
             Lb = wa = !0;
@@ -1364,45 +1364,45 @@ Feedback:
             for (let b in B)
                 B[b].clearTrail()
         };
-        w.connectToServer = function(b) {
+        window.connectToServer = function(b) {
             A.roomNumber = 0;
             A.remoteHost = b;
             A.connect();
             console.log("CONNECTING NOW to " + b)
         };
-        w.disconnect = function() {
+        window.disconnect = function() {
             A.disconnect();
             console.log("Disconnected.")
         };
-        w.enterGame = function(b) {
+        window.enterGame = function(b) {
             clickPlay(b);
             onfocus()
         };
-        w.setInput = function(b, e, f) {
+        window.setInput = function(b, e, f) {
             V.angle = b;
             V.hover = e;
             !Sb && f ? A.sendShooting(f) : Sb && !f && A.sendShooting(f);
             Sb = f
         };
-        w.wasKilled = function(b) {
+        window.wasKilled = function(b) {
             V.angle = Math.PI;
             V.hover = 1;
             G && (Aa = !0,
             b = {
                 score: b
             },
-            "undefined" != typeof messageHandlers && messageHandlers.wasKilled ? messageHandlers.wasKilled(JSON.stringify(b)) : w.webkit.messageHandlers.wasKilled.postMessage(b))
+            "undefined" != typeof messageHandlers && messageHandlers.wasKilled ? messageHandlers.wasKilled(JSON.stringify(b)) : window.webkit.messageHandlers.wasKilled.postMessage(b))
         };
-        w.connectionClosed = function() {
+        window.connectionClosed = function() {
             console.log("Connection was closed");
             V.angle = Math.PI;
             V.hover = 1;
-            G && ("undefined" != typeof messageHandlers && messageHandlers.connectionClosed ? messageHandlers.connectionClosed(JSON.stringify({})) : w.webkit.messageHandlers.connectionClosed.postMessage({}))
+            G && ("undefined" != typeof messageHandlers && messageHandlers.connectionClosed ? messageHandlers.connectionClosed(JSON.stringify({})) : window.webkit.messageHandlers.connectionClosed.postMessage({}))
         };
         if (G)
-            w.onblur();
-        w.localStorage.nick && s("#nick")[0] && (s("#nick")[0].value = w.localStorage.nick);
-        x.oncontextmenu = function() {
+            window.onblur();
+        window.localStorage.nick && $("#nick")[0] && ($("#nick")[0].value = window.localStorage.nick);
+        document.oncontextmenu = function() {
             return !1
         };
         G && (Tb = "Arial-BoldMT");
@@ -1471,7 +1471,7 @@ Feedback:
                 this._dirty = !0)
             },
             render: function() {
-                null == this._canvas && (this._canvas = x.createElement("canvas"),
+                null == this._canvas && (this._canvas = document.createElement("canvas"),
                 this._ctx = this._canvas.getContext("2d"));
                 if (this._dirty) {
                     this._dirty = !1;
@@ -1565,7 +1565,7 @@ Feedback:
                 this._angY = Math.cos(b) * this._d
             },
             render: function() {
-                null == this._canvas && (this._canvas = x.createElement("canvas"),
+                null == this._canvas && (this._canvas = document.createElement("canvas"),
                 this._ctx = this._canvas.getContext("2d"));
                 if (this._dirty) {
                     this._dirty = !1;
@@ -1621,15 +1621,15 @@ Feedback:
             this.warshipsEscaped = this.warshipsDestroyed = 0;
             this.setType = function(b) {
                 this.type = b;
-                this.isSpaceWars() ? (s("#pfText").css({
+                this.isSpaceWars() ? ($("#pfText").css({
                     "-webkit-filter": "brightness(100%)"
                 }),
-                s("#pfArrow").css({
+                $("#pfArrow").css({
                     "-webkit-filter": "brightness(100%)"
-                })) : (s("#pfText").css({
+                })) : ($("#pfText").css({
                     "-webkit-filter": "brightness(0%)"
                 }),
-                s("#pfArrow").css({
+                $("#pfArrow").css({
                     "-webkit-filter": "brightness(0%)"
                 }));
                 this.isWarship() && (this.warshipsLeft = 3,
@@ -1777,7 +1777,7 @@ Feedback:
                 frameIconR = p.frames.killR;
                 let c = a.generateRGBKs();
                 f = a.generateTintImage(c, b, e, f);
-                b = x.createElement("canvas");
+                b = document.createElement("canvas");
                 b.width = f.width;
                 b.height = f.height;
                 e = b.getContext("2d");
@@ -1794,7 +1794,7 @@ Feedback:
                   , e = 0
                   , e = this.generateTintedKillIcon(205, 154, 109, "#FFFFFF")
                   , f = this.generateTintedKillIcon(172, 121, 76, "#BBBBBB")
-                  , d = x.createElement("canvas");
+                  , d = document.createElement("canvas");
                 d.width = e.width;
                 d.height = e.height + b;
                     a = d.getContext("2d")
@@ -1808,7 +1808,7 @@ Feedback:
                   , d = .9
                   , c = this.generateTintedKillIcon(167, 176, 185, "#FFFFFF")
                   , f = this.generateTintedKillIcon(129, 138, 148, "#BBBBBB")
-                  , g = x.createElement("canvas");
+                  , g = document.createElement("canvas");
                 g.width = c.width + e;
                 g.height = c.height + b;
                     h = g.getContext("2d")
@@ -1830,7 +1830,7 @@ Feedback:
                 c = this.generateTintedKillIcon(240, 164, 0, "#FFFFFF");
                 f = this.generateTintedKillIcon(200, 124, 0, "#ddaf63");
                 b = this.generateTintedKillIcon(158, 98, 0, "#b25c5c");
-                g = x.createElement("canvas");
+                g = document.createElement("canvas");
                 g.width = c.width + shift2X;
                 g.height = c.height + 1.5 * shift2Y;
                 a = g.width / 2 - c.width / 2 * d;
@@ -1856,7 +1856,7 @@ Feedback:
                 c = this.generateTintedKillIcon(222, 0, 0, "#FFFFFF");
                 f = this.generateTintedKillIcon(172, 0, 0, "#d68080");
                 b = this.generateTintedKillIcon(133, 0, 0, "#b25c5c");
-                g = x.createElement("canvas");
+                g = document.createElement("canvas");
                 g.width = c.width + shift2X;
                 g.height = c.height + 1.5 * shift2Y;
                 a = g.width / 2 - c.width / 2 * .65;
@@ -1889,13 +1889,13 @@ Feedback:
                 this.loadGameSpritesheet()
             };
             this.loadTintImage = function(b, e, f) {
-                let d = x.createElement("canvas")
+                let d = document.createElement("canvas")
                   , a = d.getContext("2d")
                   , c = b.width
                   , g = b.height;
                 d.width = c;
                 d.height = g;
-                let h = x.createElement("canvas");
+                let h = document.createElement("canvas");
                 h.width = c;
                 h.height = g;
                 c = h.getContext("2d");
@@ -1975,11 +1975,11 @@ Feedback:
                 console.log("Toggled drawTrails to " + Ya)) : 48 == a.keyCode ? (sb = !sb,
                 console.log("Toggled drawSplashes to " + sb)) : 27 == a.keyCode ? (Bb(),
                 da = .05 * N,
-                s("#overlay").show(),
+                $("#overlay").show(),
                 hc(),
                 Y = !0,
                 Z || (ka = 1,
-                v = null)) : 70 == a.keyCode && (x.fullscreenElement || x.mozFullScreenElement || x.webkitFullscreenElement || x.msFullscreenElement ? x.exitFullscreen ? x.exitFullscreen() : x.msExitFullscreen ? x.msExitFullscreen() : x.mozCancelFullScreen ? x.mozCancelFullScreen() : x.webkitExitFullscreen && x.webkitExitFullscreen() : x.documentElement.requestFullscreen ? x.documentElement.requestFullscreen() : x.documentElement.msRequestFullscreen ? x.documentElement.msRequestFullscreen() : x.documentElement.mozRequestFullScreen ? x.documentElement.mozRequestFullScreen() : x.documentElement.webkitRequestFullscreen && x.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT),
+                v = null)) : 70 == a.keyCode && (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement ? document.exitFullscreen ? document.exitFullscreen() : document.msExitFullscreen ? document.msExitFullscreen() : document.mozCancelFullScreen ? document.mozCancelFullScreen() : document.webkitExitFullscreen && document.webkitExitFullscreen() : document.documentElement.requestFullscreen ? document.documentElement.requestFullscreen() : document.documentElement.msRequestFullscreen ? document.documentElement.msRequestFullscreen() : document.documentElement.mozRequestFullScreen ? document.documentElement.mozRequestFullScreen() : document.documentElement.webkitRequestFullscreen && document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT),
                 F.clearTip())))
             };
             b.keyup = function(a) {
@@ -2003,20 +2003,20 @@ Feedback:
                 e)) {
                     let c = a.clientY - d
                       , g = z.x - (a.clientX - f)
-                      , h = x.y - c;
+                      , h = document.y - c;
                     h < -E / 2 ? h = -E / 2 : h > E / 2 && (h = E / 2);
-                    g < -$ ? g = -$ : g > $ && (g = $);
+                    g < -$_sub ? g = -$_sub : g > $_sub && (g = $_sub);
                     z.setPosition(g, h);
                     f = a.clientX;
                     d = a.clientY
                 }
             };
             this.addListeners = function() {
-                x.addEventListener("mousedown", b.mousedown, !1);
-                x.addEventListener("mousemove", b.mousemove, !1);
-                x.addEventListener("mouseup", b.mouseup, !1);
-                x.addEventListener("keydown", b.keydown, !1);
-                x.addEventListener("keyup", b.keyup, !1)
+                document.addEventListener("mousedown", b.mousedown, !1);
+                document.addEventListener("mousemove", b.mousemove, !1);
+                document.addEventListener("mouseup", b.mouseup, !1);
+                document.addEventListener("keydown", b.keydown, !1);
+                document.addEventListener("keyup", b.keyup, !1)
             }
         }
           , Rc = function() {
@@ -2283,7 +2283,7 @@ Feedback:
               , V = 0
               , Q
               , W
-              , $
+              , $_sub
               , M
               , N
               , da
@@ -2304,7 +2304,7 @@ Feedback:
             this.draw = function(I) {
                 let r, K, P, O, R, S;
                 if (ta) {
-                    C = x.createElement("canvas");
+                    C = document.createElement("canvas");
                     r = C.getContext("2d");
                     this.renderLeaderboard(r, C)
                 }
@@ -2493,7 +2493,7 @@ Feedback:
                 a.restore()
             };
             this.DrawRank = function(a) {
-                0 < v.rank && (void 0 == rankCanvas && (rankCanvas = x.createElement("canvas"),
+                0 < v.rank && (void 0 == rankCanvas && (rankCanvas = document.createElement("canvas"),
                 rankCanvas.width = 200,
                 rankCanvas.height = 200,
                 rankCanvasContext = rankCanvas.getContext("2d")),
@@ -2523,7 +2523,7 @@ Feedback:
                       , f = S + 5 + 5;
                     G && (h = 60 * t,
                     g = b);
-                    void 0 == r && (r = x.createElement("canvas"),
+                    void 0 == r && (r = document.createElement("canvas"),
                     K = r.getContext("2d"));
                     if (-1 != v.score)
                         for (r.width = g,
@@ -2552,9 +2552,9 @@ Feedback:
                     W = new ba(23 * t,u.getEventColor(),"#6e3800");
                     W.setValue(u.getEventName());
                     N = W.render();
-                    $ = new ba(20 * t,"#fe9b00","#6e3800");
-                    $.setValue("STARTS IN");
-                    da = $.render();
+                    $_sub = new ba(20 * t,"#fe9b00","#6e3800");
+                    $_sub.setValue("STARTS IN");
+                    da = $_sub.render();
                     Q = new ba(27 * t,"#fe9b00","#6e3800");
                     Q.setValue(oc(c));
                     M = Q.render()
@@ -3925,7 +3925,7 @@ Feedback:
                 a = e.length;
                 for (let c = 1, g = 0; g < a; g++) {
                     let h = e[g][2], q = -d[h][0] + d[h][2], n = -d[h][1] + d[h][3], k;
-                    k = x.createElement("canvas");
+                    k = document.createElement("canvas");
                     let m = k.getContext("2d")
                       , l = c = 1
                       , y = 3
@@ -4133,11 +4133,11 @@ Feedback:
                   , r = 0
                   , p;
                 if (0 < c) {
-                    p = $ - c;
+                    p = $_sub - c;
                     p < d && (f = Math.min(1 - p / d, 1),
                     f *= .2)
                 } else
-                    p = $ + c,
+                    p = $_sub + c,
                     p < d && (l = Math.min(1 - p / d, 1),
                     l *= .2);
                 u.isSpaceWars() && (d = 200,
@@ -4155,11 +4155,11 @@ Feedback:
                 l = d = r > d ? r : d);
                 r = y = d;
                 0 < f ? (a.fillStyle = "rgba(200,0,0," + f + ")",
-                a.fillRect($, -e / 2, 2500, e)) : (a.fillStyle = "rgba(200,0,0," + l + ")",
-                a.fillRect(-$ - 2500, -e / 2, 2500, e));
+                a.fillRect($_sub, -e / 2, 2500, e)) : (a.fillStyle = "rgba(200,0,0," + l + ")",
+                a.fillRect(-$_sub - 2500, -e / 2, 2500, e));
                 u.isSpaceWars() && (0 > b ? (a.fillStyle = "rgba(200,0,0," + y + ")",
-                a.fillRect(-$, -E / 2 - 2500, 2 * $, 2500)) : (a.fillStyle = "rgba(200,0,0," + r + ")",
-                a.fillRect(-$, E / 2, 2 * $, 2500)));
+                a.fillRect(-$_sub, -E / 2 - 2500, 2 * $_sub, 2500)) : (a.fillStyle = "rgba(200,0,0," + r + ")",
+                a.fillRect(-$_sub, E / 2, 2 * $_sub, 2500)));
                 u.isSpaceWars() || (a.fillStyle = "rgba(255,255,255,0.10)",
                 a.fillRect(c - canvas.width / 2 / z.zoom, -E / 2 - 1, canvas.width / z.zoom, 6))
             };
@@ -4187,7 +4187,7 @@ Feedback:
                     this.waves.update(a),
                     f.update(a),
                     null != v) {
-                        let b = v.x < -$ || v.x > $;
+                        let b = v.x < -$_sub || v.x > $_sub;
                         u.isSpaceWars() && (b |= v.y > E / 2 || v.y < -E / 2);
                         b ? (0 == e && (J.playSound(gd, 1, 1, 1, null),
                         F.showWarningMessage("YOU ABANDONED THE FIGHT!")),
@@ -4569,14 +4569,14 @@ Feedback:
                     else {
                             c = "";
                         Ib && (c = "s");
-                        s.ajax({
+                        $.ajax({
                             url: "http" + c + "://master.wings.io/",
                             type: "POST",
                             success: function(a) {
                                 if ("0" == a)
-                                    s("#topGui").hide(),
-                                    s("#topGuiConnecting").hide(),
-                                    s("#roomFailed").show();
+                                    $("#topGui").hide(),
+                                    $("#topGuiConnecting").hide(),
+                                    $("#roomFailed").show();
                                 else {
                                     a = a.split("!");
                                     A.roomID = 0;
@@ -4631,19 +4631,19 @@ Feedback:
                     setTimeout(A.getServerAndConnect, 100)
             };
             this.disconnect = function() {
-                A.directed && (Hb() || (w.location.hash = ""),
+                A.directed && (Hb() || (window.location.hash = ""),
                 A.directed = !1);
                 A.roomID = 0;
                 f && f.close()
             };
             this.onSocketOpen = function(b) {
-                w.didSendLoadingTime || (b = +new Date - w.startTime,
-                w.stats && console.log("ltct " + b),
-                w.mixpanel.track("Load Time To Play", {
+                window.didSendLoadingTime || (b = +new Date - window.startTime,
+                window.stats && console.log("ltct " + b),
+                window.mixpanel.track("Load Time To Play", {
                     deltatime: b,
-                    domain: w.location.hostname
+                    domain: window.location.hostname
                 }),
-                w.didSendLoadingTime = !0);
+                window.didSendLoadingTime = !0);
                 A.connectRetry = 0;
                 A.hasConnection = !0;
                 A.directed = !1;
@@ -4662,12 +4662,12 @@ Feedback:
                 G ? A.sendSingleByte(32) : A.sendSingleByte(1);
                 A.ping();
                 A.sentHello = !0;
-                s("#copyLink").fadeIn(300);
-                s("#topGui").show();
-                s("#topGuiConnecting").hide();
-                s(".btn-needs-server").removeAttr("disabled");
-                s("#nick").focus();
-                1 == G && ("undefined" != typeof messageHandlers && messageHandlers.didConnect ? messageHandlers.didConnect(JSON.stringify({})) : w.webkit.messageHandlers.didConnect.postMessage({}))
+                $("#copyLink").fadeIn(300);
+                $("#topGui").show();
+                $("#topGuiConnecting").hide();
+                $(".btn-needs-server").removeAttr("disabled");
+                $("#nick").focus();
+                1 == G && ("undefined" != typeof messageHandlers && messageHandlers.didConnect ? messageHandlers.didConnect(JSON.stringify({})) : window.webkit.messageHandlers.didConnect.postMessage({}))
             };
             this.processMessage = function(d) {
                 let a, c, f, h, q, n, k, m, l, y, r, s, t, x, z, Ca, ta;
@@ -4697,7 +4697,7 @@ Feedback:
                           , r = d.getFloat32(c, !0);
                         d = d.getFloat32(c + 4, !0);
                         Xa = a;
-                        $ = 10 * f;
+                        $_sub = 10 * f;
                         E = 10 * h;
                         uc = 1E3 * q;
                         tc = n;
@@ -4711,7 +4711,7 @@ Feedback:
                         xc = d
                     } else if (161 == a || 171 == a)
                         xa = !0,
-                        G && ("undefined" != typeof messageHandlers && messageHandlers.didEnterGame ? messageHandlers.didEnterGame(JSON.stringify({})) : w.webkit.messageHandlers.didEnterGame.postMessage({})),
+                        G && ("undefined" != typeof messageHandlers && messageHandlers.didEnterGame ? messageHandlers.didEnterGame(JSON.stringify({})) : window.webkit.messageHandlers.didEnterGame.postMessage({})),
                         c = 1,
                         f = d.getUint32(c, !0),
                         c += 4,
@@ -4971,10 +4971,10 @@ Feedback:
                 A.firstClientListing = !0;
                 connectionClosed();
                 Fb(-1);
-                s("#topGui").hide();
-                s("#topGuiConnecting").show();
-                s("#copyLink").fadeOut(300);
-                s(".btn-needs-server").attr("disabled", "disabled");
+                $("#topGui").hide();
+                $("#topGuiConnecting").show();
+                $("#copyLink").fadeOut(300);
+                $(".btn-needs-server").attr("disabled", "disabled");
                 let b = this.connectRetry;
                 5 < b && (b = 5);
                 setTimeout(this.getServerAndConnect, 1E3 + 1E3 * b);
@@ -5260,7 +5260,7 @@ Feedback:
                         e = 0, Q, I, N, Y;
                         for (b in U)
                             if (C = U[b],
-                            C.state == Ic && C.x > -$ && C.x < $) {
+                            C.state == Ic && C.x > -$_sub && C.x < $_sub) {
                                     w = H.x - C.x
                                   , D = H.y - C.y
                                   , ba = Math.sqrt(w * w + D * D);
@@ -5427,36 +5427,36 @@ Feedback:
             let C = function() {
                 let a = 2, b, c;
                 Ba && (a = 1);
-                d.width = w.innerWidth / a;
-                d.height = w.innerHeight / a;
+                d.width = window.innerWidth / a;
+                d.height = window.innerHeight / a;
                 Ka = d.width;
                 ib = d.height;
                     b = ib * a
                   , c = -50 + 50 * a + "%"
                   , a = "translate(" + c + "," + c + ") scale(" + a + ")";
-                s("#canvas").css({
+                $("#canvas").css({
                     transform: a
                 });
-                s("#canvas").css({
+                $("#canvas").css({
                     "-ms-transform": a
                 });
-                s("#canvas").css({
+                $("#canvas").css({
                     "-webkit-transform": a
                 });
                 t = .92 * Math.max(ib / 1016, Ka / 1500);
-                t *= w.devicePixelRatio / jb;
+                t *= window.devicePixelRatio / jb;
                 b = Math.min(1, b / 1016);
                 0 < 640 * b && (b = "translate(-50%,0%) scale(" + b + ")",
-                s("#mainDialog").css({
+                $("#mainDialog").css({
                     transform: b
                 }),
-                s("#mainDialog").css({
+                $("#mainDialog").css({
                     "-ms-transform": b
                 }),
-                s("#mainDialog").css({
+                $("#mainDialog").css({
                     "-webkit-transform": b
                 }),
-                s("#mainDialog").css({
+                $("#mainDialog").css({
                     top: "25%"
                 }))
             };
@@ -5474,7 +5474,7 @@ Feedback:
             p = new Oc;
             p.load(function() {
                 console.log("Resources loaded!");
-                1 == G && ("undefined" != typeof messageHandlers && messageHandlers.didLoad ? messageHandlers.didLoad(JSON.stringify({})) : w.webkit.messageHandlers.didLoad.postMessage({}));
+                1 == G && ("undefined" != typeof messageHandlers && messageHandlers.didLoad ? messageHandlers.didLoad(JSON.stringify({})) : window.webkit.messageHandlers.didLoad.postMessage({}));
                 F = new Vc;
                 oa = new Rc;
                 A.hasConnection && !A.sentHello && A.hello();
@@ -5533,13 +5533,13 @@ Feedback:
             this.update = function(b) {
                 let c = a.maxZoom + (a.minZoom - a.maxZoom);
                 xa || (a.y = 470);
-                Z || 1 != ka || Y ? (a.zoom = 1 / (w.devicePixelRatio / jb) * 1.2,
+                Z || 1 != ka || Y ? (a.zoom = 1 / (window.devicePixelRatio / jb) * 1.2,
                 a.zoom *= t,
                 G && (a.zoom += .3),
                 null != v && (ca.x = v.x - a.x,
                 ca.y = v.y - a.y,
                 a.x = v.x,
-                a.y = v.y)) : (c = 1 / (w.devicePixelRatio / jb) * .7 * t,
+                a.y = v.y)) : (c = 1 / (window.devicePixelRatio / jb) * .7 * t,
                 a.zoom += (c - a.zoom) / 10);
                 this.applyShake(b)
             };
@@ -5618,11 +5618,11 @@ Feedback:
                 a ? d.drawImage(a, b, e, this.width, this.height, c + this.x, g + this.y, this.width, this.height) : d.drawImage(this.canvas, 0, 0, this.width, this.height, c + this.x, g + this.y, this.width, this.height)
             };
             this.renderTintedFrame = function(d) {
-                let f = x.createElement("canvas")
+                let f = document.createElement("canvas")
                   , n = f.getContext("2d");
                 f.width = this.width;
                 f.height = this.height;
-                let k = x.createElement("canvas");
+                let k = document.createElement("canvas");
                 k.width = this.width;
                 k.height = this.height;
                 let m = k.getContext("2d");
@@ -5637,7 +5637,7 @@ Feedback:
                 return d
             };
             this.getImageCopy = function() {
-                let c = x.createElement("canvas");
+                let c = document.createElement("canvas");
                 c.width = this.width;
                 c.height = this.height;
                 let d = c.getContext("2d");
@@ -5651,7 +5651,7 @@ Feedback:
                 }
             };
             this.generateTintImage2 = function(d, f, n, k) {
-                let m = x.createElement("canvas");
+                let m = document.createElement("canvas");
                 m.width = this.width;
                 m.height = this.height;
                 let l = m.getContext("2d");
@@ -5668,7 +5668,7 @@ Feedback:
                 return d
             };
             this.generateTintImage = function(a, b, d, e) {
-                let f = x.createElement("canvas");
+                let f = document.createElement("canvas");
                 f.width = this.width;
                 f.height = this.height;
                 let l = f.getContext("2d");
@@ -5688,11 +5688,11 @@ Feedback:
             };
             this.generateRGBKs = function() {
                 let c = []
-                  , d = x.createElement("canvas");
+                  , d = document.createElement("canvas");
                 d.getContext("2d");
                 d.width = this.width;
                 d.height = this.height;
-                d = x.createElement("canvas");
+                d = document.createElement("canvas");
                 d.width = this.width;
                 d.height = this.height;
                 d = d.getContext("2d");
@@ -5735,11 +5735,11 @@ Feedback:
                 return c
             };
             this.renderToCanvas = function() {
-                let c = x.createElement("canvas")
+                let c = document.createElement("canvas")
                   , d = c.getContext("2d");
                 c.width = this.width;
                 c.height = this.height;
-                let f = x.createElement("canvas");
+                let f = document.createElement("canvas");
                 f.width = this.width;
                 f.height = this.height;
                 f.getContext("2d");
@@ -6901,7 +6901,7 @@ Feedback:
                 }
             };
             this.loadWarshipCanvas = function() {
-                let a = x.createElement("canvas")
+                let a = document.createElement("canvas")
                   , b = a.getContext("2d")
                   , d = p.warshipImage.height;
                 a.width = p.warshipImage.width;
@@ -7059,15 +7059,15 @@ Feedback:
                 this.inGame = !1
             }
         };
-        w.onload = function() {
-            Modernizr.canvas && Modernizr.websockets && (null == L && (w.devicePixelRatio && (jb = 1 < w.devicePixelRatio ? 2 : 1),
+        window.onload = function() {
+            Modernizr.canvas && Modernizr.websockets && (null == L && (window.devicePixelRatio && (jb = 1 < window.devicePixelRatio ? 2 : 1),
             u = new Nc,
-            L = new Cd(x.getElementById("canvas")),
-            w.addEventListener("resize", L.resize, !1),
+            L = new Cd(document.getElementById("canvas")),
+            window.addEventListener("resize", L.resize, !1),
             V = new Pc,
             V.addListeners(),
-            w.requestAnimationFrame ? w.requestAnimationFrame(Rb) : setInterval(Rb, 1E3 / 60),
-            s("#overlay").show()),
+            window.requestAnimationFrame ? window.requestAnimationFrame(Rb) : setInterval(Rb, 1E3 / 60),
+            $("#overlay").show()),
             L.resize(),
             gc())
         }
