@@ -954,12 +954,12 @@ Feedback:
                 window.requestAnimationFrame && window.requestAnimationFrame(Rb);
                 Lb && (Lb = !1)
             };
-        function ac(b) {
-            bc = b;
+        function func_displaySelectedColor(int_color_id) {
+            bc = int_color_id;
             let e;
             for (e = 0; 5 >= e; e++) {
                 let f = e
-                  , d = p.planes[f][b][7]
+                  , d = p.planes[f][int_color_id][7]
                   , a = document.createElement("canvas")
                   , c = a.getContext("2d")
                   , g = p.frames.plane8;
@@ -982,36 +982,36 @@ Feedback:
             }
             for (e = 0; 5 >= e; e++)
                 $("#check" + e).hide();
-            $("#check" + b).show()
+            $("#check" + int_color_id).show()
         }
-        function cc(b) {
-            dc = b;
+        function func_displaySelectedDecal(int_decal_id) {
+            dc = int_decal_id;
             for (let e = 0; 5 >= e; e++)
                 $("#checkD" + e).hide();
-            $("#checkD" + b).show()
+            $("#checkD" + int_decal_id).show()
         }
-        function ec() {
+        function funcR_showBeta() {
             Aa = !1;
             $("#beta").show();
-            Ab()
+            func_displayNicknameInput()
         }
-        function fc() {
+        function func_isNotChrome() {
             let b = -1 < navigator.userAgent.indexOf("Chrome")
               , e = -1 < navigator.userAgent.indexOf("Safari");
             b && e && (e = !1);
             return e
         }
-        function gc() {
+        function func_setGraphicsQuality() {
             let b = "Low";
             Ba && (b = "High");
             let e = $("#graphicsID")[0];
             e && (e.childNodes[0].data = "Graphics: " + b)
         }
-        function hc() {
+        function funcR_hc_showPf() {
             $("#pfArrow").show();
             $("#pfText").show()
         }
-        function ic() {
+        function func_displayCopyLink() {
             $("#copycheckimage").hide();
             $("#copyLink").show();
             $("#copyLinkBox").hide();
@@ -1026,7 +1026,7 @@ Feedback:
             }, 1E3);
             eb = !1
         }
-        function jc() {
+        function func_displayMuteAudio() {
             let b = "images/sound_off.png";
             1 == N ? da = N = 0 : 0 == N && (N = 1,
             da = .05,
@@ -1034,7 +1034,7 @@ Feedback:
             window.localStorage.muteVol = N;
             $("#soundImg")[0].src = b
         }
-        function Bb() {
+        function func_showAds() {
             window.mixpanel && window.mixpanel.track("Ad Impression Opportunity", {
                 domain: window.location.hostname
             });
@@ -1069,28 +1069,28 @@ Feedback:
                 refreshSlots()
             }
         }
-        function Kc() {
+        function func_wsConnDisconnect() {
             A && A.disconnect()
         }
-        function Db() {
+        function func_hideOverlay() {
             da = 1 * N;
             $("#overlay").hide();
             Y = !1
         }
-        function mc() {
+        function func_displayContinueCountdown() {
             if (Aa) {
                 let b = Math.floor((T - Eb) / 1E3);
                 0 > b && (b = 0);
                 let e = 10 - b;
                 0 > e ? (Aa = !1,
-                Ab()) : (b = $("#countdownText")[0],
+                func_displayNicknameInput()) : (b = $("#countdownText")[0],
                 e = document.createTextNode(e),
                 b.replaceChild(e, b.firstChild),
-                setTimeout(mc, 500))
+                setTimeout(func_displayContinueCountdown, 500))
             }
         }
-        function Lc() {
-            Bb();
+        function func_displayGameover() {
+            func_showAds();
             0 < nc && ($("#continueTop").show(),
             $("#continueBR").show(),
             $("#continue").show(),
@@ -1099,12 +1099,12 @@ Feedback:
             $("#howto").hide(),
             Aa = !0,
             Eb = +new Date,
-            mc());
+            func_displayContinueCountdown());
             $("#overlay").fadeIn(500);
             da = .05 * N;
             F.clearBonusDisplay()
         }
-        function Fb(b) {
+        function func_displayGameoverScore(int_score) {
             if (G)
                 Y = !0,
                 Z || (ka = 1,
@@ -1113,19 +1113,19 @@ Feedback:
                 Y = !0;
                 Z || (ka = 1,
                 v = null);
-                hc();
-                if (0 <= b) {
+                funcR_hc_showPf();
+                if (0 <= int_score) {
                     Aa = !0;
                     $("#beta").hide();
                     let e = $("#curScore")[0], f;
-                    f = u.isInstagib() ? document.createTextNode("Kills: " + b) : document.createTextNode("Current Score: " + b);
+                    f = u.isInstagib() ? document.createTextNode("Kills: " + int_score) : document.createTextNode("Current Score: " + int_score);
                     e.replaceChild(f, e.firstChild)
                 }
-                nc = b;
-                setTimeout(Lc, 1E3)
+                nc = int_score;
+                setTimeout(func_displayGameover, 1E3)
             }
         }
-        function Ab() {
+        function func_displayNicknameInput() {
             $("#continueTop").hide();
             $("#continueBR").hide();
             $("#continue").hide();
@@ -1137,92 +1137,92 @@ Feedback:
             $("#beta").show();
             Eb = +new Date
         }
-        function Va() {
+        function func_setPlayerCount() {
             Gb = Object.keys(B).length;
             document.title = "Wings!"
         }
-        function Hb() {
+        function func_isIframe() {
             try {
                 return window.self !== window.top
             } catch (b) {
                 return !0
             }
         }
-        function Wa(b) {
+        function func_padZerosPrefix(num_val) {
             let e = "";
-            10 > b && (e = "0");
-            return e + parseInt(b)
+            10 > num_val && (e = "0");
+            return e + parseInt(num_val)
         }
-        function oc(b) {
-            let e = parseInt(b / 1E3);
-            b = parseInt(e / 60);
-            e = e - 60 * b
-              , f = parseInt(b / 60);
-            b -= 60 * f;
-            return 0 == f ? Wa(b) + ":" + Wa(e) : Wa(f) + ":" + Wa(b) + ":" + Wa(e)
+        function func_millisToTimeFormat(total_millis) {
+            let total_seconds = parseInt(total_millis / 1E3);
+            let minutes = parseInt(total_seconds / 60);
+            let seconds = total_seconds - 60 * minutes
+              , hours = parseInt(minutes / 60);
+            minutes -= 60 * hours;
+            return 0 == hours ? func_padZerosPrefix(minutes) + ":" + func_padZerosPrefix(seconds) : func_padZerosPrefix(hours) + ":" + func_padZerosPrefix(minutes) + ":" + func_padZerosPrefix(seconds)
         }
-        function va(b, e, f, d) {
-            return Math.sqrt((f - b) * (f - b) + (d - e) * (d - e))
+        function func_calculateDistance2D(x1, y1, x2, y2) {
+            return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
         }
-        function la() {
+        function func_isTimeElapsed_50ms() {
             return 50 > +new Date - T
         }
-        function aa(b, e, f) {
+        function func_isInsideBox(x, y, dist) {
             let d = z.getBounds();
-            return b + f >= d[0].x && b - f <= d[1].x && e + f >= d[0].y && e - f <= d[1].y ? !0 : !1
+            return x + dist >= d[0].x && x - dist <= d[1].x && y + dist >= d[0].y && y - dist <= d[1].y ? !0 : !1
         }
-        function fa(b, e, f) {
-            return b < e ? e : b > f ? f : b
+        function func_clamp(val, l, u) {
+            return val < l ? l : val > u ? u : val
         }
-        function Class_StrokeStyle(b, e, f, d) {
-            b && (this._size = b);
-            e && (this._color = e);
-            this._stroke = !!f;
-            d && (this._strokeColor = d)
+        function Class_StrokeStyle(size, color, is_stroke_enabled, stroke_color) {
+            size && (this._size = size);
+            color && (this._color = color);
+            this._stroke = !!is_stroke_enabled;
+            stroke_color && (this._strokeColor = stroke_color)
         }
-        function Class_TextStyle(b, e, f) {
-            b && (this._size = b);
-            e && (this._color = e);
-            f && (this._secondColor = f)
+        function Class_TextStyle(size, color, second_color) {
+            size && (this._size = size);
+            color && (this._color = color);
+            second_color && (this._secondColor = second_color)
         }
-        function ga(b) {
-            "" == b && (b = "<Unnamed>");
-            return b
+        function func_renameBlankPlayerNames(str_name) {
+            "" == str_name && (str_name = "<Unnamed>");
+            return str_name
         }
-        function Ea(b, e, f, d, a, c) {
-            c /= 2;
-            b.beginPath();
-            b.moveTo(e, f + c);
-            b.lineTo(e, f + a - c);
-            b.quadraticCurveTo(e, f + a, e + c, f + a);
-            b.lineTo(e + d - c, f + a);
-            b.quadraticCurveTo(e + d, f + a, e + d, f + a - c);
-            b.lineTo(e + d, f + c);
-            b.quadraticCurveTo(e + d, f, e + d - c, f);
-            b.lineTo(e + c, f);
-            b.quadraticCurveTo(e, f, e, f + c);
-            b.closePath();
-            b.fill()
+        function func_drawRoundedRectangle(canvas, x, y, width, height, radius) {
+            radius /= 2;
+            canvas.beginPath();
+            canvas.moveTo(x, y + radius);
+            canvas.lineTo(x, y + height - radius);
+            canvas.quadraticCurveTo(x, y + height, x + radius, y + height);
+            canvas.lineTo(x + width - radius, y + height);
+            canvas.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+            canvas.lineTo(x + width, y + radius);
+            canvas.quadraticCurveTo(x + width, y, x + width - radius, y);
+            canvas.lineTo(x + radius, y);
+            canvas.quadraticCurveTo(x, y, x, y + radius);
+            canvas.closePath();
+            canvas.fill()
         }
-        function pc(b, e, f, d, a, c) {
-            c /= 2;
-            b.beginPath();
-            b.moveTo(e, f + c);
-            b.lineTo(e, f + a);
-            b.lineTo(e + d, f + a);
-            b.lineTo(e + d, f + c);
-            b.quadraticCurveTo(e + d, f, e + d - c, f);
-            b.lineTo(e + c, f);
-            b.quadraticCurveTo(e, f, e, f + c);
-            b.closePath();
-            b.fill()
+        function func_drawRoundedRectangleHalf(canvas, x, y, width, height, radius) {
+            radius /= 2;
+            canvas.beginPath();
+            canvas.moveTo(x, y + radius);
+            canvas.lineTo(x, y + height);
+            canvas.lineTo(x + width, y + height);
+            canvas.lineTo(x + width, y + radius);
+            canvas.quadraticCurveTo(x + width, y, x + width - radius, y);
+            canvas.lineTo(x + radius, y);
+            canvas.quadraticCurveTo(x, y, x, y + radius);
+            canvas.closePath();
+            canvas.fill()
         }
-        function fb(b, e, f) {
-            let d = b * Math.cos(f) - e * Math.sin(f);
-            b = e * Math.cos(f) + b * Math.sin(f);
+        function func_rotatePoint(x, y, angle) {
+            let d = x * Math.cos(angle) - y * Math.sin(angle);
+            x = y * Math.cos(angle) + x * Math.sin(angle);
             return {
                 x: d,
-                y: b
+                y: x
             }
         }
         window.location.href.split("/");
@@ -1250,7 +1250,7 @@ Feedback:
             return !1
         };
         window.switchSkins = function() {
-            ec();
+            funcR_showBeta();
             Ob ? ($("#howto").show(),
             $("#skinPanel").hide(),
             $("#divOff").show(),
@@ -1261,27 +1261,27 @@ Feedback:
             Ob = !Ob
         };
         window.setSkinColor = function(b) {
-            ac(b)
+            func_displaySelectedColor(b)
         };
         window.setDecal = function(b) {
-            cc(b)
+            func_displaySelectedDecal(b)
         };
         window.clickPlay = function(b) {
-            Z ? Db() : (window.localStorage.nick = b,
+            Z ? func_hideOverlay() : (window.localStorage.nick = b,
             document.getElementsByTagName("canvas")[0].style.cursor = "url(images/crosshair.png) 16 16, auto",
             kb++,
             V.mouseMoved = !1,
             A.sendNick(b, Aa),
-            Aa && (Ab(),
+            Aa && (func_displayNicknameInput(),
             Aa = !1),
             u.isSpaceWars() ? F.showTip("Hint: Earn points faster by destroying asteroids.") : document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement || 2 != kb && 4 != kb && 6 != kb || F.showTip("Press 'F' to toggle Fullscreen"))
         };
         window.setSpectate = function(b) {
             xa = !0;
             document.getElementsByTagName("canvas")[0].style.cursor = "default";
-            Db();
+            func_hideOverlay();
             zc++;
-            ec();
+            funcR_showBeta();
             Z ? (A.leave(),
             Z = !1,
             L.waitUntilNextFollow()) : L.followTopPlayer();
@@ -1291,14 +1291,14 @@ Feedback:
         window.setContinue = function() {
             $("#topGui").show();
             $("#roomFailed").hide();
-            Hb() || (parent.location.hash = "");
+            func_isIframe() || (parent.location.hash = "");
             A.getServerAndConnect()
         };
         window.toggleGraphics = function() {
             Ba = !Ba;
             L.resize();
             window.localStorage.lq = !Ba;
-            gc()
+            func_setGraphicsQuality()
         };
         window.copyRoomLink = function() {
             $("#copyLink").hide();
@@ -1306,7 +1306,7 @@ Feedback:
             let b = $("#roomlinkInput")[0];
             b.value = "http://classic.wings.io/#" + A.roomID;
             eb = !0;
-            fc() && ($("#copyButton")[0].childNodes[0].data = "Close",
+            func_isNotChrome() && ($("#copyButton")[0].childNodes[0].data = "Close",
             $("#safariTooltip").show());
             setTimeout(function() {
                 b.setSelectionRange(0, b.value.length);
@@ -1320,7 +1320,7 @@ Feedback:
             b.setSelectionRange(0, b.value.length);
             b.select();
             b.focus();
-            if (fc())
+            if (func_isNotChrome())
                 $("#copyLinkBox").hide(),
                 $("#copyLink").show(),
                 eb = !1;
@@ -1328,26 +1328,26 @@ Feedback:
                 try {
                     document.execCommand("copy")
                 } catch (e) {}
-                ic()
+                func_displayCopyLink()
             }
         };
-        null != adsense && adsense && Bb();
+        null != adsense && adsense && func_showAds();
         window.clickNoNames = function(b) {
             lb = !lb;
             b.checked = lb
         };
         window.toggleMute = function() {
-            jc()
+            func_displayMuteAudio()
         };
         void 0 == N && (N = 1);
         "undefined" === typeof window.orientation || G || (window.location.href = "https://itunes.apple.com/us/app/wings.io/id1098205567?l=pt&ls=1&mt=8");
         if (0 == N || Dc)
             N = 1,
-            G || jc();
+            G || func_displayMuteAudio();
         Dc && $("#sndIcon").hide();
         window.onblur = function() {
             window.didSendLoadingTime = !0;
-            wb = setTimeout(Kc, 3E5);
+            wb = setTimeout(func_wsConnDisconnect, 3E5);
             wa = !1;
             da = 0;
             J && (J.sound.volume(0),
@@ -1498,7 +1498,7 @@ Feedback:
                     e.strokeStyle = this._strokeColor;
                     this._usingRoundedFrame && (e.fillStyle = "#000000",
                     e.globalAlpha = this._frameOpacity,
-                    Ea(e, 0, 0, b.width, b.height, 10),
+                    func_drawRoundedRectangle(e, 0, 0, b.width, b.height, 10),
                     e.globalAlpha = 1);
                     e.fillStyle = this._color;
                     this._stroke && e.strokeText(f, h + 2, a + q / 2);
@@ -1590,7 +1590,7 @@ Feedback:
                     e.lineTo(this._angX + 5 * t, b.height + this._angY - 17 * t),
                     e.fill());
                     this._usingRoundedFrame && (e.globalAlpha = .3,
-                    Ea(e, 0, 0, b.width, b.height, 40),
+                    func_drawRoundedRectangle(e, 0, 0, b.width, b.height, 40),
                     e.globalAlpha = 1);
                     G && (e.lineJoin = "round",
                     e.lineWidth = 3,
@@ -1964,7 +1964,7 @@ Feedback:
             this.hover = 1;
             b.keydown = function(a) {
                 67 == a.keyCode && Y && eb ? setTimeout(function() {
-                    ic()
+                    func_displayCopyLink()
                 }, 10) : Y || (32 == a.keyCode ? Z && A.sendShooting(!0) : 188 != a.keyCode && 49 != a.keyCode && (222 == a.keyCode ? bool_drawUI = !bool_drawUI : 51 == a.keyCode ? (bool_drawGradient = !bool_drawGradient,
                 console.log("Toggled Gradient to " + bool_drawGradient)) : 52 == a.keyCode ? (ob = !ob,
                 console.log("Toggled drawClouds to " + ob)) : 53 == a.keyCode ? (bool_drawWater = !bool_drawWater,
@@ -1973,10 +1973,10 @@ Feedback:
                 console.log("Toggled drawSun to " + bool_drawSun)) : 56 == a.keyCode ? (bool_drawItems = !bool_drawItems,
                 console.log("Toggled drawItems to " + bool_drawItems)) : 57 == a.keyCode ? (bool_drawTrails = !bool_drawTrails,
                 console.log("Toggled drawTrails to " + bool_drawTrails)) : 48 == a.keyCode ? (bool_drawSplashes = !bool_drawSplashes,
-                console.log("Toggled drawSplashes to " + bool_drawSplashes)) : 27 == a.keyCode ? (Bb(),
+                console.log("Toggled drawSplashes to " + bool_drawSplashes)) : 27 == a.keyCode ? (func_showAds(),
                 da = .05 * N,
                 $("#overlay").show(),
-                hc(),
+                funcR_hc_showPf(),
                 Y = !0,
                 Z || (ka = 1,
                 v = null)) : 70 == a.keyCode && (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement ? document.exitFullscreen ? document.exitFullscreen() : document.msExitFullscreen ? document.msExitFullscreen() : document.mozCancelFullScreen ? document.mozCancelFullScreen() : document.webkitExitFullscreen && document.webkitExitFullscreen() : document.documentElement.requestFullscreen ? document.documentElement.requestFullscreen() : document.documentElement.msRequestFullscreen ? document.documentElement.msRequestFullscreen() : document.documentElement.mozRequestFullScreen ? document.documentElement.mozRequestFullScreen() : document.documentElement.webkitRequestFullscreen && document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT),
@@ -2165,7 +2165,7 @@ Feedback:
                 f.length = 0
             };
             this.addShot = function(e, f, d, a) {
-                if (la() && xa) {
+                if (func_isTimeElapsed_50ms() && xa) {
                     let c = B[e];
                     if (c) {
                         let g = {};
@@ -2180,7 +2180,7 @@ Feedback:
                         u.isInstagib() ? g.special = 1 : u.isSpaceWars() && (g.special = 2);
                         g.a = 1;
                         g.weapon = a;
-                        f = fb(0, -10, c.angle);
+                        f = func_rotatePoint(0, -10, c.angle);
                         e = c.x + f.x;
                         d = c.y + f.y;
                         g.origPosition = {
@@ -2199,7 +2199,7 @@ Feedback:
                             y: d
                         },
                         g.finish = !1,
-                        (aa(e, d, 100) || aa(g.hitPosition.x, g.hitPosition.y, 100)) && b.push(g));
+                        (func_isInsideBox(e, d, 100) || func_isInsideBox(g.hitPosition.x, g.hitPosition.y, 100)) && b.push(g));
                         a = E / 2;
                         g.hitPosition.y > a && (e = f / c,
                         oa.addSplash((a - (g.hitPosition.y - e * g.hitPosition.x)) / e, a + 6, 1, !1))
@@ -2209,18 +2209,18 @@ Feedback:
             this.addMissileImpact = function(b, f) {
                 let d = 10 * b
                   , a = 10 * f;
-                if (aa(d, a, 100) && la()) {
+                if (func_isInsideBox(d, a, 100) && func_isTimeElapsed_50ms()) {
                     let c = X.createAnimation("explosion");
                     c.setScale(1);
                     c.posX = 10 * b;
                     c.posY = 10 * f;
                     X.runAnimationBehind(c);
-                    d = 1 - va(d, a, H.x, H.y) / Ra;
+                    d = 1 - func_calculateDistance2D(d, a, H.x, H.y) / Ra;
                     J.playSound(Qc, d, 1, Sa, null)
                 }
             };
             this.addSplash = function(b, f, d, a) {
-                if (bool_drawSplashes && !u.isSpaceWars() && aa(b, f, 100) && la()) {
+                if (bool_drawSplashes && !u.isSpaceWars() && func_isInsideBox(b, f, 100) && func_isTimeElapsed_50ms()) {
                     let c = X.createAnimation("splash")
                       , g = X.createAnimation("splashReflex");
                     c.setScale(d);
@@ -2411,7 +2411,7 @@ Feedback:
                     n.draw(I),
                     I.restore());
                     Z || Y || (O = "FREE MODE",
-                    0 == ka && (O = v ? "Following " + ga(v.name) : "FOLLOW MODE"),
+                    0 == ka && (O = v ? "Following " + func_renameBlankPlayerNames(v.name) : "FOLLOW MODE"),
                     c || (c = new Class_TextStyle(30 * t,"#ffd118","#b56006")),
                     c.setValue(O),
                     c.setUsingFrame(!0),
@@ -2444,7 +2444,7 @@ Feedback:
                 if (F && 0 < F.length && 0 < Object.keys(B).length) {
                     let c = B[F[0]], d;
                     if (c) {
-                        d = ga(c.name);
+                        d = func_renameBlankPlayerNames(c.name);
                         v && I != c.id && c.id == v.id && J.playSound(Tc, 1, 1, 1, null);
                         I = c.id;
                         d != Fa && (c = 25,
@@ -2500,7 +2500,7 @@ Feedback:
                 lastRankNumber != v.rank && (rankCanvasContext.clearRect(0, 0, 200, 200),
                 rankCanvasContext.globalAlpha = .3,
                 rankCanvasContext.fillStyle = "rgba(0,0,0,1.0)",
-                Ea(rankCanvasContext, 0, 0, 200, 200, 30 * t),
+                func_drawRoundedRectangle(rankCanvasContext, 0, 0, 200, 200, 30 * t),
                 ca = new Class_StrokeStyle(15 * t,"#EEEEEE"),
                 ca.setValue(v.rank),
                 ca.setUsingRoundedFrame(!1),
@@ -2531,7 +2531,7 @@ Feedback:
                         K.font = c + "px 'proxima-nova-1','proxima-nova-2', " + d,
                         K.globalAlpha = .3,
                         K.textBaseline = "hanging",
-                        Ea(K, 0, 0, b, h, 30 * t),
+                        func_drawRoundedRectangle(K, 0, 0, b, h, 30 * t),
                         K.globalAlpha = 1,
                         c = 2; 0 <= c; c--)
                             d = 0,
@@ -2556,7 +2556,7 @@ Feedback:
                     $_sub.setValue("STARTS IN");
                     da = $_sub.render();
                     Q = new Class_TextStyle(27 * t,"#fe9b00","#6e3800");
-                    Q.setValue(oc(c));
+                    Q.setValue(func_millisToTimeFormat(c));
                     M = Q.render()
                 }
                 if (M) {
@@ -2566,7 +2566,7 @@ Feedback:
                       , d = M.width > d ? M.width : d;
                     a.fillStyle = "#000000";
                     a.globalAlpha = .3;
-                    Ea(a, canvas.width - d - 20, c, d, 102, 20);
+                    func_drawRoundedRectangle(a, canvas.width - d - 20, c, d, 102, 20);
                     a.globalAlpha = 1;
                     a.drawImage(N, canvas.width - d - 20, c);
                     a.drawImage(da, canvas.width - d / 2 - da.width / 2 - 20, c + 36);
@@ -2582,7 +2582,7 @@ Feedback:
                     W.setValue(u.getEventName());
                     N = W.render();
                     Q = new Class_TextStyle(25 * t,"#fe9b00","#6e3800");
-                    u.isWarship() ? 0 < u.warshipsLeft ? Q.setValue("Warships Left: " + u.warshipsLeft) : 0 == u.warshipsEscaped ? Q.setValue("All Warships Destroyed!") : Q.setValue(u.warshipsDestroyed + " Destroyed, " + u.warshipsEscaped + " Escaped!") : Q.setValue(oc(c));
+                    u.isWarship() ? 0 < u.warshipsLeft ? Q.setValue("Warships Left: " + u.warshipsLeft) : 0 == u.warshipsEscaped ? Q.setValue("All Warships Destroyed!") : Q.setValue(u.warshipsDestroyed + " Destroyed, " + u.warshipsEscaped + " Escaped!") : Q.setValue(func_millisToTimeFormat(c));
                     M = Q.render()
                 }
                 if (M) {
@@ -2590,7 +2590,7 @@ Feedback:
                       , d = M.width < N.width ? N.width : M.width;
                     a.fillStyle = "#000000";
                     a.globalAlpha = .3;
-                    Ea(a, canvas.width / 2 - d / 2, c, d, 69, 20);
+                    func_drawRoundedRectangle(a, canvas.width / 2 - d / 2, c, d, 69, 20);
                     a.globalAlpha = 1;
                     a.drawImage(N, canvas.width / 2 - N.width / 2, c);
                     a.drawImage(M, canvas.width / 2 - M.width / 2, c + 30)
@@ -2608,7 +2608,7 @@ Feedback:
                       , d = ha.width > renderedWinnerNameCachedText.width ? ha.width : renderedWinnerNameCachedText.width;
                     a.fillStyle = "#000000";
                     a.globalAlpha = .3;
-                    Ea(a, canvas.width / 2 - d / 2, c, d, 140, 20);
+                    func_drawRoundedRectangle(a, canvas.width / 2 - d / 2, c, d, 140, 20);
                     a.globalAlpha = 1;
                     a.drawImage(ha, canvas.width / 2 - ha.width / 2, c);
                     a.drawImage(renderedWinnerNameCachedText, canvas.width / 2 - renderedWinnerNameCachedText.width / 2, c + 70)
@@ -2626,7 +2626,7 @@ Feedback:
                       , d = ma.width > sa.width ? ma.width : sa.width;
                     a.fillStyle = "#000000";
                     a.globalAlpha = .3;
-                    Ea(a, canvas.width / 2 - d / 2, c, d, 114, 20);
+                    func_drawRoundedRectangle(a, canvas.width / 2 - d / 2, c, d, 114, 20);
                     a.globalAlpha = 1;
                     a.drawImage(ma, canvas.width / 2 - ma.width / 2, c);
                     a.drawImage(sa, canvas.width / 2 - sa.width / 2, c + 60)
@@ -2635,7 +2635,7 @@ Feedback:
             this.DrawLastEventWinner = function(a) {
                 null != aa && aa != ja && (ca = new Class_StrokeStyle(15 * t,"#EEEEEE"),
                 ca.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black"),
-                ca.setValue("Last Event Winner: " + ga(aa) + " "),
+                ca.setValue("Last Event Winner: " + func_renameBlankPlayerNames(aa) + " "),
                 ca.setUsingRoundedFrame(!0),
                 ja = aa,
                 fa = ca.render());
@@ -2745,7 +2745,7 @@ Feedback:
                 for (l = 0; l < m; l++) {
                     r = B[F[l]];
                     r && (S += h + b,
-                    r = a.measureText(ga(r.name)).width,
+                    r = a.measureText(func_renameBlankPlayerNames(r.name)).width,
                     I < r && (I = r))
                 }
                 S -= b;
@@ -2757,11 +2757,11 @@ Feedback:
                 c.height = S;
                 k = h + "px 'proxima-nova-1','proxima-nova-2', " + q;
                 a.fillStyle = "rgba(0,0,0,0.3)";
-                Ea(a, 0, 0, R, S, 30 * t);
+                func_drawRoundedRectangle(a, 0, 0, R, S, 30 * t);
                 a.fillStyle = "rgba(204,84,0,1.0)";
-                pc(a, 0, 2, R, f * t, 30 * t);
+                func_drawRoundedRectangleHalf(a, 0, 2, R, f * t, 30 * t);
                 a.fillStyle = "rgba(254,102,3,1.0)";
-                pc(a, 0, 0, R, f * t, 30 * t);
+                func_drawRoundedRectangleHalf(a, 0, 0, R, f * t, 30 * t);
                 l = "LEADERBOARD";
                 u.isInstagib() && (l = "KILLS");
                 a.font = g + "px 'proxima-nova-1','proxima-nova-2', " + q;
@@ -2778,7 +2778,7 @@ Feedback:
                         for (n = 2; 0 <= n; n--) {
                             g = ". ";
                             r.inGame && r.id != qa || (g = ".     ");
-                            q = l + 1 + g + ga(r.name);
+                            q = l + 1 + g + func_renameBlankPlayerNames(r.name);
                             g = 0;
                             0 != n ? (a.fillStyle = "rgba(100,49,0,1.0)",
                             g = n) : a.fillStyle = ra == r.id ? "rgba(255,156,0,1.0)" : "rgba(255,220,0,1.0)";
@@ -2861,7 +2861,7 @@ Feedback:
                 n.clearNearMiss()
             };
             this.setLastWinner = function(a, c) {
-                aa = ga(a);
+                aa = func_renameBlankPlayerNames(a);
                 console.log("Last Event Winner: " + a);
                 c && (ia = null,
                 na = 6E3)
@@ -2983,7 +2983,7 @@ Feedback:
                 if (this.inGame) {
                     let g = 400, l;
                     ea && this.weapon == za && (g = 800);
-                    aa(this.x, this.y, g) ? pa || (a && a.clear(),
+                    func_isInsideBox(this.x, this.y, g) ? pa || (a && a.clear(),
                     c && c.clear(),
                     pa = !0) : pa = !1;
                     g = this.weapon == za && this.isShooting;
@@ -2994,7 +2994,7 @@ Feedback:
                     L.moveLeft && (this.controlAngle += this.rotSpeed);
                     L.moveRight && (this.controlAngle -= this.rotSpeed);
                     360 < this.controlAngle ? this.controlAngle = 0 : 0 > this.controlAngle && (this.controlAngle = 360);
-                    let k = fa((T - this.lastUpdate) / Jb, 0, 1);
+                    let k = func_clamp((T - this.lastUpdate) / Jb, 0, 1);
                     this.prevX = this.x;
                     this.prevY = this.y;
                     let m = k * (this.dstY - this.origY) + this.origY;
@@ -3056,7 +3056,7 @@ Feedback:
                     na && (m = 0,
                     .2 > k && .01 < k && !u.isSpaceWars() && (m = 1.7 * (.2 - k)),
                     J.sound.volume(m * da, na)));
-                    g ? (k = va(this.x, this.y, H.x, H.y),
+                    g ? (k = func_calculateDistance2D(this.x, this.y, H.x, H.y),
                     g = 1 - k / 3E3,
                     1 < g && (g = 1),
                     .1 > g && (g = 0),
@@ -3346,12 +3346,12 @@ Feedback:
                 wa && a && a.trailEffect()
             };
             this.hit = function(a) {
-                la() && (this.highlightValue = 1)
+                func_isTimeElapsed_50ms() && (this.highlightValue = 1)
             };
             this.setScore = function(a) {
                 let c = a - this.score;
                 0 < c && this == v && (K || (K = new Class_ScoreAccumInfo),
-                la() && K.addScore(c));
+                func_isTimeElapsed_50ms() && K.addScore(c));
                 this.score = a
             };
             this.incScore = function(a) {
@@ -3514,28 +3514,28 @@ Feedback:
                   , m = f[0]
                   , l = f[1];
                 f[0] = .99 * (.9 * m + .5 * (k + l) * (1 - .9));
-                f[0] = fa(f[0], -100, 100);
+                f[0] = func_clamp(f[0], -100, 100);
                 for (y = 1; 24 > y; ++y)
                     k = m,
                     m = l,
                     l = f[y + 1],
                     f[y] = .99 * (.9 * m + .5 * (k + l) * (1 - .9)),
-                    f[y] = fa(f[y], -100, 100);
+                    f[y] = func_clamp(f[y], -100, 100);
                 k = m;
                 m = l;
                 f[24] = .99 * (.9 * m + .5 * (k + l) * (1 - .9));
-                f[24] = fa(f[24], -100, 100);
+                f[24] = func_clamp(f[24], -100, 100);
                 k = m;
                 m = l;
                 f[0] = .99 * (.9 * m + .5 * (k + l) * (1 - .9));
-                f[0] = fa(f[0], -100, 100);
+                f[0] = func_clamp(f[0], -100, 100);
                 k = m;
                 m = l;
                 f[1] = .99 * (.9 * m + .5 * (k + l) * (1 - .9));
-                f[1] = fa(f[1], -100, 100);
+                f[1] = func_clamp(f[1], -100, 100);
                 k = m;
                 f[24] = .99 * (.9 * l + .5 * (k + l) * (1 - .9));
-                f[24] = fa(f[24], -100, 100);
+                f[24] = func_clamp(f[24], -100, 100);
                 k = parseInt(24 * Math.random());
                 m = 20 * Math.random() / 20;
                 f[k - 1] += m / 2;
@@ -4299,9 +4299,9 @@ Feedback:
                     let d = this.y;
                     this.grabbing || (d += e);
                     if (!this.grabbing) {
-                        if (!aa(this.x, d, c))
+                        if (!func_isInsideBox(this.x, d, c))
                             return
-                    } else if (!aa(this.x, this.y, c))
+                    } else if (!func_isInsideBox(this.x, this.y, c))
                         return;
                     this.drawItem(a, b)
                 }
@@ -4372,11 +4372,11 @@ Feedback:
                                         w = Q
                                       , t = 1;
                                     u ? (w = Sa,
-                                    u = va(m.x, m.y, H.x, H.y),
+                                    u = func_calculateDistance2D(m.x, m.y, H.x, H.y),
                                     t = 1 - u / Ra,
                                     .01 < t && J.playSound(ld, t, 1, w, null),
                                     m.cannonShoot()) : (v && p == v.id || (w = Sa,
-                                    u = va(m.x, m.y, H.x, H.y),
+                                    u = func_calculateDistance2D(m.x, m.y, H.x, H.y),
                                     t = 1 - u / Ra),
                                     .01 < t && J.playSound(md, t, 1, w, null),
                                     m.ammo--)
@@ -4549,7 +4549,7 @@ Feedback:
                 let b, c, a;
                 if (!G) {
                         b = null, b = "", a;
-                    Hb() || (a = parent.location.hash);
+                    func_isIframe() || (a = parent.location.hash);
                     if (a)
                         b = a,
                         b = b.substring(1, b.length),
@@ -4631,7 +4631,7 @@ Feedback:
                     setTimeout(A.getServerAndConnect, 100)
             };
             this.disconnect = function() {
-                A.directed && (Hb() || (window.location.hash = ""),
+                A.directed && (func_isIframe() || (window.location.hash = ""),
                 A.directed = !1);
                 A.roomID = 0;
                 f && f.close()
@@ -4737,21 +4737,21 @@ Feedback:
                         B[f] = v,
                         ra = f,
                         Z = !0,
-                        Db(),
-                        Va(),
+                        func_hideOverlay(),
+                        func_setPlayerCount(),
                         161 == a && (Za[f] = 0);
                     else if (162 == a || 178 == a)
                         b(d, a, !1),
                         this.firstClientListing = !1,
-                        Va();
+                        func_setPlayerCount();
                     else if (169 == a || 172 == a)
                         b(d, a, !1),
-                        Va();
+                        func_setPlayerCount();
                     else if (163 == a || 179 == a)
                         b(d, a, !1);
                     else if (164 == a || 180 == a)
                         164 == a ? b(d, 162, !0) : b(d, 178, !0),
-                        Va();
+                        func_setPlayerCount();
                     else if (165 == a) {
                         q = 1;
                         a = d.getUint32(q, !0);
@@ -4763,20 +4763,20 @@ Feedback:
                             d = d.getUint32(q + 1, !0),
                             q = v,
                             !q && Qb && (q = Qb),
-                            q && f == q.id && (n = ga(B[a].name),
+                            q && f == q.id && (n = func_renameBlankPlayerNames(B[a].name),
                             F.addMessage("You killed", !0, n),
                             u.isInstagib() || (a == qa ? q.incScore(yc) : q.incScore(xc))),
-                            0 < f ? ((f = B[f]) ? (F.addActivityMessage(ga(c.name) + " was Killed by " + ga(f.name)),
+                            0 < f ? ((f = B[f]) ? (F.addActivityMessage(func_renameBlankPlayerNames(c.name) + " was Killed by " + func_renameBlankPlayerNames(f.name)),
                             f.incKills(),
-                            Za[c.id] = f.id) : F.addActivityMessage(ga(c.name) + " was Killed"),
+                            Za[c.id] = f.id) : F.addActivityMessage(func_renameBlankPlayerNames(c.name) + " was Killed"),
                             X.addExplosion(c.dstX, c.dstY, c.getSpeedDirectionX(), c.getSpeedDirectionY()),
-                            v && v.id == a && (f ? F.addMessage("Killed by", !1, ga(f.name)) : F.addMessage("You were killed", !1, null),
+                            v && v.id == a && (f ? F.addMessage("Killed by", !1, func_renameBlankPlayerNames(f.name)) : F.addMessage("You were killed", !1, null),
                             Z ? (Z = !1,
                             Qb = v,
                             v = null,
                             ka = 1,
                             wasKilled(d),
-                            Fb(d)) : (v = null,
+                            func_displayGameoverScore(d)) : (v = null,
                             L.waitUntilNextFollow()))) : (Za[c.id] = 0,
                             v && v.id == a && (5 == h ? F.addMessage("You left!", !1, null) : 4 == h ? F.addMessage("Abandoned!", !1, null) : 1 == h ? F.addMessage("Crashed!", !1, null) : 6 == h ? F.addMessage("Exploded!", !1, null) : 7 == h ? F.addMessage("KAMIKAZE!!", !1, null) : 8 == h ? F.addMessage("You were killed by a Warship!", !1, null) : 3 == h ? (F.addMessage("Splash!", !1, null),
                             J.playSound(rd, .7, 1, Q, null),
@@ -4786,18 +4786,18 @@ Feedback:
                             ma = 0,
                             ka = 1,
                             wasKilled(d),
-                            Fb(d)) : (v = null,
+                            func_displayGameoverScore(d)) : (v = null,
                             L.waitUntilNextFollow())),
-                            5 == h ? F.addActivityMessage(ga(c.name) + " left") : 4 == h && F.addActivityMessage(ga(c.name) + " abandoned"),
+                            5 == h ? F.addActivityMessage(func_renameBlankPlayerNames(c.name) + " left") : 4 == h && F.addActivityMessage(func_renameBlankPlayerNames(c.name) + " abandoned"),
                             X.addExplosion(c.dstX, c.dstY, .5 * c.getSpeedDirectionX(), .5 * c.getSpeedDirectionY())),
                             null == c ? console.log("ERROR: Trying to remove a player that didnt exist!") : B[a].cleanup();
                         else if (d = U[a])
                             d.type == db && u.isSpaceWars() && (X.addExplosion(d.x, d.y, 0, 0),
-                            3 != d.fragment && (d = 1 - va(d.x, d.y, H.x, H.y) / Ra,
+                            3 != d.fragment && (d = 1 - func_calculateDistance2D(d.x, d.y, H.x, H.y) / Ra,
                             .01 < d && J.playSound(Fc, d, .4, Sa, null))),
                             U[a].cleanup(),
                             delete U[a];
-                        Va()
+                        func_setPlayerCount()
                     } else if (166 == a || 176 == a)
                         for (c = 1,
                         f = d.getUint16(c, !0),
@@ -4827,7 +4827,7 @@ Feedback:
                             y = Q;
                             r = 1;
                             v && n == v.id || !k || (y = Sa,
-                            r = 1 - va(k.x, k.y, H.x, H.y) / Ra);
+                            r = 1 - func_calculateDistance2D(k.x, k.y, H.x, H.y) / Ra);
                             .01 < r && l != Gc && J.playSound(l, r, m, y, null);
                             m = d.getUint16(c, !0);
                             c += 2;
@@ -4941,7 +4941,7 @@ Feedback:
                         c += 4;
                         if (0 < f) {
                             if (a = B[f])
-                                a = ga(a.name),
+                                a = func_renameBlankPlayerNames(a.name),
                                 F.setWarshipRemoved(a)
                         } else
                             F.setWarshipRemoved(null);
@@ -4970,7 +4970,7 @@ Feedback:
                 A.hasConnection = !1;
                 A.firstClientListing = !0;
                 connectionClosed();
-                Fb(-1);
+                func_displayGameoverScore(-1);
                 $("#topGui").hide();
                 $("#topGuiConnecting").show();
                 $("#copyLink").fadeOut(300);
@@ -5157,7 +5157,7 @@ Feedback:
                     for (b in B)
                         B[b].updateBool != A.lastUpdateBool ? (B[b] == v && (ra = 0),
                         delete B[b]) : (!La && B[b].weapon == za && B[b].inGame && (La = !0,
-                        Ma = ga(B[b].name)),
+                        Ma = func_renameBlankPlayerNames(B[b].name)),
                         sc == b && B[b].inGame && (e = B[b]),
                         u.railSwitch ? (B[b].setWeapon(Qa),
                         B[b].ammo = -1) : u.machinegunSwitch && (B[b].setWeapon(Ja),
@@ -5219,7 +5219,7 @@ Feedback:
                     f = t[0].x;
                     s = t[0].y;
                     t = t[1].y;
-                    if (e && !aa(e.x, e.y, 30)) {
+                    if (e && !func_isInsideBox(e.x, e.y, 30)) {
                             w = H.x - e.x
                           , D = H.y - e.y
                           , C = Math.sqrt(w * w + D * D);
@@ -5240,7 +5240,7 @@ Feedback:
                         E, w = !1;
                     (ub = v ? Za[v.id] : 0) && 0 < ub && (E = B[ub],
                     E == e && (w = !0));
-                    !E || aa(E.x, E.y, 30) || w ? y = !1 : (w = H.x - E.x,
+                    !E || func_isInsideBox(E.x, E.y, 30) || w ? y = !1 : (w = H.x - E.x,
                     D = H.y - E.y,
                     E = Math.sqrt(w * w + D * D),
                     r = 1,
@@ -5271,7 +5271,7 @@ Feedback:
                                 N = w,
                                 Y = D)
                             }
-                        0 < e ? aa(Q, I, 120) ? T = !1 : (1300 < E && (Ca = 900 / E,
+                        0 < e ? func_isInsideBox(Q, I, 120) ? T = !1 : (1300 < E && (Ca = 900 / E,
                         .3 > Ca && (Ca = .3)),
                         D = Y / N,
                         C = H.y - D * H.x,
@@ -5336,7 +5336,7 @@ Feedback:
                         a.translate(g, h),
                         a.scale(n, n),
                         c && (a.save(),
-                        e = fb(0, 50, -k),
+                        e = func_rotatePoint(0, 50, -k),
                         a.translate(e.x, e.y),
                         p.frames.crown.draw(a),
                         a.restore()),
@@ -5356,7 +5356,7 @@ Feedback:
                         a.translate(m, l),
                         a.scale(r, r),
                         a.save(),
-                        e = fb(0, 50, -x),
+                        e = func_rotatePoint(0, 50, -x),
                         a.translate(e.x, e.y),
                         p.frames.revengeIcon.draw(a),
                         a.restore(),
@@ -5375,7 +5375,7 @@ Feedback:
                         a.translate(pa, L),
                         a.scale(Ca, Ca),
                         a.save(),
-                        e = fb(0, 80, -ta),
+                        e = func_rotatePoint(0, 80, -ta),
                         a.translate(e.x, e.y),
                         a.drawImage(p.warshipIcon, -p.warshipIcon.width / 2, -p.warshipIcon.height / 2),
                         a.restore(),
@@ -5479,8 +5479,8 @@ Feedback:
                 oa = new Class_ParticleImpacts;
                 A.hasConnection && !A.sentHello && A.hello();
                 setInterval(e, 40);
-                cc(Math.floor(5 * Math.random()) + 1);
-                ac(Math.floor(5 * Math.random()) + 1);
+                func_displaySelectedDecal(Math.floor(5 * Math.random()) + 1);
+                func_displaySelectedColor(Math.floor(5 * Math.random()) + 1);
                 console.log("Loading sounds!");
                 J = new Class_SFXmanager;
                 J.load(function() {
@@ -5782,11 +5782,11 @@ Feedback:
                 k.posX = a;
                 k.posY = b;
                 X.runAnimationBehind(k);
-                a = 1 - va(a, b, H.x, H.y) / Ra;
+                a = 1 - func_calculateDistance2D(a, b, H.x, H.y) / Ra;
                 .01 < a && J.playSound(Fc, a * f, 1, e, null)
             };
             this.addExplosion = function(b, d, e, f) {
-                if (bool_drawExplosions && aa(b, d, 100) && la()) {
+                if (bool_drawExplosions && func_isInsideBox(b, d, 100) && func_isTimeElapsed_50ms()) {
                     if (1 >= a.length) {
                         let n = new Class_ParticleDebrisManager;
                         n.init(b, d, e, f);
@@ -6230,7 +6230,7 @@ Feedback:
             this.finished = !1;
             this.type = 0;
             this.update = function(d) {
-                let a = fa((T - this.lastUpdate) / Jb, 0, 1)
+                let a = func_clamp((T - this.lastUpdate) / Jb, 0, 1)
                   , c = this.y - this.prevY
                   , g;
                 0 == this.x - this.prevX && 0 == c && (f++,
@@ -6872,8 +6872,8 @@ Feedback:
             this.recoilTime = this.cannonAngle = 0;
             this.update = function(c) {
                 if (this.inGame) {
-                    aa(this.x, this.y + this.floatValue, 120) ? b || (b = !0) : b = !1;
-                    let g = fa((T - this.lastUpdate) / Jb, 0, 1);
+                    func_isInsideBox(this.x, this.y + this.floatValue, 120) ? b || (b = !0) : b = !1;
+                    let g = func_clamp((T - this.lastUpdate) / Jb, 0, 1);
                     this.prevX = this.x;
                     this.prevY = this.y;
                     this.prevFloatValue = this.floatValue;
@@ -7002,7 +7002,7 @@ Feedback:
                 }
             };
             this.hit = function(a) {
-                la() && (this.highlightValue = a == Ua || this.type == db ? this.highlightValue + 1 : this.highlightValue + .3,
+                func_isTimeElapsed_50ms() && (this.highlightValue = a == Ua || this.type == db ? this.highlightValue + 1 : this.highlightValue + .3,
                 1 < this.highlightValue && (this.highlightValue = 1))
             };
             this.setPose = function(a, b, d) {
@@ -7069,7 +7069,7 @@ Feedback:
             window.requestAnimationFrame ? window.requestAnimationFrame(Rb) : setInterval(Rb, 1E3 / 60),
             $("#overlay").show()),
             L.resize(),
-            gc())
+            func_setGraphicsQuality())
         }
     }
     )(window, document, jQuery);
