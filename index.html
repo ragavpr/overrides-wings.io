@@ -1478,18 +1478,18 @@ Feedback:
                 this._ctx = this._canvas.getContext("2d"));
                 if (this._dirty) {
                     this._dirty = !1;
-                    var b = this._canvas
+                    let b = this._canvas
                       , e = this._ctx
                       , f = this._value
                       , d = this._scale
                       , a = this._size
                       , c = "Bold " + a + this._font;
                     e.font = c;
-                    var g = e.measureText(f).width
+                    let g = e.measureText(f).width
                       , h = this._hmargin
                       , q = 2;
                     -1 < this._vmargin && (q = this._vmargin);
-                    var n = 0;
+                    let n = 0;
                     this._stroke && (n = this._strokeWidth);
                     b.width = (g + 2 * h + n) * d;
                     b.height = (a + 2 * q + n) * d;
@@ -1572,14 +1572,14 @@ Feedback:
                 this._ctx = this._canvas.getContext("2d"));
                 if (this._dirty) {
                     this._dirty = !1;
-                    var b = this._canvas
+                    let b = this._canvas
                       , e = this._ctx
                       , f = this._value
                       , d = this._scale
                       , a = this._size
                       , c = "Bold " + a + this._font;
                     e.font = c;
-                    var g = e.measureText(f).width
+                    let g = e.measureText(f).width
                       , h = ~~(.2 * a);
                     b.width = (g + 6 + 10 + 2 * this._d) * d;
                     b.height = (a + h + this._extrude + 2 * this._d + this._addTop) * d;
@@ -1699,19 +1699,19 @@ Feedback:
                 }
             };
             this.loadGameSpritesheetFrames = function() {
-                for (var b = gameSheetInfo.length, e = 0; e < b; e++) {
-                    var f = gameSheetInfo[e]
+                for (let b = gameSheetInfo.length, e = 0; e < b; e++) {
+                    let f = gameSheetInfo[e]
                       , d = new xb;
                     d.setFrameInfo(f, this.gameSheet);
                     this.frames[f[0]] = d
                 }
-                for (e = 1; 8 >= e; e++)
+                for (let e = 1, b; 8 >= e; e++)
                     b = this.frames["plane" + e].renderTintedFrame("#FFFFFF").canvas,
                     this.whitePlaneImages["plane" + e] = b;
-                for (e = 0; 5 >= e; e++)
+                for (let e = 0; 5 >= e; e++)
                     this.planes[e] = [];
                 this.loadPlaneImages();
-                for (e = 0; 5 >= e; e++)
+                for (let e = 0; 5 >= e; e++)
                     this.loadPlaneDecal(0, e),
                     this.loadPlaneDecal(1, e),
                     this.loadPlaneDecal(2, e),
@@ -1720,8 +1720,9 @@ Feedback:
                     this.loadPlaneDecal(5, e)
             };
             this.loadPlaneImages = function(b, e) {
-                for (var f = [], d = [], a = 1; 8 >= a; a++) {
-                    var c = this.frames["plane" + a];
+                let f = [], d = [];
+                for (let a = 1; 8 >= a; a++) {
+                    let c = this.frames["plane" + a];
                     f.push(c);
                     d.push(c.renderTintedFrame("rgba(0,100,255,1.0)"))
                 }
@@ -1729,15 +1730,17 @@ Feedback:
                 this.planeFramesReflex = d
             };
             this.loadPlaneDecal = function(b, e) {
-                for (var f = Mc[e], d = [], a = 1; 8 >= a; a++) {
-                    var c;
+                let d = [];
+                for (let f = Mc[e], a = 1; 8 >= a; a++) {
+                    let c;
                     c = this.frames["decal" + b + "_" + a].generateTintImage2(f.r, f.g, f.b, 1);
                     d.push(c)
                 }
                 this.planes[b][e] = d
             };
             this.loadAnimations = function() {
-                for (var b = new Ub, e = new Ub, f = 0; 13 > f; f++)
+                let b = new Ub, e = new Ub;
+                for (let f = 0; 13 > f; f++)
                     b.addFrame(this.frames["s" + f]),
                     e.addFrame(this.frames["s" + f].renderTintedFrame("#2b9bf5"));
                 b.setInterval(1E3 / 30);
@@ -1772,10 +1775,10 @@ Feedback:
                 X.addAnimationInfo("explosion", b)
             };
             this.generateTintedKillIcon = function(b, e, f, d) {
-                var a;
+                let a;
                 a = p.frames.iconkill;
                 frameIconR = p.frames.killR;
-                var c = a.generateRGBKs();
+                let c = a.generateRGBKs();
                 f = a.generateTintImage(c, b, e, f);
                 b = x.createElement("canvas");
                 b.width = f.width;
@@ -1789,20 +1792,21 @@ Feedback:
                 return b
             };
             this.generateHudIcons = function() {
-                var b = 30
+                let b, e, f, d, a, c, g, h
+                    b = 30
                   , e = 0
                   , e = this.generateTintedKillIcon(205, 154, 109, "#FFFFFF")
                   , f = this.generateTintedKillIcon(172, 121, 76, "#BBBBBB")
                   , d = x.createElement("canvas");
                 d.width = e.width;
                 d.height = e.height + b;
-                var a = d.getContext("2d")
+                    a = d.getContext("2d")
                   , e = e.getContext("2d")
                   , f = f.getContext("2d");
                 a.drawImage(f.canvas, 0, 0);
                 a.drawImage(e.canvas, 0, b);
                 this.doubleKillCanvas = d;
-                var b = 10
+                    b = 10
                   , e = 70
                   , d = .9
                   , c = this.generateTintedKillIcon(167, 176, 185, "#FFFFFF")
@@ -1810,7 +1814,7 @@ Feedback:
                   , g = x.createElement("canvas");
                 g.width = c.width + e;
                 g.height = c.height + b;
-                var h = g.getContext("2d")
+                    h = g.getContext("2d")
                   , e = c.getContext("2d")
                   , f = f.getContext("2d")
                   , a = g.width / 2 - c.width / 2 * d;
@@ -1888,13 +1892,13 @@ Feedback:
                 this.loadGameSpritesheet()
             };
             this.loadTintImage = function(b, e, f) {
-                var d = x.createElement("canvas")
+                let d = x.createElement("canvas")
                   , a = d.getContext("2d")
                   , c = b.width
                   , g = b.height;
                 d.width = c;
                 d.height = g;
-                var h = x.createElement("canvas");
+                let h = x.createElement("canvas");
                 h.width = c;
                 h.height = g;
                 c = h.getContext("2d");
@@ -2000,11 +2004,9 @@ Feedback:
                 qc = a.clientX,
                 rc = a.clientY,
                 e)) {
-                    var c = a.clientY - d
-                      , g = z.x
-                      , h = z.y
-                      , g = g - (a.clientX - f)
-                      , h = h - c;
+                    let c = a.clientY - d
+                      , g = z.x - (a.clientX - f)
+                      , h = x.y - c;
                     h < -E / 2 ? h = -E / 2 : h > E / 2 && (h = E / 2);
                     g < -$ ? g = -$ : g > $ && (g = $);
                     z.setPosition(g, h);
@@ -2023,17 +2025,18 @@ Feedback:
           , Rc = function() {
             let b = [];
             this.draw = function(e) {
-                for (var f = [], d = 0; d < b.length; d++) {
-                    var a = b[d];
+                let f, d, a, c, g, h, q, n, k, m, l, y, r, p;
+                for (    f = [], d = 0; d < b.length; d++) {
+                        a = b[d];
                     if (void 0 == B[a.id])
                         f.push(a);
                     else if (a.weapon == Qa) {
                         e.lineWidth = 2 + 5 * (1 - a.a);
                         e.beginPath();
-                        var c = parseInt(255 * a.a)
+                            c = parseInt(255 * a.a)
                           , g = e.createLinearGradient(a.hitPosition.x, a.hitPosition.y, a.origPosition.x, a.origPosition.y);
                         0 > a.a && (a.a = 0);
-                        var h = 255;
+                            h = 255;
                         1 == a.special ? (h = 0,
                         c = parseInt(.4 * c)) : 2 == a.special && (h = 200,
                         c = parseInt(.1 * c));
@@ -2044,7 +2047,7 @@ Feedback:
                         e.moveTo(a.origPosition.x, a.origPosition.y);
                         e.lineTo(a.hitPosition.x, a.hitPosition.y);
                         e.stroke();
-                        var g = (a.hitPosition.x - a.origPosition.x) / 100
+                            g = (a.hitPosition.x - a.origPosition.x) / 100
                           , h = (a.hitPosition.y - a.origPosition.y) / 100
                           , q = a.angle
                           , n = a.origPosition.x
@@ -2052,10 +2055,10 @@ Feedback:
                           , m = 0;
                         e.beginPath();
                         e.lineWidth = 2 == a.special ? 10 : 4;
-                        var l = 5;
+                            l = 5;
                         a.special && (l = 8);
                         for (c = 0; 100 > c; c++) {
-                            var m = m + Math.PI / 4
+                                m = m + Math.PI / 4
                               , n = Math.sin(m - 4 * a.a) * (6 + (1 - a.a) * l)
                               , y = n * Math.cos(q)
                               , r = n * Math.sin(q)
@@ -2127,7 +2130,7 @@ Feedback:
                         q > c ? (q = a.curPosition.x - a.direction.x * c,
                         m = a.curPosition.y - a.direction.y * c) : (q = a.origPosition.x,
                         m = a.origPosition.y);
-                        var c = e
+                            c = e
                           , n = r = y = l = void 0
                           , n = q - g
                           , r = m - h
@@ -2166,9 +2169,9 @@ Feedback:
             };
             this.addShot = function(e, f, d, a) {
                 if (la() && xa) {
-                    var c = B[e];
+                    let c = B[e];
                     if (c) {
-                        var g = {};
+                        let g = {};
                         g.id = e;
                         g.angle = c.angle;
                         g.isKing = qa == e;
@@ -2207,10 +2210,10 @@ Feedback:
                 }
             };
             this.addMissileImpact = function(b, f) {
-                var d = 10 * b
+                let d = 10 * b
                   , a = 10 * f;
                 if (aa(d, a, 100) && la()) {
-                    var c = X.createAnimation("explosion");
+                    let c = X.createAnimation("explosion");
                     c.setScale(1);
                     c.posX = 10 * b;
                     c.posY = 10 * f;
@@ -2221,7 +2224,7 @@ Feedback:
             };
             this.addSplash = function(b, f, d, a) {
                 if (sb && !u.isSpaceWars() && aa(b, f, 100) && la()) {
-                    var c = X.createAnimation("splash")
+                    let c = X.createAnimation("splash")
                       , g = X.createAnimation("splashReflex");
                     c.setScale(d);
                     a && (c.scaleX *= 1.2 + .4 * Math.random());
