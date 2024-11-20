@@ -1174,13 +1174,13 @@ Feedback:
         function fa(b, e, f) {
             return b < e ? e : b > f ? f : b
         }
-        function Da(b, e, f, d) {
+        function Class_StrokeStyle(b, e, f, d) {
             b && (this._size = b);
             e && (this._color = e);
             this._stroke = !!f;
             d && (this._strokeColor = d)
         }
-        function ba(b, e, f) {
+        function Class_TextStyle(b, e, f) {
             b && (this._size = b);
             e && (this._color = e);
             f && (this._secondColor = f)
@@ -1406,7 +1406,7 @@ Feedback:
             return !1
         };
         G && (Tb = "Arial-BoldMT");
-        Da.prototype = {
+        Class_StrokeStyle.prototype = {
             _value: "",
             _color: "#000000",
             _stroke: !1,
@@ -1507,7 +1507,7 @@ Feedback:
                 return this._canvas
             }
         };
-        ba.prototype = {
+        Class_TextStyle.prototype = {
             _value: "",
             _color: "#000000",
             _secondColor: "#FFFFFF",
@@ -1605,7 +1605,7 @@ Feedback:
                 return this._canvas
             }
         };
-        let Nc = function() {
+        let Class_EventManager = function() {
             this.eventType = {
                 EVENT_NONE: 0,
                 EVENT_WAITING: 1,
@@ -1659,7 +1659,7 @@ Feedback:
                 this.warshipsEscaped = f
             }
         }
-          , Oc = function() {
+          , Class_Assets = function() {
             this.loaded = !1;
             this.onLoad = null;
             this.spriteSheetLoaded = !1;
@@ -1698,7 +1698,7 @@ Feedback:
             this.loadGameSpritesheetFrames = function() {
                 for (let b = gameSheetInfo.length, e = 0; e < b; e++) {
                     let f = gameSheetInfo[e]
-                      , d = new xb;
+                      , d = new Class_RenderManager;
                     d.setFrameInfo(f, this.gameSheet);
                     this.frames[f[0]] = d
                 }
@@ -1736,7 +1736,7 @@ Feedback:
                 this.planes[b][e] = d
             };
             this.loadAnimations = function() {
-                let b = new Ub, e = new Ub;
+                let b = new Class_Animation, e = new Class_Animation;
                 for (let f = 0; 13 > f; f++)
                     b.addFrame(this.frames["s" + f]),
                     e.addFrame(this.frames["s" + f].renderTintedFrame("#2b9bf5"));
@@ -1744,7 +1744,7 @@ Feedback:
                 X.addAnimationInfo("splash", b);
                 e.setInterval(1E3 / 30);
                 X.addAnimationInfo("splashReflex", e);
-                b = new Ub;
+                b = new Class_Animation;
                 b.addFrame(this.frames.e0);
                 b.addFrame(this.frames.e0);
                 b.addFrame(this.frames.e2);
@@ -1951,7 +1951,7 @@ Feedback:
                 this.blinkImage.src = "images/events/blink.png")
             }
         }
-          , Pc = function() {
+          , Class_InputManager = function() {
             let b = this
               , e = !1
               , f = 0
@@ -2019,7 +2019,7 @@ Feedback:
                 document.addEventListener("keyup", b.keyup, !1)
             }
         }
-          , Rc = function() {
+          , Class_ParticleImpacts = function() {
             let b = [];
             this.draw = function(e) {
                 let f, d, a, c, g, h, q, n, k, m, l, y, r, p;
@@ -2236,7 +2236,7 @@ Feedback:
                 }
             }
         }
-          , Vc = function() {
+          , Class_UI_GameInfo = function() {
             let b
               , e
               , f
@@ -2246,7 +2246,7 @@ Feedback:
               , g
               , h
               , q
-              , n = new Sc
+              , n = new Class_UI_KillStatus
               , k
               , m
               , l
@@ -2267,7 +2267,7 @@ Feedback:
               , Vb
               , ea = 1
               , Ga = 0
-              , D = new Uc
+              , D = new Class_UI_ActivityMessages
               , Fa
               , ua
               , E
@@ -2325,7 +2325,7 @@ Feedback:
                           , P = 0;
                         G && (r = 24,
                         P = -5);
-                        null == pa && (pa = new Da(r,"#FFFFFF"));
+                        null == pa && (pa = new Class_StrokeStyle(r,"#FFFFFF"));
                         R = u.isInstagib();
                         if (z != v.GetAmmo() || null == s) {
                             S = "\u221e";
@@ -2349,13 +2349,13 @@ Feedback:
                         r = !1,
                         f ? (r = 40,
                         G && (r = 50),
-                        q = new ba(r * t,"#FF0000","#990000"),
+                        q = new Class_TextStyle(r * t,"#FF0000","#990000"),
                         q.setValue(f),
                         q.setUsingFrame(!0),
                         r = !0,
                         G ? q.setAddTop(35) : q.setAddTop(25)) : (q = null,
                         P = G ? 45 : 35),
-                        h = new ba(P * t,"#FF0000","#990000"),
+                        h = new Class_TextStyle(P * t,"#FF0000","#990000"),
                         h.setValue(e),
                         h.setUsingFrame(!r));
                         P = .25 * canvas.height;
@@ -2378,7 +2378,7 @@ Feedback:
                     1 < K && (K = 1),
                     g || (r = 30,
                     G && (r = 40),
-                    g = new ba(r * t,"#FF0000","#990000")),
+                    g = new Class_TextStyle(r * t,"#FF0000","#990000")),
                     g.setValue(k),
                     g.setUsingFrame(!0),
                     r = g.render(),
@@ -2394,7 +2394,7 @@ Feedback:
                     K = 1,
                     y || (r = 20,
                     G && (r = 30),
-                    y = new ba(r * t,"#FF0000","#990000")),
+                    y = new Class_TextStyle(r * t,"#FF0000","#990000")),
                     y.setValue(l),
                     y.setUsingFrame(!1),
                     r = y.render(),
@@ -2412,7 +2412,7 @@ Feedback:
                     I.restore());
                     Z || Y || (O = "FREE MODE",
                     0 == ka && (O = v ? "Following " + ga(v.name) : "FOLLOW MODE"),
-                    c || (c = new ba(30 * t,"#ffd118","#b56006")),
+                    c || (c = new Class_TextStyle(30 * t,"#ffd118","#b56006")),
                     c.setValue(O),
                     c.setUsingFrame(!0),
                     r = c.render(),
@@ -2421,7 +2421,7 @@ Feedback:
                     I.drawImage(r, .5 * canvas.width - r.width / 2, P));
                     Ta && (4E3 > H ? (null == Ia && (r = 20,
                     G && (r = 30),
-                    Ha = new Da(r * t,"#ffd118",!0,"#633504"),
+                    Ha = new Class_StrokeStyle(r * t,"#ffd118",!0,"#633504"),
                     Ha.setValue(Ta),
                     Ha.setStrokeWidth(5),
                     Ha.setRoundedFrameOpacity(.5),
@@ -2449,7 +2449,7 @@ Feedback:
                         I = c.id;
                         d != Fa && (c = 25,
                         G && (c = 35),
-                        ua = new ba(c * t,"#fe9b00","#6e3800"),
+                        ua = new Class_TextStyle(c * t,"#fe9b00","#6e3800"),
                         c = " ",
                         Ba || (c = ""),
                         G && (c = "  "),
@@ -2478,7 +2478,7 @@ Feedback:
                     X = Ma;
                     c = 25;
                     G && (c = 35);
-                    L = new ba(c * t,"#fbc521","#c78109");
+                    L = new Class_TextStyle(c * t,"#fbc521","#c78109");
                     Ma ? L.setValue("     Super Weapon: " + Ma) : L.setValue("     Find The Super Weapon!");
                     L.setUsingRoundedFrame(!0);
                     ab = L.render()
@@ -2501,7 +2501,7 @@ Feedback:
                 rankCanvasContext.globalAlpha = .3,
                 rankCanvasContext.fillStyle = "rgba(0,0,0,1.0)",
                 Ea(rankCanvasContext, 0, 0, 200, 200, 30 * t),
-                ca = new Da(15 * t,"#EEEEEE"),
+                ca = new Class_StrokeStyle(15 * t,"#EEEEEE"),
                 ca.setValue(v.rank),
                 ca.setUsingRoundedFrame(!1),
                 fa = ca.render(),
@@ -2549,13 +2549,13 @@ Feedback:
                     let c = u.endTime - T;
                     if (0 > parseInt(c))
                         return;
-                    W = new ba(23 * t,u.getEventColor(),"#6e3800");
+                    W = new Class_TextStyle(23 * t,u.getEventColor(),"#6e3800");
                     W.setValue(u.getEventName());
                     N = W.render();
-                    $_sub = new ba(20 * t,"#fe9b00","#6e3800");
+                    $_sub = new Class_TextStyle(20 * t,"#fe9b00","#6e3800");
                     $_sub.setValue("STARTS IN");
                     da = $_sub.render();
-                    Q = new ba(27 * t,"#fe9b00","#6e3800");
+                    Q = new Class_TextStyle(27 * t,"#fe9b00","#6e3800");
                     Q.setValue(oc(c));
                     M = Q.render()
                 }
@@ -2578,10 +2578,10 @@ Feedback:
                     U = !1;
                     let c = u.endTime - T;
                     0 > parseInt(c) && (c = 0);
-                    W = new ba(25 * t,u.getEventColor(),"#6e3800");
+                    W = new Class_TextStyle(25 * t,u.getEventColor(),"#6e3800");
                     W.setValue(u.getEventName());
                     N = W.render();
-                    Q = new ba(25 * t,"#fe9b00","#6e3800");
+                    Q = new Class_TextStyle(25 * t,"#fe9b00","#6e3800");
                     u.isWarship() ? 0 < u.warshipsLeft ? Q.setValue("Warships Left: " + u.warshipsLeft) : 0 == u.warshipsEscaped ? Q.setValue("All Warships Destroyed!") : Q.setValue(u.warshipsDestroyed + " Destroyed, " + u.warshipsEscaped + " Escaped!") : Q.setValue(oc(c));
                     M = Q.render()
                 }
@@ -2597,10 +2597,10 @@ Feedback:
                 }
             };
             this.DrawWinnerLabel = function(a) {
-                !ia && aa && (ia = new ba(55 * t,"#fe6800","#6e3800"),
+                !ia && aa && (ia = new Class_TextStyle(55 * t,"#fe6800","#6e3800"),
                 ia.setValue("WINNER"),
                 ha = ia.render(),
-                wa = new ba(45 * t,"#fe9b00","#6e3800"),
+                wa = new Class_TextStyle(45 * t,"#fe9b00","#6e3800"),
                 wa.setValue(aa),
                 renderedWinnerNameCachedText = wa.render());
                 if (ha) {
@@ -2615,10 +2615,10 @@ Feedback:
                 }
             };
             this.DrawWarshipDestroyedLabel = function(a) {
-                la || (la = new ba(45 * t,"#fe6800","#6e3800"),
+                la || (la = new Class_TextStyle(45 * t,"#fe6800","#6e3800"),
                 null == va ? la.setValue("WARSHIP") : la.setValue(va),
                 ma = la.render(),
-                ya = new ba(35 * t,"#fe9b00","#6e3800"),
+                ya = new Class_TextStyle(35 * t,"#fe9b00","#6e3800"),
                 null == va ? ya.setValue("ESCAPED!") : ya.setValue("DESTROYED A WARSHIP!"),
                 sa = ya.render());
                 if (ma) {
@@ -2633,7 +2633,7 @@ Feedback:
                 }
             };
             this.DrawLastEventWinner = function(a) {
-                null != aa && aa != ja && (ca = new Da(15 * t,"#EEEEEE"),
+                null != aa && aa != ja && (ca = new Class_StrokeStyle(15 * t,"#EEEEEE"),
                 ca.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black"),
                 ca.setValue("Last Event Winner: " + ga(aa) + " "),
                 ca.setUsingRoundedFrame(!0),
@@ -2872,7 +2872,7 @@ Feedback:
                 la = null
             };
         }
-          , Uc = function() {
+          , Class_UI_ActivityMessages = function() {
             let b = []
               , e = [];
             this.update = function(f) {
@@ -2886,7 +2886,7 @@ Feedback:
                     e.drawImage(b[a], 25, d + 26 * t + 5 + 14 * a * t + 15 * a * t)
             };
             this.addActivityMessage = function(f) {
-                let d = new Da(14 * t,"#EEEEEE");
+                let d = new Class_StrokeStyle(14 * t,"#EEEEEE");
                 d.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
                 d.setValue("\u2022 " + f);
                 d.setUsingRoundedFrame(!0);
@@ -2903,12 +2903,12 @@ Feedback:
                     d > f && (f = d)
             }
         }
-          , Xb = function() {
+          , Class_Plane = function() {
             let b = this
-              , e = 0
+              , num_spawn_cooldown_ms = 0
               , f = 100
               , d = !1
-              , a = new yb
+              , a = new Class_ParticleTrails
               , c
               , g
               , h = 0
@@ -2987,10 +2987,10 @@ Feedback:
                     c && c.clear(),
                     pa = !0) : pa = !1;
                     g = this.weapon == za && this.isShooting;
-                    0 < e && (f -= b,
+                    0 < num_spawn_cooldown_ms && (f -= b,
                     0 > f && (f = 100,
                     d = !d),
-                    e -= b);
+                    num_spawn_cooldown_ms -= b);
                     L.moveLeft && (this.controlAngle += this.rotSpeed);
                     L.moveRight && (this.controlAngle -= this.rotSpeed);
                     360 < this.controlAngle ? this.controlAngle = 0 : 0 > this.controlAngle && (this.controlAngle = 360);
@@ -3335,7 +3335,7 @@ Feedback:
                 this.y = this.dstY,
                 this.origAngle = this.dstAngle,
                 this.first_set = !1,
-                A.firstClientListing || (e = 1E3 * tc)) : (b = this.dstX - this.origX,
+                A.firstClientListing || (num_spawn_cooldown_ms = 1E3 * tc)) : (b = this.dstX - this.origX,
                 d = this.dstY - this.origY,
                 this.speed = Math.sqrt(b * b + d * d) / 3);
                 this.inGame || (this.inGame = !0,
@@ -3350,7 +3350,7 @@ Feedback:
             };
             this.setScore = function(a) {
                 let c = a - this.score;
-                0 < c && this == v && (K || (K = new $c),
+                0 < c && this == v && (K || (K = new Class_ScoreAccumInfo),
                 la() && K.addScore(c));
                 this.score = a
             };
@@ -3360,7 +3360,7 @@ Feedback:
             this.setName = function(c) {
                 this.name = c;
                 if ("" == c || null == c)
-                    a = new yb,
+                    a = new Class_ParticleTrails,
                     a.fixedColor = !0,
                     a.style = M[Ja],
                     a.clear()
@@ -3374,7 +3374,7 @@ Feedback:
                     let h = 0 < (b & 4) ? !0 : !1
                       , e = 0 < (b & 2) ? !0 : !1;
                     G = 0 < (b & 8) ? !0 : !1;
-                    c = new ad;
+                    c = new Class_ParticleFlags;
                     c.flipX = e;
                     c.flipY = h;
                     c.scale = g / 100;
@@ -3382,14 +3382,14 @@ Feedback:
                     c.setTexture(this.name)
                 } else
                     this.showName = !0;
-                a = new yb;
+                a = new Class_ParticleTrails;
                 a.fixedColor = !0;
                 a.style = M[Ja];
                 a.clear()
             };
             this.setEnergy = function(a) {
                 this.energy = a;
-                25 > a && !n ? (n = new Ec,
+                25 > a && !n ? (n = new Class_ParticleManager,
                 n.init(15, this.x, this.y),
                 k = 0,
                 m = 20 + 40 * Math.random(),
@@ -3422,7 +3422,7 @@ Feedback:
                 this.rank = a
             };
             this.isInvulnerable = function() {
-                return 0 < e
+                return 0 < num_spawn_cooldown_ms
             };
             a.style = M[Ja];
             this.setWeapon = function(c) {
@@ -3480,7 +3480,7 @@ Feedback:
                 a && a.clear()
             }
         }
-          , ed = function() {
+          , Class_SeaWater = function() {
             let e
               , f
               , d
@@ -3546,7 +3546,7 @@ Feedback:
                     k = h.length;
                     q -= b;
                     0 > q && (q = 125.6,
-                    20 > k && (m = new dd,
+                    20 > k && (m = new ClassU_dd,
                     h.push(m),
                     l = l[1].x - l[0].x,
                     y = 0,
@@ -3627,7 +3627,7 @@ Feedback:
             }
             )()
         }
-          , dd = function() {
+          , ClassU_dd = function() {
             let b = [
                         118.17, 11.98,
                         26.9, -3.43, 1.91, -19.41, .45, -19.48,
@@ -3673,7 +3673,7 @@ Feedback:
                 }
             }
         }
-          , fd = function() {
+          , Class_Clouds = function() {
             let b = [
                         [
                             -142.21, -1.18,
@@ -3963,12 +3963,12 @@ Feedback:
             )();
             this.preRender()
         }
-          , hd = function() {
+          , Class_Backgrounds = function() {
             let b = []
               , e = 0
-              , f = new fd
+              , f = new Class_Clouds
               , c = !1;
-            this.waves = new ed;
+            this.waves = new Class_SeaWater;
             let d = function() {
                 this.vertexes = [];
                 this.type = 0;
@@ -4196,7 +4196,7 @@ Feedback:
                     }
             };
         }
-          , jd = function() {
+          , Class_PickupItem = function() {
             let b = this.alpha = 0
               , e = 0
               , f = Math.random() * Math.PI * 2
@@ -4328,7 +4328,7 @@ Feedback:
             };
             u.isSpaceWars() && (y = !0)
         }
-          , wd = function() {
+          , Class_WS_Connection = function() {
             let f;
             function b(b, a, c) {
                 169 != a && 172 != a && 162 != a && 178 != a || c || (ja = []);
@@ -4361,7 +4361,7 @@ Feedback:
                               , h = h + 4
                               , s = M[m];
                             if (null == s) {
-                                s = new kd;
+                                s = new Class_Missile;
                                 M[m] = s;
                                 163 != f && 162 != f && 169 != f || s.setType(l);
                                     m = B[p]
@@ -4395,7 +4395,7 @@ Feedback:
                                 if (178 == a || 162 == a)
                                     f = b.getUint8(l, !0),
                                     l += 1,
-                                    null == h && (h = new nd,
+                                    null == h && (h = new Class_Warship,
                                     U[c] = h,
                                     h.setType(f));
                                 h.id = c;
@@ -4461,7 +4461,7 @@ Feedback:
                         ea = b.getUint32(h, !0),
                         h += 4;
                     if (162 != a && 178 != a || !y)
-                        162 != a && 178 != a || y || null != C || (C = new Xb,
+                        162 != a && 178 != a || y || null != C || (C = new Class_Plane,
                         B[k] = C,
                         C.inGame = !1);
                     else {
@@ -4483,7 +4483,7 @@ Feedback:
                                 break;
                             O += String.fromCharCode(G)
                         }
-                        null == C && (C = new Xb,
+                        null == C && (C = new Class_Plane,
                         B[k] = C);
                         -1 != O.indexOf("\ufdfd") && (O = "<Unnamed>");
                         C.setColorID(z);
@@ -4726,7 +4726,7 @@ Feedback:
                         m = d.getUint8(c, !0),
                         c += 1,
                         d = d.getUint32(c, !0),
-                        v = new Xb,
+                        v = new Class_Plane,
                         v.id = f,
                         v.setColorID(k),
                         v.setDecalID(m),
@@ -4884,7 +4884,7 @@ Feedback:
                             c += 4;
                             n = -d.getFloat32(c, !0);
                             c += 4;
-                            k = new jd;
+                            k = new Class_PickupItem;
                             W[f] = k;
                             k.id = f;
                             k.setPosition(q, n);
@@ -5052,7 +5052,7 @@ Feedback:
                 }
             }
         }
-          , Cd = function(b) {
+          , ClassR_FollowMode = function(b) {
             let f = this
               , d
               , a
@@ -5463,26 +5463,26 @@ Feedback:
             f.respawnParticles = function() {
                 sa = [];
                 for (let a = 0; 150 > a; a++)
-                    sa.push(new xd)
+                    sa.push(new ClassU_xd)
             };
             d = b;
             a = d.getContext("2d");
             C();
-            ya = new hd;
-            X = new yd;
+            ya = new Class_Backgrounds;
+            X = new Class_AnimationManager;
             f.respawnParticles();
-            p = new Oc;
+            p = new Class_Assets;
             p.load(function() {
                 console.log("Resources loaded!");
                 1 == G && ("undefined" != typeof messageHandlers && messageHandlers.didLoad ? messageHandlers.didLoad(JSON.stringify({})) : window.webkit.messageHandlers.didLoad.postMessage({}));
-                F = new Vc;
-                oa = new Rc;
+                F = new Class_UI_GameInfo;
+                oa = new Class_ParticleImpacts;
                 A.hasConnection && !A.sentHello && A.hello();
                 setInterval(e, 40);
                 cc(Math.floor(5 * Math.random()) + 1);
                 ac(Math.floor(5 * Math.random()) + 1);
                 console.log("Loading sounds!");
-                J = new zd;
+                J = new Class_SFXmanager;
                 J.load(function() {
                     J.playSound(Ad, 1, 1, Q, function(a) {
                         mb = a
@@ -5490,11 +5490,11 @@ Feedback:
                 })
             });
             myName = "";
-            z = new Bd(d,a,0,0);
-            A = new wd;
+            z = new Class_UI_Anchor_Shake(d,a,0,0);
+            A = new Class_WS_Connection;
             A.getServerAndConnect()
         }
-          , Bd = function(b, e, f, d) {
+          , Class_UI_Anchor_Shake = function(b, e, f, d) {
             let a = this
               , c = 0
               , g
@@ -5584,7 +5584,7 @@ Feedback:
                 e.setTransform(1, 0, 0, 1, 0, 0)
             }
         }
-          , xb = function() {
+          , Class_RenderManager = function() {
             let b
               , e
               , f
@@ -5632,7 +5632,7 @@ Feedback:
                 m.drawImage(a, b, e, this.width, this.height, 0, 0, this.width, this.height);
                 n.globalAlpha = 1;
                 n.drawImage(k, 0, 0);
-                d = new xb;
+                d = new Class_RenderManager;
                 d.frameWithCanvas(f, c, g);
                 return d
             };
@@ -5663,7 +5663,7 @@ Feedback:
                     r[t] = r[t++] * (1 - k) + n * k,
                     r[t] = .8 * r[t++];
                 l.putImageData(p, 0, 0);
-                d = new xb;
+                d = new Class_RenderManager;
                 d.frameWithCanvas(m, c, g);
                 return d
             };
@@ -5682,7 +5682,7 @@ Feedback:
                 l.drawImage(a[1], 0, 0));
                 0 < e && (l.globalAlpha = e / 255,
                 l.drawImage(a[2], 0, 0));
-                a = new xb;
+                a = new Class_RenderManager;
                 a.frameWithCanvas(f, c, g);
                 return a
             };
@@ -5749,7 +5749,7 @@ Feedback:
                 return c
             }
         }
-          , yd = function() {
+          , Class_AnimationManager = function() {
             let b = {}
               , e = []
               , f = []
@@ -5763,7 +5763,7 @@ Feedback:
             };
             this.createAnimation = function(a) {
                 a = b[a];
-                let d = new Jc;
+                let d = new Class_DrawAnimation;
                 d.setup(a);
                 return d
             };
@@ -5788,7 +5788,7 @@ Feedback:
             this.addExplosion = function(b, d, e, f) {
                 if (bool_drawExplosions && aa(b, d, 100) && la()) {
                     if (1 >= a.length) {
-                        let n = new Dd;
+                        let n = new Class_ParticleDebrisManager;
                         n.init(b, d, e, f);
                         a.push(n)
                     }
@@ -5858,7 +5858,7 @@ Feedback:
                     a[d].draw(b)
             }
         }
-          , Jc = function() {
+          , Class_DrawAnimation = function() {
             let b = 0
               , e = 0
               , f = 0;
@@ -5870,7 +5870,7 @@ Feedback:
             this.rotation = 0;
             this.alpha = 1;
             this.copy = function(b) {
-                b = new Jc;
+                b = new Class_DrawAnimation;
                 b.frames = this.frames;
                 b.frameCount = this.frameCount;
                 b.deleting = this.deleting;
@@ -5905,7 +5905,7 @@ Feedback:
                 this.frames[b].draw(d)
             }
         }
-          , Ub = function() {
+          , Class_Animation = function() {
             this.frames = [];
             this.interval = 0;
             this.addFrame = function(b) {
@@ -5915,7 +5915,7 @@ Feedback:
                 this.interval = b
             }
         }
-          , Ed = function() {
+          , ClassR_ParticleU = function() {
             this.color = {
                 h: "61",
                 s: "100%",
@@ -5953,7 +5953,7 @@ Feedback:
                 b.restore()
             }
         }
-          , Ec = function() {
+          , Class_ParticleManager = function() {
             let b = 0
               , e = 0
               , f = []
@@ -5974,7 +5974,7 @@ Feedback:
                 e = k;
                 q = this.life / d;
                 for (n = 0; n < d; n++)
-                    k = new Ed,
+                    k = new ClassR_ParticleU,
                     this.resetParticle(k),
                     k.active = !1,
                     k.time = q * n,
@@ -6114,7 +6114,7 @@ Feedback:
                 }
             }
         }
-          , Dd = function() {
+          , Class_ParticleDebrisManager = function() {
             let e = []
               , f
               , d;
@@ -6146,7 +6146,7 @@ Feedback:
                 this.addDebree(n * q + e, k * q + h)
             };
             this.addDebree = function(a, b) {
-                let g = new Fd;
+                let g = new Class_ParticleDebris;
                 g.init(f, d);
                 g.setSpeed(a, b);
                 e.push(g)
@@ -6167,7 +6167,7 @@ Feedback:
                     e[debreeID].draw(a)
             }
         }
-          , Fd = function() {
+          , Class_ParticleDebris = function() {
             let b
               , e
               , f
@@ -6183,7 +6183,7 @@ Feedback:
             this.init = function(a, b) {
                 g = a;
                 h = b;
-                q = new Ec;
+                q = new Class_ParticleManager;
                 q.init(15, g, h)
             };
             this.setSpeed = function(c, g) {
@@ -6213,8 +6213,8 @@ Feedback:
                 this.deleting || q.draw(a)
             }
         }
-          , kd = function() {
-            let b = new yb
+          , Class_Missile = function() {
+            let b = new Class_ParticleTrails
               , e = 0
               , f = 0;
             this.lastUpdate = 0;
@@ -6350,7 +6350,7 @@ Feedback:
             b.width = 1.2;
             b.fixedColor = !0
         }
-          , yb = function() {
+          , Class_ParticleTrails = function() {
             let b
               , e;
             this.tailAddJointInterval = 50;
@@ -6422,7 +6422,7 @@ Feedback:
                 this.tailJoints = [[]]
             }
         }
-          , ad = function() {
+          , Class_ParticleFlags = function() {
             let b
               , e;
             this.tailJoints = [[]];
@@ -6619,7 +6619,7 @@ Feedback:
                 this.tailJoints = [[]]
             }
         }
-          , $c = function() {
+          , Class_ScoreAccumInfo = function() {
             let b = []
               , e = []
               , f;
@@ -6641,7 +6641,7 @@ Feedback:
             this.addScore = function(d) {
                 let a = !1, c;
                 f && 500 > T - f && (a = !0);
-                c = new Da(13,"#FFFFFF");
+                c = new Class_StrokeStyle(13,"#FFFFFF");
                 c.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
                 a ? d = b[b.length - 1].number + d : f = T;
                 c.setValue("+" + d);
@@ -6652,7 +6652,7 @@ Feedback:
                 e.push(+new Date))
             }
         }
-          , zd = function() {
+          , Class_SFXmanager = function() {
             let b = !1
               , e = {}
               , f = {
@@ -6716,7 +6716,7 @@ Feedback:
                 this.sound.volume(b)
             }
         }
-          , Sc = function() {
+          , Class_UI_KillStatus = function() {
             let b = []
               , f = null
               , d = null
@@ -6801,11 +6801,11 @@ Feedback:
                 n = .8,
                 m = "",
                 k = !0);
-                "" != e && (f = new Da(40,s,!0,"#000000"),
+                "" != e && (f = new Class_StrokeStyle(40,s,!0,"#000000"),
                 f.setValue(e),
                 f.setStrokeWidth(10),
                 d = f.render(),
-                a = new Da(40,s,!0,"#000000"),
+                a = new Class_StrokeStyle(40,s,!0,"#000000"),
                 a.setValue(m),
                 a.setStrokeWidth(10),
                 currentText2Render = a.render())
@@ -6825,7 +6825,7 @@ Feedback:
                 return g
             }
         }
-          , xd = function() {
+          , ClassU_xd = function() {
             let b = this;
             b.x = 0;
             b.y = 0;
@@ -6851,7 +6851,7 @@ Feedback:
                 e.fill()
             }
         }
-          , nd = function() {
+          , Class_Warship = function() {
             let e = 1
               , f = 20
               , d = 100
@@ -7061,10 +7061,10 @@ Feedback:
         };
         window.onload = function() {
             Modernizr.canvas && Modernizr.websockets && (null == L && (window.devicePixelRatio && (jb = 1 < window.devicePixelRatio ? 2 : 1),
-            u = new Nc,
-            L = new Cd(document.getElementById("canvas")),
+            u = new Class_EventManager,
+            L = new ClassR_FollowMode(document.getElementById("canvas")),
             window.addEventListener("resize", L.resize, !1),
-            V = new Pc,
+            V = new Class_InputManager,
             V.addListeners(),
             window.requestAnimationFrame ? window.requestAnimationFrame(Rb) : setInterval(Rb, 1E3 / 60),
             $("#overlay").show()),
