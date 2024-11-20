@@ -640,10 +640,10 @@ Feedback:
     (function(window, document, $) {
         let Zb
           , $b
-          , Ib = "https:" == window.location.protocol
+          , bool_isHttps = "https:" == window.location.protocol
           , G = window.location.pathname.indexOf("mobile")
-          , Jb = 1E3 / 30 * 3
-          , Mc = [
+          , num_global_physics_step_ms = 1E3 / 30 * 3
+          , list_decal_colors = [
                 {
                     r: 255,
                     g: 0,
@@ -674,7 +674,7 @@ Feedback:
           , gb = 0
           , hb = 0
           , ma = 0
-          , V
+          , objG_inputManager
           , qc = 0
           , rc = 0
           , H
@@ -692,19 +692,19 @@ Feedback:
           , $_sub = 5E3
           , ka = 1
           , Y = !0
-          , Gb = 0
+          , numG_player_count = 0
           , Xa = 0
-          , Ob = !1
+          , bool_hideCustomization = !1
           , jb = 1
-          , bc = 0
-          , dc = 0
+          , intG_color_id = 0
+          , intG_decal_id = 0
           , qa = 0
           , sc = 0
-          , Aa = !1
+          , bool_continueGame = !1
           , Eb
           , nc = 0
-          , da = 1
-          , N = window.localStorage.muteVol
+          , num_max_volume = 1
+          , num_setting_muteVol = window.localStorage.muteVol
           , tc = 3
           , uc = 750
           , vc = 5
@@ -717,7 +717,7 @@ Feedback:
           , Ac = .3
           , La = !1
           , Ma = null
-          , Ba = !0
+          , bool_setting_highQuality = !0
           , lb = !1
           , mb
           , ia
@@ -726,8 +726,8 @@ Feedback:
           , Cb = !0
           , lc = 2
           , xa = !1
-          , kc = 0
-          , ob = !0
+          , int_ads_refreshed = 0
+          , bool_drawClouds = !0
           , bool_drawWater = !0
           , bool_drawExplosions = !0
           , bool_drawSun = !0
@@ -736,74 +736,74 @@ Feedback:
           , bool_drawSplashes = !0
           , bool_drawGradient = !0
           , bool_drawUI = !0
-          , L
-          , X
-          , p
-          , A
-          , W = {}
-          , B = {}
-          , U = {}
-          , M = {}
-          , ja = []
-          , v
+          , objG_followMode
+          , objG_animationManager
+          , objG_assets
+          , objG_wsConnection
+          , objD_pickups = {}
+          , objD_planes = {}
+          , objD_specialEntities = {}
+          , objD_missiles = {}
+          , list_str_leaderboard_players = []
+          , objG_player_plane
           , ra
           , Qb
           , Oa = 0
-          , z
-          , F
-          , oa
-          , ya
-          , J
+          , objGUI_anchor
+          , objGUI_gameInfo
+          , obj_particleImpacts
+          , objG_backgrounds
+          , objG_sfxManager
           , Za = {}
           , ub = 0
-          , u
-          , sa
-          , Pa = {}
+          , objG_eventManager
+          , list_particleDust
+          , obj_browserQueryParams = {}
           , eb = !1
           , vb = null
-          , Cc = window.navigator.userAgent
-          , Dc = -1 < Cc.indexOf("MSIE ") || -1 < Cc.indexOf("Trident/")
-          , wb
+          , str_browser_user_agent = window.navigator.userAgent
+          , bool_internet_explorer = -1 < str_browser_user_agent.indexOf("MSIE ") || -1 < str_browser_user_agent.indexOf("Trident/")
+          , timeout_ws_conn
           , Sb = !1
-          , Tb = "Arial Black"
-          , Ja = 1
-          , $a = 2
-          , Ua = 4
-          , Qa = 8
-          , za = 16
-          , bb = 128
-          , cb = 256
-          , td = "shot"
-          , Yb = "laser"
-          , sd = "kinglaser"
-          , ud = "trishot"
-          , vd = "rail"
-          , md = "mlaunch"
-          , Qc = "mexpl"
-          , Fc = "mexpl"
-          , Hc = "phit"
-          , od = "weapgrab"
-          , qd = "hgrab"
-          , pd = "winggrab"
-          , gd = "warn"
-          , Wb = "lockon"
-          , Tc = "king"
-          , Wc = "planeloop"
-          , Xc = "waterloop"
-          , Ad = "env"
-          , rd = "bigsplash"
-          , bd = "crash"
-          , Yc = "lasershot"
-          , Zc = "laserloop"
-          , cd = "woosh"
-          , ld = "cannonshoot"
-          , Gc = ""
-          , Q = 0
-          , Sa = 3
-          , Ra = 600
-          , zb = 1
-          , db = 2
-          , Ic = 0
+          , str_font_name = "Arial Black"
+          , id_weapon_machinegun = 1
+          , id_weapon_trishoot = 2
+          , id_weapon_missile = 4
+          , id_weapon_railgun = 8
+          , id_weapon_superweapon = 16
+          , id_weapon_punch = 128
+          , id_weapon_bombs = 256
+          , str_sfxid_shot = "shot"
+          , str_sfxid_laser = "laser"
+          , str_sfxid_kinglaser = "kinglaser"
+          , str_sfxid_trishot = "trishot"
+          , str_sfxid_rail = "rail"
+          , str_sfxid_mlaunch = "mlaunch"
+          , str_sfxid_mexpl = "mexpl"
+          , str_sfxid_mexpl2 = "mexpl"
+          , str_sfxid_phit = "phit"
+          , str_sfxid_weapgrab = "weapgrab"
+          , str_sfxid_hgrab = "hgrab"
+          , str_sfxid_winggrab = "winggrab"
+          , str_sfxid_warn = "warn"
+          , str_sfxid_lockon = "lockon"
+          , str_sfxid_king = "king"
+          , str_sfxid_planeloop = "planeloop"
+          , str_sfxid_waterloop = "waterloop"
+          , str_sfxid_env = "env"
+          , str_sfxid_bigsplash = "bigsplash"
+          , str_sfxid_crash = "crash"
+          , str_sfxid_lasershot = "lasershot"
+          , str_sfxid_laserloop = "laserloop"
+          , str_sfxid_woosh = "woosh"
+          , str_sfxid_cannonshoot = "cannonshoot"
+          , str_sfxid_empty = ""
+          , const_Q_0 = 0
+          , const_Sa_3 = 3
+          , num_sound_max_distance = 600
+          , id_entity_warship = 1
+          , id_entity_asteroid = 2
+          , const_Ic_0 = 0
           , gameSheetInfo = [
             ["bomb",                     522,      34,      11,       8,        .545,       .5],
             ["bombdrop",                 887,     196,      23,      23,        .5,         .5],
@@ -937,7 +937,7 @@ Feedback:
         ];
         let Bc = function() {
                 let b = "";
-                Ib && (b = "s");
+                bool_isHttps && (b = "s");
                 $.get("http" + b + "://ip2l.wings.io/cc", function(b) {
                     vb = b.substring(0, 2);
                     window.localStorage.wingsCC = vb;
@@ -949,20 +949,20 @@ Feedback:
                 let b = 0;
                 0 < Mb && (b = T - Mb);
                 Mb = T;
-                L.update(b);
-                L.draw(b);
+                objG_followMode.update(b);
+                objG_followMode.draw(b);
                 window.requestAnimationFrame && window.requestAnimationFrame(Rb);
                 Lb && (Lb = !1)
             };
         function func_displaySelectedColor(int_color_id) {
-            bc = int_color_id;
+            intG_color_id = int_color_id;
             let e;
             for (e = 0; 5 >= e; e++) {
                 let f = e
-                  , d = p.planes[f][int_color_id][7]
+                  , d = objG_assets.planes[f][int_color_id][7]
                   , a = document.createElement("canvas")
                   , c = a.getContext("2d")
-                  , g = p.frames.plane8;
+                  , g = objG_assets.frames.plane8;
                 a.width = g.width;
                 a.height = g.height;
                 c.translate(g.width / 2, g.height / 2);
@@ -985,13 +985,13 @@ Feedback:
             $("#check" + int_color_id).show()
         }
         function func_displaySelectedDecal(int_decal_id) {
-            dc = int_decal_id;
+            intG_decal_id = int_decal_id;
             for (let e = 0; 5 >= e; e++)
                 $("#checkD" + e).hide();
             $("#checkD" + int_decal_id).show()
         }
         function funcR_showBeta() {
-            Aa = !1;
+            bool_continueGame = !1;
             $("#beta").show();
             func_displayNicknameInput()
         }
@@ -1003,7 +1003,7 @@ Feedback:
         }
         function func_setGraphicsQuality() {
             let b = "Low";
-            Ba && (b = "High");
+            bool_setting_highQuality && (b = "High");
             let e = $("#graphicsID")[0];
             e && (e.childNodes[0].data = "Graphics: " + b)
         }
@@ -1028,10 +1028,10 @@ Feedback:
         }
         function func_displayMuteAudio() {
             let b = "images/sound_off.png";
-            1 == N ? da = N = 0 : 0 == N && (N = 1,
-            da = .05,
+            1 == num_setting_muteVol ? num_max_volume = num_setting_muteVol = 0 : 0 == num_setting_muteVol && (num_setting_muteVol = 1,
+            num_max_volume = .05,
             b = "images/sound_on.png");
-            window.localStorage.muteVol = N;
+            window.localStorage.muteVol = num_setting_muteVol;
             $("#soundImg")[0].src = b
         }
         function func_showAds() {
@@ -1039,7 +1039,7 @@ Feedback:
                 domain: window.location.hostname
             });
             if (null != adsense && adsense)
-                0 == kc && cpmstarAPI({
+                0 == int_ads_refreshed && cpmstarAPI({
                     kind: "createmodule",
                     module: "anchor78670",
                     config: {
@@ -1061,7 +1061,7 @@ Feedback:
                     }, 6E4 * lc),
                     window.googletag && window.googletag.pubads && window.googletag.pubads().refresh && window.googletag.pubads().refresh(window.ads))
                 }),
-                kc++);
+                int_ads_refreshed++);
             else {
                 $("#mpu-top").show();
                 let b = $("#ldr-top");
@@ -1070,19 +1070,19 @@ Feedback:
             }
         }
         function func_wsConnDisconnect() {
-            A && A.disconnect()
+            objG_wsConnection && objG_wsConnection.disconnect()
         }
         function func_hideOverlay() {
-            da = 1 * N;
+            num_max_volume = 1 * num_setting_muteVol;
             $("#overlay").hide();
             Y = !1
         }
         function func_displayContinueCountdown() {
-            if (Aa) {
+            if (bool_continueGame) {
                 let b = Math.floor((T - Eb) / 1E3);
                 0 > b && (b = 0);
                 let e = 10 - b;
-                0 > e ? (Aa = !1,
+                0 > e ? (bool_continueGame = !1,
                 func_displayNicknameInput()) : (b = $("#countdownText")[0],
                 e = document.createTextNode(e),
                 b.replaceChild(e, b.firstChild),
@@ -1097,28 +1097,28 @@ Feedback:
             $("#nickInput").hide(),
             $("#skinPanel").hide(),
             $("#howto").hide(),
-            Aa = !0,
+            bool_continueGame = !0,
             Eb = +new Date,
             func_displayContinueCountdown());
             $("#overlay").fadeIn(500);
-            da = .05 * N;
-            F.clearBonusDisplay()
+            num_max_volume = .05 * num_setting_muteVol;
+            objGUI_gameInfo.clearBonusDisplay()
         }
         function func_displayGameoverScore(int_score) {
             if (G)
                 Y = !0,
                 Z || (ka = 1,
-                v = null);
+                objG_player_plane = null);
             else {
                 Y = !0;
                 Z || (ka = 1,
-                v = null);
+                objG_player_plane = null);
                 funcR_hc_showPf();
                 if (0 <= int_score) {
-                    Aa = !0;
+                    bool_continueGame = !0;
                     $("#beta").hide();
                     let e = $("#curScore")[0], f;
-                    f = u.isInstagib() ? document.createTextNode("Kills: " + int_score) : document.createTextNode("Current Score: " + int_score);
+                    f = objG_eventManager.isInstagib() ? document.createTextNode("Kills: " + int_score) : document.createTextNode("Current Score: " + int_score);
                     e.replaceChild(f, e.firstChild)
                 }
                 nc = int_score;
@@ -1138,7 +1138,7 @@ Feedback:
             Eb = +new Date
         }
         function func_setPlayerCount() {
-            Gb = Object.keys(B).length;
+            numG_player_count = Object.keys(objD_planes).length;
             document.title = "Wings!"
         }
         function func_isIframe() {
@@ -1168,7 +1168,7 @@ Feedback:
             return 50 > +new Date - T
         }
         function func_isInsideBox(x, y, dist) {
-            let d = z.getBounds();
+            let d = objGUI_anchor.getBounds();
             return x + dist >= d[0].x && x - dist <= d[1].x && y + dist >= d[0].y && y - dist <= d[1].y ? !0 : !1
         }
         function func_clamp(val, l, u) {
@@ -1234,12 +1234,12 @@ Feedback:
             b = b.split("&")
             for (let e = 0; e < b.length; e++) {
                 let f = b[e].split("=");
-                Pa[f[0]] = f[1]
+                obj_browserQueryParams[f[0]] = f[1]
             }
         }
         )();
-        window.stats = Pa.stats ? !0 : !1;
-        "true" == window.localStorage.lq && (Ba = !1);
+        window.stats = obj_browserQueryParams.stats ? !0 : !1;
+        "true" == window.localStorage.lq && (bool_setting_highQuality = !1);
         window.mixpanel && window.mixpanel.init("208ce64093308da8075ba320f97c12fd", {
             debug: !1,
             track_pageview: !0,
@@ -1251,14 +1251,14 @@ Feedback:
         };
         window.switchSkins = function() {
             funcR_showBeta();
-            Ob ? ($("#howto").show(),
+            bool_hideCustomization ? ($("#howto").show(),
             $("#skinPanel").hide(),
             $("#divOff").show(),
             $("#divOn").hide()) : ($("#howto").hide(),
             $("#skinPanel").show(),
             $("#divOff").hide(),
             $("#divOn").show());
-            Ob = !Ob
+            bool_hideCustomization = !bool_hideCustomization
         };
         window.setSkinColor = function(b) {
             func_displaySelectedColor(b)
@@ -1270,11 +1270,11 @@ Feedback:
             Z ? func_hideOverlay() : (window.localStorage.nick = b,
             document.getElementsByTagName("canvas")[0].style.cursor = "url(images/crosshair.png) 16 16, auto",
             kb++,
-            V.mouseMoved = !1,
-            A.sendNick(b, Aa),
-            Aa && (func_displayNicknameInput(),
-            Aa = !1),
-            u.isSpaceWars() ? F.showTip("Hint: Earn points faster by destroying asteroids.") : document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement || 2 != kb && 4 != kb && 6 != kb || F.showTip("Press 'F' to toggle Fullscreen"))
+            objG_inputManager.mouseMoved = !1,
+            objG_wsConnection.sendNick(b, bool_continueGame),
+            bool_continueGame && (func_displayNicknameInput(),
+            bool_continueGame = !1),
+            objG_eventManager.isSpaceWars() ? objGUI_gameInfo.showTip("Hint: Earn points faster by destroying asteroids.") : document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement || 2 != kb && 4 != kb && 6 != kb || objGUI_gameInfo.showTip("Press 'F' to toggle Fullscreen"))
         };
         window.setSpectate = function(b) {
             xa = !0;
@@ -1282,29 +1282,29 @@ Feedback:
             func_hideOverlay();
             zc++;
             funcR_showBeta();
-            Z ? (A.leave(),
+            Z ? (objG_wsConnection.leave(),
             Z = !1,
-            L.waitUntilNextFollow()) : L.followTopPlayer();
+            objG_followMode.waitUntilNextFollow()) : objG_followMode.followTopPlayer();
             ka = 0;
-            zc % 2 || 1 >= Gb ? F.showTip("Press 'ESC' to go back") : F.showTip("Click to follow next player")
+            zc % 2 || 1 >= numG_player_count ? objGUI_gameInfo.showTip("Press 'ESC' to go back") : objGUI_gameInfo.showTip("Click to follow next player")
         };
         window.setContinue = function() {
             $("#topGui").show();
             $("#roomFailed").hide();
             func_isIframe() || (parent.location.hash = "");
-            A.getServerAndConnect()
+            objG_wsConnection.getServerAndConnect()
         };
         window.toggleGraphics = function() {
-            Ba = !Ba;
-            L.resize();
-            window.localStorage.lq = !Ba;
+            bool_setting_highQuality = !bool_setting_highQuality;
+            objG_followMode.resize();
+            window.localStorage.lq = !bool_setting_highQuality;
             func_setGraphicsQuality()
         };
         window.copyRoomLink = function() {
             $("#copyLink").hide();
             $("#copyLinkBox").show();
             let b = $("#roomlinkInput")[0];
-            b.value = "http://classic.wings.io/#" + A.roomID;
+            b.value = "http://classic.wings.io/#" + objG_wsConnection.roomID;
             eb = !0;
             func_isNotChrome() && ($("#copyButton")[0].childNodes[0].data = "Close",
             $("#safariTooltip").show());
@@ -1316,7 +1316,7 @@ Feedback:
         };
         window.setCopy = function() {
             let b = $("#roomlinkInput")[0];
-            b.value = "http://wings.io/#" + A.roomID;
+            b.value = "http://wings.io/#" + objG_wsConnection.roomID;
             b.setSelectionRange(0, b.value.length);
             b.select();
             b.focus();
@@ -1339,39 +1339,39 @@ Feedback:
         window.toggleMute = function() {
             func_displayMuteAudio()
         };
-        void 0 == N && (N = 1);
+        void 0 == num_setting_muteVol && (num_setting_muteVol = 1);
         "undefined" === typeof window.orientation || G || (window.location.href = "https://itunes.apple.com/us/app/wings.io/id1098205567?l=pt&ls=1&mt=8");
-        if (0 == N || Dc)
-            N = 1,
+        if (0 == num_setting_muteVol || bool_internet_explorer)
+            num_setting_muteVol = 1,
             G || func_displayMuteAudio();
-        Dc && $("#sndIcon").hide();
+        bool_internet_explorer && $("#sndIcon").hide();
         window.onblur = function() {
             window.didSendLoadingTime = !0;
-            wb = setTimeout(func_wsConnDisconnect, 3E5);
+            timeout_ws_conn = setTimeout(func_wsConnDisconnect, 3E5);
             wa = !1;
-            da = 0;
-            J && (J.sound.volume(0),
-            J.sound.volume(0, mb),
-            J.sound.volume(0, ia),
-            J.sound.volume(0, na),
-            nb && J.sound.volume(0, nb))
+            num_max_volume = 0;
+            objG_sfxManager && (objG_sfxManager.sound.volume(0),
+            objG_sfxManager.sound.volume(0, mb),
+            objG_sfxManager.sound.volume(0, ia),
+            objG_sfxManager.sound.volume(0, na),
+            nb && objG_sfxManager.sound.volume(0, nb))
         };
         window.onfocus = function() {
-            wb && (clearTimeout(wb),
-            wb = null);
+            timeout_ws_conn && (clearTimeout(timeout_ws_conn),
+            timeout_ws_conn = null);
             Lb = wa = !0;
-            da = 1 * N;
-            for (let b in B)
-                B[b].clearTrail()
+            num_max_volume = 1 * num_setting_muteVol;
+            for (let b in objD_planes)
+                objD_planes[b].clearTrail()
         };
         window.connectToServer = function(b) {
-            A.roomNumber = 0;
-            A.remoteHost = b;
-            A.connect();
+            objG_wsConnection.roomNumber = 0;
+            objG_wsConnection.remoteHost = b;
+            objG_wsConnection.connect();
             console.log("CONNECTING NOW to " + b)
         };
         window.disconnect = function() {
-            A.disconnect();
+            objG_wsConnection.disconnect();
             console.log("Disconnected.")
         };
         window.enterGame = function(b) {
@@ -1379,15 +1379,15 @@ Feedback:
             onfocus()
         };
         window.setInput = function(b, e, f) {
-            V.angle = b;
-            V.hover = e;
-            !Sb && f ? A.sendShooting(f) : Sb && !f && A.sendShooting(f);
+            objG_inputManager.angle = b;
+            objG_inputManager.hover = e;
+            !Sb && f ? objG_wsConnection.sendShooting(f) : Sb && !f && objG_wsConnection.sendShooting(f);
             Sb = f
         };
         window.wasKilled = function(b) {
-            V.angle = Math.PI;
-            V.hover = 1;
-            G && (Aa = !0,
+            objG_inputManager.angle = Math.PI;
+            objG_inputManager.hover = 1;
+            G && (bool_continueGame = !0,
             b = {
                 score: b
             },
@@ -1395,8 +1395,8 @@ Feedback:
         };
         window.connectionClosed = function() {
             console.log("Connection was closed");
-            V.angle = Math.PI;
-            V.hover = 1;
+            objG_inputManager.angle = Math.PI;
+            objG_inputManager.hover = 1;
             G && ("undefined" != typeof messageHandlers && messageHandlers.connectionClosed ? messageHandlers.connectionClosed(JSON.stringify({})) : window.webkit.messageHandlers.connectionClosed.postMessage({}))
         };
         if (G)
@@ -1405,7 +1405,7 @@ Feedback:
         document.oncontextmenu = function() {
             return !1
         };
-        G && (Tb = "Arial-BoldMT");
+        G && (str_font_name = "Arial-BoldMT");
         Class_StrokeStyle.prototype = {
             _value: "",
             _color: "#000000",
@@ -1417,7 +1417,7 @@ Feedback:
             _ctx: null,
             _dirty: !1,
             _scale: 1,
-            _font: "px 'proxima-nova-1','proxima-nova-2', " + Tb,
+            _font: "px 'proxima-nova-1','proxima-nova-2', " + str_font_name,
             _usingRoundedFrame: !1,
             _hmargin: 3,
             _vmargin: -1,
@@ -1516,7 +1516,7 @@ Feedback:
             _ctx: null,
             _dirty: !1,
             _scale: 1,
-            _font: "px 'proxima-nova-1','proxima-nova-2', " + Tb,
+            _font: "px 'proxima-nova-1','proxima-nova-2', " + str_font_name,
             _extrude: 3,
             _usingFrame: !1,
             _usingRoundedFrame: !1,
@@ -1687,20 +1687,20 @@ Feedback:
                 this.gameSheet = new Image;
                 this.gameSheet.src = "images/sheet.png";
                 this.gameSheet.onload = function() {
-                    p.loadGameSpritesheetFrames();
-                    p.spriteSheetLoaded = !0;
-                    p.loadAnimations();
-                    p.generateHudIcons();
-                    p.loaded = !0;
-                    p.onLoad()
+                    objG_assets.loadGameSpritesheetFrames();
+                    objG_assets.spriteSheetLoaded = !0;
+                    objG_assets.loadAnimations();
+                    objG_assets.generateHudIcons();
+                    objG_assets.loaded = !0;
+                    objG_assets.onLoad()
                 }
             };
             this.loadGameSpritesheetFrames = function() {
                 for (let b = gameSheetInfo.length, e = 0; e < b; e++) {
                     let f = gameSheetInfo[e]
-                      , d = new Class_RenderManager;
-                    d.setFrameInfo(f, this.gameSheet);
-                    this.frames[f[0]] = d
+                      , obj_renderManager = new Class_RenderManager;
+                    obj_renderManager.setFrameInfo(f, this.gameSheet);
+                    this.frames[f[0]] = obj_renderManager
                 }
                 for (let e = 1, b; 8 >= e; e++)
                     b = this.frames["plane" + e].renderTintedFrame("#FFFFFF").canvas,
@@ -1728,7 +1728,7 @@ Feedback:
             };
             this.loadPlaneDecal = function(b, e) {
                 let d = [];
-                for (let f = Mc[e], a = 1; 8 >= a; a++) {
+                for (let f = list_decal_colors[e], a = 1; 8 >= a; a++) {
                     let c;
                     c = this.frames["decal" + b + "_" + a].generateTintImage2(f.r, f.g, f.b, 1);
                     d.push(c)
@@ -1736,45 +1736,46 @@ Feedback:
                 this.planes[b][e] = d
             };
             this.loadAnimations = function() {
-                let b = new Class_Animation, e = new Class_Animation;
+                let obj_animation = new Class_Animation
+                  , obj_animation2 = new Class_Animation;
                 for (let f = 0; 13 > f; f++)
-                    b.addFrame(this.frames["s" + f]),
-                    e.addFrame(this.frames["s" + f].renderTintedFrame("#2b9bf5"));
-                b.setInterval(1E3 / 30);
-                X.addAnimationInfo("splash", b);
-                e.setInterval(1E3 / 30);
-                X.addAnimationInfo("splashReflex", e);
-                b = new Class_Animation;
-                b.addFrame(this.frames.e0);
-                b.addFrame(this.frames.e0);
-                b.addFrame(this.frames.e2);
-                b.addFrame(this.frames.e3);
-                b.addFrame(this.frames.e4);
-                b.addFrame(this.frames.e5);
-                b.addFrame(this.frames.e5);
-                b.addFrame(this.frames.e7);
-                b.addFrame(this.frames.e7);
-                b.addFrame(this.frames.e9);
-                b.addFrame(this.frames.e10);
-                b.addFrame(this.frames.e11);
-                b.addFrame(this.frames.e11);
-                b.addFrame(this.frames.e13);
-                b.addFrame(this.frames.e14);
-                b.addFrame(this.frames.e15);
-                b.addFrame(this.frames.e16);
-                b.addFrame(this.frames.e17);
-                b.addFrame(this.frames.e18);
-                b.addFrame(this.frames.e19);
-                b.addFrame(this.frames.e20);
-                b.addFrame(this.frames.e21);
-                b.addFrame(this.frames.e22);
-                b.setInterval(1E3 / 30);
-                X.addAnimationInfo("explosion", b)
+                    obj_animation.addFrame(this.frames["s" + f]),
+                    obj_animation2.addFrame(this.frames["s" + f].renderTintedFrame("#2b9bf5"));
+                obj_animation.setInterval(1E3 / 30);
+                objG_animationManager.addAnimationInfo("splash", obj_animation);
+                obj_animation2.setInterval(1E3 / 30);
+                objG_animationManager.addAnimationInfo("splashReflex", obj_animation2);
+                obj_animation = new Class_Animation;
+                obj_animation.addFrame(this.frames.e0);
+                obj_animation.addFrame(this.frames.e0);
+                obj_animation.addFrame(this.frames.e2);
+                obj_animation.addFrame(this.frames.e3);
+                obj_animation.addFrame(this.frames.e4);
+                obj_animation.addFrame(this.frames.e5);
+                obj_animation.addFrame(this.frames.e5);
+                obj_animation.addFrame(this.frames.e7);
+                obj_animation.addFrame(this.frames.e7);
+                obj_animation.addFrame(this.frames.e9);
+                obj_animation.addFrame(this.frames.e10);
+                obj_animation.addFrame(this.frames.e11);
+                obj_animation.addFrame(this.frames.e11);
+                obj_animation.addFrame(this.frames.e13);
+                obj_animation.addFrame(this.frames.e14);
+                obj_animation.addFrame(this.frames.e15);
+                obj_animation.addFrame(this.frames.e16);
+                obj_animation.addFrame(this.frames.e17);
+                obj_animation.addFrame(this.frames.e18);
+                obj_animation.addFrame(this.frames.e19);
+                obj_animation.addFrame(this.frames.e20);
+                obj_animation.addFrame(this.frames.e21);
+                obj_animation.addFrame(this.frames.e22);
+                obj_animation.setInterval(1E3 / 30);
+                objG_animationManager.addAnimationInfo("explosion", obj_animation)
             };
             this.generateTintedKillIcon = function(b, e, f, d) {
                 let a;
-                a = p.frames.iconkill;
-                frameIconR = p.frames.killR;
+                a = objG_assets.frames.iconkill;
+                frameIconR = objG_assets.frames.killR;
                 let c = a.generateRGBKs();
                 f = a.generateTintImage(c, b, e, f);
                 b = document.createElement("canvas");
@@ -1914,26 +1915,26 @@ Feedback:
                 this.warshipLoaded || (this.warshipImage = new Image,
                 this.warshipImage.src = "images/events/battleship.png",
                 this.warshipImage.onload = function() {
-                    p.warshipLoaded = !0;
-                    p.loadTintImage(p.warshipImage, function(b) {
-                        p.whiteWarshipImage = b;
-                        p.warshipTextureLoadCount++;
-                        p.verifyWarshipLoaded()
+                    objG_assets.warshipLoaded = !0;
+                    objG_assets.loadTintImage(objG_assets.warshipImage, function(b) {
+                        objG_assets.whiteWarshipImage = b;
+                        objG_assets.warshipTextureLoadCount++;
+                        objG_assets.verifyWarshipLoaded()
                     }, "#FFFFFF")
                 }
                 ,
                 this.cannonImage = new Image,
                 this.cannonImage.src = "images/events/shipcannon.png",
                 this.cannonImage.onload = function() {
-                    p.warshipTextureLoadCount++;
-                    p.verifyWarshipLoaded()
+                    objG_assets.warshipTextureLoadCount++;
+                    objG_assets.verifyWarshipLoaded()
                 }
                 ,
                 this.warshipIcon = new Image,
                 this.warshipIcon.src = "images/events/warshipIcon.png",
                 this.warshipIcon.onload = function() {
-                    p.warshipTextureLoadCount++;
-                    p.verifyWarshipLoaded()
+                    objG_assets.warshipTextureLoadCount++;
+                    objG_assets.verifyWarshipLoaded()
                 }
                 )
             };
@@ -1941,9 +1942,9 @@ Feedback:
                 this.asteroidLoaded || (this.asteroidImage = new Image,
                 this.asteroidImage.src = "images/events/asteroid.png",
                 this.asteroidImage.onload = function() {
-                    p.asteroidLoaded = !0;
-                    p.loadTintImage(p.asteroidImage, function(b) {
-                        p.whiteAsteroidImage = b
+                    objG_assets.asteroidLoaded = !0;
+                    objG_assets.loadTintImage(objG_assets.asteroidImage, function(b) {
+                        objG_assets.whiteAsteroidImage = b
                     }, "#FF3333")
                 }
                 ,
@@ -1965,36 +1966,36 @@ Feedback:
             b.keydown = function(a) {
                 67 == a.keyCode && Y && eb ? setTimeout(function() {
                     func_displayCopyLink()
-                }, 10) : Y || (32 == a.keyCode ? Z && A.sendShooting(!0) : 188 != a.keyCode && 49 != a.keyCode && (222 == a.keyCode ? bool_drawUI = !bool_drawUI : 51 == a.keyCode ? (bool_drawGradient = !bool_drawGradient,
-                console.log("Toggled Gradient to " + bool_drawGradient)) : 52 == a.keyCode ? (ob = !ob,
-                console.log("Toggled drawClouds to " + ob)) : 53 == a.keyCode ? (bool_drawWater = !bool_drawWater,
+                }, 10) : Y || (32 == a.keyCode ? Z && objG_wsConnection.sendShooting(!0) : 188 != a.keyCode && 49 != a.keyCode && (222 == a.keyCode ? bool_drawUI = !bool_drawUI : 51 == a.keyCode ? (bool_drawGradient = !bool_drawGradient,
+                console.log("Toggled Gradient to " + bool_drawGradient)) : 52 == a.keyCode ? (bool_drawClouds = !bool_drawClouds,
+                console.log("Toggled drawClouds to " + bool_drawClouds)) : 53 == a.keyCode ? (bool_drawWater = !bool_drawWater,
                 console.log("Toggled drawWater to " + bool_drawWater)) : 54 == a.keyCode ? (bool_drawExplosions = !bool_drawExplosions,
                 console.log("Toggled drawExplosions to " + bool_drawExplosions)) : 55 == a.keyCode ? (bool_drawSun = !bool_drawSun,
                 console.log("Toggled drawSun to " + bool_drawSun)) : 56 == a.keyCode ? (bool_drawItems = !bool_drawItems,
                 console.log("Toggled drawItems to " + bool_drawItems)) : 57 == a.keyCode ? (bool_drawTrails = !bool_drawTrails,
                 console.log("Toggled drawTrails to " + bool_drawTrails)) : 48 == a.keyCode ? (bool_drawSplashes = !bool_drawSplashes,
                 console.log("Toggled drawSplashes to " + bool_drawSplashes)) : 27 == a.keyCode ? (func_showAds(),
-                da = .05 * N,
+                num_max_volume = .05 * num_setting_muteVol,
                 $("#overlay").show(),
                 funcR_hc_showPf(),
                 Y = !0,
                 Z || (ka = 1,
-                v = null)) : 70 == a.keyCode && (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement ? document.exitFullscreen ? document.exitFullscreen() : document.msExitFullscreen ? document.msExitFullscreen() : document.mozCancelFullScreen ? document.mozCancelFullScreen() : document.webkitExitFullscreen && document.webkitExitFullscreen() : document.documentElement.requestFullscreen ? document.documentElement.requestFullscreen() : document.documentElement.msRequestFullscreen ? document.documentElement.msRequestFullscreen() : document.documentElement.mozRequestFullScreen ? document.documentElement.mozRequestFullScreen() : document.documentElement.webkitRequestFullscreen && document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT),
-                F.clearTip())))
+                objG_player_plane = null)) : 70 == a.keyCode && (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement ? document.exitFullscreen ? document.exitFullscreen() : document.msExitFullscreen ? document.msExitFullscreen() : document.mozCancelFullScreen ? document.mozCancelFullScreen() : document.webkitExitFullscreen && document.webkitExitFullscreen() : document.documentElement.requestFullscreen ? document.documentElement.requestFullscreen() : document.documentElement.msRequestFullscreen ? document.documentElement.msRequestFullscreen() : document.documentElement.mozRequestFullScreen ? document.documentElement.mozRequestFullScreen() : document.documentElement.webkitRequestFullscreen && document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT),
+                objGUI_gameInfo.clearTip())))
             };
             b.keyup = function(a) {
-                Y || 32 != a.keyCode || (Z ? A.sendShooting(!1) : (1 == ka ? (ka = 0,
-                L.followTopPlayer()) : (ka = 1,
-                v = null),
-                u.isSpaceWars() && setTimeout(L.respawnParticles, 500)))
+                Y || 32 != a.keyCode || (Z ? objG_wsConnection.sendShooting(!1) : (1 == ka ? (ka = 0,
+                objG_followMode.followTopPlayer()) : (ka = 1,
+                objG_player_plane = null),
+                objG_eventManager.isSpaceWars() && setTimeout(objG_followMode.respawnParticles, 500)))
             };
             b.mousedown = function(a) {
-                Y || (Z ? 0 == a.button && A.sendShooting(!0) : 0 == ka ? 0 == a.button ? L.PlayerFollowing(!0) : 2 == a.button && L.PlayerFollowing(!1) : (e = !0,
+                Y || (Z ? 0 == a.button && objG_wsConnection.sendShooting(!0) : 0 == ka ? 0 == a.button ? objG_followMode.PlayerFollowing(!0) : 2 == a.button && objG_followMode.PlayerFollowing(!1) : (e = !0,
                 f = a.clientX,
                 d = a.clientY))
             };
             b.mouseup = function(a) {
-                Y || (Z ? 0 == a.button && A.sendShooting(!1) : e = !1)
+                Y || (Z ? 0 == a.button && objG_wsConnection.sendShooting(!1) : e = !1)
             };
             b.mousemove = function(a) {
                 if (!Y && (b.mouseMoved = !0,
@@ -2002,11 +2003,11 @@ Feedback:
                 rc = a.clientY,
                 e)) {
                     let c = a.clientY - d
-                      , g = z.x - (a.clientX - f)
+                      , g = objGUI_anchor.x - (a.clientX - f)
                       , h = document.y - c;
                     h < -E / 2 ? h = -E / 2 : h > E / 2 && (h = E / 2);
                     g < -$_sub ? g = -$_sub : g > $_sub && (g = $_sub);
-                    z.setPosition(g, h);
+                    objGUI_anchor.setPosition(g, h);
                     f = a.clientX;
                     d = a.clientY
                 }
@@ -2025,9 +2026,9 @@ Feedback:
                 let f, d, a, c, g, h, q, n, k, m, l, y, r, p;
                 for (    f = [], d = 0; d < b.length; d++) {
                         a = b[d];
-                    if (void 0 == B[a.id])
+                    if (void 0 == objD_planes[a.id])
                         f.push(a);
-                    else if (a.weapon == Qa) {
+                    else if (a.weapon == id_weapon_railgun) {
                         e.lineWidth = 2 + 5 * (1 - a.a);
                         e.beginPath();
                             c = parseInt(255 * a.a)
@@ -2066,7 +2067,7 @@ Feedback:
                         e.stroke();
                         a.a -= .04;
                         0 > a.a && f.push(a)
-                    } else if (u.isSpaceWars())
+                    } else if (objG_eventManager.isSpaceWars())
                         c = 45,
                         a.isKing && (c = 90),
                         g = a.curPosition.x,
@@ -2085,7 +2086,7 @@ Feedback:
                         e.lineTo(q, m),
                         e.stroke(),
                         e.lineWidth = 4,
-                        e.strokeStyle = "rgba(150,255,150,1.0)") : a.weapon != $a ? (e.shadowColor = "red",
+                        e.strokeStyle = "rgba(150,255,150,1.0)") : a.weapon != id_weapon_trishoot ? (e.shadowColor = "red",
                         e.lineWidth = 7,
                         e.strokeStyle = "rgba(255,50,50,1.0)",
                         e.beginPath(),
@@ -2166,7 +2167,7 @@ Feedback:
             };
             this.addShot = function(e, f, d, a) {
                 if (func_isTimeElapsed_50ms() && xa) {
-                    let c = B[e];
+                    let c = objD_planes[e];
                     if (c) {
                         let g = {};
                         g.id = e;
@@ -2177,7 +2178,7 @@ Feedback:
                             y: 10 * d
                         };
                         g.special = 0;
-                        u.isInstagib() ? g.special = 1 : u.isSpaceWars() && (g.special = 2);
+                        objG_eventManager.isInstagib() ? g.special = 1 : objG_eventManager.isSpaceWars() && (g.special = 2);
                         g.a = 1;
                         g.weapon = a;
                         f = func_rotatePoint(0, -10, c.angle);
@@ -2189,7 +2190,7 @@ Feedback:
                         };
                         c = g.hitPosition.x - e;
                         f = g.hitPosition.y - d;
-                        a != za && (a = Math.sqrt(c * c + f * f),
+                        a != id_weapon_superweapon && (a = Math.sqrt(c * c + f * f),
                         g.direction = {
                             x: c / a,
                             y: f / a
@@ -2202,7 +2203,7 @@ Feedback:
                         (func_isInsideBox(e, d, 100) || func_isInsideBox(g.hitPosition.x, g.hitPosition.y, 100)) && b.push(g));
                         a = E / 2;
                         g.hitPosition.y > a && (e = f / c,
-                        oa.addSplash((a - (g.hitPosition.y - e * g.hitPosition.x)) / e, a + 6, 1, !1))
+                        obj_particleImpacts.addSplash((a - (g.hitPosition.y - e * g.hitPosition.x)) / e, a + 6, 1, !1))
                     }
                 }
             };
@@ -2210,29 +2211,29 @@ Feedback:
                 let d = 10 * b
                   , a = 10 * f;
                 if (func_isInsideBox(d, a, 100) && func_isTimeElapsed_50ms()) {
-                    let c = X.createAnimation("explosion");
+                    let c = objG_animationManager.createAnimation("explosion");
                     c.setScale(1);
                     c.posX = 10 * b;
                     c.posY = 10 * f;
-                    X.runAnimationBehind(c);
-                    d = 1 - func_calculateDistance2D(d, a, H.x, H.y) / Ra;
-                    J.playSound(Qc, d, 1, Sa, null)
+                    objG_animationManager.runAnimationBehind(c);
+                    d = 1 - func_calculateDistance2D(d, a, H.x, H.y) / num_sound_max_distance;
+                    objG_sfxManager.playSound(str_sfxid_mexpl, d, 1, const_Sa_3, null)
                 }
             };
             this.addSplash = function(b, f, d, a) {
-                if (bool_drawSplashes && !u.isSpaceWars() && func_isInsideBox(b, f, 100) && func_isTimeElapsed_50ms()) {
-                    let c = X.createAnimation("splash")
-                      , g = X.createAnimation("splashReflex");
+                if (bool_drawSplashes && !objG_eventManager.isSpaceWars() && func_isInsideBox(b, f, 100) && func_isTimeElapsed_50ms()) {
+                    let c = objG_animationManager.createAnimation("splash")
+                      , g = objG_animationManager.createAnimation("splashReflex");
                     c.setScale(d);
                     a && (c.scaleX *= 1.2 + .4 * Math.random());
                     c.posX = b;
                     c.posY = f - 61 * c.scaleY / 2;
-                    X.runAnimation(c);
+                    objG_animationManager.runAnimation(c);
                     g.scaleX = c.scaleX;
                     g.posX = c.posX;
                     g.posY = c.posY + 77;
                     g.scaleY = -2;
-                    X.runAnimationLayer2(g)
+                    objG_animationManager.runAnimationLayer2(g)
                 }
             }
         }
@@ -2246,7 +2247,7 @@ Feedback:
               , g
               , h
               , q
-              , n = new Class_UI_KillStatus
+              , objUI_killStatus = new Class_UI_KillStatus
               , k
               , m
               , l
@@ -2267,7 +2268,7 @@ Feedback:
               , Vb
               , ea = 1
               , Ga = 0
-              , D = new Class_UI_ActivityMessages
+              , objUI_ActivityMessages = new Class_UI_ActivityMessages
               , Fa
               , ua
               , E
@@ -2313,23 +2314,23 @@ Feedback:
                 else if (0 < oa)
                     this.DrawWarshipDestroyedLabel(I);
                 else {
-                    C && 0 < Gb && (!Y || Aa) && this.drawLeaderboard(I);
-                    if (v && !Y) {
+                    C && 0 < numG_player_count && (!Y || bool_continueGame) && this.drawLeaderboard(I);
+                    if (objG_player_plane && !Y) {
                         I.save();
                         G ? I.scale(1.5 * t, 1.5 * t) : I.scale(t, t);
-                        K = p.frames.indicator;
+                        K = objG_assets.frames.indicator;
                         I.translate(K.width / 2 + 6, K.height / 2 + 6);
                         K.draw(I);
-                        this.DrawCurrentWeaponIcon(I, v.weapon);
+                        this.DrawCurrentWeaponIcon(I, objG_player_plane.weapon);
                             r = 19
                           , P = 0;
                         G && (r = 24,
                         P = -5);
                         null == pa && (pa = new Class_StrokeStyle(r,"#FFFFFF"));
-                        R = u.isInstagib();
-                        if (z != v.GetAmmo() || null == s) {
+                        R = objG_eventManager.isInstagib();
+                        if (z != objG_player_plane.GetAmmo() || null == s) {
                             S = "\u221e";
-                            R || (z = v.GetAmmo(),
+                            R || (z = objG_player_plane.GetAmmo(),
                             -1 < z && (S = z));
                             pa.setValue(S);
                             s = pa.render();
@@ -2405,13 +2406,13 @@ Feedback:
                     I.globalAlpha = K,
                     I.drawImage(r, 0, 0),
                     I.restore());
-                    A.hasConnection && xa && (u.waiting && !G ? this.DrawWarmupTime(I) : u.isInEvent() ? this.DrawEventLabel(I) : La && !Y && this.DrawLaserDeployed(I));
-                    null == k && n.shouldDraw() && (I.save(),
+                    objG_wsConnection.hasConnection && xa && (objG_eventManager.waiting && !G ? this.DrawWarmupTime(I) : objG_eventManager.isInEvent() ? this.DrawEventLabel(I) : La && !Y && this.DrawLaserDeployed(I));
+                    null == k && objUI_killStatus.shouldDraw() && (I.save(),
                     I.translate(.5 * canvas.width, .67 * canvas.height),
-                    n.draw(I),
+                    objUI_killStatus.draw(I),
                     I.restore());
                     Z || Y || (O = "FREE MODE",
-                    0 == ka && (O = v ? "Following " + func_renameBlankPlayerNames(v.name) : "FOLLOW MODE"),
+                    0 == ka && (O = objG_player_plane ? "Following " + func_renameBlankPlayerNames(objG_player_plane.name) : "FOLLOW MODE"),
                     c || (c = new Class_TextStyle(30 * t,"#ffd118","#b56006")),
                     c.setValue(O),
                     c.setUsingFrame(!0),
@@ -2433,7 +2434,7 @@ Feedback:
                     O = Math.sqrt(O, 10)) : 3700 < H && (O = 1 - (H - 3700) / 300,
                     O = Math.sqrt(O, 10)),
                     I.drawImage(Ia, Ka / 2 - Ia.width / 2, 1.1 * Ia.height * O - Ia.height)) : Ta = null);
-                    Y || G || D.draw(I);
+                    Y || G || objUI_ActivityMessages.draw(I);
                     !Y && 0 < qa && this.DrawKing(I);
                     ta && (ta = !1);
                     b != t && (c = g = null,
@@ -2441,17 +2442,17 @@ Feedback:
                 }
             };
             this.DrawKing = function(a) {
-                if (F && 0 < F.length && 0 < Object.keys(B).length) {
-                    let c = B[F[0]], d;
+                if (F && 0 < F.length && 0 < Object.keys(objD_planes).length) {
+                    let c = objD_planes[F[0]], d;
                     if (c) {
                         d = func_renameBlankPlayerNames(c.name);
-                        v && I != c.id && c.id == v.id && J.playSound(Tc, 1, 1, 1, null);
+                        objG_player_plane && I != c.id && c.id == objG_player_plane.id && objG_sfxManager.playSound(str_sfxid_king, 1, 1, 1, null);
                         I = c.id;
                         d != Fa && (c = 25,
                         G && (c = 35),
                         ua = new Class_TextStyle(c * t,"#fe9b00","#6e3800"),
                         c = " ",
-                        Ba || (c = ""),
+                        bool_setting_highQuality || (c = ""),
                         G && (c = "  "),
                         ua.setValue(c + "  King: " + d),
                         ua.setUsingRoundedFrame(!0));
@@ -2462,12 +2463,12 @@ Feedback:
                     d = .83 * canvas.height,
                     a.drawImage(E, .5 * canvas.width - E.width / 2, d),
                     c = 20,
-                    Ba || (c = 13),
+                    bool_setting_highQuality || (c = 13),
                     a.translate(.5 * canvas.width - E.width / 2 + c, d + E.height / 2 - 2 * t),
                     d = 1,
                     G && (d = 1.5),
                     a.scale(t * d, t * d),
-                    p.frames.crown.draw(a),
+                    objG_assets.frames.crown.draw(a),
                     a.restore())
                 }
             };
@@ -2486,30 +2487,30 @@ Feedback:
                 c = .05 * canvas.height;
                 a.drawImage(ab, .5 * canvas.width - ab.width / 2, c);
                 d = 30;
-                Ba || (d = 20);
+                bool_setting_highQuality || (d = 20);
                 a.translate(.5 * canvas.width - ab.width / 2 + d, c + ab.height / 2);
                 a.scale(t, t);
-                p.frames.laser.draw(a);
+                objG_assets.frames.laser.draw(a);
                 a.restore()
             };
             this.DrawRank = function(a) {
-                0 < v.rank && (void 0 == rankCanvas && (rankCanvas = document.createElement("canvas"),
+                0 < objG_player_plane.rank && (void 0 == rankCanvas && (rankCanvas = document.createElement("canvas"),
                 rankCanvas.width = 200,
                 rankCanvas.height = 200,
                 rankCanvasContext = rankCanvas.getContext("2d")),
-                lastRankNumber != v.rank && (rankCanvasContext.clearRect(0, 0, 200, 200),
+                lastRankNumber != objG_player_plane.rank && (rankCanvasContext.clearRect(0, 0, 200, 200),
                 rankCanvasContext.globalAlpha = .3,
                 rankCanvasContext.fillStyle = "rgba(0,0,0,1.0)",
                 func_drawRoundedRectangle(rankCanvasContext, 0, 0, 200, 200, 30 * t),
                 ca = new Class_StrokeStyle(15 * t,"#EEEEEE"),
-                ca.setValue(v.rank),
+                ca.setValue(objG_player_plane.rank),
                 ca.setUsingRoundedFrame(!1),
                 fa = ca.render(),
-                lastRankNumber = v.rank),
+                lastRankNumber = objG_player_plane.rank),
                 a.drawImage(rankCanvas, Ka - 200, ib - 200))
             };
             this.DrawScore = function(a) {
-                if (0 < v.rank) {
+                if (0 < objG_player_plane.rank) {
                     let c = 16 * t
                       , d = "Arial Black";
                     G && (c = 36 * t,
@@ -2525,7 +2526,7 @@ Feedback:
                     g = b);
                     void 0 == r && (r = document.createElement("canvas"),
                     K = r.getContext("2d"));
-                    if (-1 != v.score)
+                    if (-1 != objG_player_plane.score)
                         for (r.width = g,
                         r.height = h,
                         K.font = c + "px 'proxima-nova-1','proxima-nova-2', " + d,
@@ -2537,20 +2538,20 @@ Feedback:
                             d = 0,
                             0 != c ? (K.fillStyle = "rgba(100,49,0,1.0)",
                             d = c) : K.fillStyle = "rgba(255,156,0,1.0)",
-                            K.fillText(v.rank + ". You ", e, k + d),
-                            g = K.measureText(v.score).width,
-                            K.fillText(v.score, b - e - g, k + d);
+                            K.fillText(objG_player_plane.rank + ". You ", e, k + d),
+                            g = K.measureText(objG_player_plane.score).width,
+                            K.fillText(objG_player_plane.score, b - e - g, k + d);
                     a.drawImage(r, n, f + 5)
                 }
             };
             this.DrawWarmupTime = function(a) {
                 if (U) {
                     U = !1;
-                    let c = u.endTime - T;
+                    let c = objG_eventManager.endTime - T;
                     if (0 > parseInt(c))
                         return;
-                    W = new Class_TextStyle(23 * t,u.getEventColor(),"#6e3800");
-                    W.setValue(u.getEventName());
+                    W = new Class_TextStyle(23 * t,objG_eventManager.getEventColor(),"#6e3800");
+                    W.setValue(objG_eventManager.getEventName());
                     N = W.render();
                     $_sub = new Class_TextStyle(20 * t,"#fe9b00","#6e3800");
                     $_sub.setValue("STARTS IN");
@@ -2576,13 +2577,13 @@ Feedback:
             this.DrawEventLabel = function(a) {
                 if (U) {
                     U = !1;
-                    let c = u.endTime - T;
+                    let c = objG_eventManager.endTime - T;
                     0 > parseInt(c) && (c = 0);
-                    W = new Class_TextStyle(25 * t,u.getEventColor(),"#6e3800");
-                    W.setValue(u.getEventName());
+                    W = new Class_TextStyle(25 * t,objG_eventManager.getEventColor(),"#6e3800");
+                    W.setValue(objG_eventManager.getEventName());
                     N = W.render();
                     Q = new Class_TextStyle(25 * t,"#fe9b00","#6e3800");
-                    u.isWarship() ? 0 < u.warshipsLeft ? Q.setValue("Warships Left: " + u.warshipsLeft) : 0 == u.warshipsEscaped ? Q.setValue("All Warships Destroyed!") : Q.setValue(u.warshipsDestroyed + " Destroyed, " + u.warshipsEscaped + " Escaped!") : Q.setValue(func_millisToTimeFormat(c));
+                    objG_eventManager.isWarship() ? 0 < objG_eventManager.warshipsLeft ? Q.setValue("Warships Left: " + objG_eventManager.warshipsLeft) : 0 == objG_eventManager.warshipsEscaped ? Q.setValue("All Warships Destroyed!") : Q.setValue(objG_eventManager.warshipsDestroyed + " Destroyed, " + objG_eventManager.warshipsEscaped + " Escaped!") : Q.setValue(func_millisToTimeFormat(c));
                     M = Q.render()
                 }
                 if (M) {
@@ -2655,42 +2656,42 @@ Feedback:
                 Ga = 0));
                 let d = 0, b = 0, g = 0, h, e = !0;
                 switch (O) {
-                case Ua:
+                case id_weapon_missile:
                     d = 254;
                     b = 69;
                     g = 31;
-                    h = p.frames.iconRocket;
+                    h = objG_assets.frames.iconRocket;
                     break;
-                case Ja:
+                case id_weapon_machinegun:
                     d = 112;
                     b = 130;
                     g = 144;
-                    h = p.frames.iconMachinegun;
+                    h = objG_assets.frames.iconMachinegun;
                     break;
-                case $a:
+                case id_weapon_trishoot:
                     d = 243;
                     b = 150;
                     g = 40;
-                    h = p.frames.iconTrishoot;
+                    h = objG_assets.frames.iconTrishoot;
                     break;
-                case Qa:
+                case id_weapon_railgun:
                     d = 40;
                     b = 179;
                     g = 243;
-                    h = p.frames.iconRailgun;
+                    h = objG_assets.frames.iconRailgun;
                     break;
-                case bb:
+                case id_weapon_punch:
                     d = 181;
                     b = 25;
                     g = 255;
-                    h = p.frames.iconMelee;
+                    h = objG_assets.frames.iconMelee;
                     break;
-                case cb:
+                case id_weapon_bombs:
                     g = b = d = 127;
-                    h = p.frames.iconBombdrop;
+                    h = objG_assets.frames.iconBombdrop;
                     break;
-                case za:
-                    h = p.frames.iconLaserFull;
+                case id_weapon_superweapon:
+                    h = objG_assets.frames.iconLaserFull;
                     e = !1;
                     break;
                 default:
@@ -2721,8 +2722,8 @@ Feedback:
             this.update = function(a) {
                 m += a;
                 H += a;
-                D.update(a);
-                n.update(a);
+                objUI_ActivityMessages.update(a);
+                objUI_killStatus.update(a);
                 V -= a;
                 0 > V && (V += 1E3,
                 U = !0);
@@ -2743,7 +2744,7 @@ Feedback:
                 G && (m = 5);
                 10 < m && (m = 10);
                 for (l = 0; l < m; l++) {
-                    r = B[F[l]];
+                    r = objD_planes[F[l]];
                     r && (S += h + b,
                     r = a.measureText(func_renameBlankPlayerNames(r.name)).width,
                     I < r && (I = r))
@@ -2763,7 +2764,7 @@ Feedback:
                 a.fillStyle = "rgba(254,102,3,1.0)";
                 func_drawRoundedRectangleHalf(a, 0, 0, R, f * t, 30 * t);
                 l = "LEADERBOARD";
-                u.isInstagib() && (l = "KILLS");
+                objG_eventManager.isInstagib() && (l = "KILLS");
                 a.font = g + "px 'proxima-nova-1','proxima-nova-2', " + q;
                 a.textBaseline = "hanging";
                 r = a.measureText(l).width;
@@ -2774,7 +2775,7 @@ Feedback:
                 a.font = k;
                 e += n;
                 for (l = 0; l < m; l++)
-                    if (r = B[F[l]]) {
+                    if (r = objD_planes[F[l]]) {
                         for (n = 2; 0 <= n; n--) {
                             g = ". ";
                             r.inGame && r.id != qa || (g = ".     ");
@@ -2796,7 +2797,7 @@ Feedback:
                                 9 == l && (y = 50),
                                 a.translate(y * t * f + I, e + g + 7 * t * f),
                                 a.scale(t * f, t * f),
-                                p.frames.crown.draw(a),
+                                objG_assets.frames.crown.draw(a),
                                 a.restore());
                             else {
                                 a.save();
@@ -2804,7 +2805,7 @@ Feedback:
                                 9 == l && (y = 50);
                                 a.translate(y * t * f + I, e + g + 7 * t * f);
                                 a.scale(t * f, t * f);
-                                p.frames.skull.draw(a);
+                                objG_assets.frames.skull.draw(a);
                                 a.restore()
                             }
                             a.fillText(r.score, R - d - q, e + g)
@@ -2816,7 +2817,7 @@ Feedback:
                 a.drawImage(C, Ka - R - 5, 5)
             };
             this.addActivityMessage = function(a) {
-                G || D.addActivityMessage(a)
+                G || objUI_ActivityMessages.addActivityMessage(a)
             };
             this.addMessage = function(c, b, g) {
                 e = c;
@@ -2852,13 +2853,13 @@ Feedback:
                 ta = !0
             };
             this.addBonus = function(a, c) {
-                n.push(a, c)
+                objUI_killStatus.push(a, c)
             };
             this.clearBonusDisplay = function() {
-                n.clear()
+                objUI_killStatus.clear()
             };
             this.clearNearMiss = function() {
-                n.clearNearMiss()
+                objUI_killStatus.clearNearMiss()
             };
             this.setLastWinner = function(a, c) {
                 aa = func_renameBlankPlayerNames(a);
@@ -2908,18 +2909,18 @@ Feedback:
               , num_spawn_cooldown_ms = 0
               , f = 100
               , d = !1
-              , a = new Class_ParticleTrails
-              , c
+              , obj_particleTrails = new Class_ParticleTrails
+              , obj_particleFlags
               , g
               , h = 0
               , q = this.laserFrame = this.laserTimer = 0
-              , n
+              , obj_particleManager
               , k = 0
               , m = 0
               , l = 1
               , y = 0
               , r = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1]
-              , K
+              , obj_scoreAccumInfo
               , pa = !1
               , s = 0
               , w = 0
@@ -2971,30 +2972,30 @@ Feedback:
             this.lastImage;
             this.lastImageReflex;
             this.flipLastImage = 1;
-            this.planeImages = p.planeFrames;
-            this.planeImagesReflex = p.planeFramesReflex;
+            this.planeImages = objG_assets.planeFrames;
+            this.planeImagesReflex = objG_assets.planeFramesReflex;
             this.decalFrames;
             this.decalID = this.colorID = 0;
             this.isShooting = this.isBot = this.hadHover = this.hover = !1;
-            a.fixedColor = !0;
-            this.weapon = Ja;
+            obj_particleTrails.fixedColor = !0;
+            this.weapon = id_weapon_machinegun;
             this.ammo = -1;
             this.update = function(b) {
                 if (this.inGame) {
                     let g = 400, l;
-                    ea && this.weapon == za && (g = 800);
-                    func_isInsideBox(this.x, this.y, g) ? pa || (a && a.clear(),
-                    c && c.clear(),
+                    ea && this.weapon == id_weapon_superweapon && (g = 800);
+                    func_isInsideBox(this.x, this.y, g) ? pa || (obj_particleTrails && obj_particleTrails.clear(),
+                    obj_particleFlags && obj_particleFlags.clear(),
                     pa = !0) : pa = !1;
-                    g = this.weapon == za && this.isShooting;
+                    g = this.weapon == id_weapon_superweapon && this.isShooting;
                     0 < num_spawn_cooldown_ms && (f -= b,
                     0 > f && (f = 100,
                     d = !d),
                     num_spawn_cooldown_ms -= b);
-                    L.moveLeft && (this.controlAngle += this.rotSpeed);
-                    L.moveRight && (this.controlAngle -= this.rotSpeed);
+                    objG_followMode.moveLeft && (this.controlAngle += this.rotSpeed);
+                    objG_followMode.moveRight && (this.controlAngle -= this.rotSpeed);
                     360 < this.controlAngle ? this.controlAngle = 0 : 0 > this.controlAngle && (this.controlAngle = 360);
-                    let k = func_clamp((T - this.lastUpdate) / Jb, 0, 1);
+                    let k = func_clamp((T - this.lastUpdate) / num_global_physics_step_ms, 0, 1);
                     this.prevX = this.x;
                     this.prevY = this.y;
                     let m = k * (this.dstY - this.origY) + this.origY;
@@ -3003,16 +3004,16 @@ Feedback:
                     this.angle = k * (this.dstAngle - this.origAngle) + this.origAngle;
                     k = this.x + 12 * Math.sin(-this.angle);
                     m = this.y + 12 * Math.cos(-this.angle);
-                    a && (a.setPosition(k, m),
-                    u.isSpaceWars() && (a.width = .6,
-                    this.id == qa && "#00FF00" != a.style && (a.style = "#00FF00")));
-                    c && c.setPosition(k, m);
-                    (k = !this.hover && !n && !this.isInvulnerable() && !g) ? 0 == this.hadHover && (this.hadHover = !0,
-                    a.push()) : this.hadHover = !1;
-                    a && (a.enabled = k,
-                    a.update(b));
-                    c && (c.enabled = k,
-                    c.update(b));
+                    obj_particleTrails && (obj_particleTrails.setPosition(k, m),
+                    objG_eventManager.isSpaceWars() && (obj_particleTrails.width = .6,
+                    this.id == qa && "#00FF00" != obj_particleTrails.style && (obj_particleTrails.style = "#00FF00")));
+                    obj_particleFlags && obj_particleFlags.setPosition(k, m);
+                    (k = !this.hover && !obj_particleManager && !this.isInvulnerable() && !g) ? 0 == this.hadHover && (this.hadHover = !0,
+                    obj_particleTrails.push()) : this.hadHover = !1;
+                    obj_particleTrails && (obj_particleTrails.enabled = k,
+                    obj_particleTrails.update(b));
+                    obj_particleFlags && (obj_particleFlags.enabled = k,
+                    obj_particleFlags.update(b));
                     k = E / 2;
                     m = k - 150;
                     if (this.y > m && this.y < k && 0 >= h) {
@@ -3020,55 +3021,55 @@ Feedback:
                         l = Math.random() / 2
                           , m = (.5 + (.5 - (k - this.y) / (k - m) * .5)) * (.95 + l)
                           , l = 20 * Math.sin(this.angle);
-                        oa.addSplash(this.x - l, k + 5 * Math.random(), m, !0)
+                        obj_particleImpacts.addSplash(this.x - l, k + 5 * Math.random(), m, !0)
                     }
                     h -= b;
-                    n && (k = this.x + 12 * Math.sin(-this.angle),
+                    obj_particleManager && (k = this.x + 12 * Math.sin(-this.angle),
                     m = this.y + 12 * Math.cos(-this.angle),
-                    n.setPosition(k, m),
-                    n.update(b));
-                    v == this && (hb = 0 == ha ? hb + b : 0);
-                    2 != ha ? B[gb] && (w = Math.sqrt(hb / uc),
+                    obj_particleManager.setPosition(k, m),
+                    obj_particleManager.update(b));
+                    objG_player_plane == this && (hb = 0 == ha ? hb + b : 0);
+                    2 != ha ? objD_planes[gb] && (w = Math.sqrt(hb / uc),
                     1 < w && (w = 1),
                     s -= b,
                     0 >= s && (0 == ha ? (s = .7 > w ? 200 + s : 80 + s,
-                    J.playSound(Wb, .1, 1, Q, null)) : 1 == ha && (F.showTargetLockedMessage(),
+                    objG_sfxManager.playSound(str_sfxid_lockon, .1, 1, const_Q_0, null)) : 1 == ha && (objGUI_gameInfo.showTargetLockedMessage(),
                     s = 50 + s,
-                    J.playSound(Wb, .1, 1.58, Q, null)))) : (s = 0,
-                    F.clearTargetLockedMessage());
+                    objG_sfxManager.playSound(str_sfxid_lockon, .1, 1.58, const_Q_0, null)))) : (s = 0,
+                    objGUI_gameInfo.clearTargetLockedMessage());
                     0 < ma ? (t -= b,
                     0 > t && (t = 100,
-                    J.playSound(Wb, .1, .5, Q, null))) : t = 0;
-                    this == v && (ia || J.playSound(Wc, .6, 1, Q, function(a) {
+                    objG_sfxManager.playSound(str_sfxid_lockon, .1, .5, const_Q_0, null))) : t = 0;
+                    this == objG_player_plane && (ia || objG_sfxManager.playSound(str_sfxid_planeloop, .6, 1, const_Q_0, function(a) {
                         ia = a
                     }),
-                    na || J.playSound(Xc, 0, 1, Q, function(a) {
+                    na || objG_sfxManager.playSound(str_sfxid_waterloop, 0, 1, const_Q_0, function(a) {
                         na = a
                     }),
                     k = (E / 2 - this.y) / 1E3,
                     1 < k && (k = 1),
-                    ia && (m = J.sound._nodeById(ia),
-                    J.sound.volume(.5 * da, ia),
-                    .01 > k && !u.isSpaceWars() ? m && m.bufferSource && (m.bufferSource.playbackRate.value = .1) : (l = this.speed / 30,
+                    ia && (m = objG_sfxManager.sound._nodeById(ia),
+                    objG_sfxManager.sound.volume(.5 * num_max_volume, ia),
+                    .01 > k && !objG_eventManager.isSpaceWars() ? m && m.bufferSource && (m.bufferSource.playbackRate.value = .1) : (l = this.speed / 30,
                     1 < l && (l = 1),
                     x += (.3 + .8 * l - x) / 30,
                     m && m.bufferSource && (m.bufferSource.playbackRate.value = x))),
                     na && (m = 0,
-                    .2 > k && .01 < k && !u.isSpaceWars() && (m = 1.7 * (.2 - k)),
-                    J.sound.volume(m * da, na)));
+                    .2 > k && .01 < k && !objG_eventManager.isSpaceWars() && (m = 1.7 * (.2 - k)),
+                    objG_sfxManager.sound.volume(m * num_max_volume, na)));
                     g ? (k = func_calculateDistance2D(this.x, this.y, H.x, H.y),
                     g = 1 - k / 3E3,
                     1 < g && (g = 1),
                     .1 > g && (g = 0),
-                    0 == Fa ? (J.playSound(Yc, .2 * g, .5, Q, null),
-                    ua || J.playSound(Zc, .2 * g, 1, Q, function(a) {
+                    0 == Fa ? (objG_sfxManager.playSound(str_sfxid_lasershot, .2 * g, .5, const_Q_0, null),
+                    ua || objG_sfxManager.playSound(str_sfxid_laserloop, .2 * g, 1, const_Q_0, function(a) {
                         nb = ua = a
-                    })) : ua && J.sound.volume(.2 * g * da, ua),
+                    })) : ua && objG_sfxManager.sound.volume(.2 * g * num_max_volume, ua),
                     this.laserTimer += b,
                     Fa += b) : this.stopLaserSound();
-                    n && this.weapon == bb && 1 < this.ammo && (this.ammo = 1);
+                    obj_particleManager && this.weapon == id_weapon_punch && 1 < this.ammo && (this.ammo = 1);
                     0 < q && (q -= b);
-                    K && K.update(b);
+                    obj_scoreAccumInfo && obj_scoreAccumInfo.update(b);
                     0 < R && (R -= b)
                 }
             };
@@ -3079,19 +3080,19 @@ Feedback:
             this.draw = function(b, h) {
                 if (this.inGame && pa) {
                     let e, f, K, s, v, R, w, S, O, t;
-                    a && a.draw(b);
-                    c && c.draw(b);
-                    n || (b.save(),
+                    obj_particleTrails && obj_particleTrails.draw(b);
+                    obj_particleFlags && obj_particleFlags.draw(b);
+                    obj_particleManager || (b.save(),
                     b.translate(this.x, this.y),
                     this.timeToNextFrame -= h,
                     0 >= this.timeToNextFrame && (this.flameState = !this.flameState,
                     this.timeToNextFrame = this.frameSwitchTime),
-                    this.hover && (u.isSpaceWars() ? b.scale(.5, .5) : b.scale(.8, .8)),
+                    this.hover && (objG_eventManager.isSpaceWars() ? b.scale(.5, .5) : b.scale(.8, .8)),
                     this.flameState && b.scale(.88, .88),
                     b.rotate(this.angle - Math.PI / 2),
                     b.translate(-23, 0),
                     this.isInvulnerable() && d && (b.globalAlpha = .3),
-                    p.frames.throttleFlame.draw(b),
+                    objG_assets.frames.throttleFlame.draw(b),
                     b.restore());
                     g = Math.abs((this.angle - Math.PI / 2) % (2 * Math.PI)) + 2 * Math.PI / 28 / 2;
                     0 < this.angle - Math.PI / 2 && (g = 2 * Math.PI - g);
@@ -3105,14 +3106,14 @@ Feedback:
                         e = 1;
                         60 > q ? e = q / 60 : 240 < q && (e = (300 - q) / 60);
                         b.globalAlpha = e;
-                        p.frames.punch.draw(b);
+                        objG_assets.frames.punch.draw(b);
                         b.restore()
                     }
                     b.save();
                     b.translate(this.x, this.y);
                     b.scale(.7, .7);
                     b.rotate(this.angle - Math.PI / 2);
-                    n ? (k -= h,
+                    obj_particleManager ? (k -= h,
                     0 > k && (k = m,
                     y++,
                     8 == y && (l *= -1)),
@@ -3138,7 +3139,7 @@ Feedback:
                     0 == P && (z += 1,
                     2 < z && (z = 0));
                     b.globalAlpha = C;
-                    p.frames["turbo" + z].draw(b);
+                    objG_assets.frames["turbo" + z].draw(b);
                     b.restore();
                     0 < this.highlightValue && !this.isInvulnerable() && (this.highlightValue -= .05,
                     0 > this.highlightValue && (this.highlightValue = 0),
@@ -3147,12 +3148,12 @@ Feedback:
                     b.scale(.7, .7),
                     b.rotate(this.angle - Math.PI / 2),
                     b.globalAlpha = this.highlightValue,
-                    e = p.whitePlaneImages["plane" + e],
+                    e = objG_assets.whitePlaneImages["plane" + e],
                     g > .5 * Math.PI && g < 1.5 * Math.PI ? b.scale(1.2, -1.2) : b.scale(1.2, 1.2),
                     e && b.drawImage(e, -e.width / 2, -e.height / 2),
                     b.restore());
-                    n && n.draw(b);
-                    if (this.weapon == za) {
+                    obj_particleManager && obj_particleManager.draw(b);
+                    if (this.weapon == id_weapon_superweapon) {
                         e = !1;
                         g > .5 * Math.PI && g < .5 * Math.PI + Math.PI || (e = !0);
                         if (this.isShooting) {
@@ -3162,7 +3163,7 @@ Feedback:
                               , f = 500;
                             ea && (f = Math.sqrt(K * K + s * s) - 10);
                             100 > f && (f = 100);
-                                v = p.frames.laser_opening.height
+                                v = objG_assets.frames.laser_opening.height
                               , R = Fa / 50
                               , w = 1
                               , S = .75 * Math.PI
@@ -3178,19 +3179,19 @@ Feedback:
                             O = Math.sin(R) / Math.sin(S)));
                             t && (b.scale((1 + .2 * w) * O, 1),
                             b.translate(0, v / 2),
-                            p.frames.laser_opening.draw(b),
+                            objG_assets.frames.laser_opening.draw(b),
                             f -= v,
                             b.translate(0, f / 2 + v / 2 - 1),
                             b.scale(1, f),
-                            p.frames.laser_stretch.draw(b),
+                            objG_assets.frames.laser_stretch.draw(b),
                             b.scale(1, 1 / f),
                             b.translate(0, f / 2 - 10),
                             50 < this.laserTimer && (this.laserTimer = 0,
                             this.laserFrame = (this.laserFrame + 1) % 3),
-                            ea ? p.frames["laser_collision" + this.laserFrame].draw(b) : (f = p.frames.laserfade.width,
+                            ea ? objG_assets.frames["laser_collision" + this.laserFrame].draw(b) : (f = objG_assets.frames.laserfade.width,
                             b.rotate(Math.PI / 2),
                             b.translate(f / 2, 0),
-                            p.frames.laserfade.draw(b)));
+                            objG_assets.frames.laserfade.draw(b)));
                             b.restore();
                             b.save();
                             b.translate(this.x, this.y);
@@ -3210,7 +3211,7 @@ Feedback:
                         e && (b.scale(-1, 1),
                         b.translate(-6, 0));
                         b.rotate(-Math.PI / 2);
-                        p.frames.laserplug.draw(b);
+                        objG_assets.frames.laserplug.draw(b);
                         b.restore()
                     }
                 }
@@ -3235,8 +3236,8 @@ Feedback:
             };
             this.drawInput = function(a) {
                 if (this.inGame) {
-                    let c = -V.angle + Math.PI
-                      , b = !V.hover;
+                    let c = -objG_inputManager.angle + Math.PI
+                      , b = !objG_inputManager.hover;
                     .01 >= b && (b = .3);
                     a.save();
                     a.translate(this.x, this.y);
@@ -3249,11 +3250,11 @@ Feedback:
                     a.lineTo(0, -22 * b);
                     a.fill();
                     a.restore();
-                    2 != ha && (c = B[gb]) && this.DrawLockCrosshair(a, c.x, c.y, w, ha);
+                    2 != ha && (c = objD_planes[gb]) && this.DrawLockCrosshair(a, c.x, c.y, w, ha);
                     0 < ma && this.DrawLockCrosshair(a, this.x, this.y, 1, 1);
                     a.lineWidth = 1;
                     a.beginPath();
-                    u.isSpaceWars() ? a.strokeStyle = "rgba(255,255,255,0.3)" : a.strokeStyle = "rgba(0,0,255,0.1)";
+                    objG_eventManager.isSpaceWars() ? a.strokeStyle = "rgba(255,255,255,0.3)" : a.strokeStyle = "rgba(0,0,255,0.1)";
                     a.arc(this.x, this.y, 75, 0, 2 * Math.PI);
                     a.closePath();
                     a.stroke()
@@ -3280,7 +3281,7 @@ Feedback:
                     let c, d;
                     a.save();
                     a.translate(this.x, this.y);
-                    if (!u.isInstagib()) {
+                    if (!objG_eventManager.isInstagib()) {
                         a.fillStyle = "rgba(126,219,226,1)";
                         a.shadowOffsetX = 0;
                         a.shadowOffsetY = 0;
@@ -3302,7 +3303,7 @@ Feedback:
                     a.textBaseline = "hanging",
                     c = a.measureText(b.name).width,
                     d = 38,
-                    u.isInstagib() && (d = 20),
+                    objG_eventManager.isInstagib() && (d = 20),
                     a.fillText(b.name, -c / 2, d));
                     a.restore();
                     c = !1;
@@ -3312,13 +3313,13 @@ Feedback:
                     if (c || 0 < R || O || d)
                         a.save(),
                         a.translate(this.x, this.y - 30),
-                        O ? p.frames.pause.draw(a) : c ? p.frames.crown.draw(a) : d ? p.frames.revengeIcon.draw(a) : p.frames.frenzyIcon.draw(a),
+                        O ? objG_assets.frames.pause.draw(a) : c ? objG_assets.frames.crown.draw(a) : d ? objG_assets.frames.revengeIcon.draw(a) : objG_assets.frames.frenzyIcon.draw(a),
                         a.restore();
-                    K && (a.save(),
+                    obj_scoreAccumInfo && (a.save(),
                     d = 0,
                     c && (d = 30),
                     a.translate(this.x, this.y - d),
-                    K.draw(a),
+                    obj_scoreAccumInfo.draw(a),
                     a.restore())
                 }
             };
@@ -3335,23 +3336,23 @@ Feedback:
                 this.y = this.dstY,
                 this.origAngle = this.dstAngle,
                 this.first_set = !1,
-                A.firstClientListing || (num_spawn_cooldown_ms = 1E3 * tc)) : (b = this.dstX - this.origX,
+                objG_wsConnection.firstClientListing || (num_spawn_cooldown_ms = 1E3 * tc)) : (b = this.dstX - this.origX,
                 d = this.dstY - this.origY,
                 this.speed = Math.sqrt(b * b + d * d) / 3);
                 this.inGame || (this.inGame = !0,
-                a && a.clear(),
-                c && c.clear())
+                obj_particleTrails && obj_particleTrails.clear(),
+                obj_particleFlags && obj_particleFlags.clear())
             };
             this.trailEffect = function() {
-                wa && a && a.trailEffect()
+                wa && obj_particleTrails && obj_particleTrails.trailEffect()
             };
             this.hit = function(a) {
                 func_isTimeElapsed_50ms() && (this.highlightValue = 1)
             };
             this.setScore = function(a) {
                 let c = a - this.score;
-                0 < c && this == v && (K || (K = new Class_ScoreAccumInfo),
-                func_isTimeElapsed_50ms() && K.addScore(c));
+                0 < c && this == objG_player_plane && (obj_scoreAccumInfo || (obj_scoreAccumInfo = new Class_ScoreAccumInfo),
+                func_isTimeElapsed_50ms() && obj_scoreAccumInfo.addScore(c));
                 this.score = a
             };
             this.incScore = function(a) {
@@ -3360,10 +3361,10 @@ Feedback:
             this.setName = function(c) {
                 this.name = c;
                 if ("" == c || null == c)
-                    a = new Class_ParticleTrails,
-                    a.fixedColor = !0,
-                    a.style = M[Ja],
-                    a.clear()
+                    obj_particleTrails = new Class_ParticleTrails,
+                    obj_particleTrails.fixedColor = !0,
+                    obj_particleTrails.style = M[id_weapon_machinegun],
+                    obj_particleTrails.clear()
             };
             this.setFlagInfo = function(b) {
                 if (0 < b) {
@@ -3374,28 +3375,28 @@ Feedback:
                     let h = 0 < (b & 4) ? !0 : !1
                       , e = 0 < (b & 2) ? !0 : !1;
                     G = 0 < (b & 8) ? !0 : !1;
-                    c = new Class_ParticleFlags;
-                    c.flipX = e;
-                    c.flipY = h;
-                    c.scale = g / 100;
-                    c.stringScale = d / 100;
-                    c.setTexture(this.name)
+                    obj_particleFlags = new Class_ParticleFlags;
+                    obj_particleFlags.flipX = e;
+                    obj_particleFlags.flipY = h;
+                    obj_particleFlags.scale = g / 100;
+                    obj_particleFlags.stringScale = d / 100;
+                    obj_particleFlags.setTexture(this.name)
                 } else
                     this.showName = !0;
-                a = new Class_ParticleTrails;
-                a.fixedColor = !0;
-                a.style = M[Ja];
-                a.clear()
+                obj_particleTrails = new Class_ParticleTrails;
+                obj_particleTrails.fixedColor = !0;
+                obj_particleTrails.style = M[id_weapon_machinegun];
+                obj_particleTrails.clear()
             };
             this.setEnergy = function(a) {
                 this.energy = a;
-                25 > a && !n ? (n = new Class_ParticleManager,
-                n.init(15, this.x, this.y),
+                25 > a && !obj_particleManager ? (obj_particleManager = new Class_ParticleManager,
+                obj_particleManager.init(15, this.x, this.y),
                 k = 0,
                 m = 20 + 40 * Math.random(),
-                v == this && (J.playSound(bd, .7, 1, Q, null),
-                F.clearNearMiss())) : 25 <= a && n && (delete n,
-                n = null,
+                objG_player_plane == this && (objG_sfxManager.playSound(str_sfxid_crash, .7, 1, const_Q_0, null),
+                objGUI_gameInfo.clearNearMiss())) : 25 <= a && obj_particleManager && (delete obj_particleManager,
+                obj_particleManager = null,
                 l = 1)
             };
             this.GetAmmo = function() {
@@ -3403,11 +3404,11 @@ Feedback:
             };
             this.setColorID = function(a) {
                 this.colorID = a;
-                this.decalFrames = p.planes[this.decalID][this.colorID]
+                this.decalFrames = objG_assets.planes[this.decalID][this.colorID]
             };
             this.setDecalID = function(a) {
                 this.decalID = a;
-                this.decalFrames = p.planes[this.decalID][this.colorID]
+                this.decalFrames = objG_assets.planes[this.decalID][this.colorID]
             };
             this.setColorHue = function(a) {
                 this.colorHue = a
@@ -3424,20 +3425,20 @@ Feedback:
             this.isInvulnerable = function() {
                 return 0 < num_spawn_cooldown_ms
             };
-            a.style = M[Ja];
+            obj_particleTrails.style = M[id_weapon_machinegun];
             this.setWeapon = function(c) {
-                a.style = M[c];
-                a.width = 1;
+                obj_particleTrails.style = M[c];
+                obj_particleTrails.width = 1;
                 this.weapon = c
             };
             this.cleanup = function() {
-                ia && J.sound.stop(ia);
-                na && J.sound.stop(na);
+                ia && objG_sfxManager.sound.stop(ia);
+                na && objG_sfxManager.sound.stop(na);
                 this.stopLaserSound();
                 na = ia = null;
                 this.first_set = !0;
                 this.inGame = !1;
-                F.clearTargetLockedMessage();
+                objGUI_gameInfo.clearTargetLockedMessage();
                 ma = 0
             };
             this.setFrenzy = function() {
@@ -3466,18 +3467,18 @@ Feedback:
             };
             this.prepareFollow = function() {};
             this.stopLaserSound = function() {
-                ua && (J.sound.stop(ua),
+                ua && (objG_sfxManager.sound.stop(ua),
                 ua = nb = null)
             };
             this.dash = function() {
-                this == v && J.playSound(cd, .15, 1, Q, null);
+                this == objG_player_plane && objG_sfxManager.playSound(str_sfxid_woosh, .15, 1, const_Q_0, null);
                 q = 300
             };
             this.dashing = function() {
                 return 0 < q
             };
             this.clearTrail = function() {
-                a && a.clear()
+                obj_particleTrails && obj_particleTrails.clear()
             }
         }
           , Class_SeaWater = function() {
@@ -3494,7 +3495,7 @@ Feedback:
             }
             this.update = function(b) {
                 let k, m, l, y;
-                c = 1.1 * canvas.width / z.zoom;
+                c = 1.1 * canvas.width / objGUI_anchor.zoom;
                 g = c / 25;
                 a = Math.floor(H.x / g);
                 null != d && d != a && (0 < d - a ? (f.splice(24, 24),
@@ -3541,16 +3542,16 @@ Feedback:
                 f[k - 1] += m / 2;
                 f[k] += m;
                 f[k + 1] += m / 2;
-                l = z.getBounds();
+                l = objGUI_anchor.getBounds();
                 if (l[1].y > E / 2) {
                     k = h.length;
                     q -= b;
                     0 > q && (q = 125.6,
-                    20 > k && (m = new ClassU_dd,
+                    20 > k && (m = new Class_SeaWaterRipple,
                     h.push(m),
                     l = l[1].x - l[0].x,
                     y = 0,
-                    v && (y = 50 * v.getSpeedDirectionX()),
+                    objG_player_plane && (y = 50 * objG_player_plane.getSpeedDirectionX()),
                     l = Math.random() * l - l / 2 + y,
                     y = 250 * Math.random(),
                     m.setPosition(l + H.x, E / 2 + y + 30, y)));
@@ -3627,7 +3628,7 @@ Feedback:
             }
             )()
         }
-          , ClassU_dd = function() {
+          , Class_SeaWaterRipple = function() {
             let b = [
                         118.17, 11.98,
                         26.9, -3.43, 1.91, -19.41, .45, -19.48,
@@ -3855,7 +3856,7 @@ Feedback:
                   , y = g + d[h][1] * e
                   , r = c + d[h][2] * e
                   , K = g + d[h][3] * e
-                  , p = z.getBounds();
+                  , p = objGUI_anchor.getBounds();
                 l = l > p[1].x || r < p[0].x || y > p[1].y || K < p[0].y ? !1 : !0;
                 l && (a.save(),
                 a.fillStyle = "rgba(190,227,249," + f + ")",
@@ -3874,7 +3875,7 @@ Feedback:
                   , y = b + m * n
                   , r = c + d[q][2] * n;
                 q = b + d[q][3] * n;
-                let K = z.getBounds();
+                let K = objGUI_anchor.getBounds();
                 l = l > K[1].x || r < K[0].x || y > K[1].y || q < K[0].y ? !1 : !0;
                 l && a.drawImage(f[e], c + k * n, b + m * n)
             };
@@ -3966,7 +3967,7 @@ Feedback:
           , Class_Backgrounds = function() {
             let b = []
               , e = 0
-              , f = new Class_Clouds
+              , obj_clouds = new Class_Clouds
               , c = !1;
             this.waves = new Class_SeaWater;
             let d = function() {
@@ -4062,7 +4063,7 @@ Feedback:
                                                       , g = g + 4;
                                                     p.add(10 * v, 10 * -u, m)
                                                 }
-                                                b.push(p)
+                                                b.push(objG_assets)
                                             }
                                     }
                                 else
@@ -4092,14 +4093,14 @@ Feedback:
             };
             this.drawGradient = function(a) {
                 let c, b, d, f, m;
-                    c = (canvas.width / 2 + (z.x * z.zoom - canvas.width / 2)) / z.zoom
-                  , b = (canvas.height / 2 + (z.y * z.zoom - canvas.height / 2)) / z.zoom
+                    c = (canvas.width / 2 + (objGUI_anchor.x * objGUI_anchor.zoom - canvas.width / 2)) / objGUI_anchor.zoom
+                  , b = (canvas.height / 2 + (objGUI_anchor.y * objGUI_anchor.zoom - canvas.height / 2)) / objGUI_anchor.zoom
                   , d = .75 * E;
-                u.isSpaceWars() && (d = E);
+                objG_eventManager.isSpaceWars() && (d = E);
                     d = a.createLinearGradient(0, -d, 0, d)
                   , f = 39
                   , m = 161;
-                u.isSpaceWars() && (f = 0,
+                objG_eventManager.isSpaceWars() && (f = 0,
                 m = 55);
                 if (0 < e) {
                     let l = e / 2500;
@@ -4107,14 +4108,14 @@ Feedback:
                     f += (255 - f) * l;
                     m += (255 - m) * l
                 }
-                u.isSpaceWars() ? (d.addColorStop(0, "rgba(" + parseInt(f) + ",0,0,1.0)"),
+                objG_eventManager.isSpaceWars() ? (d.addColorStop(0, "rgba(" + parseInt(f) + ",0,0,1.0)"),
                 d.addColorStop(.3, "rgba(" + parseInt(m) + ",0,55,1.0)"),
                 d.addColorStop(.5, "rgba(" + parseInt(m) + ",0,75,1.0)"),
                 d.addColorStop(.7, "rgba(" + parseInt(m) + ",0,55,1.0)"),
                 d.addColorStop(1, "rgba(" + parseInt(f) + ",0,0,1.0)")) : bool_drawGradient ? (d.addColorStop(0, "rgba(" + parseInt(f) + ",145,202,1.0)"),
                 d.addColorStop(1, "rgba(" + parseInt(m) + ",231,252,1.0)")) : d = "#62bae2";
                 a.fillStyle = d;
-                a.fillRect(c - canvas.width / 2 / z.zoom, b - canvas.height / 2 / z.zoom, canvas.width / z.zoom, canvas.height / z.zoom)
+                a.fillRect(c - canvas.width / 2 / objGUI_anchor.zoom, b - canvas.height / 2 / objGUI_anchor.zoom, canvas.width / objGUI_anchor.zoom, canvas.height / objGUI_anchor.zoom)
             };
             this.drawWaterBehind = function(a) {
                 bool_drawWater && this.waves.drawBehind(a)
@@ -4123,8 +4124,8 @@ Feedback:
                 bool_drawWater && this.waves.drawFront(a)
             };
             this.drawLimits = function(a) {
-                let c = (canvas.width / 2 + (z.x * z.zoom - canvas.width / 2)) / z.zoom
-                  , b = (canvas.height / 2 + (z.y * z.zoom - canvas.height / 2)) / z.zoom
+                let c = (canvas.width / 2 + (objGUI_anchor.x * objGUI_anchor.zoom - canvas.width / 2)) / objGUI_anchor.zoom
+                  , b = (canvas.height / 2 + (objGUI_anchor.y * objGUI_anchor.zoom - canvas.height / 2)) / objGUI_anchor.zoom
                   , d = 500
                   , e = 2 * E
                   , f = 0
@@ -4140,7 +4141,7 @@ Feedback:
                     p = $_sub + c,
                     p < d && (l = Math.min(1 - p / d, 1),
                     l *= .2);
-                u.isSpaceWars() && (d = 200,
+                objG_eventManager.isSpaceWars() && (d = 200,
                 0 > b ? (p = E / 2,
                 p += b,
                 p < d && (y = Math.min(1 - p / d, 1),
@@ -4157,16 +4158,16 @@ Feedback:
                 0 < f ? (a.fillStyle = "rgba(200,0,0," + f + ")",
                 a.fillRect($_sub, -e / 2, 2500, e)) : (a.fillStyle = "rgba(200,0,0," + l + ")",
                 a.fillRect(-$_sub - 2500, -e / 2, 2500, e));
-                u.isSpaceWars() && (0 > b ? (a.fillStyle = "rgba(200,0,0," + y + ")",
+                objG_eventManager.isSpaceWars() && (0 > b ? (a.fillStyle = "rgba(200,0,0," + y + ")",
                 a.fillRect(-$_sub, -E / 2 - 2500, 2 * $_sub, 2500)) : (a.fillStyle = "rgba(200,0,0," + r + ")",
                 a.fillRect(-$_sub, E / 2, 2 * $_sub, 2500)));
-                u.isSpaceWars() || (a.fillStyle = "rgba(255,255,255,0.10)",
-                a.fillRect(c - canvas.width / 2 / z.zoom, -E / 2 - 1, canvas.width / z.zoom, 6))
+                objG_eventManager.isSpaceWars() || (a.fillStyle = "rgba(255,255,255,0.10)",
+                a.fillRect(c - canvas.width / 2 / objGUI_anchor.zoom, -E / 2 - 1, canvas.width / objGUI_anchor.zoom, 6))
             };
             this.draw = function(a) {
-                if (bool_drawSun && !u.isSpaceWars()) {
-                    let c = .97 * z.x + 450
-                      , b = .97 * z.y - 100
+                if (bool_drawSun && !objG_eventManager.isSpaceWars()) {
+                    let c = .97 * objGUI_anchor.x + 450
+                      , b = .97 * objGUI_anchor.y - 100
                       , d = a.createRadialGradient(c, b, 70, c, b, 350);
                     d.addColorStop(0, "rgba(255,255,255,0.4)");
                     d.addColorStop(.1, "rgba(255,255,255,0.13)");
@@ -4179,19 +4180,19 @@ Feedback:
                     a.arc(c, b, 70, 0, 2 * Math.PI);
                     a.fill()
                 }
-                ob && !u.isSpaceWars() && f.drawPreRenderedClouds(a)
+                bool_drawClouds && !objG_eventManager.isSpaceWars() && obj_clouds.drawPreRenderedClouds(a)
             };
             this.update = function(a) {
                 if (xa || !c)
                     if (c = !0,
                     this.waves.update(a),
-                    f.update(a),
-                    null != v) {
-                        let b = v.x < -$_sub || v.x > $_sub;
-                        u.isSpaceWars() && (b |= v.y > E / 2 || v.y < -E / 2);
-                        b ? (0 == e && (J.playSound(gd, 1, 1, 1, null),
-                        F.showWarningMessage("YOU ABANDONED THE FIGHT!")),
-                        e += a) : (0 < e && F.clearWarningMessage(),
+                    obj_clouds.update(a),
+                    null != objG_player_plane) {
+                        let b = objG_player_plane.x < -$_sub || objG_player_plane.x > $_sub;
+                        objG_eventManager.isSpaceWars() && (b |= objG_player_plane.y > E / 2 || objG_player_plane.y < -E / 2);
+                        b ? (0 == e && (objG_sfxManager.playSound(str_sfxid_warn, 1, 1, 1, null),
+                        objGUI_gameInfo.showWarningMessage("YOU ABANDONED THE FIGHT!")),
+                        e += a) : (0 < e && objGUI_gameInfo.clearWarningMessage(),
                         e = 0)
                     }
             };
@@ -4220,7 +4221,7 @@ Feedback:
             this.update = function(f) {
                 let p = .06 * f, s, v;
                 if (64 != this.type) {
-                    if (!u.isSpaceWars()) {
+                    if (!objG_eventManager.isSpaceWars()) {
                             s = E / 2 - 20
                           , v = this.y + e;
                         l += f / 400;
@@ -4233,16 +4234,16 @@ Feedback:
                         0 > k && (k = 0),
                         m = Math.sqrt(k))
                     }
-                    this.fadingOut && (y || u.isSpaceWars() || u.isInstagib() ? delete W[this.id] : (e += .25,
+                    this.fadingOut && (y || objG_eventManager.isSpaceWars() || objG_eventManager.isInstagib() ? delete objD_pickups[this.id] : (e += .25,
                     this.alpha -= f / 1E3,
-                    0 >= this.alpha && delete W[this.id]))
+                    0 >= this.alpha && delete objD_pickups[this.id]))
                 }
-                this.grabbing && ((f = B[c]) ? (s = Math.pow(g, 2),
+                this.grabbing && ((f = objD_planes[c]) ? (s = Math.pow(g, 2),
                 this.x = h + (f.x - h) * s,
                 this.y = q + (f.y - q) * s,
                 n = 1 - s,
                 g += .07 * p,
-                1 < g && delete W[this.id]) : delete W[this.id])
+                1 < g && delete objD_pickups[this.id]) : delete objD_pickups[this.id])
             };
             this.drawItem = function(c, b) {
                 let g;
@@ -4254,8 +4255,8 @@ Feedback:
                     c.translate(this.x, this.y + e),
                     c.scale((1 + Math.sin(this.sinScaleX) / 6) * n * 1.3, (1 + Math.sin(this.sinScaleY) / 6) * n * 1.3),
                     b.draw(c);
-                else if (y || u.isSpaceWars())
-                    v && u.isSpaceWars() && v.id == qa && (g = .3),
+                else if (y || objG_eventManager.isSpaceWars())
+                    objG_player_plane && objG_eventManager.isSpaceWars() && objG_player_plane.id == qa && (g = .3),
                     c.save(),
                     c.beginPath(),
                     this.sinScaleX += .1,
@@ -4264,13 +4265,13 @@ Feedback:
                     c.scale((1 + Math.sin(this.sinScaleX) / 6) * n * 1.3, (1 + Math.sin(this.sinScaleY) / 6) * n * 1.3),
                     c.scale(2, 2),
                     c.globalAlpha = g,
-                    p.frames.wing.draw(c),
+                    objG_assets.frames.wing.draw(c),
                     c.scale(.5, .5),
                     b.draw(c);
                 else {
                     g = 1;
-                    !v || v.weapon != za || this.type != $a && this.type != Ua && this.type != Qa && this.type != bb && this.type != cb || (g = .3);
-                    let h = p.frames.parachute;
+                    !objG_player_plane || objG_player_plane.weapon != id_weapon_superweapon || this.type != id_weapon_trishoot && this.type != id_weapon_missile && this.type != id_weapon_railgun && this.type != id_weapon_punch && this.type != id_weapon_bombs || (g = .3);
+                    let h = objG_assets.frames.parachute;
                     h.y = -h.height / 2 + 100 * (1 - m);
                     c.save();
                     this.grabbing ? c.translate(this.x, this.y) : c.translate(this.x, this.y + e);
@@ -4284,7 +4285,7 @@ Feedback:
                     h.draw(c);
                     c.restore();
                     g = 0;
-                    this.type == za && (g = 8);
+                    this.type == id_weapon_superweapon && (g = 8);
                     c.translate(0, 4 * Math.sin(a) + g + 10);
                     b.draw(c);
                     c.globalAlpha = 1
@@ -4294,8 +4295,8 @@ Feedback:
             this.draw = function(a) {
                 if (bool_drawItems) {
                     let c = 40, b;
-                    32 == this.type ? b = p.frames.health : this.type == $a ? b = p.frames.trishoot : this.type == Qa ? b = p.frames.railgun : this.type == Ua ? b = p.frames.missile : this.type == bb ? b = p.frames.melee : this.type == cb ? b = p.frames.bombdrop : this.type == za ? b = p.frames.laser : 64 == this.type && (c = 10,
-                    b = p.frames.wing);
+                    32 == this.type ? b = objG_assets.frames.health : this.type == id_weapon_trishoot ? b = objG_assets.frames.trishoot : this.type == id_weapon_railgun ? b = objG_assets.frames.railgun : this.type == id_weapon_missile ? b = objG_assets.frames.missile : this.type == id_weapon_punch ? b = objG_assets.frames.melee : this.type == id_weapon_bombs ? b = objG_assets.frames.bombdrop : this.type == id_weapon_superweapon ? b = objG_assets.frames.laser : 64 == this.type && (c = 10,
+                    b = objG_assets.frames.wing);
                     let d = this.y;
                     this.grabbing || (d += e);
                     if (!this.grabbing) {
@@ -4315,10 +4316,10 @@ Feedback:
                 this.y += e;
                 h = this.x;
                 q = this.y;
-                delete W[this.id];
+                delete objD_pickups[this.id];
                 this.id = "g" + this.id;
-                W[this.id] = this;
-                v && c == v.id && !u.isInstagib() && (64 == this.type ? v.incScore(vc) : v.incScore(wc))
+                objD_pickups[this.id] = this;
+                objG_player_plane && c == objG_player_plane.id && !objG_eventManager.isInstagib() && (64 == this.type ? objG_player_plane.incScore(vc) : objG_player_plane.incScore(wc))
             };
             this.setPosition = function(a, c) {
                 this.x = 10 * a;
@@ -4326,18 +4327,18 @@ Feedback:
                 this.y > -E / 2 && (this.alpha = 1);
                 b = +new Date
             };
-            u.isSpaceWars() && (y = !0)
+            objG_eventManager.isSpaceWars() && (y = !0)
         }
           , Class_WS_Connection = function() {
             let f;
             function b(b, a, c) {
-                169 != a && 172 != a && 162 != a && 178 != a || c || (ja = []);
+                169 != a && 172 != a && 162 != a && 178 != a || c || (list_str_leaderboard_players = []);
                 let e, h, f, n, k, m, l, y, r, p, s, u, w, t, x, z, C, P, R, S, O, G, ea;
                     e = !1
                   , h = 1
                   , f = 1
                   , n = 0;
-                c || (A.lastUpdateBool = !A.lastUpdateBool);
+                c || (objG_wsConnection.lastUpdateBool = !objG_wsConnection.lastUpdateBool);
                 for (; ; ) {
                     n++;
                         k = b.getUint32(h, !0)
@@ -4359,26 +4360,26 @@ Feedback:
                               , h = h + 4
                               , p = c.getUint32(h, !0)
                               , h = h + 4
-                              , s = M[m];
+                              , s = objD_missiles[m];
                             if (null == s) {
                                 s = new Class_Missile;
-                                M[m] = s;
+                                objD_missiles[m] = s;
                                 163 != f && 162 != f && 169 != f || s.setType(l);
-                                    m = B[p]
+                                    m = objD_planes[p]
                                   , u = !1;
                                 m || (u = !0,
-                                m = U[p]);
+                                m = objD_specialEntities[p]);
                                 if (m) {
-                                        w = Q
+                                        w = const_Q_0
                                       , t = 1;
-                                    u ? (w = Sa,
+                                    u ? (w = const_Sa_3,
                                     u = func_calculateDistance2D(m.x, m.y, H.x, H.y),
-                                    t = 1 - u / Ra,
-                                    .01 < t && J.playSound(ld, t, 1, w, null),
-                                    m.cannonShoot()) : (v && p == v.id || (w = Sa,
+                                    t = 1 - u / num_sound_max_distance,
+                                    .01 < t && objG_sfxManager.playSound(str_sfxid_cannonshoot, t, 1, w, null),
+                                    m.cannonShoot()) : (objG_player_plane && p == objG_player_plane.id || (w = const_Sa_3,
                                     u = func_calculateDistance2D(m.x, m.y, H.x, H.y),
-                                    t = 1 - u / Ra),
-                                    .01 < t && J.playSound(md, t, 1, w, null),
+                                    t = 1 - u / num_sound_max_distance),
+                                    .01 < t && objG_sfxManager.playSound(str_sfxid_mlaunch, t, 1, w, null),
                                     m.ammo--)
                                 }
                             }
@@ -4391,12 +4392,12 @@ Feedback:
                                 l += 4;
                                 if (0 == c)
                                     break;
-                                h = U[c];
+                                h = objD_specialEntities[c];
                                 if (178 == a || 162 == a)
                                     f = b.getUint8(l, !0),
                                     l += 1,
                                     null == h && (h = new Class_Warship,
-                                    U[c] = h,
+                                    objD_specialEntities[c] = h,
                                     h.setType(f));
                                 h.id = c;
                                 h.lastUpdate = T;
@@ -4410,12 +4411,12 @@ Feedback:
                                 l += 2;
                                 y = b.getUint8(l, !0);
                                 l += 1;
-                                h.type == zb ? (r = -b.getFloat32(l, !0),
+                                h.type == id_entity_warship ? (r = -b.getFloat32(l, !0),
                                 l += 4,
                                 p = b.getFloat32(l, !0),
                                 l += 4,
                                 h.setCannonAngle(p),
-                                h.setFloatValue(r)) : h.type != db || 162 != a && 178 != a || (r = b.getUint8(l, !0),
+                                h.setFloatValue(r)) : h.type != id_entity_asteroid || 162 != a && 178 != a || (r = b.getUint8(l, !0),
                                 l += 1,
                                 h.setFragment(r));
                                 h.setState(y);
@@ -4440,21 +4441,21 @@ Feedback:
                     h += 4,
                     t = b.getUint8(h, !0),
                     h += 1);
-                        C = B[k]
+                        C = objD_planes[k]
                       , P = x & 256;
                     if (C && (P && C.setFrenzy(),
                     C.setPaused(z),
-                    v == C)) {
+                    objG_player_plane == C)) {
                             z = x & 8
                           , R = x & 16
                           , S = x & 32
                           , O = x & 128
                           , G = x & 4096;
-                        x & 64 ? F.addBonus(64, 0) : S ? F.addBonus(32, 0) : R ? F.addBonus(16, 0) : z && F.addBonus(8, 0);
-                        G && (F.addBonus(4096, 0),
+                        x & 64 ? objGUI_gameInfo.addBonus(64, 0) : S ? objGUI_gameInfo.addBonus(32, 0) : R ? objGUI_gameInfo.addBonus(16, 0) : z && objGUI_gameInfo.addBonus(8, 0);
+                        G && (objGUI_gameInfo.addBonus(4096, 0),
                         Za[C.id] = 0);
-                        O && F.addBonus(128, 0);
-                        P && F.addBonus(256, C.getKills())
+                        O && objGUI_gameInfo.addBonus(128, 0);
+                        P && objGUI_gameInfo.addBonus(256, C.getKills())
                     }
                         ea;
                     if (162 == a || 178 == a || 169 == a || 172 == a)
@@ -4462,7 +4463,7 @@ Feedback:
                         h += 4;
                     if (162 != a && 178 != a || !y)
                         162 != a && 178 != a || y || null != C || (C = new Class_Plane,
-                        B[k] = C,
+                        objD_planes[k] = C,
                         C.inGame = !1);
                     else {
                         162 == a ? (x = b.getUint16(h, !0),
@@ -4484,7 +4485,7 @@ Feedback:
                             O += String.fromCharCode(G)
                         }
                         null == C && (C = new Class_Plane,
-                        B[k] = C);
+                        objD_planes[k] = C);
                         -1 != O.indexOf("\ufdfd") && (O = "<Unnamed>");
                         C.setColorID(z);
                         C.setDecalID(R);
@@ -4497,7 +4498,7 @@ Feedback:
                         console.log("ERROR: Receiving data for a player (" + k + ") that does not exist, ignoring!");
                     else if (C.id = k,
                     C.lastUpdate = T,
-                    C.updateBool = A.lastUpdateBool,
+                    C.updateBool = objG_wsConnection.lastUpdateBool,
                     y && (C.setPose(m, w, u),
                     C.energy = t,
                     C.setEnergy(t),
@@ -4507,12 +4508,12 @@ Feedback:
                     169 == a || 172 == a || 162 == a || 178 == a)
                         C.setScore(ea),
                         c || (1 == f && (sc = k),
-                        ja.push(k),
+                        list_str_leaderboard_players.push(k),
                         e = !0,
                         C.setRank(f),
                         f++)
                 }
-                e && F.refreshLeaderboard(ja)
+                e && objGUI_gameInfo.refreshLeaderboard(list_str_leaderboard_players)
             }
             function e(b, a) {
                 let c, e, f, q, n, k;
@@ -4522,20 +4523,20 @@ Feedback:
                 c += 2);
                 if (0 < f) {
                         n = 1
-                      , k = od;
+                      , k = str_sfxid_weapgrab;
                     32 > q || 128 == q || 256 == q ? (c = b.getUint16(c, !0),
-                    B[f].setWeapon(q),
-                    B[f].ammo = c) : 64 == q ? (B[f].trailEffect(),
-                    k = pd,
+                    objD_planes[f].setWeapon(q),
+                    objD_planes[f].ammo = c) : 64 == q ? (objD_planes[f].trailEffect(),
+                    k = str_sfxid_winggrab,
                     null != this.lastGrabbedWingTime && (q = T - this.lastGrabbedWingTime,
-                    1E3 > q ? A.wingsInARow++ : A.wingsInARow = 0,
-                    n = 1 + .05 * A.wingsInARow,
+                    1E3 > q ? objG_wsConnection.wingsInARow++ : objG_wsConnection.wingsInARow = 0,
+                    n = 1 + .05 * objG_wsConnection.wingsInARow,
                     1.5 < n && (n = 1.5)),
-                    this.lastGrabbedWingTime = T) : 32 == q && (k = qd);
-                    v && f == v.id && J.playSound(k, 1, n, Q, null);
-                    W[e].playerGrab(f)
+                    this.lastGrabbedWingTime = T) : 32 == q && (k = str_sfxid_hgrab);
+                    objG_player_plane && f == objG_player_plane.id && objG_sfxManager.playSound(k, 1, n, const_Q_0, null);
+                    objD_pickups[e].playerGrab(f)
                 } else
-                    W[e].fadeOut()
+                    objD_pickups[e].fadeOut()
             }
             this.firstClientListing = !0;
             this.sentHello = this.hasConnection = !1;
@@ -4554,21 +4555,21 @@ Feedback:
                         b = a,
                         b = b.substring(1, b.length),
                         b = ";" + b,
-                        A.directed = !0;
-                    else if (Pa.ip) {
-                        b = Pa.ip;
+                        objG_wsConnection.directed = !0;
+                    else if (obj_browserQueryParams.ip) {
+                        b = obj_browserQueryParams.ip;
                         b = b.replace("%3A", ":");
-                        A.remoteHost = b;
-                        A.connect();
+                        objG_wsConnection.remoteHost = b;
+                        objG_wsConnection.connect();
                         return
                     }
                     a = vb;
-                    Pa.cc && (a = Pa.cc);
+                    obj_browserQueryParams.cc && (a = obj_browserQueryParams.cc);
                     if (void 0 == a)
-                        setTimeout(A.getServerAndConnect, 200);
+                        setTimeout(objG_wsConnection.getServerAndConnect, 200);
                     else {
                             c = "";
-                        Ib && (c = "s");
+                        bool_isHttps && (c = "s");
                         $.ajax({
                             url: "http" + c + "://master.wings.io/",
                             type: "POST",
@@ -4579,19 +4580,19 @@ Feedback:
                                     $("#roomFailed").show();
                                 else {
                                     a = a.split("!");
-                                    A.roomID = 0;
-                                    1 < a.length && (A.roomID = a[1]);
+                                    objG_wsConnection.roomID = 0;
+                                    1 < a.length && (objG_wsConnection.roomID = a[1]);
                                         c = a[0];
                                     a = c.split("/");
-                                    A.roomNumber = 0;
-                                    1 < a.length && (A.roomNumber = a[1],
+                                    objG_wsConnection.roomNumber = 0;
+                                    1 < a.length && (objG_wsConnection.roomNumber = a[1],
                                     c = a[0]);
-                                    A.remoteHost = c;
-                                    A.connect()
+                                    objG_wsConnection.remoteHost = c;
+                                    objG_wsConnection.connect()
                                 }
                             },
                             error: function() {
-                                setTimeout(A.getServerAndConnect, 1E3)
+                                setTimeout(objG_wsConnection.getServerAndConnect, 1E3)
                             },
                             dataType: "text",
                             contentType: "text/plain",
@@ -4606,34 +4607,34 @@ Feedback:
             this.connect = function() {
                 let b;
                 if (wa || G) {
-                        b = "ws://" + A.remoteHost;
+                        b = "ws://" + objG_wsConnection.remoteHost;
                     console.log("fullhost: " + b);
-                    if (Ib) {
-                            b = A.remoteHost.split(":")[0].split(".")
-                          , a = parseInt(A.roomNumber) + 8079 + 1E3
+                    if (bool_isHttps) {
+                            b = objG_wsConnection.remoteHost.split(":")[0].split(".")
+                          , a = parseInt(objG_wsConnection.roomNumber) + 8079 + 1E3
                           , b = "wss://ip-" + b[0] + "-" + b[1] + "-" + b[2] + "-" + b[3] + ".wings.io:" + a;
-                        console.log("isSecure RoomNumber: " + A.roomNumber)
+                        console.log("isSecure RoomNumber: " + objG_wsConnection.roomNumber)
                     } else
-                        0 < A.roomNumber && (b = "ws:" + b.split(":")[1] + ":" + (parseInt(A.roomNumber) + 8079),
+                        0 < objG_wsConnection.roomNumber && (b = "ws:" + b.split(":")[1] + ":" + (parseInt(objG_wsConnection.roomNumber) + 8079),
                         console.log("New full host: " + b));
                     try {
                         f = new WebSocket(b)
                     } catch (c) {
-                        setTimeout(A.getServerAndConnect, 1E3);
+                        setTimeout(objG_wsConnection.getServerAndConnect, 1E3);
                         return
                     }
                     f.binaryType = "arraybuffer";
-                    f.onopen = A.onSocketOpen;
-                    f.onclose = A.onSocketClose;
-                    f.onmessage = A.onSocketMessage;
-                    f.onerror = A.onSocketError
+                    f.onopen = objG_wsConnection.onSocketOpen;
+                    f.onclose = objG_wsConnection.onSocketClose;
+                    f.onmessage = objG_wsConnection.onSocketMessage;
+                    f.onerror = objG_wsConnection.onSocketError
                 } else
-                    setTimeout(A.getServerAndConnect, 100)
+                    setTimeout(objG_wsConnection.getServerAndConnect, 100)
             };
             this.disconnect = function() {
-                A.directed && (func_isIframe() || (window.location.hash = ""),
-                A.directed = !1);
-                A.roomID = 0;
+                objG_wsConnection.directed && (func_isIframe() || (window.location.hash = ""),
+                objG_wsConnection.directed = !1);
+                objG_wsConnection.roomID = 0;
                 f && f.close()
             };
             this.onSocketOpen = function(b) {
@@ -4644,24 +4645,24 @@ Feedback:
                     domain: window.location.hostname
                 }),
                 window.didSendLoadingTime = !0);
-                A.connectRetry = 0;
-                A.hasConnection = !0;
-                A.directed = !1;
-                p.loaded && A.hello()
+                objG_wsConnection.connectRetry = 0;
+                objG_wsConnection.hasConnection = !0;
+                objG_wsConnection.directed = !1;
+                objG_assets.loaded && objG_wsConnection.hello()
             };
             this.onSocketClose = function(b) {
-                A.connectionClosed()
+                objG_wsConnection.connectionClosed()
             };
             this.onSocketMessage = function(b) {
-                A.processMessage(b.data)
+                objG_wsConnection.processMessage(b.data)
             };
             this.onSocketError = function(b) {
                 console.log("socket error")
             };
             this.hello = function() {
-                G ? A.sendSingleByte(32) : A.sendSingleByte(1);
-                A.ping();
-                A.sentHello = !0;
+                G ? objG_wsConnection.sendSingleByte(32) : objG_wsConnection.sendSingleByte(1);
+                objG_wsConnection.ping();
+                objG_wsConnection.sentHello = !0;
                 $("#copyLink").fadeIn(300);
                 $("#topGui").show();
                 $("#topGuiConnecting").hide();
@@ -4726,15 +4727,15 @@ Feedback:
                         m = d.getUint8(c, !0),
                         c += 1,
                         d = d.getUint32(c, !0),
-                        v = new Class_Plane,
-                        v.id = f,
-                        v.setColorID(k),
-                        v.setDecalID(m),
-                        v.setName(myName),
-                        v.setFlagInfo(d),
-                        v.setPose(h, q, n),
-                        v.updateBool = A.lastUpdateBool,
-                        B[f] = v,
+                        objG_player_plane = new Class_Plane,
+                        objG_player_plane.id = f,
+                        objG_player_plane.setColorID(k),
+                        objG_player_plane.setDecalID(m),
+                        objG_player_plane.setName(myName),
+                        objG_player_plane.setFlagInfo(d),
+                        objG_player_plane.setPose(h, q, n),
+                        objG_player_plane.updateBool = objG_wsConnection.lastUpdateBool,
+                        objD_planes[f] = objG_player_plane,
                         ra = f,
                         Z = !0,
                         func_hideOverlay(),
@@ -4756,47 +4757,47 @@ Feedback:
                         q = 1;
                         a = d.getUint32(q, !0);
                         q += 4;
-                        if (c = B[a])
+                        if (c = objD_planes[a])
                             f = d.getUint32(q, !0),
                             q += 4,
                             h = d.getUint8(q, !0),
                             d = d.getUint32(q + 1, !0),
-                            q = v,
+                            q = objG_player_plane,
                             !q && Qb && (q = Qb),
-                            q && f == q.id && (n = func_renameBlankPlayerNames(B[a].name),
-                            F.addMessage("You killed", !0, n),
-                            u.isInstagib() || (a == qa ? q.incScore(yc) : q.incScore(xc))),
-                            0 < f ? ((f = B[f]) ? (F.addActivityMessage(func_renameBlankPlayerNames(c.name) + " was Killed by " + func_renameBlankPlayerNames(f.name)),
+                            q && f == q.id && (n = func_renameBlankPlayerNames(objD_planes[a].name),
+                            objGUI_gameInfo.addMessage("You killed", !0, n),
+                            objG_eventManager.isInstagib() || (a == qa ? q.incScore(yc) : q.incScore(xc))),
+                            0 < f ? ((f = objD_planes[f]) ? (objGUI_gameInfo.addActivityMessage(func_renameBlankPlayerNames(c.name) + " was Killed by " + func_renameBlankPlayerNames(f.name)),
                             f.incKills(),
-                            Za[c.id] = f.id) : F.addActivityMessage(func_renameBlankPlayerNames(c.name) + " was Killed"),
-                            X.addExplosion(c.dstX, c.dstY, c.getSpeedDirectionX(), c.getSpeedDirectionY()),
-                            v && v.id == a && (f ? F.addMessage("Killed by", !1, func_renameBlankPlayerNames(f.name)) : F.addMessage("You were killed", !1, null),
+                            Za[c.id] = f.id) : objGUI_gameInfo.addActivityMessage(func_renameBlankPlayerNames(c.name) + " was Killed"),
+                            objG_animationManager.addExplosion(c.dstX, c.dstY, c.getSpeedDirectionX(), c.getSpeedDirectionY()),
+                            objG_player_plane && objG_player_plane.id == a && (f ? objGUI_gameInfo.addMessage("Killed by", !1, func_renameBlankPlayerNames(f.name)) : objGUI_gameInfo.addMessage("You were killed", !1, null),
                             Z ? (Z = !1,
-                            Qb = v,
-                            v = null,
+                            Qb = objG_player_plane,
+                            objG_player_plane = null,
                             ka = 1,
                             wasKilled(d),
-                            func_displayGameoverScore(d)) : (v = null,
-                            L.waitUntilNextFollow()))) : (Za[c.id] = 0,
-                            v && v.id == a && (5 == h ? F.addMessage("You left!", !1, null) : 4 == h ? F.addMessage("Abandoned!", !1, null) : 1 == h ? F.addMessage("Crashed!", !1, null) : 6 == h ? F.addMessage("Exploded!", !1, null) : 7 == h ? F.addMessage("KAMIKAZE!!", !1, null) : 8 == h ? F.addMessage("You were killed by a Warship!", !1, null) : 3 == h ? (F.addMessage("Splash!", !1, null),
-                            J.playSound(rd, .7, 1, Q, null),
-                            oa.addSplash(v.x, E / 2 + 10, 2, !1)) : F.addMessage("You were killed!", !1, null),
+                            func_displayGameoverScore(d)) : (objG_player_plane = null,
+                            objG_followMode.waitUntilNextFollow()))) : (Za[c.id] = 0,
+                            objG_player_plane && objG_player_plane.id == a && (5 == h ? objGUI_gameInfo.addMessage("You left!", !1, null) : 4 == h ? objGUI_gameInfo.addMessage("Abandoned!", !1, null) : 1 == h ? objGUI_gameInfo.addMessage("Crashed!", !1, null) : 6 == h ? objGUI_gameInfo.addMessage("Exploded!", !1, null) : 7 == h ? objGUI_gameInfo.addMessage("KAMIKAZE!!", !1, null) : 8 == h ? objGUI_gameInfo.addMessage("You were killed by a Warship!", !1, null) : 3 == h ? (objGUI_gameInfo.addMessage("Splash!", !1, null),
+                            objG_sfxManager.playSound(str_sfxid_bigsplash, .7, 1, const_Q_0, null),
+                            obj_particleImpacts.addSplash(objG_player_plane.x, E / 2 + 10, 2, !1)) : objGUI_gameInfo.addMessage("You were killed!", !1, null),
                             Z ? (Z = !1,
-                            v = null,
+                            objG_player_plane = null,
                             ma = 0,
                             ka = 1,
                             wasKilled(d),
-                            func_displayGameoverScore(d)) : (v = null,
-                            L.waitUntilNextFollow())),
-                            5 == h ? F.addActivityMessage(func_renameBlankPlayerNames(c.name) + " left") : 4 == h && F.addActivityMessage(func_renameBlankPlayerNames(c.name) + " abandoned"),
-                            X.addExplosion(c.dstX, c.dstY, .5 * c.getSpeedDirectionX(), .5 * c.getSpeedDirectionY())),
-                            null == c ? console.log("ERROR: Trying to remove a player that didnt exist!") : B[a].cleanup();
-                        else if (d = U[a])
-                            d.type == db && u.isSpaceWars() && (X.addExplosion(d.x, d.y, 0, 0),
-                            3 != d.fragment && (d = 1 - func_calculateDistance2D(d.x, d.y, H.x, H.y) / Ra,
-                            .01 < d && J.playSound(Fc, d, .4, Sa, null))),
-                            U[a].cleanup(),
-                            delete U[a];
+                            func_displayGameoverScore(d)) : (objG_player_plane = null,
+                            objG_followMode.waitUntilNextFollow())),
+                            5 == h ? objGUI_gameInfo.addActivityMessage(func_renameBlankPlayerNames(c.name) + " left") : 4 == h && objGUI_gameInfo.addActivityMessage(func_renameBlankPlayerNames(c.name) + " abandoned"),
+                            objG_animationManager.addExplosion(c.dstX, c.dstY, .5 * c.getSpeedDirectionX(), .5 * c.getSpeedDirectionY())),
+                            null == c ? console.log("ERROR: Trying to remove a player that didnt exist!") : objD_planes[a].cleanup();
+                        else if (d = objD_specialEntities[a])
+                            d.type == id_entity_asteroid && objG_eventManager.isSpaceWars() && (objG_animationManager.addExplosion(d.x, d.y, 0, 0),
+                            3 != d.fragment && (d = 1 - func_calculateDistance2D(d.x, d.y, H.x, H.y) / num_sound_max_distance,
+                            .01 < d && objG_sfxManager.playSound(str_sfxid_mexpl2, d, .4, const_Sa_3, null))),
+                            objD_specialEntities[a].cleanup(),
+                            delete objD_specialEntities[a];
                         func_setPlayerCount()
                     } else if (166 == a || 176 == a)
                         for (c = 1,
@@ -4809,29 +4810,29 @@ Feedback:
                             c += 2) : (q = d.getUint8(c, !0),
                             c += 1);
                             m = 1;
-                            l = Gc;
+                            l = str_sfxid_empty;
                             switch (q) {
-                            case Ja:
-                                l = u.isSpaceWars() ? qa == n ? sd : Yb : td;
+                            case id_weapon_machinegun:
+                                l = objG_eventManager.isSpaceWars() ? qa == n ? str_sfxid_kinglaser : str_sfxid_laser : str_sfxid_shot;
                                 break;
-                            case $a:
-                                u.isSpaceWars() ? (m = .7,
-                                l = Yb) : l = ud;
+                            case id_weapon_trishoot:
+                                objG_eventManager.isSpaceWars() ? (m = .7,
+                                l = str_sfxid_laser) : l = str_sfxid_trishot;
                                 break;
-                            case Qa:
-                                u.isSpaceWars() ? (l = Yb,
-                                m = 1.3) : l = vd
+                            case id_weapon_railgun:
+                                objG_eventManager.isSpaceWars() ? (l = str_sfxid_laser,
+                                m = 1.3) : l = str_sfxid_rail
                             }
-                            k = B[n];
-                            !k && 0 < n && (y = U[n]) && console.log("specialEntity did shoot: " + y.id);
-                            y = Q;
+                            k = objD_planes[n];
+                            !k && 0 < n && (y = objD_specialEntities[n]) && console.log("specialEntity did shoot: " + y.id);
+                            y = const_Q_0;
                             r = 1;
-                            v && n == v.id || !k || (y = Sa,
-                            r = 1 - func_calculateDistance2D(k.x, k.y, H.x, H.y) / Ra);
-                            .01 < r && l != Gc && J.playSound(l, r, m, y, null);
+                            objG_player_plane && n == objG_player_plane.id || !k || (y = const_Sa_3,
+                            r = 1 - func_calculateDistance2D(k.x, k.y, H.x, H.y) / num_sound_max_distance);
+                            .01 < r && l != str_sfxid_empty && objG_sfxManager.playSound(l, r, m, y, null);
                             m = d.getUint16(c, !0);
                             c += 2;
-                            q == bb && k.dash();
+                            q == id_weapon_punch && k.dash();
                             l = d.getUint8(c, !0);
                             c += 1;
                             for (y = 0; y < l; y++) {
@@ -4841,13 +4842,13 @@ Feedback:
                                   , c = c + 4
                                   , t = 0
                                   , t = !1;
-                                if (q != Ua && q != cb)
-                                    oa.addShot(n, r, s, q);
+                                if (q != id_weapon_missile && q != id_weapon_bombs)
+                                    obj_particleImpacts.addShot(n, r, s, q);
                                 else {
                                         t = d.getUint32(c, !0)
                                       , c = c + 4
-                                      , x = M[t];
-                                    x && (delete M[t],
+                                      , x = objD_missiles[t];
+                                    x && (delete objD_missiles[t],
                                     delete x);
                                     t = !0
                                 }
@@ -4856,19 +4857,19 @@ Feedback:
                                       , c = c + 4;
                                     if (0 == z)
                                         break;
-                                        Ca = B[z]
+                                        Ca = objD_planes[z]
                                       , ta = !1;
-                                    Ca || (Ca = U[z]) && (ta = !0);
+                                    Ca || (Ca = objD_specialEntities[z]) && (ta = !0);
                                     z == qa || ta || (t = !1);
                                     Ca && (Ca.hit(q),
-                                    k && q == za && (x = !0,
+                                    k && q == id_weapon_superweapon && (x = !0,
                                     k.laserHit(r, s, !0)),
-                                    v && (v.id == z ? J.playSound(Hc, 1, 1, Q, null) : n == v.id && J.playSound(Hc, 1, 2, Q, null)))
+                                    objG_player_plane && (objG_player_plane.id == z ? objG_sfxManager.playSound(str_sfxid_phit, 1, 1, const_Q_0, null) : n == objG_player_plane.id && objG_sfxManager.playSound(str_sfxid_phit, 1, 2, const_Q_0, null)))
                                 }
                                 k && !x && k.laserHit(r, s, !1);
-                                t && oa.addMissileImpact(r, s)
+                                t && obj_particleImpacts.addMissileImpact(r, s)
                             }
-                            0 < n && (n = B[n]) && q != Ua && q != cb && (n.ammo = m,
+                            0 < n && (n = objD_planes[n]) && q != id_weapon_missile && q != id_weapon_bombs && (n.ammo = m,
                             n.setWeapon(q))
                         }
                     else if (167 == a || 174 == a)
@@ -4885,7 +4886,7 @@ Feedback:
                             n = -d.getFloat32(c, !0);
                             c += 4;
                             k = new Class_PickupItem;
-                            W[f] = k;
+                            objD_pickups[f] = k;
                             k.id = f;
                             k.setPosition(q, n);
                             k.type = h
@@ -4901,56 +4902,56 @@ Feedback:
                     else if (16 == a)
                         c = d.getUint8(1, !0),
                         a = d.getUint32(2, !0),
-                        u.type = c,
-                        u.waiting = !0,
-                        u.endTime = +new Date + 1E3 * a;
+                        objG_eventManager.type = c,
+                        objG_eventManager.waiting = !0,
+                        objG_eventManager.endTime = +new Date + 1E3 * a;
                     else if (17 == a)
-                        u.type = u.eventType.EVENT_NONE,
-                        u.waiting = !1,
-                        u.endTime = 0;
+                        objG_eventManager.type = objG_eventManager.eventType.EVENT_NONE,
+                        objG_eventManager.waiting = !1,
+                        objG_eventManager.endTime = 0;
                     else if (18 == a || 19 == a)
                         c = 1,
                         f = d.getUint8(c, !0),
                         c++,
                         a = d.getUint32(c, !0),
                         c += 4,
-                        u.waiting = !1,
-                        u.setType(f),
-                        u.type == u.eventType.EVENT_WARSHIP && (h = d.getUint8(c, !0),
+                        objG_eventManager.waiting = !1,
+                        objG_eventManager.setType(f),
+                        objG_eventManager.type == objG_eventManager.eventType.EVENT_WARSHIP && (h = d.getUint8(c, !0),
                         c++,
                         f = d.getUint8(c, !0),
                         c++,
                         d = d.getUint8(c, !0),
-                        u.setWarshipInfo(h, f, d)),
-                        L.whiteFlash = 1,
-                        u.endTime = +new Date + 1E3 * a,
-                        u.isInstagib() ? u.railSwitch = !0 : u.isWarship() ? p.loadWarshipEvent() : u.isSpaceWars() && p.loadAsteroidEvent();
+                        objG_eventManager.setWarshipInfo(h, f, d)),
+                        objG_followMode.whiteFlash = 1,
+                        objG_eventManager.endTime = +new Date + 1E3 * a,
+                        objG_eventManager.isInstagib() ? objG_eventManager.railSwitch = !0 : objG_eventManager.isWarship() ? objG_assets.loadWarshipEvent() : objG_eventManager.isSpaceWars() && objG_assets.loadAsteroidEvent();
                     else if (20 == a) {
-                        u.type != u.eventType.EVENT_WARSHIP && (L.whiteFlash = 1);
-                        u.waiting = !1;
-                        if (u.isInstagib() || u.isSpaceWars())
-                            u.machinegunSwitch = !0;
-                        u.setType(u.eventType.EVENT_NONE)
+                        objG_eventManager.type != objG_eventManager.eventType.EVENT_WARSHIP && (objG_followMode.whiteFlash = 1);
+                        objG_eventManager.waiting = !1;
+                        if (objG_eventManager.isInstagib() || objG_eventManager.isSpaceWars())
+                            objG_eventManager.machinegunSwitch = !0;
+                        objG_eventManager.setType(objG_eventManager.eventType.EVENT_NONE)
                     } else if (22 == a)
-                        u.waiting = !1,
-                        u.type != u.eventType.EVENT_NONE && (u.type != u.eventType.EVENT_WARSHIP && (L.whiteFlash = 1),
-                        u.setType(u.eventType.EVENT_NONE));
+                        objG_eventManager.waiting = !1,
+                        objG_eventManager.type != objG_eventManager.eventType.EVENT_NONE && (objG_eventManager.type != objG_eventManager.eventType.EVENT_WARSHIP && (objG_followMode.whiteFlash = 1),
+                        objG_eventManager.setType(objG_eventManager.eventType.EVENT_NONE));
                     else if (23 == a) {
                         c = 1;
                         f = d.getUint32(c, !0);
                         c += 4;
                         if (0 < f) {
-                            if (a = B[f])
+                            if (a = objD_planes[f])
                                 a = func_renameBlankPlayerNames(a.name),
-                                F.setWarshipRemoved(a)
+                                objGUI_gameInfo.setWarshipRemoved(a)
                         } else
-                            F.setWarshipRemoved(null);
+                            objGUI_gameInfo.setWarshipRemoved(null);
                         a = d.getUint8(c, !0);
                         c += 1;
                         f = d.getUint8(c, !0);
                         c += 1;
                         d = d.getUint8(c, !0);
-                        u.setWarshipInfo(a, f, d)
+                        objG_eventManager.setWarshipInfo(a, f, d)
                     } else if (21 == a) {
                         f = d.getUint8(1, !0);
                         c = 2;
@@ -4961,14 +4962,14 @@ Feedback:
                                 break;
                             a += String.fromCharCode(h)
                         }
-                        F.setLastWinner(a, f)
+                        objGUI_gameInfo.setLastWinner(a, f)
                     }
             };
             this.connectionClosed = function() {
-                L.gameCleanup();
-                A.sentHello = !1;
-                A.hasConnection = !1;
-                A.firstClientListing = !0;
+                objG_followMode.gameCleanup();
+                objG_wsConnection.sentHello = !1;
+                objG_wsConnection.hasConnection = !1;
+                objG_wsConnection.firstClientListing = !0;
                 connectionClosed();
                 func_displayGameoverScore(-1);
                 $("#topGui").hide();
@@ -4978,7 +4979,7 @@ Feedback:
                 let b = this.connectRetry;
                 5 < b && (b = 5);
                 setTimeout(this.getServerAndConnect, 1E3 + 1E3 * b);
-                A.connectRetry++
+                objG_wsConnection.connectRetry++
             };
             this.sendSingleByte = function(b) {
                 let a = new ArrayBuffer(1);
@@ -4992,8 +4993,8 @@ Feedback:
                   , h = 2;
                 a && (h = 8);
                 e.setUint8(0, h);
-                e.setUint8(1, bc);
-                e.setUint8(2, dc);
+                e.setUint8(1, intG_color_id);
+                e.setUint8(2, intG_decal_id);
                 for (h = 0; h < b.length; ++h)
                     e.setUint16(3 + 2 * h, b.charCodeAt(h), !0);
                 f.send(c)
@@ -5002,9 +5003,9 @@ Feedback:
                 let b = new ArrayBuffer(10)
                   , a = new DataView(b);
                 a.setUint8(0, 3);
-                a.setFloat64(1, V.angle, !0);
+                a.setFloat64(1, objG_inputManager.angle, !0);
                 let c = 0;
-                if (V.hover || !wa)
+                if (objG_inputManager.hover || !wa)
                     c |= 1;
                 if (!wa || Y)
                     c |= 2;
@@ -5015,14 +5016,14 @@ Feedback:
                 let b = new ArrayBuffer(9)
                   , a = new DataView(b);
                 a.setUint8(0, 4);
-                a.setFloat64(1, V.angle, !0);
+                a.setFloat64(1, objG_inputManager.angle, !0);
                 f.send(b)
             };
             this.sendThrottle = function() {
                 let b = new ArrayBuffer(2)
                   , a = new DataView(b);
                 a.setUint8(0, 6);
-                1 == V.throttle ? a.setUint8(1, 1) : a.setUint8(1, 0);
+                1 == objG_inputManager.throttle ? a.setUint8(1, 1) : a.setUint8(1, 0);
                 f.send(b)
             };
             this.sendBraking = function(b) {
@@ -5074,62 +5075,62 @@ Feedback:
               , ta
               , N;
             function e() {
-                Z && A.hasConnection && A.sendInput()
+                Z && objG_wsConnection.hasConnection && objG_wsConnection.sendInput()
             }
             this.whiteFlash = 0;
             f.followTopPlayer = function() {
                 let a = -1
                   , b = 0;
-                for (id in B)
-                    if (B[id].inGame) {
-                        let c = B[id].score;
+                for (id in objD_planes)
+                    if (objD_planes[id].inGame) {
+                        let c = objD_planes[id].score;
                         a < c && (a = c,
                         b = id)
                     }
-                b && (v = B[b],
-                v.prepareFollow(),
+                b && (objG_player_plane = objD_planes[b],
+                objG_player_plane.prepareFollow(),
                 Oa = ra = b)
             };
             f.PlayerFollowing = function(a) {
                 c = 0;
                 let b, d, e;
-                if (0 == ja.length)
+                if (0 == list_str_leaderboard_players.length)
                     ra = 0,
-                    v = null;
+                    objG_player_plane = null;
                 else {
                     b = !1;
                     0 == Oa && (b = !0);
                     if (!b) {
                         b = !1, d;
-                        for (d in ja) {
+                        for (d in list_str_leaderboard_players) {
                             if (b) {
-                                e = B[ja[d]];
+                                e = objD_planes[list_str_leaderboard_players[d]];
                                 if (!e.inGame)
                                     continue;
-                                ra = ja[d];
-                                v = e;
-                                v.prepareFollow();
+                                ra = list_str_leaderboard_players[d];
+                                objG_player_plane = e;
+                                objG_player_plane.prepareFollow();
                                 Oa = ra;
                                 return
                             }
-                            if (ja[d] == Oa)
+                            if (list_str_leaderboard_players[d] == Oa)
                                 if (a)
                                     b = !0;
                                 else {
                                     d--;
-                                    0 > d && (d = ja.length - 1);
-                                    e = B[ja[d]];
-                                    ra = ja[d];
-                                    v = e;
-                                    v.prepareFollow();
+                                    0 > d && (d = list_str_leaderboard_players.length - 1);
+                                    e = objD_planes[list_str_leaderboard_players[d]];
+                                    ra = list_str_leaderboard_players[d];
+                                    objG_player_plane = e;
+                                    objG_player_plane.prepareFollow();
                                     Oa = ra;
                                     return
                                 }
                         }
                     }
-                    ra = a = ja[0];
-                    v = B[a];
-                    v.prepareFollow();
+                    ra = a = list_str_leaderboard_players[0];
+                    objG_player_plane = objD_planes[a];
+                    objG_player_plane.prepareFollow();
                     Oa = a
                 }
             };
@@ -5138,83 +5139,83 @@ Feedback:
             };
             f.update = function(a) {
                 let b, e, f, s, t, w, D, C, E, Q, I, N, Y, ba;
-                if (p.loaded) {
-                    v && !v.inGame && 0 == ka && (v = null,
+                if (objG_assets.loaded) {
+                    objG_player_plane && !objG_player_plane.inGame && 0 == ka && (objG_player_plane = null,
                     ra = 0);
-                    F && F.update(a);
-                    mb && J.sound.volume(da, mb);
+                    objGUI_gameInfo && objGUI_gameInfo.update(a);
+                    mb && objG_sfxManager.sound.volume(num_max_volume, mb);
                     La = !1;
-                    for (b in W)
-                        W[b].update(a),
-                        W[b] && !La && W[b].type == za && (La = !0,
+                    for (b in objD_pickups)
+                        objD_pickups[b].update(a),
+                        objD_pickups[b] && !La && objD_pickups[b].type == id_weapon_superweapon && (La = !0,
                         Ma = null);
                     e = null;
-                    for (b in M)
-                        M[b].update(a),
-                        M[b].finished && (e = b);
-                    e && delete M[e];
+                    for (b in objD_missiles)
+                        objD_missiles[b].update(a),
+                        objD_missiles[b].finished && (e = b);
+                    e && delete objD_missiles[e];
                     e = null;
-                    for (b in B)
-                        B[b].updateBool != A.lastUpdateBool ? (B[b] == v && (ra = 0),
-                        delete B[b]) : (!La && B[b].weapon == za && B[b].inGame && (La = !0,
-                        Ma = func_renameBlankPlayerNames(B[b].name)),
-                        sc == b && B[b].inGame && (e = B[b]),
-                        u.railSwitch ? (B[b].setWeapon(Qa),
-                        B[b].ammo = -1) : u.machinegunSwitch && (B[b].setWeapon(Ja),
-                        B[b].ammo = -1),
-                        B[b].update(a));
-                    for (b in U)
-                        U[b].update(a);
-                    u.railSwitch && (u.railSwitch = !1);
-                    u.machinegunSwitch && (u.machinegunSwitch = !1);
-                    z.update(a);
-                    if (!Z && 0 == ka && null == v && (c -= a,
+                    for (b in objD_planes)
+                        objD_planes[b].updateBool != objG_wsConnection.lastUpdateBool ? (objD_planes[b] == objG_player_plane && (ra = 0),
+                        delete objD_planes[b]) : (!La && objD_planes[b].weapon == id_weapon_superweapon && objD_planes[b].inGame && (La = !0,
+                        Ma = func_renameBlankPlayerNames(objD_planes[b].name)),
+                        sc == b && objD_planes[b].inGame && (e = objD_planes[b]),
+                        objG_eventManager.railSwitch ? (objD_planes[b].setWeapon(id_weapon_railgun),
+                        objD_planes[b].ammo = -1) : objG_eventManager.machinegunSwitch && (objD_planes[b].setWeapon(id_weapon_machinegun),
+                        objD_planes[b].ammo = -1),
+                        objD_planes[b].update(a));
+                    for (b in objD_specialEntities)
+                        objD_specialEntities[b].update(a);
+                    objG_eventManager.railSwitch && (objG_eventManager.railSwitch = !1);
+                    objG_eventManager.machinegunSwitch && (objG_eventManager.machinegunSwitch = !1);
+                    objGUI_anchor.update(a);
+                    if (!Z && 0 == ka && null == objG_player_plane && (c -= a,
                     0 >= c))
-                        for (b in B) {
-                            B[b].inGame && (v = B[b],
-                            v.prepareFollow(),
+                        for (b in objD_planes) {
+                            objD_planes[b].inGame && (objG_player_plane = objD_planes[b],
+                            objG_player_plane.prepareFollow(),
                             ra = b);
                             break
                         }
-                    if (u.isSpaceWars()) {
-                        for (i in sa) {
-                            sa[i].update(z.getBounds(), z.zoom);
-                            f = sa[i];
+                    if (objG_eventManager.isSpaceWars()) {
+                        for (i in list_particleDust) {
+                            list_particleDust[i].update(objGUI_anchor.getBounds(), objGUI_anchor.zoom);
+                            f = list_particleDust[i];
                             .1 < Math.abs(ca.x) + Math.abs(ca.y) && (f.x -= (f.z - 1) * ca.x * .5,
                             f.y -= (f.z - 1) * ca.y * .5)
                         }
                         ca.x = 0;
                         ca.y = 0
                     }
-                    X.update(a);
+                    objG_animationManager.update(a);
                     H = {
-                        x: (d.width / 2 + (z.x * z.zoom - d.width / 2)) / z.zoom,
-                        y: (d.height / 2 + (z.y * z.zoom - d.height / 2)) / z.zoom
+                        x: (d.width / 2 + (objGUI_anchor.x * objGUI_anchor.zoom - d.width / 2)) / objGUI_anchor.zoom,
+                        y: (d.height / 2 + (objGUI_anchor.y * objGUI_anchor.zoom - d.height / 2)) / objGUI_anchor.zoom
                     };
-                    ya.update(a);
-                    if (!G && null != v)
-                        if (V.mouseMoved) {
+                    objG_backgrounds.update(a);
+                    if (!G && null != objG_player_plane)
+                        if (objG_inputManager.mouseMoved) {
                             a = 1;
-                            Ba || (a = 2);
-                            Zb = (qc + (z.x * z.zoom - d.width * a / 2)) / z.zoom;
-                            $b = (rc + (z.y * z.zoom - d.height * a / 2)) / z.zoom;
-                            a = Zb - v.x;
-                                s = $b - v.y
+                            bool_setting_highQuality || (a = 2);
+                            Zb = (qc + (objGUI_anchor.x * objGUI_anchor.zoom - d.width * a / 2)) / objGUI_anchor.zoom;
+                            $b = (rc + (objGUI_anchor.y * objGUI_anchor.zoom - d.height * a / 2)) / objGUI_anchor.zoom;
+                            a = Zb - objG_player_plane.x;
+                                s = $b - objG_player_plane.y
                               , f = Math.sqrt(a * a + s * s);
                             a /= f;
                             s /= f;
-                            V.hover = 75 < f ? 0 : 1;
+                            objG_inputManager.hover = 75 < f ? 0 : 1;
                             t = f = 0;
                             wa && (f = a,
                             t = -s);
                             0 != f && (a = Math.atan(t / f),
                             0 > f && (a = Math.PI + a),
                             a += Math.PI / 2,
-                            V.angle = a)
+                            objG_inputManager.angle = a)
                         } else
-                            V.hover = 1,
-                            V.angle = Math.PI;
-                    t = z.getBounds();
+                            objG_inputManager.hover = 1,
+                            objG_inputManager.angle = Math.PI;
+                    t = objGUI_anchor.getBounds();
                     a = t[1].x;
                     f = t[0].x;
                     s = t[0].y;
@@ -5238,7 +5239,7 @@ Feedback:
                     } else
                         q = !1;
                         E, w = !1;
-                    (ub = v ? Za[v.id] : 0) && 0 < ub && (E = B[ub],
+                    (ub = objG_player_plane ? Za[objG_player_plane.id] : 0) && 0 < ub && (E = objD_planes[ub],
                     E == e && (w = !0));
                     !E || func_isInsideBox(E.x, E.y, 30) || w ? y = !1 : (w = H.x - E.x,
                     D = H.y - E.y,
@@ -5255,12 +5256,12 @@ Feedback:
                     x = Math.acos(D),
                     0 > w && (x += Math.PI),
                     y = !0);
-                    if (u.isWarship()) {
+                    if (objG_eventManager.isWarship()) {
                         E = 99999;
                         e = 0, Q, I, N, Y;
-                        for (b in U)
-                            if (C = U[b],
-                            C.state == Ic && C.x > -$_sub && C.x < $_sub) {
+                        for (b in objD_specialEntities)
+                            if (C = objD_specialEntities[b],
+                            C.state == const_Ic_0 && C.x > -$_sub && C.x < $_sub) {
                                     w = H.x - C.x
                                   , D = H.y - C.y
                                   , ba = Math.sqrt(w * w + D * D);
@@ -5286,50 +5287,50 @@ Feedback:
                 }
             };
             f.draw = function(b) {
-                if (p.loaded) {
-                    z.setupContext();
-                    ya.drawGradient(a);
-                    ya.draw(a);
-                    let c = z.getBounds()[1].y
+                if (objG_assets.loaded) {
+                    objGUI_anchor.setupContext();
+                    objG_backgrounds.drawGradient(a);
+                    objG_backgrounds.draw(a);
+                    let c = objGUI_anchor.getBounds()[1].y
                       , e = !1
                       , f;
-                    if (u.isSpaceWars())
-                        for (i in sa)
-                            sa[i].draw(a);
+                    if (objG_eventManager.isSpaceWars())
+                        for (i in list_particleDust)
+                            list_particleDust[i].draw(a);
                     else
                         c > E / 2 - 25 && (e = !0,
-                        ya.drawWaterBehind(a));
+                        objG_backgrounds.drawWaterBehind(a));
                     if (xa) {
-                        for (f in W)
-                            W[f].draw(a);
-                        oa.draw(a);
-                        for (f in M)
-                            M[f].draw(a, b);
-                        for (f in B)
-                            B[f].draw(a, b);
-                        for (f in B)
-                            B[f].drawInfo(a);
-                        Z && v.drawInput(a);
-                        for (f in U)
-                            U[f].draw(a);
-                        X.drawExplosions(a);
-                        X.drawBehind(a)
+                        for (f in objD_pickups)
+                            objD_pickups[f].draw(a);
+                        obj_particleImpacts.draw(a);
+                        for (f in objD_missiles)
+                            objD_missiles[f].draw(a, b);
+                        for (f in objD_planes)
+                            objD_planes[f].draw(a, b);
+                        for (f in objD_planes)
+                            objD_planes[f].drawInfo(a);
+                        Z && objG_player_plane.drawInput(a);
+                        for (f in objD_specialEntities)
+                            objD_specialEntities[f].draw(a);
+                        objG_animationManager.drawExplosions(a);
+                        objG_animationManager.drawBehind(a)
                     }
-                    e && ya.drawWaterFront(a);
+                    e && objG_backgrounds.drawWaterFront(a);
                     if (xa) {
-                        if (!u.isSpaceWars()) {
-                            for (f in B)
-                                B[f].drawReflection(a, b);
-                            for (f in M)
-                                M[f].drawReflection(a, b);
-                            for (f in U)
-                                U[f].drawReflection(a, b)
+                        if (!objG_eventManager.isSpaceWars()) {
+                            for (f in objD_planes)
+                                objD_planes[f].drawReflection(a, b);
+                            for (f in objD_missiles)
+                                objD_missiles[f].drawReflection(a, b);
+                            for (f in objD_specialEntities)
+                                objD_specialEntities[f].drawReflection(a, b)
                         }
-                        X.drawLayer2(a);
-                        X.draw(a);
-                        for (f in U)
-                            U[f].drawInfo(a);
-                        ya.drawLimits(a);
+                        objG_animationManager.drawLayer2(a);
+                        objG_animationManager.draw(a);
+                        for (f in objD_specialEntities)
+                            objD_specialEntities[f].drawInfo(a);
+                        objG_backgrounds.drawLimits(a);
                         q && (b = 1,
                         c = 0 < qa,
                         a.save(),
@@ -5338,7 +5339,7 @@ Feedback:
                         c && (a.save(),
                         e = func_rotatePoint(0, 50, -k),
                         a.translate(e.x, e.y),
-                        p.frames.crown.draw(a),
+                        objG_assets.frames.crown.draw(a),
                         a.restore()),
                         a.rotate(-k),
                         e = 1.2,
@@ -5358,7 +5359,7 @@ Feedback:
                         a.save(),
                         e = func_rotatePoint(0, 50, -x),
                         a.translate(e.x, e.y),
-                        p.frames.revengeIcon.draw(a),
+                        objG_assets.frames.revengeIcon.draw(a),
                         a.restore(),
                         a.rotate(-x),
                         a.translate(0, -(-20 - 10 * b)),
@@ -5370,14 +5371,14 @@ Feedback:
                         a.lineTo(0, -20 * b * e),
                         a.fill(),
                         a.restore());
-                        T && p.warshipIcon && (b = 1,
+                        T && objG_assets.warshipIcon && (b = 1,
                         a.save(),
                         a.translate(pa, L),
                         a.scale(Ca, Ca),
                         a.save(),
                         e = func_rotatePoint(0, 80, -ta),
                         a.translate(e.x, e.y),
-                        a.drawImage(p.warshipIcon, -p.warshipIcon.width / 2, -p.warshipIcon.height / 2),
+                        a.drawImage(objG_assets.warshipIcon, -objG_assets.warshipIcon.width / 2, -objG_assets.warshipIcon.height / 2),
                         a.restore(),
                         a.rotate(-ta),
                         e = .9,
@@ -5390,8 +5391,8 @@ Feedback:
                         a.fill(),
                         a.restore())
                     }
-                    z.startUILayer();
-                    bool_drawUI && F.draw(a);
+                    objGUI_anchor.startUILayer();
+                    bool_drawUI && objGUI_gameInfo.draw(a);
                     0 < this.whiteFlash && (a.save(),
                     a.globalAlpha = this.whiteFlash,
                     a.fillStyle = "#FFFFFF",
@@ -5401,32 +5402,32 @@ Feedback:
                 }
             };
             f.gameCleanup = function() {
-                v = void 0;
+                objG_player_plane = void 0;
                 ra = 0;
                 Z = !1;
                 gb = ma = 0;
-                F && F.clearBonusDisplay();
-                for (id in W)
-                    delete W[id];
-                W = {};
-                for (id in M)
-                    delete M[id];
-                M = {};
-                for (id in B)
-                    delete B[id];
-                B = {};
-                for (id in U)
-                    delete U[id];
-                U = {}
+                objGUI_gameInfo && objGUI_gameInfo.clearBonusDisplay();
+                for (id in objD_pickups)
+                    delete objD_pickups[id];
+                objD_pickups = {};
+                for (id in objD_missiles)
+                    delete objD_missiles[id];
+                objD_missiles = {};
+                for (id in objD_planes)
+                    delete objD_planes[id];
+                objD_planes = {};
+                for (id in objD_specialEntities)
+                    delete objD_specialEntities[id];
+                objD_specialEntities = {}
             };
             f.resize = function(a) {
                 C();
-                u.isSpaceWars() && (N && clearTimeout(N),
+                objG_eventManager.isSpaceWars() && (N && clearTimeout(N),
                 N = setTimeout(f.respawnParticles, 200))
             };
             let C = function() {
                 let a = 2, b, c;
-                Ba && (a = 1);
+                bool_setting_highQuality && (a = 1);
                 d.width = window.innerWidth / a;
                 d.height = window.innerHeight / a;
                 Ka = d.width;
@@ -5461,40 +5462,40 @@ Feedback:
                 }))
             };
             f.respawnParticles = function() {
-                sa = [];
+                list_particleDust = [];
                 for (let a = 0; 150 > a; a++)
-                    sa.push(new ClassU_xd)
+                    list_particleDust.push(new Class_ParticleDust)
             };
             d = b;
             a = d.getContext("2d");
             C();
-            ya = new Class_Backgrounds;
-            X = new Class_AnimationManager;
+            objG_backgrounds = new Class_Backgrounds;
+            objG_animationManager = new Class_AnimationManager;
             f.respawnParticles();
-            p = new Class_Assets;
-            p.load(function() {
+            objG_assets = new Class_Assets;
+            objG_assets.load(function() {
                 console.log("Resources loaded!");
                 1 == G && ("undefined" != typeof messageHandlers && messageHandlers.didLoad ? messageHandlers.didLoad(JSON.stringify({})) : window.webkit.messageHandlers.didLoad.postMessage({}));
-                F = new Class_UI_GameInfo;
-                oa = new Class_ParticleImpacts;
-                A.hasConnection && !A.sentHello && A.hello();
+                objGUI_gameInfo = new Class_UI_GameInfo;
+                obj_particleImpacts = new Class_ParticleImpacts;
+                objG_wsConnection.hasConnection && !objG_wsConnection.sentHello && objG_wsConnection.hello();
                 setInterval(e, 40);
                 func_displaySelectedDecal(Math.floor(5 * Math.random()) + 1);
                 func_displaySelectedColor(Math.floor(5 * Math.random()) + 1);
                 console.log("Loading sounds!");
-                J = new Class_SFXmanager;
-                J.load(function() {
-                    J.playSound(Ad, 1, 1, Q, function(a) {
+                objG_sfxManager = new Class_SFXmanager;
+                objG_sfxManager.load(function() {
+                    objG_sfxManager.playSound(str_sfxid_env, 1, 1, const_Q_0, function(a) {
                         mb = a
                     })
                 })
             });
             myName = "";
-            z = new Class_UI_Anchor_Shake(d,a,0,0);
-            A = new Class_WS_Connection;
-            A.getServerAndConnect()
+            objGUI_anchor = new Class_UI_Anchor(d,a,0,0);
+            objG_wsConnection = new Class_WS_Connection;
+            objG_wsConnection.getServerAndConnect()
         }
-          , Class_UI_Anchor_Shake = function(b, e, f, d) {
+          , Class_UI_Anchor = function(b, e, f, d) {
             let a = this
               , c = 0
               , g
@@ -5536,10 +5537,10 @@ Feedback:
                 Z || 1 != ka || Y ? (a.zoom = 1 / (window.devicePixelRatio / jb) * 1.2,
                 a.zoom *= t,
                 G && (a.zoom += .3),
-                null != v && (ca.x = v.x - a.x,
-                ca.y = v.y - a.y,
-                a.x = v.x,
-                a.y = v.y)) : (c = 1 / (window.devicePixelRatio / jb) * .7 * t,
+                null != objG_player_plane && (ca.x = objG_player_plane.x - a.x,
+                ca.y = objG_player_plane.y - a.y,
+                a.x = objG_player_plane.x,
+                a.y = objG_player_plane.y)) : (c = 1 / (window.devicePixelRatio / jb) * .7 * t,
                 a.zoom += (c - a.zoom) / 10);
                 this.applyShake(b)
             };
@@ -5777,13 +5778,13 @@ Feedback:
                 d.push(a)
             };
             this.addBlast = function(a, b, d, e, f) {
-                let k = X.createAnimation("explosion");
+                let k = objG_animationManager.createAnimation("explosion");
                 k.setScale(d);
                 k.posX = a;
                 k.posY = b;
-                X.runAnimationBehind(k);
-                a = 1 - func_calculateDistance2D(a, b, H.x, H.y) / Ra;
-                .01 < a && J.playSound(Fc, a * f, 1, e, null)
+                objG_animationManager.runAnimationBehind(k);
+                a = 1 - func_calculateDistance2D(a, b, H.x, H.y) / num_sound_max_distance;
+                .01 < a && objG_sfxManager.playSound(str_sfxid_mexpl2, a * f, 1, e, null)
             };
             this.addExplosion = function(b, d, e, f) {
                 if (bool_drawExplosions && func_isInsideBox(b, d, 100) && func_isTimeElapsed_50ms()) {
@@ -5792,8 +5793,8 @@ Feedback:
                         n.init(b, d, e, f);
                         a.push(n)
                     }
-                    this.addBlast(b, d, 1, Sa, 1);
-                    z.shake()
+                    this.addBlast(b, d, 1, const_Sa_3, 1);
+                    objGUI_anchor.shake()
                 }
             };
             this.update = function(b) {
@@ -6178,7 +6179,7 @@ Feedback:
               , h
               , q
               , n = 0;
-            u.isSpaceWars() && (c = 0);
+            objG_eventManager.isSpaceWars() && (c = 0);
             this.deleting = !1;
             this.init = function(a, b) {
                 g = a;
@@ -6214,7 +6215,7 @@ Feedback:
             }
         }
           , Class_Missile = function() {
-            let b = new Class_ParticleTrails
+            let obj_particleTrails = new Class_ParticleTrails
               , e = 0
               , f = 0;
             this.lastUpdate = 0;
@@ -6230,7 +6231,7 @@ Feedback:
             this.finished = !1;
             this.type = 0;
             this.update = function(d) {
-                let a = func_clamp((T - this.lastUpdate) / Jb, 0, 1)
+                let a = func_clamp((T - this.lastUpdate) / num_global_physics_step_ms, 0, 1)
                   , c = this.y - this.prevY
                   , g;
                 0 == this.x - this.prevX && 0 == c && (f++,
@@ -6239,10 +6240,10 @@ Feedback:
                 this.prevY = this.y;
                 this.x = a * (this.dstX - this.origX) + this.origX;
                 this.y = a * (this.dstY - this.origY) + this.origY;
-                b.setPosition(this.x, this.y);
-                b.update(d);
+                obj_particleTrails.setPosition(this.x, this.y);
+                obj_particleTrails.update(d);
                 if (1 == this.type)
-                    u.isSpaceWars() && (this.angle += .2);
+                    objG_eventManager.isSpaceWars() && (this.angle += .2);
                 else if (2 != this.type) {
                     a = E / 2;
                     c = a - 100;
@@ -6251,7 +6252,7 @@ Feedback:
                             g = Math.random() / 2
                           , c = (.2 + (.5 - (a - this.y) / (a - c) * .5)) * (.95 + g)
                           , g = 20 * Math.sin(this.angle);
-                        oa.addSplash(this.x - g, a + 5 * Math.random(), c, !0)
+                        obj_particleImpacts.addSplash(this.x - g, a + 5 * Math.random(), c, !0)
                     }
                     e -= d
                 }
@@ -6263,28 +6264,28 @@ Feedback:
                 this.timeToNextFrame = this.frameSwitchTime);
                 let e = .7;
                 this.flameState && (e = 1);
-                0 == this.type && (b.width = 1.5 * e,
-                b.style = "rgba(247, 189, 57, 1.0)",
-                b.draw(d),
-                b.width = .4 * e,
-                b.style = "rgba(232, 247, 59, 1.0)",
-                b.draw(d),
+                0 == this.type && (obj_particleTrails.width = 1.5 * e,
+                obj_particleTrails.style = "rgba(247, 189, 57, 1.0)",
+                obj_particleTrails.draw(d),
+                obj_particleTrails.width = .4 * e,
+                obj_particleTrails.style = "rgba(232, 247, 59, 1.0)",
+                obj_particleTrails.draw(d),
                 d.save(),
                 d.translate(this.x, this.y),
                 this.flameState ? d.scale(.7, .7) : d.scale(.9, .9),
                 d.rotate(this.angle),
                 d.translate(-27, 0),
-                p.frames.throttleFlame.draw(d),
+                objG_assets.frames.throttleFlame.draw(d),
                 d.restore());
                 d.save();
                 d.translate(this.x, this.y);
                 2 != this.type ? (1 == this.type && (c = 1.4),
                 d.scale(c, c),
-                1 == this.type && p.blinkImage && u.isSpaceWars() && (d.scale(2, 2),
-                d.drawImage(p.blinkImage, -p.blinkImage.width / 2, -p.blinkImage.height / 2),
+                1 == this.type && objG_assets.blinkImage && objG_eventManager.isSpaceWars() && (d.scale(2, 2),
+                d.drawImage(objG_assets.blinkImage, -objG_assets.blinkImage.width / 2, -objG_assets.blinkImage.height / 2),
                 d.scale(.5, .5)),
                 d.rotate(this.angle),
-                0 == this.type ? p.frames.missile_attack.draw(d) : p.frames.bomb.draw(d)) : (d.beginPath(),
+                0 == this.type ? objG_assets.frames.missile_attack.draw(d) : objG_assets.frames.bomb.draw(d)) : (d.beginPath(),
                 d.fillStyle = "#FF0000",
                 d.arc(0, 0, 6, 0, 2 * Math.PI),
                 d.fill(),
@@ -6317,7 +6318,7 @@ Feedback:
                 this.origY = this.dstY;
                 this.dstX = 10 * b;
                 this.dstY = 10 * a;
-                this.first_set && ((b = B[c]) ? (a = 5 * Math.abs(Math.cos(b.angle + Math.PI / 2)),
+                this.first_set && ((b = objD_planes[c]) ? (a = 5 * Math.abs(Math.cos(b.angle + Math.PI / 2)),
                 this.origX = b.x,
                 this.origY = b.y + a,
                 this.x = b.x,
@@ -6336,7 +6337,7 @@ Feedback:
             };
             this.setType = function(d) {
                 this.type = d;
-                0 != d && delete b
+                0 != d && delete obj_particleTrails
             };
             this.getSpeedDirectionX = function() {
                 return this.x - this.prevX
@@ -6344,11 +6345,11 @@ Feedback:
             this.getSpeedDirectionY = function() {
                 return this.y - this.prevY
             };
-            b.tailAddJointInterval = 30;
-            b.enabled = !0;
-            b.trailTime = 100;
-            b.width = 1.2;
-            b.fixedColor = !0
+            obj_particleTrails.tailAddJointInterval = 30;
+            obj_particleTrails.enabled = !0;
+            obj_particleTrails.trailTime = 100;
+            obj_particleTrails.width = 1.2;
+            obj_particleTrails.fixedColor = !0
         }
           , Class_ParticleTrails = function() {
             let b
@@ -6692,20 +6693,20 @@ Feedback:
                 })
             };
             this.playSound = function(d, a, c, g, h) {
-                if (b && 0 != N && wa) {
-                    a *= da;
+                if (b && 0 != num_setting_muteVol && wa) {
+                    a *= num_max_volume;
                     let q = f[d];
                     e[d] || (e[d] = 0);
                     0 < g && e[d] >= g || (this.sound.play(d, function(b) {
-                        d = J.sound._nodeById(b);
+                        d = objG_sfxManager.sound._nodeById(b);
                         d && d.bufferSource && (d.bufferSource.playbackRate.value = c);
-                        J.sound.volume(a, b);
+                        objG_sfxManager.sound.volume(a, b);
                         h && h(b)
                     }),
                     q = q[1],
-                    g != Q && e[d]++,
+                    g != const_Q_0 && e[d]++,
                     setTimeout(function() {
-                        g != Q && e[d]--
+                        g != const_Q_0 && e[d]--
                     }, q))
                 }
             };
@@ -6772,32 +6773,32 @@ Feedback:
                 k = !1;
                 8 == b ? (e = "DOUBLE",
                 s = "#cd9a6d",
-                c = p.doubleKillCanvas,
+                c = objG_assets.doubleKillCanvas,
                 n = .8) : 16 == b ? (e = "TRIPLE",
                 s = "#95b9c9",
-                c = p.tripleKillCanvas,
+                c = objG_assets.tripleKillCanvas,
                 n = .9,
                 m += "!") : 32 == b ? (e = "QUAD",
                 s = "#f0a400",
-                c = p.quadKillCanvas,
+                c = objG_assets.quadKillCanvas,
                 n = 1,
                 m += "!!") : 64 == b ? (e = "MULTI",
                 s = "#de0000",
-                c = p.multiKillCanvas,
+                c = objG_assets.multiKillCanvas,
                 n = 1.1,
                 m += "!!") : 128 == b ? (e = "NEAR",
                 s = "#ffe774",
-                c = p.frames.nearmiss,
+                c = objG_assets.frames.nearmiss,
                 n = .8,
                 m = "MISS",
                 k = !0) : 4096 == b ? (e = "REVENGE",
                 s = "#dd1824",
-                c = p.frames.revenge,
+                c = objG_assets.frames.revenge,
                 n = 1,
                 m = "KILL",
                 k = !0) : 256 == b && (e = l + " KILL STREAK!",
                 s = "#a5dd11",
-                c = p.frames.frenzy,
+                c = objG_assets.frames.frenzy,
                 n = .8,
                 m = "",
                 k = !0);
@@ -6825,7 +6826,7 @@ Feedback:
                 return g
             }
         }
-          , ClassU_xd = function() {
+          , Class_ParticleDust = function() {
             let b = this;
             b.x = 0;
             b.y = 0;
@@ -6873,7 +6874,7 @@ Feedback:
             this.update = function(c) {
                 if (this.inGame) {
                     func_isInsideBox(this.x, this.y + this.floatValue, 120) ? b || (b = !0) : b = !1;
-                    let g = func_clamp((T - this.lastUpdate) / Jb, 0, 1);
+                    let g = func_clamp((T - this.lastUpdate) / num_global_physics_step_ms, 0, 1);
                     this.prevX = this.x;
                     this.prevY = this.y;
                     this.prevFloatValue = this.floatValue;
@@ -6886,14 +6887,14 @@ Feedback:
                     this.cannonAngle = g * (this.dstCannonAngle - this.origCannonAngle) + this.origCannonAngle;
                     0 < this.highlightValue && (this.highlightValue -= .06,
                     0 > this.highlightValue && (this.highlightValue = 0));
-                    this.type == zb && 1 == this.state && 0 < f && (e -= .02,
+                    this.type == id_entity_warship && 1 == this.state && 0 < f && (e -= .02,
                     0 > e && (e = 0),
                     d -= c,
                     0 > d && (d = 150,
                     f -= 1,
-                    g = Math.random() * p.warshipImage.width - p.warshipImage.width / 2,
-                    h = Math.random() * p.warshipImage.height / 2 - p.warshipImage.height / 4,
-                    X.addBlast(this.x + g, this.y + h + q, .5, Q, 2)));
+                    g = Math.random() * objG_assets.warshipImage.width - objG_assets.warshipImage.width / 2,
+                    h = Math.random() * objG_assets.warshipImage.height / 2 - objG_assets.warshipImage.height / 4,
+                    objG_animationManager.addBlast(this.x + g, this.y + h + q, .5, const_Q_0, 2)));
                     2 == this.state ? (a -= .01,
                     0 > a && (a = 0)) : (a += .01,
                     1 < a && (a = 1));
@@ -6903,16 +6904,16 @@ Feedback:
             this.loadWarshipCanvas = function() {
                 let a = document.createElement("canvas")
                   , b = a.getContext("2d")
-                  , d = p.warshipImage.height;
-                a.width = p.warshipImage.width;
+                  , d = objG_assets.warshipImage.height;
+                a.width = objG_assets.warshipImage.width;
                 a.height = d;
                 this.warshipCanvas = a;
                 this.warshipContext = b
             };
             this.draw = function(c) {
                 if (this.inGame && b)
-                    if (this.type == zb && p.warshipLoaded) {
-                        if (p.warshipImage && !this.warshipCanvas && this.loadWarshipCanvas(),
+                    if (this.type == id_entity_warship && objG_assets.warshipLoaded) {
+                        if (objG_assets.warshipImage && !this.warshipCanvas && this.loadWarshipCanvas(),
                         this.warshipCanvas) {
                             c.save();
                             c.globalAlpha = a;
@@ -6928,42 +6929,42 @@ Feedback:
                             this.warshipContext.translate(d, e);
                             this.warshipContext.rotate(-this.cannonAngle);
                             d = 10 * (1 - this.recoilTime / 200);
-                            this.warshipContext.translate(.5 * -p.cannonImage.width, -20 - d);
-                            this.warshipContext.drawImage(p.cannonImage, 0, 0);
+                            this.warshipContext.translate(.5 * -objG_assets.cannonImage.width, -20 - d);
+                            this.warshipContext.drawImage(objG_assets.cannonImage, 0, 0);
                             this.warshipContext.restore();
                             this.warshipContext.save();
                             this.warshipContext.translate(0, this.floatValue + 4);
                             this.warshipContext.translate(this.warshipCanvas.width / 2, this.warshipCanvas.height / 2);
                             this.warshipContext.rotate(this.angle);
                             this.warshipContext.translate(-this.warshipCanvas.width / 2, -this.warshipCanvas.height / 2);
-                            this.warshipContext.drawImage(p.warshipImage, 0, 0);
+                            this.warshipContext.drawImage(objG_assets.warshipImage, 0, 0);
                             0 < this.highlightValue && (this.warshipContext.globalAlpha = .8 * this.highlightValue,
-                            this.warshipContext.drawImage(p.whiteWarshipImage, 0, 0),
+                            this.warshipContext.drawImage(objG_assets.whiteWarshipImage, 0, 0),
                             this.warshipContext.globalAlpha = 1);
                             this.warshipContext.restore();
                             1 == this.state && (c.globalAlpha = .8);
-                            c.drawImage(this.warshipCanvas, -p.warshipImage.width / 2, -p.warshipImage.height / 2);
+                            c.drawImage(this.warshipCanvas, -objG_assets.warshipImage.width / 2, -objG_assets.warshipImage.height / 2);
                             c.restore()
                         }
                     } else
-                        this.type == db && p.asteroidImage && (c.save(),
+                        this.type == id_entity_asteroid && objG_assets.asteroidImage && (c.save(),
                         c.globalAlpha = a,
                         c.translate(this.x, this.y),
                         c.rotate(-this.angle),
                         d = (3 - this.fragment + 1) / 3,
                         c.scale(d, d),
-                        c.drawImage(p.asteroidImage, -p.asteroidImage.width / 2, -p.asteroidImage.height / 2),
+                        c.drawImage(objG_assets.asteroidImage, -objG_assets.asteroidImage.width / 2, -objG_assets.asteroidImage.height / 2),
                         0 < this.highlightValue && (c.globalAlpha = .8 * this.highlightValue,
-                        c.drawImage(p.whiteAsteroidImage, -p.asteroidImage.width / 2, -p.asteroidImage.height / 2),
+                        c.drawImage(objG_assets.whiteAsteroidImage, -objG_assets.asteroidImage.width / 2, -objG_assets.asteroidImage.height / 2),
                         c.globalAlpha = 1),
                         c.restore())
             };
             this.drawReflection = function(c, d) {
-                this.inGame && b && this.type == zb && p.warshipLoaded && (c.save(),
+                this.inGame && b && this.type == id_entity_warship && objG_assets.warshipLoaded && (c.save(),
                 c.globalAlpha = .15 * a,
                 c.translate(this.x, this.y + this.warshipCanvas.height - 4),
                 c.scale(1, -1),
-                c.drawImage(this.warshipCanvas, -p.warshipImage.width / 2, -p.warshipImage.height / 2),
+                c.drawImage(this.warshipCanvas, -objG_assets.warshipImage.width / 2, -objG_assets.warshipImage.height / 2),
                 c.restore(),
                 c.save(),
                 c.translate(this.x + 85 + this.floatValue + 100 * this.angle, this.y + this.warshipCanvas.height / 2 - 4),
@@ -6979,7 +6980,7 @@ Feedback:
             };
             this.drawInput = function(a) {};
             this.drawInfo = function(a) {
-                if (this.inGame && b && this.state == Ic && 65535 != this.energy) {
+                if (this.inGame && b && this.state == const_Ic_0 && 65535 != this.energy) {
                     a.save();
                     a.translate(this.x, this.y);
                     a.fillStyle = "rgba(126,219,226,1)";
@@ -6989,7 +6990,7 @@ Feedback:
                     a.shadowColor = "rgba(255, 255, 255, 0.7)";
                     a.lineWidth = 1;
                     let d = 28, e;
-                    this.type == db ? (e = 50 / this.fragment,
+                    this.type == id_entity_asteroid ? (e = 50 / this.fragment,
                     d *= 3 / this.fragment) : (e = 55,
                     d *= 5);
                     let f = 512;
@@ -7002,7 +7003,7 @@ Feedback:
                 }
             };
             this.hit = function(a) {
-                func_isTimeElapsed_50ms() && (this.highlightValue = a == Ua || this.type == db ? this.highlightValue + 1 : this.highlightValue + .3,
+                func_isTimeElapsed_50ms() && (this.highlightValue = a == id_weapon_missile || this.type == id_entity_asteroid ? this.highlightValue + 1 : this.highlightValue + .3,
                 1 < this.highlightValue && (this.highlightValue = 1))
             };
             this.setPose = function(a, b, d) {
@@ -7060,15 +7061,15 @@ Feedback:
             }
         };
         window.onload = function() {
-            Modernizr.canvas && Modernizr.websockets && (null == L && (window.devicePixelRatio && (jb = 1 < window.devicePixelRatio ? 2 : 1),
-            u = new Class_EventManager,
-            L = new ClassR_FollowMode(document.getElementById("canvas")),
-            window.addEventListener("resize", L.resize, !1),
-            V = new Class_InputManager,
-            V.addListeners(),
+            Modernizr.canvas && Modernizr.websockets && (null == objG_followMode && (window.devicePixelRatio && (jb = 1 < window.devicePixelRatio ? 2 : 1),
+            objG_eventManager = new Class_EventManager,
+            objG_followMode = new ClassR_FollowMode(document.getElementById("canvas")),
+            window.addEventListener("resize", objG_followMode.resize, !1),
+            objG_inputManager = new Class_InputManager,
+            objG_inputManager.addListeners(),
             window.requestAnimationFrame ? window.requestAnimationFrame(Rb) : setInterval(Rb, 1E3 / 60),
             $("#overlay").show()),
-            L.resize(),
+            objG_followMode.resize(),
             func_setGraphicsQuality())
         }
     }
