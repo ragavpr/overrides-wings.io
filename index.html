@@ -728,14 +728,14 @@ Feedback:
           , xa = !1
           , kc = 0
           , ob = !0
-          , Na = !0
-          , pb = !0
-          , qb = !0
-          , rb = !0
-          , Ya = !0
-          , sb = !0
-          , tb = !0
-          , Pb = !0
+          , bool_drawWater = !0
+          , bool_drawExplosions = !0
+          , bool_drawSun = !0
+          , bool_drawItems = !0
+          , bool_drawTrails = !0
+          , bool_drawSplashes = !0
+          , bool_drawGradient = !0
+          , bool_drawUI = !0
           , L
           , X
           , p
@@ -1965,15 +1965,15 @@ Feedback:
             b.keydown = function(a) {
                 67 == a.keyCode && Y && eb ? setTimeout(function() {
                     ic()
-                }, 10) : Y || (32 == a.keyCode ? Z && A.sendShooting(!0) : 188 != a.keyCode && 49 != a.keyCode && (222 == a.keyCode ? Pb = !Pb : 51 == a.keyCode ? (tb = !tb,
-                console.log("Toggled Gradient to " + tb)) : 52 == a.keyCode ? (ob = !ob,
-                console.log("Toggled drawClouds to " + ob)) : 53 == a.keyCode ? (Na = !Na,
-                console.log("Toggled drawWater to " + Na)) : 54 == a.keyCode ? (pb = !pb,
-                console.log("Toggled drawExplosions to " + pb)) : 55 == a.keyCode ? (qb = !qb,
-                console.log("Toggled drawSun to " + qb)) : 56 == a.keyCode ? (rb = !rb,
-                console.log("Toggled drawItems to " + rb)) : 57 == a.keyCode ? (Ya = !Ya,
-                console.log("Toggled drawTrails to " + Ya)) : 48 == a.keyCode ? (sb = !sb,
-                console.log("Toggled drawSplashes to " + sb)) : 27 == a.keyCode ? (Bb(),
+                }, 10) : Y || (32 == a.keyCode ? Z && A.sendShooting(!0) : 188 != a.keyCode && 49 != a.keyCode && (222 == a.keyCode ? bool_drawUI = !bool_drawUI : 51 == a.keyCode ? (bool_drawGradient = !bool_drawGradient,
+                console.log("Toggled Gradient to " + bool_drawGradient)) : 52 == a.keyCode ? (ob = !ob,
+                console.log("Toggled drawClouds to " + ob)) : 53 == a.keyCode ? (bool_drawWater = !bool_drawWater,
+                console.log("Toggled drawWater to " + bool_drawWater)) : 54 == a.keyCode ? (bool_drawExplosions = !bool_drawExplosions,
+                console.log("Toggled drawExplosions to " + bool_drawExplosions)) : 55 == a.keyCode ? (bool_drawSun = !bool_drawSun,
+                console.log("Toggled drawSun to " + bool_drawSun)) : 56 == a.keyCode ? (bool_drawItems = !bool_drawItems,
+                console.log("Toggled drawItems to " + bool_drawItems)) : 57 == a.keyCode ? (bool_drawTrails = !bool_drawTrails,
+                console.log("Toggled drawTrails to " + bool_drawTrails)) : 48 == a.keyCode ? (bool_drawSplashes = !bool_drawSplashes,
+                console.log("Toggled drawSplashes to " + bool_drawSplashes)) : 27 == a.keyCode ? (Bb(),
                 da = .05 * N,
                 $("#overlay").show(),
                 hc(),
@@ -2220,7 +2220,7 @@ Feedback:
                 }
             };
             this.addSplash = function(b, f, d, a) {
-                if (sb && !u.isSpaceWars() && aa(b, f, 100) && la()) {
+                if (bool_drawSplashes && !u.isSpaceWars() && aa(b, f, 100) && la()) {
                     let c = X.createAnimation("splash")
                       , g = X.createAnimation("splashReflex");
                     c.setScale(d);
@@ -4082,7 +4082,7 @@ Feedback:
                     b[d].draw(a, 1)
             };
             this.drawWater = function(a) {
-                if (Na)
+                if (bool_drawWater)
                     for (let c = b.length, d = 0; d < c; d++)
                         b[d].draw(a, 2)
             };
@@ -4111,16 +4111,16 @@ Feedback:
                 d.addColorStop(.3, "rgba(" + parseInt(m) + ",0,55,1.0)"),
                 d.addColorStop(.5, "rgba(" + parseInt(m) + ",0,75,1.0)"),
                 d.addColorStop(.7, "rgba(" + parseInt(m) + ",0,55,1.0)"),
-                d.addColorStop(1, "rgba(" + parseInt(f) + ",0,0,1.0)")) : tb ? (d.addColorStop(0, "rgba(" + parseInt(f) + ",145,202,1.0)"),
+                d.addColorStop(1, "rgba(" + parseInt(f) + ",0,0,1.0)")) : bool_drawGradient ? (d.addColorStop(0, "rgba(" + parseInt(f) + ",145,202,1.0)"),
                 d.addColorStop(1, "rgba(" + parseInt(m) + ",231,252,1.0)")) : d = "#62bae2";
                 a.fillStyle = d;
                 a.fillRect(c - canvas.width / 2 / z.zoom, b - canvas.height / 2 / z.zoom, canvas.width / z.zoom, canvas.height / z.zoom)
             };
             this.drawWaterBehind = function(a) {
-                Na && this.waves.drawBehind(a)
+                bool_drawWater && this.waves.drawBehind(a)
             };
             this.drawWaterFront = function(a) {
-                Na && this.waves.drawFront(a)
+                bool_drawWater && this.waves.drawFront(a)
             };
             this.drawLimits = function(a) {
                 let c = (canvas.width / 2 + (z.x * z.zoom - canvas.width / 2)) / z.zoom
@@ -4164,7 +4164,7 @@ Feedback:
                 a.fillRect(c - canvas.width / 2 / z.zoom, -E / 2 - 1, canvas.width / z.zoom, 6))
             };
             this.draw = function(a) {
-                if (qb && !u.isSpaceWars()) {
+                if (bool_drawSun && !u.isSpaceWars()) {
                     let c = .97 * z.x + 450
                       , b = .97 * z.y - 100
                       , d = a.createRadialGradient(c, b, 70, c, b, 350);
@@ -4292,7 +4292,7 @@ Feedback:
                 c.restore()
             };
             this.draw = function(a) {
-                if (rb) {
+                if (bool_drawItems) {
                     let c = 40, b;
                     32 == this.type ? b = p.frames.health : this.type == $a ? b = p.frames.trishoot : this.type == Qa ? b = p.frames.railgun : this.type == Ua ? b = p.frames.missile : this.type == bb ? b = p.frames.melee : this.type == cb ? b = p.frames.bombdrop : this.type == za ? b = p.frames.laser : 64 == this.type && (c = 10,
                     b = p.frames.wing);
@@ -5391,7 +5391,7 @@ Feedback:
                         a.restore())
                     }
                     z.startUILayer();
-                    Pb && F.draw(a);
+                    bool_drawUI && F.draw(a);
                     0 < this.whiteFlash && (a.save(),
                     a.globalAlpha = this.whiteFlash,
                     a.fillStyle = "#FFFFFF",
@@ -5786,7 +5786,7 @@ Feedback:
                 .01 < a && J.playSound(Fc, a * f, 1, e, null)
             };
             this.addExplosion = function(b, d, e, f) {
-                if (pb && aa(b, d, 100) && la()) {
+                if (bool_drawExplosions && aa(b, d, 100) && la()) {
                     if (1 >= a.length) {
                         let n = new Dd;
                         n.init(b, d, e, f);
@@ -6395,7 +6395,7 @@ Feedback:
                 this.trailEffectTime = 0 > this.trailEffectTime ? 0 : this.trailEffectTime - f
             };
             this.draw = function(b) {
-                if (Ya)
+                if (bool_drawTrails)
                     for (let d = this.tailJoints.length, a = 0; a < d; a++)
                         for (let c = this.tailJoints[a].length, e = 0; e < c - 1; e++) {
                             b.strokeStyle = this.tailJoints[a][e].style;
@@ -6481,7 +6481,7 @@ Feedback:
                 d > this.maxPoints && this.tailJoints[0].splice(0, 1))
             };
             this.draw = function(f) {
-                if (Ya && this.loaded && 0 < this.tailJoints.length)
+                if (bool_drawTrails && this.loaded && 0 < this.tailJoints.length)
                     for (let d, a, c = this.letterMinDistance, g = !0, h = 0, q = 0, n, k, m, l, p, r, s = this.tailJoints[0].length - 2; 0 <= s; s--) {
                         let t = this.tailJoints[0][s].x, w = this.tailJoints[0][s].y, u;
                         g && (d = b,
