@@ -7,4 +7,4 @@
 # Disclaimer
 
 - This project is a reverse engineering effort for educational purposes.
-- No affiliation whatsoever with `wings.io`
+- This effort has no affiliation whatsoever with `wings.io`.

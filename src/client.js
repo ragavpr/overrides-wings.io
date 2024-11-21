@@ -1,5 +1,4 @@
 const $ = jQuery;
-console.log(window, document, $);
 let Zb,
   $b,
   bool_isHttps = "https:" == window.location.protocol,
