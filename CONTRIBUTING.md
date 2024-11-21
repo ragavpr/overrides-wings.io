@@ -48,5 +48,7 @@ Use bun to build the project
 ### To build `client.js`
 
 ```
-bun build src/client.js --minify --outfile build/client.js --target browser
+bun build src/client.ts --minify --outfile build/client.js --target browser
 ```
+
+(Errors must be ignored for now)

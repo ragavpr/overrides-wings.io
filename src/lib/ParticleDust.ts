@@ -1,4 +1,4 @@
-export class Class_ParticleDust {
+export class ParticleDust {
   x = 0;
   y = 0;
   z = 1 * Math.random() + 0.3;

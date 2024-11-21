@@ -1,5 +1,5 @@
-import { Class_ParticleDust } from "./lib/ParticleDust";
-const $ = jQuery;
+import { EventManager } from "./lib/EventManager";
+import { ParticleDust } from "./lib/ParticleDust";
 let Zb,
   $b,
   bool_isHttps = "https:" == window.location.protocol,
@@ -327,7 +327,7 @@ let func_detect_country = function () {
     window.requestAnimationFrame && window.requestAnimationFrame(Rb);
     Lb && (Lb = false);
   };
-function func_displaySelectedColor(int_color_id) {
+function func_displaySelectedColor(int_color_id: number) {
   intG_color_id = int_color_id;
   let e;
   for (e = 0; 5 >= e; e++) {
@@ -364,7 +364,7 @@ function func_displaySelectedColor(int_color_id) {
   for (e = 0; 5 >= e; e++) $("#check" + e).hide();
   $("#check" + int_color_id).show();
 }
-function func_displaySelectedDecal(int_decal_id) {
+function func_displaySelectedDecal(int_decal_id: number) {
   intG_decal_id = int_decal_id;
   for (let e = 0; 5 >= e; e++) $("#checkD" + e).hide();
   $("#checkD" + int_decal_id).show();
@@ -495,7 +495,7 @@ function func_displayGameover() {
   num_max_volume = 0.05 * num_setting_muteVol;
   objGUI_gameInfo.clearBonusDisplay();
 }
-function func_displayGameoverScore(int_score) {
+function func_displayGameoverScore(int_score: number) {
   if (int_pathMobile)
     (bool_following_plane = true), Z || ((ka = 1), (objG_player_plane = null));
   else {
@@ -539,16 +539,16 @@ function func_isIframe() {
     return true;
   }
 }
-function func_padZerosPrefix(num_val) {
+function func_padZerosPrefix(num_val: number) {
   let e = "";
   10 > num_val && (e = "0");
-  return e + parseInt(num_val);
+  return e + num_val;
 }
-function func_millisToTimeFormat(total_millis) {
-  let total_seconds = parseInt(total_millis / 1e3);
-  let minutes = parseInt(total_seconds / 60);
+function func_millisToTimeFormat(total_millis: number) {
+  let total_seconds = total_millis / 1e3;
+  let minutes = total_seconds / 60;
   let seconds = total_seconds - 60 * minutes,
-    hours = parseInt(minutes / 60);
+    hours = minutes / 60;
   minutes -= 60 * hours;
   return 0 == hours
     ? func_padZerosPrefix(minutes) + ":" + func_padZerosPrefix(seconds)
@@ -558,13 +558,18 @@ function func_millisToTimeFormat(total_millis) {
         ":" +
         func_padZerosPrefix(seconds);
 }
-function func_calculateDistance2D(x1, y1, x2, y2) {
+function func_calculateDistance2D(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+) {
   return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }
 function func_isTimeElapsed_50ms() {
   return 50 > +new Date() - T;
 }
-function func_isInsideBox(x, y, dist) {
+function func_isInsideBox(x: number, y: number, dist: number) {
   let d = objGUI_anchor.getBounds();
   return x + dist >= d[0].x &&
     x - dist <= d[1].x &&
@@ -573,7 +578,7 @@ function func_isInsideBox(x, y, dist) {
     ? true
     : false;
 }
-function func_clamp(val, l, u) {
+function func_clamp(val: number, l: number, u: number) {
   return val < l ? l : val > u ? u : val;
 }
 function Class_StrokeStyle(size, color, is_stroke_enabled, stroke_color) {
@@ -587,11 +592,18 @@ function Class_TextStyle(size, color, second_color) {
   color && (this._color = color);
   second_color && (this._secondColor = second_color);
 }
-function func_renameBlankPlayerNames(str_name) {
+function func_renameBlankPlayerNames(str_name: string) {
   "" == str_name && (str_name = "<Unnamed>");
   return str_name;
 }
-function func_drawRoundedRectangle(canvas, x, y, width, height, radius) {
+function func_drawRoundedRectangle(
+  canvas,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number,
+) {
   radius /= 2;
   canvas.beginPath();
   canvas.moveTo(x, y + radius);
@@ -611,7 +623,14 @@ function func_drawRoundedRectangle(canvas, x, y, width, height, radius) {
   canvas.closePath();
   canvas.fill();
 }
-function func_drawRoundedRectangleHalf(canvas, x, y, width, height, radius) {
+function func_drawRoundedRectangleHalf(
+  canvas,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number,
+) {
   radius /= 2;
   canvas.beginPath();
   canvas.moveTo(x, y + radius);
@@ -624,7 +643,7 @@ function func_drawRoundedRectangleHalf(canvas, x, y, width, height, radius) {
   canvas.closePath();
   canvas.fill();
 }
-function func_rotatePoint(x, y, angle) {
+function func_rotatePoint(x: number, y: number, angle: number) {
   let d = x * Math.cos(angle) - y * Math.sin(angle);
   x = y * Math.cos(angle) + x * Math.sin(angle);
   return {
@@ -1041,72 +1060,7 @@ Class_TextStyle.prototype = {
     return this._canvas;
   },
 };
-let Class_EventManager = function () {
-    this.eventType = {
-      EVENT_NONE: 0,
-      EVENT_WAITING: 1,
-      EVENT_WARSHIP: 2,
-      EVENT_INSTAGIB: 3,
-      EVENT_GLADIATOR: 4,
-      EVENT_SPACEWARS: 5,
-    };
-    this.type = this.eventType.EVENT_NONE;
-    this.endTime = 0;
-    this.waiting = this.machinegunSwitch = this.railSwitch = false;
-    this.warshipsLeft = 3;
-    this.warshipsEscaped = this.warshipsDestroyed = 0;
-    this.setType = function (b) {
-      this.type = b;
-      this.isSpaceWars()
-        ? ($("#pfText").css({
-            "-webkit-filter": "brightness(100%)",
-          }),
-          $("#pfArrow").css({
-            "-webkit-filter": "brightness(100%)",
-          }))
-        : ($("#pfText").css({
-            "-webkit-filter": "brightness(0%)",
-          }),
-          $("#pfArrow").css({
-            "-webkit-filter": "brightness(0%)",
-          }));
-      this.isWarship() &&
-        ((this.warshipsLeft = 3),
-        (this.warshipsEscaped = this.warshipsDestroyed = 0));
-    };
-    this.isInEvent = function () {
-      return this.type != this.eventType.EVENT_NONE && 0 == this.waiting;
-    };
-    this.isInstagib = function () {
-      return this.type == this.eventType.EVENT_INSTAGIB && 0 == this.waiting;
-    };
-    this.isSpaceWars = function () {
-      return this.type == this.eventType.EVENT_SPACEWARS && 0 == this.waiting;
-    };
-    this.isWarship = function () {
-      return this.type == this.eventType.EVENT_WARSHIP && 0 == this.waiting;
-    };
-    this.getEventName = function () {
-      return this.type == this.eventType.EVENT_INSTAGIB
-        ? "SUDDEN DEATH"
-        : this.type == this.eventType.EVENT_SPACEWARS
-          ? "SPACE WARS"
-          : this.type == this.eventType.EVENT_WARSHIP
-            ? "WARSHIP ATTACK"
-            : "NEW EVENT";
-    };
-    this.getEventColor = function () {
-      return this.type == this.eventType.EVENT_SPACEWARS
-        ? "#FF3300"
-        : "#fe6800";
-    };
-    this.setWarshipInfo = function (b, e, f) {
-      this.warshipsLeft = b;
-      this.warshipsDestroyed = e;
-      this.warshipsEscaped = f;
-    };
-  },
-  Class_Assets = function () {
+let Class_Assets = function () {
     this.loaded = false;
     this.onLoad = null;
     this.spriteSheetLoaded = false;
@@ -5664,8 +5618,7 @@ let Class_EventManager = function () {
     };
     _this.respawnParticles = function () {
       list_particleDust = [];
-      for (let a = 0; 150 > a; a++)
-        list_particleDust.push(new Class_ParticleDust());
+      for (let a = 0; 150 > a; a++) list_particleDust.push(new ParticleDust());
     };
     html_canvas = b;
     ctx_canvas = html_canvas.getContext("2d");
@@ -7584,7 +7537,7 @@ window.onload = function () {
     (null == objG_followMode &&
       (window.devicePixelRatio &&
         (int_pixel_ratio = 1 < window.devicePixelRatio ? 2 : 1),
-      (objG_eventManager = new Class_EventManager()),
+      (objG_eventManager = new EventManager()),
       (objG_followMode = new ClassR_FollowMode(
         document.getElementById("canvas"),
       )),
