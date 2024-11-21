@@ -3298,7 +3298,7 @@ let Class_EventManager = function () {
             objGUI_gameInfo.clearNearMiss()))
         : 25 <= a &&
           obj_particleManager &&
-          (delete obj_particleManager, (obj_particleManager = null), (l = 1));
+          (obj_particleManager = null, l = 1);
     };
     this.GetAmmo = function () {
       return 1 == this.weapon ? -1 : this.ammo;
@@ -4996,7 +4996,7 @@ let Class_EventManager = function () {
                 obj_particleImpacts.addShot(n, r, s, q);
               else {
                 (t = d.getUint32(c, true)), (c = c + 4), (x = objD_missiles[t]);
-                x && (delete objD_missiles[t], delete x);
+                x && (delete objD_missiles[t]);
                 t = true;
               }
               for (x = false; ; ) {
@@ -6115,18 +6115,14 @@ let Class_EventManager = function () {
       }
     };
     this.update = function (b) {
-      let g, h, q;
-      for (g in e) {
-        h = e[g];
-        h.update(b);
-        h.deleting && (e.splice(g, 1), delete h);
-      }
-      for (g in d)
-        (h = d[g]), h.update(b), h.deleting && (d.splice(g, 1), delete h);
-      for (g in f)
-        (h = f[g]), h.update(b), h.deleting && (f.splice(g, 1), delete h);
-      for (q in a)
-        (g = a[q]), g.update(b), g.deleting && (a.splice(q, 1), delete g);
+      for (const i in e)
+        e[i].update(b), e[i].deleting && (e.splice(i, 1));
+      for (const i in d)
+        d[i].update(b), d[i].deleting && (d.splice(i, 1));
+      for (const i in f)
+        f[i].update(b), f[i].deleting && (f.splice(i, 1));
+      for (const i in a)
+        a[i].update(b), a[i].deleting && (a.splice(i, 1));
     };
     this.drawBehind = function (a) {
       for (let b in d) {
@@ -6480,7 +6476,7 @@ let Class_EventManager = function () {
       for (debreeID in e) {
         let d = e[debreeID];
         d.update(a);
-        d.deleting && (e.splice(debreeID, 1), delete d);
+        d.deleting && (e.splice(debreeID, 1));
         b++;
       }
       0 == b && (this.deleting = true);
@@ -6530,7 +6526,7 @@ let Class_EventManager = function () {
         ? (q.debreeAge = (n - 500) / 2300)
         : 2300 < n && 2500 >= n
           ? (q.alpha = (2500 - n) / 200)
-          : 2500 < n && (delete q, (this.deleting = true));
+          : 2500 < n && (this.deleting = true);
       this.deleting || (q.setPosition(g, h), q.updateExplosion(k));
     };
     this.draw = function (a) {
@@ -6697,7 +6693,6 @@ let Class_EventManager = function () {
     };
     this.setType = function (d) {
       this.type = d;
-      0 != d && delete obj_particleTrails;
     };
     this.getSpeedDirectionX = function () {
       return this.x - this.prevX;
