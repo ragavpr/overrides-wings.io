@@ -1138,7 +1138,7 @@ class Assets {
   loadGameSpritesheetFrames() {
     for (let b = gameSheetInfo.length, e = 0; e < b; e++) {
       let f = gameSheetInfo[e],
-        obj_renderManager = new Class_RenderManager();
+        obj_renderManager = new RenderManager();
       obj_renderManager.setFrameInfo(f, this.gameSheet);
       this.frames[f[0]] = obj_renderManager;
     }
@@ -1181,8 +1181,8 @@ class Assets {
     this.planes[b][e] = d;
   }
   loadAnimations() {
-    let obj_animation = new Class_Animation(),
-      obj_animation2 = new Class_Animation();
+    let obj_animation = new Animation(),
+      obj_animation2 = new Animation();
     for (let f = 0; 13 > f; f++)
       obj_animation.addFrame(this.frames["s" + f]),
         obj_animation2.addFrame(
@@ -1192,7 +1192,7 @@ class Assets {
     objG_animationManager.addAnimationInfo("splash", obj_animation);
     obj_animation2.setInterval(1e3 / 30);
     objG_animationManager.addAnimationInfo("splashReflex", obj_animation2);
-    obj_animation = new Class_Animation();
+    obj_animation = new Animation();
     obj_animation.addFrame(this.frames.e0);
     obj_animation.addFrame(this.frames.e0);
     obj_animation.addFrame(this.frames.e2);
@@ -1805,7 +1805,8 @@ class ParticleImpacts {
     }
   }
 }
-let Class_UI_GameInfo = function () {
+class UI_GameInfo {
+  constructor() {
     let b,
       e,
       f,
@@ -1815,7 +1816,7 @@ let Class_UI_GameInfo = function () {
       g,
       h,
       q,
-      objUI_killStatus = new Class_UI_KillStatus(),
+      objUI_killStatus = new UI_KillStatus(),
       k,
       m,
       l,
@@ -1836,7 +1837,7 @@ let Class_UI_GameInfo = function () {
       Vb,
       ea = 1,
       Ga = 0,
-      objUI_ActivityMessages = new Class_UI_ActivityMessages(),
+      objUI_ActivityMessages = new UI_ActivityMessages(),
       Fa,
       ua,
       E,
@@ -2571,8 +2572,10 @@ let Class_UI_GameInfo = function () {
       oa = 5e3;
       la = null;
     };
-  },
-  Class_UI_ActivityMessages = function () {
+  }
+}
+class UI_ActivityMessages {
+  constructor() {
     let b = [],
       e = [];
     this.update = function (f) {
@@ -2607,13 +2610,15 @@ let Class_UI_GameInfo = function () {
       f = 0;
       for (let a in b) (d = b[a].width + 5 + 5), d > f && (f = d);
     };
-  },
-  Class_Plane = function () {
+  }
+}
+class Plane {
+  constructor() {
     let _this = this,
       num_spawn_cooldown_ms = 0,
       f = 100,
       d = false,
-      obj_particleTrails = new Class_ParticleTrails(),
+      obj_particleTrails = new ParticleTrails(),
       obj_particleFlags,
       g,
       h = 0,
@@ -3201,8 +3206,7 @@ let Class_UI_GameInfo = function () {
       let c = a - this.score;
       0 < c &&
         this == objG_player_plane &&
-        (obj_scoreAccumInfo ||
-          (obj_scoreAccumInfo = new Class_ScoreAccumInfo()),
+        (obj_scoreAccumInfo || (obj_scoreAccumInfo = new ScoreAccumInfo()),
         func_isTimeElapsed_50ms() && obj_scoreAccumInfo.addScore(c));
       this.score = a;
     };
@@ -3212,7 +3216,7 @@ let Class_UI_GameInfo = function () {
     this.setName = function (c) {
       this.name = c;
       if ("" == c || null == c)
-        (obj_particleTrails = new Class_ParticleTrails()),
+        (obj_particleTrails = new ParticleTrails()),
           (obj_particleTrails.fixedColor = true),
           (obj_particleTrails.style = M[id_weapon_machinegun]),
           obj_particleTrails.clear();
@@ -3226,14 +3230,14 @@ let Class_UI_GameInfo = function () {
         let h = 0 < (b & 4) ? true : false,
           e = 0 < (b & 2) ? true : false;
         G = 0 < (b & 8) ? true : false;
-        obj_particleFlags = new Class_ParticleFlags();
+        obj_particleFlags = new ParticleFlags();
         obj_particleFlags.flipX = e;
         obj_particleFlags.flipY = h;
         obj_particleFlags.scale = g / 100;
         obj_particleFlags.stringScale = d / 100;
         obj_particleFlags.setTexture(this.name);
       } else this.showName = true;
-      obj_particleTrails = new Class_ParticleTrails();
+      obj_particleTrails = new ParticleTrails();
       obj_particleTrails.fixedColor = true;
       obj_particleTrails.style = M[id_weapon_machinegun];
       obj_particleTrails.clear();
@@ -3241,7 +3245,7 @@ let Class_UI_GameInfo = function () {
     this.setEnergy = function (a) {
       this.energy = a;
       25 > a && !obj_particleManager
-        ? ((obj_particleManager = new Class_ParticleManager()),
+        ? ((obj_particleManager = new ParticleManager()),
           obj_particleManager.init(15, this.x, this.y),
           (k = 0),
           (m = 20 + 40 * Math.random()),
@@ -3339,8 +3343,10 @@ let Class_UI_GameInfo = function () {
     this.clearTrail = function () {
       obj_particleTrails && obj_particleTrails.clear();
     };
-  },
-  Class_SeaWater = function () {
+  }
+}
+class WaterSea {
+  constructor() {
     let e,
       f,
       d,
@@ -3406,7 +3412,7 @@ let Class_UI_GameInfo = function () {
         0 > q &&
           ((q = 125.6),
           20 > k &&
-            ((m = new Class_SeaWaterRipple()),
+            ((m = new WaterSeaRipple()),
             h.push(m),
             (l = l[1].x - l[0].x),
             (y = 0),
@@ -3479,8 +3485,10 @@ let Class_UI_GameInfo = function () {
       f = [];
       for (let a = 0; 25 > a; a++) e.push(0), f.push(0);
     })();
-  },
-  Class_SeaWaterRipple = function () {
+  }
+}
+class WaterSeaRipple {
+  constructor() {
     let b = [
         118.17, 11.98, 26.9, -3.43, 1.91, -19.41, 0.45, -19.48, -0.82, -19.55,
         -52.05, 2.79, -118.88, 11.55, -121.21, 11.85, -0.57, -3.74, 0.26, -4.04,
@@ -3529,8 +3537,10 @@ let Class_UI_GameInfo = function () {
         d.restore();
       }
     };
-  },
-  Class_Clouds = function () {
+  }
+}
+class Clouds {
+  constructor() {
     let b = [
         [
           -142.21, -1.18, -143.28, 0.36, -123.09, 11.23, -103.01, 13.96, -81.96,
@@ -3808,13 +3818,15 @@ let Class_UI_GameInfo = function () {
       }
     })();
     this.preRender();
-  },
-  Class_Backgrounds = function () {
+  }
+}
+class Backgrounds {
+  constructor() {
     let b = [],
       e = 0,
-      obj_clouds = new Class_Clouds(),
+      obj_clouds = new Clouds(),
       c = false;
-    this.waves = new Class_SeaWater();
+    this.waves = new WaterSea();
     let d = function () {
         this.vertexes = [];
         this.type = 0;
@@ -4073,8 +4085,10 @@ let Class_UI_GameInfo = function () {
             : (0 < e && objGUI_gameInfo.clearWarningMessage(), (e = 0));
         }
     };
-  },
-  Class_PickupItem = function () {
+  }
+}
+class PickupItem {
+  constructor() {
     let b = (this.alpha = 0),
       e = 0,
       f = Math.random() * Math.PI * 2,
@@ -4252,8 +4266,10 @@ let Class_UI_GameInfo = function () {
       b = +new Date();
     };
     objG_eventManager.isSpaceWars() && (y = true);
-  },
-  Class_WS_Connection = function () {
+  }
+}
+class WS_Connection {
+  constructor() {
     let f;
     function b(b, a, c) {
       (169 != a && 172 != a && 162 != a && 178 != a) ||
@@ -4283,7 +4299,7 @@ let Class_UI_GameInfo = function () {
               (h = h + 4),
               (s = objD_missiles[m]);
             if (null == s) {
-              s = new Class_Missile();
+              s = new Missile();
               objD_missiles[m] = s;
               (163 != f && 162 != f && 169 != f) || s.setType(l);
               (m = objD_planes[p]), (u = false);
@@ -4338,7 +4354,7 @@ let Class_UI_GameInfo = function () {
                 (f = b.getUint8(l, true)),
                   (l += 1),
                   null == h &&
-                    ((h = new Class_Warship()),
+                    ((h = new Warship()),
                     (objD_specialEntities[c] = h),
                     h.setType(f));
               h.id = c;
@@ -4411,7 +4427,7 @@ let Class_UI_GameInfo = function () {
           (162 != a && 178 != a) ||
             y ||
             null != C ||
-            ((C = new Class_Plane()), (objD_planes[k] = C), (C.inGame = false));
+            ((C = new Plane()), (objD_planes[k] = C), (C.inGame = false));
         else {
           162 == a
             ? ((x = b.getUint16(h, true)), (h += 2))
@@ -4430,7 +4446,7 @@ let Class_UI_GameInfo = function () {
             if (0 == G) break;
             O += String.fromCharCode(G);
           }
-          null == C && ((C = new Class_Plane()), (objD_planes[k] = C));
+          null == C && ((C = new Plane()), (objD_planes[k] = C));
           -1 != O.indexOf("\ufdfd") && (O = "<Unnamed>");
           C.setColorID(z);
           C.setDecalID(R);
@@ -4569,7 +4585,7 @@ let Class_UI_GameInfo = function () {
       }
     };
     this.connect = function () {
-      let b;
+      let b, a;
       if (wa || int_pathMobile) {
         b = "ws://" + objG_wsConnection.remoteHost;
         console.log("fullhost: " + b);
@@ -4716,7 +4732,7 @@ let Class_UI_GameInfo = function () {
             (m = d.getUint8(c, true)),
             (c += 1),
             (d = d.getUint32(c, true)),
-            (objG_player_plane = new Class_Plane()),
+            (objG_player_plane = new Plane()),
             (objG_player_plane.id = f),
             objG_player_plane.setColorID(k),
             objG_player_plane.setDecalID(m),
@@ -5007,7 +5023,7 @@ let Class_UI_GameInfo = function () {
             c += 4;
             n = -d.getFloat32(c, true);
             c += 4;
-            k = new Class_PickupItem();
+            k = new PickupItem();
             objD_pickups[f] = k;
             k.id = f;
             k.setPosition(q, n);
@@ -5186,8 +5202,10 @@ let Class_UI_GameInfo = function () {
         f.send(b);
       }
     };
-  },
-  ClassR_FollowMode = function (b) {
+  }
+}
+class FollowMode_R {
+  constructor(b) {
     let _this = this,
       html_canvas,
       ctx_canvas,
@@ -5627,8 +5645,8 @@ let Class_UI_GameInfo = function () {
     html_canvas = b;
     ctx_canvas = html_canvas.getContext("2d");
     C();
-    objG_backgrounds = new Class_Backgrounds();
-    objG_animationManager = new Class_AnimationManager();
+    objG_backgrounds = new Backgrounds();
+    objG_animationManager = new AnimationManager();
     _this.respawnParticles();
     objG_assets = new Assets();
     objG_assets.load(function () {
@@ -5637,7 +5655,7 @@ let Class_UI_GameInfo = function () {
         ("undefined" != typeof messageHandlers && messageHandlers.didLoad
           ? messageHandlers.didLoad(JSON.stringify({}))
           : window.webkit.messageHandlers.didLoad.postMessage({}));
-      objGUI_gameInfo = new Class_UI_GameInfo();
+      objGUI_gameInfo = new UI_GameInfo();
       obj_particleImpacts = new ParticleImpacts();
       objG_wsConnection.hasConnection &&
         !objG_wsConnection.sentHello &&
@@ -5646,19 +5664,21 @@ let Class_UI_GameInfo = function () {
       func_displaySelectedDecal(Math.floor(5 * Math.random()) + 1);
       func_displaySelectedColor(Math.floor(5 * Math.random()) + 1);
       console.log("Loading sounds!");
-      objG_sfxManager = new Class_SFXmanager();
+      objG_sfxManager = new SFXmanager();
       objG_sfxManager.load(function () {
         objG_sfxManager.playSound(str_sfxid_env, 1, 1, const_Q_0, function (a) {
           mb = a;
         });
       });
     });
-    myName = "";
-    objGUI_anchor = new Class_UI_Anchor(html_canvas, ctx_canvas, 0, 0);
-    objG_wsConnection = new Class_WS_Connection();
+    //myName = "";
+    objGUI_anchor = new UI_Anchor(html_canvas, ctx_canvas, 0, 0);
+    objG_wsConnection = new WS_Connection();
     objG_wsConnection.getServerAndConnect();
-  },
-  Class_UI_Anchor = function (html_canvas, ctx_canvas, x, y) {
+  }
+}
+class UI_Anchor {
+  constructor(html_canvas, ctx_canvas, x, y) {
     let _this = this,
       c = 0,
       g,
@@ -5761,8 +5781,10 @@ let Class_UI_GameInfo = function () {
     this.startUILayer = function () {
       ctx_canvas.setTransform(1, 0, 0, 1, 0, 0);
     };
-  },
-  Class_RenderManager = function () {
+  }
+}
+class RenderManager {
+  constructor() {
     let b,
       e,
       f,
@@ -5842,7 +5864,7 @@ let Class_UI_GameInfo = function () {
       );
       n.globalAlpha = 1;
       n.drawImage(k, 0, 0);
-      d = new Class_RenderManager();
+      d = new RenderManager();
       d.frameWithCanvas(f, c, g);
       return d;
     };
@@ -5900,7 +5922,7 @@ let Class_UI_GameInfo = function () {
           (r[t] = r[t++] * (1 - k) + n * k),
           (r[t] = 0.8 * r[t++]);
       l.putImageData(p, 0, 0);
-      d = new Class_RenderManager();
+      d = new RenderManager();
       d.frameWithCanvas(m, c, g);
       return d;
     };
@@ -5916,7 +5938,7 @@ let Class_UI_GameInfo = function () {
       0 < b && ((l.globalAlpha = b / 255), l.drawImage(a[0], 0, 0));
       0 < d && ((l.globalAlpha = d / 255), l.drawImage(a[1], 0, 0));
       0 < e && ((l.globalAlpha = e / 255), l.drawImage(a[2], 0, 0));
-      a = new Class_RenderManager();
+      a = new RenderManager();
       a.frameWithCanvas(f, c, g);
       return a;
     };
@@ -6018,8 +6040,10 @@ let Class_UI_GameInfo = function () {
       d.drawImage(f, 0, 0);
       return c;
     };
-  },
-  Class_AnimationManager = function () {
+  }
+}
+class AnimationManager {
+  constructor() {
     let b = {},
       e = [],
       f = [],
@@ -6033,7 +6057,7 @@ let Class_UI_GameInfo = function () {
     };
     this.createAnimation = function (a) {
       a = b[a];
-      let d = new Class_DrawAnimation();
+      let d = new DrawAnimation();
       d.setup(a);
       return d;
     };
@@ -6063,7 +6087,7 @@ let Class_UI_GameInfo = function () {
         func_isTimeElapsed_50ms()
       ) {
         if (1 >= a.length) {
-          let n = new Class_ParticleDebrisManager();
+          let n = new ParticleDebrisManager();
           n.init(b, d, e, f);
           a.push(n);
         }
@@ -6113,8 +6137,10 @@ let Class_UI_GameInfo = function () {
     this.drawExplosions = function (b) {
       for (let d in a) a[d].draw(b);
     };
-  },
-  Class_DrawAnimation = function () {
+  }
+}
+class DrawAnimation {
+  constructor() {
     let b = 0,
       e = 0,
       f = 0;
@@ -6126,7 +6152,7 @@ let Class_UI_GameInfo = function () {
     this.rotation = 0;
     this.alpha = 1;
     this.copy = function (b) {
-      b = new Class_DrawAnimation();
+      b = new DrawAnimation();
       b.frames = this.frames;
       b.frameCount = this.frameCount;
       b.deleting = this.deleting;
@@ -6160,8 +6186,10 @@ let Class_UI_GameInfo = function () {
       1 > this.alpha && (d.globalAlpha = this.alpha);
       this.frames[b].draw(d);
     };
-  },
-  Class_Animation = function () {
+  }
+}
+class Animation {
+  constructor() {
     this.frames = [];
     this.interval = 0;
     this.addFrame = function (b) {
@@ -6170,8 +6198,10 @@ let Class_UI_GameInfo = function () {
     this.setInterval = function (b) {
       this.interval = b;
     };
-  },
-  ClassR_ParticleU = function () {
+  }
+}
+class ParticleU_R {
+  constructor() {
     this.color = {
       h: "61",
       s: "100%",
@@ -6217,8 +6247,10 @@ let Class_UI_GameInfo = function () {
       b.fill();
       b.restore();
     };
-  },
-  Class_ParticleManager = function () {
+  }
+}
+class ParticleManager {
+  constructor() {
     let b = 0,
       e = 0,
       f = [],
@@ -6239,7 +6271,7 @@ let Class_UI_GameInfo = function () {
       e = k;
       q = this.life / d;
       for (n = 0; n < d; n++)
-        (k = new ClassR_ParticleU()),
+        (k = new ParticleU_R()),
           this.resetParticle(k),
           (k.active = false),
           (k.time = q * n),
@@ -6386,8 +6418,10 @@ let Class_UI_GameInfo = function () {
         c.active && c.draw(a);
       }
     };
-  },
-  Class_ParticleDebrisManager = function () {
+  }
+}
+class ParticleDebrisManager {
+  constructor() {
     let e = [],
       f,
       d;
@@ -6419,7 +6453,7 @@ let Class_UI_GameInfo = function () {
       this.addDebree(n * q + e, k * q + h);
     };
     this.addDebree = function (a, b) {
-      let g = new Class_ParticleDebris();
+      let g = new ParticleDebris();
       g.init(f, d);
       g.setSpeed(a, b);
       e.push(g);
@@ -6437,8 +6471,10 @@ let Class_UI_GameInfo = function () {
     this.draw = function (a) {
       for (debreeID in e) e[debreeID].draw(a);
     };
-  },
-  Class_ParticleDebris = function () {
+  }
+}
+class ParticleDebris {
+  constructor() {
     let b,
       e,
       f,
@@ -6454,7 +6490,7 @@ let Class_UI_GameInfo = function () {
     this.init = function (a, b) {
       g = a;
       h = b;
-      q = new Class_ParticleManager();
+      q = new ParticleManager();
       q.init(15, g, h);
     };
     this.setSpeed = function (c, g) {
@@ -6485,9 +6521,11 @@ let Class_UI_GameInfo = function () {
     this.draw = function (a) {
       this.deleting || q.draw(a);
     };
-  },
-  Class_Missile = function () {
-    let obj_particleTrails = new Class_ParticleTrails(),
+  }
+}
+class Missile {
+  constructor() {
+    let obj_particleTrails = new ParticleTrails(),
       e = 0,
       f = 0;
     this.lastUpdate = 0;
@@ -6658,8 +6696,10 @@ let Class_UI_GameInfo = function () {
     obj_particleTrails.trailTime = 100;
     obj_particleTrails.width = 1.2;
     obj_particleTrails.fixedColor = true;
-  },
-  Class_ParticleTrails = function () {
+  }
+}
+class ParticleTrails {
+  constructor() {
     let b, e;
     this.tailAddJointInterval = 50;
     this.timeToNextJoint = 0;
@@ -6744,8 +6784,10 @@ let Class_UI_GameInfo = function () {
     this.clear = function () {
       this.tailJoints = [[]];
     };
-  },
-  Class_ParticleFlags = function () {
+  }
+}
+class ParticleFlags {
+  constructor() {
     let b, e;
     this.tailJoints = [[]];
     this.maxPoints = 1;
@@ -6989,8 +7031,10 @@ let Class_UI_GameInfo = function () {
     this.clear = function () {
       this.tailJoints = [[]];
     };
-  },
-  Class_ScoreAccumInfo = function () {
+  }
+}
+class ScoreAccumInfo {
+  constructor() {
     let b = [],
       e = [],
       f;
@@ -7020,8 +7064,10 @@ let Class_UI_GameInfo = function () {
       c.number = d;
       a ? (b.pop(), b.push(c)) : (b.push(c), e.push(+new Date()));
     };
-  },
-  Class_SFXmanager = function () {
+  }
+}
+class SFXmanager {
+  constructor() {
     let b = false,
       e = {},
       f = {
@@ -7090,8 +7136,10 @@ let Class_UI_GameInfo = function () {
     this.setVolume = function (b) {
       this.sound.volume(b);
     };
-  },
-  Class_UI_KillStatus = function () {
+  }
+}
+class UI_KillStatus {
+  constructor() {
     let b = [],
       f = null,
       d = null,
@@ -7220,8 +7268,10 @@ let Class_UI_GameInfo = function () {
     this.shouldDraw = function () {
       return g;
     };
-  },
-  Class_Warship = function () {
+  }
+}
+class Warship {
+  constructor() {
     let e = 1,
       f = 20,
       d = 100,
@@ -7534,7 +7584,8 @@ let Class_UI_GameInfo = function () {
       this.first_set = true;
       this.inGame = false;
     };
-  };
+  }
+}
 window.onload = function () {
   Modernizr.canvas &&
     Modernizr.websockets &&
@@ -7542,9 +7593,7 @@ window.onload = function () {
       (window.devicePixelRatio &&
         (int_pixel_ratio = 1 < window.devicePixelRatio ? 2 : 1),
       (objG_eventManager = new EventManager()),
-      (objG_followMode = new ClassR_FollowMode(
-        document.getElementById("canvas"),
-      )),
+      (objG_followMode = new FollowMode_R(document.getElementById("canvas"))),
       window.addEventListener("resize", objG_followMode.resize, false),
       (objG_inputManager = new InputManager()),
       objG_inputManager.addListeners(),
