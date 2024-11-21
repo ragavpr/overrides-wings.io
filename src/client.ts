@@ -1099,369 +1099,370 @@ class StyleText {
     return this._canvas;
   }
 }
-let Class_Assets = function () {
-    this.loaded = false;
-    this.onLoad = null;
-    this.spriteSheetLoaded = false;
-    this.gameSheet;
-    this.frames = {};
-    this.whitePlaneImages = {};
-    this.planeFrames;
-    this.planeFramesReflex;
-    this.planes = [];
-    this.doubleKillCanvas;
-    this.tripleKillCanvas;
-    this.quadKillCanvas;
-    this.multiKillCanvas;
-    this.warshipImage;
-    this.whiteWarshipImage;
-    this.cannonImage;
-    this.warshipIcon;
-    this.warshipLoaded = false;
-    this.warshipTextureLoadCount = 0;
-    this.asteroidLoaded = false;
-    this.asteroidImage;
-    this.whiteAsteroidImage;
-    this.blinkImage;
-    this.loadGameSpritesheet = function () {
-      this.gameSheet = new Image();
-      this.gameSheet.src = "images/sheet.png";
-      this.gameSheet.onload = function () {
-        objG_assets.loadGameSpritesheetFrames();
-        objG_assets.spriteSheetLoaded = true;
-        objG_assets.loadAnimations();
-        objG_assets.generateHudIcons();
-        objG_assets.loaded = true;
-        objG_assets.onLoad();
-      };
+class Assets {
+  loaded = false;
+  onLoad = null;
+  spriteSheetLoaded = false;
+  gameSheet;
+  frames = {};
+  whitePlaneImages = {};
+  planeFrames;
+  planeFramesReflex;
+  planes = [];
+  doubleKillCanvas;
+  tripleKillCanvas;
+  quadKillCanvas;
+  multiKillCanvas;
+  warshipImage;
+  whiteWarshipImage;
+  cannonImage;
+  warshipIcon;
+  warshipLoaded = false;
+  warshipTextureLoadCount = 0;
+  asteroidLoaded = false;
+  asteroidImage;
+  whiteAsteroidImage;
+  blinkImage;
+  loadGameSpritesheet() {
+    this.gameSheet = new Image();
+    this.gameSheet.src = "images/sheet.png";
+    this.gameSheet.onload = function () {
+      objG_assets.loadGameSpritesheetFrames();
+      objG_assets.spriteSheetLoaded = true;
+      objG_assets.loadAnimations();
+      objG_assets.generateHudIcons();
+      objG_assets.loaded = true;
+      objG_assets.onLoad();
     };
-    this.loadGameSpritesheetFrames = function () {
-      for (let b = gameSheetInfo.length, e = 0; e < b; e++) {
-        let f = gameSheetInfo[e],
-          obj_renderManager = new Class_RenderManager();
-        obj_renderManager.setFrameInfo(f, this.gameSheet);
-        this.frames[f[0]] = obj_renderManager;
-      }
-      for (let e = 1, b; 8 >= e; e++)
-        (b = this.frames["plane" + e].renderTintedFrame("#FFFFFF").canvas),
-          (this.whitePlaneImages["plane" + e] = b);
-      for (let e = 0; 5 >= e; e++) this.planes[e] = [];
-      this.loadPlaneImages();
-      for (let e = 0; 5 >= e; e++)
-        this.loadPlaneDecal(0, e),
-          this.loadPlaneDecal(1, e),
-          this.loadPlaneDecal(2, e),
-          this.loadPlaneDecal(3, e),
-          this.loadPlaneDecal(4, e),
-          this.loadPlaneDecal(5, e);
-    };
-    this.loadPlaneImages = function (b, e) {
-      let f = [],
-        d = [];
-      for (let a = 1; 8 >= a; a++) {
-        let c = this.frames["plane" + a];
-        f.push(c);
-        d.push(c.renderTintedFrame("rgba(0,100,255,1.0)"));
-      }
-      this.planeFrames = f;
-      this.planeFramesReflex = d;
-    };
-    this.loadPlaneDecal = function (b, e) {
-      let d = [];
-      for (let f = list_decal_colors[e], a = 1; 8 >= a; a++) {
-        let c;
-        c = this.frames["decal" + b + "_" + a].generateTintImage2(
-          f.r,
-          f.g,
-          f.b,
-          1,
+  }
+  loadGameSpritesheetFrames() {
+    for (let b = gameSheetInfo.length, e = 0; e < b; e++) {
+      let f = gameSheetInfo[e],
+        obj_renderManager = new Class_RenderManager();
+      obj_renderManager.setFrameInfo(f, this.gameSheet);
+      this.frames[f[0]] = obj_renderManager;
+    }
+    for (let e = 1, b; 8 >= e; e++)
+      (b = this.frames["plane" + e].renderTintedFrame("#FFFFFF").canvas),
+        (this.whitePlaneImages["plane" + e] = b);
+    for (let e = 0; 5 >= e; e++) this.planes[e] = [];
+    this.loadPlaneImages();
+    for (let e = 0; 5 >= e; e++)
+      this.loadPlaneDecal(0, e),
+        this.loadPlaneDecal(1, e),
+        this.loadPlaneDecal(2, e),
+        this.loadPlaneDecal(3, e),
+        this.loadPlaneDecal(4, e),
+        this.loadPlaneDecal(5, e);
+  }
+  loadPlaneImages(b, e) {
+    let f = [],
+      d = [];
+    for (let a = 1; 8 >= a; a++) {
+      let c = this.frames["plane" + a];
+      f.push(c);
+      d.push(c.renderTintedFrame("rgba(0,100,255,1.0)"));
+    }
+    this.planeFrames = f;
+    this.planeFramesReflex = d;
+  }
+  loadPlaneDecal(b, e) {
+    let d = [];
+    for (let f = list_decal_colors[e], a = 1; 8 >= a; a++) {
+      let c;
+      c = this.frames["decal" + b + "_" + a].generateTintImage2(
+        f.r,
+        f.g,
+        f.b,
+        1,
+      );
+      d.push(c);
+    }
+    this.planes[b][e] = d;
+  }
+  loadAnimations() {
+    let obj_animation = new Class_Animation(),
+      obj_animation2 = new Class_Animation();
+    for (let f = 0; 13 > f; f++)
+      obj_animation.addFrame(this.frames["s" + f]),
+        obj_animation2.addFrame(
+          this.frames["s" + f].renderTintedFrame("#2b9bf5"),
         );
-        d.push(c);
-      }
-      this.planes[b][e] = d;
-    };
-    this.loadAnimations = function () {
-      let obj_animation = new Class_Animation(),
-        obj_animation2 = new Class_Animation();
-      for (let f = 0; 13 > f; f++)
-        obj_animation.addFrame(this.frames["s" + f]),
-          obj_animation2.addFrame(
-            this.frames["s" + f].renderTintedFrame("#2b9bf5"),
-          );
-      obj_animation.setInterval(1e3 / 30);
-      objG_animationManager.addAnimationInfo("splash", obj_animation);
-      obj_animation2.setInterval(1e3 / 30);
-      objG_animationManager.addAnimationInfo("splashReflex", obj_animation2);
-      obj_animation = new Class_Animation();
-      obj_animation.addFrame(this.frames.e0);
-      obj_animation.addFrame(this.frames.e0);
-      obj_animation.addFrame(this.frames.e2);
-      obj_animation.addFrame(this.frames.e3);
-      obj_animation.addFrame(this.frames.e4);
-      obj_animation.addFrame(this.frames.e5);
-      obj_animation.addFrame(this.frames.e5);
-      obj_animation.addFrame(this.frames.e7);
-      obj_animation.addFrame(this.frames.e7);
-      obj_animation.addFrame(this.frames.e9);
-      obj_animation.addFrame(this.frames.e10);
-      obj_animation.addFrame(this.frames.e11);
-      obj_animation.addFrame(this.frames.e11);
-      obj_animation.addFrame(this.frames.e13);
-      obj_animation.addFrame(this.frames.e14);
-      obj_animation.addFrame(this.frames.e15);
-      obj_animation.addFrame(this.frames.e16);
-      obj_animation.addFrame(this.frames.e17);
-      obj_animation.addFrame(this.frames.e18);
-      obj_animation.addFrame(this.frames.e19);
-      obj_animation.addFrame(this.frames.e20);
-      obj_animation.addFrame(this.frames.e21);
-      obj_animation.addFrame(this.frames.e22);
-      obj_animation.setInterval(1e3 / 30);
-      objG_animationManager.addAnimationInfo("explosion", obj_animation);
-    };
-    this.generateTintedKillIcon = function (b, e, f, d) {
-      let a;
-      a = objG_assets.frames.iconkill;
-      frameIconR = objG_assets.frames.killR;
-      let c = a.generateRGBKs();
-      f = a.generateTintImage(c, b, e, f);
-      b = document.createElement("canvas");
-      b.width = f.width;
-      b.height = f.height;
-      e = b.getContext("2d");
-      e.drawImage(f.canvas, 0, 0);
-      d = frameIconR.renderTintedFrame(d);
-      d.x = a.width / 2;
-      d.y = a.height / 2;
-      d.draw(e);
-      return b;
-    };
-    this.generateHudIcons = function () {
-      let b, e, f, d, a, c, g, h;
-      (b = 30),
-        (e = 0),
-        (e = this.generateTintedKillIcon(205, 154, 109, "#FFFFFF")),
-        (f = this.generateTintedKillIcon(172, 121, 76, "#BBBBBB")),
-        (d = document.createElement("canvas"));
-      d.width = e.width;
-      d.height = e.height + b;
-      (a = d.getContext("2d")),
-        (e = e.getContext("2d")),
-        (f = f.getContext("2d"));
-      a.drawImage(f.canvas, 0, 0);
-      a.drawImage(e.canvas, 0, b);
-      this.doubleKillCanvas = d;
-      (b = 10),
-        (e = 70),
-        (d = 0.9),
-        (c = this.generateTintedKillIcon(167, 176, 185, "#FFFFFF")),
-        (f = this.generateTintedKillIcon(129, 138, 148, "#BBBBBB")),
-        (g = document.createElement("canvas"));
-      g.width = c.width + e;
-      g.height = c.height + b;
-      (h = g.getContext("2d")),
-        (e = c.getContext("2d")),
-        (f = f.getContext("2d")),
-        (a = g.width / 2 - (c.width / 2) * d);
-      h.save();
-      h.translate(a, 0);
-      h.scale(d, d);
-      h.drawImage(f.canvas, -30, 0);
-      h.drawImage(f.canvas, 30, 0);
-      h.restore();
-      a = g.width / 2 - c.width / 2;
-      h.drawImage(e.canvas, a, b);
-      this.tripleKillCanvas = g;
-      shift2Y = 20;
-      shift2X = 160;
-      d = 0.95;
-      c = this.generateTintedKillIcon(240, 164, 0, "#FFFFFF");
-      f = this.generateTintedKillIcon(200, 124, 0, "#ddaf63");
-      b = this.generateTintedKillIcon(158, 98, 0, "#b25c5c");
-      g = document.createElement("canvas");
-      g.width = c.width + shift2X;
-      g.height = c.height + 1.5 * shift2Y;
-      a = g.width / 2 - (c.width / 2) * d;
-      h = g.getContext("2d");
-      e = c.getContext("2d");
-      f = f.getContext("2d");
-      b = b.getContext("2d");
-      h.save();
-      h.translate(a, 0);
-      h.scale(d, d);
-      h.drawImage(b.canvas, 0, 0);
-      h.restore();
-      a = g.width / 2 - (c.width / 2) * d;
-      h.save();
-      h.translate(a, 0);
-      h.scale(d, d);
-      h.drawImage(f.canvas, -35, 15);
-      h.drawImage(f.canvas, 35, 15);
-      h.restore();
-      a = g.width / 2 - c.width / 2;
-      h.drawImage(e.canvas, a, 1.5 * shift2Y);
-      this.quadKillCanvas = g;
-      c = this.generateTintedKillIcon(222, 0, 0, "#FFFFFF");
-      f = this.generateTintedKillIcon(172, 0, 0, "#d68080");
-      b = this.generateTintedKillIcon(133, 0, 0, "#b25c5c");
-      g = document.createElement("canvas");
-      g.width = c.width + shift2X;
-      g.height = c.height + 1.5 * shift2Y;
-      a = g.width / 2 - (c.width / 2) * 0.65;
-      h = g.getContext("2d");
-      e = c.getContext("2d");
-      f = f.getContext("2d");
-      b = b.getContext("2d");
-      h.save();
-      h.translate(a, 0);
-      h.scale(0.65, 0.65);
-      h.drawImage(b.canvas, -105, 10);
-      h.drawImage(b.canvas, 105, 10);
-      h.drawImage(b.canvas, -40, 10);
-      h.drawImage(b.canvas, 40, 10);
-      h.drawImage(b.canvas, 0, shift2Y);
-      h.restore();
-      a = g.width / 2 - (c.width / 2) * d;
-      h.save();
-      h.translate(a, 0);
-      h.scale(d, d);
-      h.drawImage(f.canvas, -35, shift2Y);
-      h.drawImage(f.canvas, 35, shift2Y);
-      h.restore();
-      a = g.width / 2 - c.width / 2;
-      h.drawImage(e.canvas, a, 1.5 * shift2Y);
-      this.multiKillCanvas = g;
-    };
-    this.load = function (b) {
-      this.onLoad = b;
-      this.loadGameSpritesheet();
-    };
-    this.loadTintImage = function (b, e, f) {
-      let d = document.createElement("canvas"),
-        a = d.getContext("2d"),
-        c = b.width,
-        g = b.height;
-      d.width = c;
-      d.height = g;
-      let h = document.createElement("canvas");
-      h.width = c;
-      h.height = g;
-      c = h.getContext("2d");
-      c.fillStyle = f;
-      c.fillRect(0, 0, h.width, h.height);
-      c.globalCompositeOperation = "destination-atop";
-      c.drawImage(b, 0, 0);
-      a.globalAlpha = 1;
-      a.drawImage(h, 0, 0);
-      e(d);
-    };
-    this.verifyWarshipLoaded = function () {
-      3 == this.warshipTextureLoadCount && (this.warshipLoaded = true);
-    };
-    this.loadWarshipEvent = function () {
-      this.warshipLoaded ||
-        ((this.warshipImage = new Image()),
-        (this.warshipImage.src = "images/events/battleship.png"),
-        (this.warshipImage.onload = function () {
-          objG_assets.warshipLoaded = true;
-          objG_assets.loadTintImage(
-            objG_assets.warshipImage,
-            function (b) {
-              objG_assets.whiteWarshipImage = b;
-              objG_assets.warshipTextureLoadCount++;
-              objG_assets.verifyWarshipLoaded();
-            },
-            "#FFFFFF",
-          );
-        }),
-        (this.cannonImage = new Image()),
-        (this.cannonImage.src = "images/events/shipcannon.png"),
-        (this.cannonImage.onload = function () {
-          objG_assets.warshipTextureLoadCount++;
-          objG_assets.verifyWarshipLoaded();
-        }),
-        (this.warshipIcon = new Image()),
-        (this.warshipIcon.src = "images/events/warshipIcon.png"),
-        (this.warshipIcon.onload = function () {
-          objG_assets.warshipTextureLoadCount++;
-          objG_assets.verifyWarshipLoaded();
-        }));
-    };
-    this.loadAsteroidEvent = function () {
-      this.asteroidLoaded ||
-        ((this.asteroidImage = new Image()),
-        (this.asteroidImage.src = "images/events/asteroid.png"),
-        (this.asteroidImage.onload = function () {
-          objG_assets.asteroidLoaded = true;
-          objG_assets.loadTintImage(
-            objG_assets.asteroidImage,
-            function (b) {
-              objG_assets.whiteAsteroidImage = b;
-            },
-            "#FF3333",
-          );
-        }),
-        (this.blinkImage = new Image()),
-        (this.blinkImage.src = "images/events/blink.png"));
-    };
-  },
-  Class_InputManager = function () {
-    let _this = this,
-      bool_isLeftMousePressed = false,
+    obj_animation.setInterval(1e3 / 30);
+    objG_animationManager.addAnimationInfo("splash", obj_animation);
+    obj_animation2.setInterval(1e3 / 30);
+    objG_animationManager.addAnimationInfo("splashReflex", obj_animation2);
+    obj_animation = new Class_Animation();
+    obj_animation.addFrame(this.frames.e0);
+    obj_animation.addFrame(this.frames.e0);
+    obj_animation.addFrame(this.frames.e2);
+    obj_animation.addFrame(this.frames.e3);
+    obj_animation.addFrame(this.frames.e4);
+    obj_animation.addFrame(this.frames.e5);
+    obj_animation.addFrame(this.frames.e5);
+    obj_animation.addFrame(this.frames.e7);
+    obj_animation.addFrame(this.frames.e7);
+    obj_animation.addFrame(this.frames.e9);
+    obj_animation.addFrame(this.frames.e10);
+    obj_animation.addFrame(this.frames.e11);
+    obj_animation.addFrame(this.frames.e11);
+    obj_animation.addFrame(this.frames.e13);
+    obj_animation.addFrame(this.frames.e14);
+    obj_animation.addFrame(this.frames.e15);
+    obj_animation.addFrame(this.frames.e16);
+    obj_animation.addFrame(this.frames.e17);
+    obj_animation.addFrame(this.frames.e18);
+    obj_animation.addFrame(this.frames.e19);
+    obj_animation.addFrame(this.frames.e20);
+    obj_animation.addFrame(this.frames.e21);
+    obj_animation.addFrame(this.frames.e22);
+    obj_animation.setInterval(1e3 / 30);
+    objG_animationManager.addAnimationInfo("explosion", obj_animation);
+  }
+  generateTintedKillIcon(b, e, f, d) {
+    let a;
+    a = objG_assets.frames.iconkill;
+    let frameIconR = objG_assets.frames.killR;
+    let c = a.generateRGBKs();
+    f = a.generateTintImage(c, b, e, f);
+    b = document.createElement("canvas");
+    b.width = f.width;
+    b.height = f.height;
+    e = b.getContext("2d");
+    e.drawImage(f.canvas, 0, 0);
+    d = frameIconR.renderTintedFrame(d);
+    d.x = a.width / 2;
+    d.y = a.height / 2;
+    d.draw(e);
+    return b;
+  }
+  generateHudIcons() {
+    let b, e, f, d, a, c, g, h;
+    (b = 30),
+      (e = 0),
+      (e = this.generateTintedKillIcon(205, 154, 109, "#FFFFFF")),
+      (f = this.generateTintedKillIcon(172, 121, 76, "#BBBBBB")),
+      (d = document.createElement("canvas"));
+    d.width = e.width;
+    d.height = e.height + b;
+    (a = d.getContext("2d")),
+      (e = e.getContext("2d")),
+      (f = f.getContext("2d"));
+    a.drawImage(f.canvas, 0, 0);
+    a.drawImage(e.canvas, 0, b);
+    this.doubleKillCanvas = d;
+    (b = 10),
+      (e = 70),
+      (d = 0.9),
+      (c = this.generateTintedKillIcon(167, 176, 185, "#FFFFFF")),
+      (f = this.generateTintedKillIcon(129, 138, 148, "#BBBBBB")),
+      (g = document.createElement("canvas"));
+    g.width = c.width + e;
+    g.height = c.height + b;
+    (h = g.getContext("2d")),
+      (e = c.getContext("2d")),
+      (f = f.getContext("2d")),
+      (a = g.width / 2 - (c.width / 2) * d);
+    h.save();
+    h.translate(a, 0);
+    h.scale(d, d);
+    h.drawImage(f.canvas, -30, 0);
+    h.drawImage(f.canvas, 30, 0);
+    h.restore();
+    a = g.width / 2 - c.width / 2;
+    h.drawImage(e.canvas, a, b);
+    this.tripleKillCanvas = g;
+    let shift2Y = 20;
+    let shift2X = 160;
+    d = 0.95;
+    c = this.generateTintedKillIcon(240, 164, 0, "#FFFFFF");
+    f = this.generateTintedKillIcon(200, 124, 0, "#ddaf63");
+    b = this.generateTintedKillIcon(158, 98, 0, "#b25c5c");
+    g = document.createElement("canvas");
+    g.width = c.width + shift2X;
+    g.height = c.height + 1.5 * shift2Y;
+    a = g.width / 2 - (c.width / 2) * d;
+    h = g.getContext("2d");
+    e = c.getContext("2d");
+    f = f.getContext("2d");
+    b = b.getContext("2d");
+    h.save();
+    h.translate(a, 0);
+    h.scale(d, d);
+    h.drawImage(b.canvas, 0, 0);
+    h.restore();
+    a = g.width / 2 - (c.width / 2) * d;
+    h.save();
+    h.translate(a, 0);
+    h.scale(d, d);
+    h.drawImage(f.canvas, -35, 15);
+    h.drawImage(f.canvas, 35, 15);
+    h.restore();
+    a = g.width / 2 - c.width / 2;
+    h.drawImage(e.canvas, a, 1.5 * shift2Y);
+    this.quadKillCanvas = g;
+    c = this.generateTintedKillIcon(222, 0, 0, "#FFFFFF");
+    f = this.generateTintedKillIcon(172, 0, 0, "#d68080");
+    b = this.generateTintedKillIcon(133, 0, 0, "#b25c5c");
+    g = document.createElement("canvas");
+    g.width = c.width + shift2X;
+    g.height = c.height + 1.5 * shift2Y;
+    a = g.width / 2 - (c.width / 2) * 0.65;
+    h = g.getContext("2d");
+    e = c.getContext("2d");
+    f = f.getContext("2d");
+    b = b.getContext("2d");
+    h.save();
+    h.translate(a, 0);
+    h.scale(0.65, 0.65);
+    h.drawImage(b.canvas, -105, 10);
+    h.drawImage(b.canvas, 105, 10);
+    h.drawImage(b.canvas, -40, 10);
+    h.drawImage(b.canvas, 40, 10);
+    h.drawImage(b.canvas, 0, shift2Y);
+    h.restore();
+    a = g.width / 2 - (c.width / 2) * d;
+    h.save();
+    h.translate(a, 0);
+    h.scale(d, d);
+    h.drawImage(f.canvas, -35, shift2Y);
+    h.drawImage(f.canvas, 35, shift2Y);
+    h.restore();
+    a = g.width / 2 - c.width / 2;
+    h.drawImage(e.canvas, a, 1.5 * shift2Y);
+    this.multiKillCanvas = g;
+  }
+  load(b) {
+    this.onLoad = b;
+    this.loadGameSpritesheet();
+  }
+  loadTintImage(b, e, f) {
+    let d = document.createElement("canvas"),
+      a = d.getContext("2d"),
+      c = b.width,
+      g = b.height;
+    d.width = c;
+    d.height = g;
+    let h = document.createElement("canvas");
+    h.width = c;
+    h.height = g;
+    c = h.getContext("2d");
+    c.fillStyle = f;
+    c.fillRect(0, 0, h.width, h.height);
+    c.globalCompositeOperation = "destination-atop";
+    c.drawImage(b, 0, 0);
+    a.globalAlpha = 1;
+    a.drawImage(h, 0, 0);
+    e(d);
+  }
+  verifyWarshipLoaded() {
+    3 == this.warshipTextureLoadCount && (this.warshipLoaded = true);
+  }
+  loadWarshipEvent() {
+    this.warshipLoaded ||
+      ((this.warshipImage = new Image()),
+      (this.warshipImage.src = "images/events/battleship.png"),
+      (this.warshipImage.onload = function () {
+        objG_assets.warshipLoaded = true;
+        objG_assets.loadTintImage(
+          objG_assets.warshipImage,
+          function (b) {
+            objG_assets.whiteWarshipImage = b;
+            objG_assets.warshipTextureLoadCount++;
+            objG_assets.verifyWarshipLoaded();
+          },
+          "#FFFFFF",
+        );
+      }),
+      (this.cannonImage = new Image()),
+      (this.cannonImage.src = "images/events/shipcannon.png"),
+      (this.cannonImage.onload = function () {
+        objG_assets.warshipTextureLoadCount++;
+        objG_assets.verifyWarshipLoaded();
+      }),
+      (this.warshipIcon = new Image()),
+      (this.warshipIcon.src = "images/events/warshipIcon.png"),
+      (this.warshipIcon.onload = function () {
+        objG_assets.warshipTextureLoadCount++;
+        objG_assets.verifyWarshipLoaded();
+      }));
+  }
+  loadAsteroidEvent() {
+    this.asteroidLoaded ||
+      ((this.asteroidImage = new Image()),
+      (this.asteroidImage.src = "images/events/asteroid.png"),
+      (this.asteroidImage.onload = function () {
+        objG_assets.asteroidLoaded = true;
+        objG_assets.loadTintImage(
+          objG_assets.asteroidImage,
+          function (b) {
+            objG_assets.whiteAsteroidImage = b;
+          },
+          "#FF3333",
+        );
+      }),
+      (this.blinkImage = new Image()),
+      (this.blinkImage.src = "images/events/blink.png"));
+  }
+}
+class InputManager {
+  angle = Math.PI;
+  throttle = 0;
+  rotationValue = 0.1;
+  varAngle = 0;
+  mouseMoved = false;
+  hover = 1;
+  addListeners: () => void;
+  constructor() {
+    let bool_isLeftMousePressed = false,
       f = 0,
       d = 0;
-    this.angle = Math.PI;
-    this.throttle = 0;
-    this.rotationValue = 0.1;
-    this.varAngle = 0;
-    this.mouseMoved = false;
-    this.hover = 1;
-    _this.keydown = function (event) {
-      67 == event.keyCode && bool_following_plane && eb
+    const keydown = (ev: KeyboardEvent) => {
+      67 == ev.keyCode && bool_following_plane && eb
         ? setTimeout(function () {
             func_displayCopyLink();
           }, 10)
         : bool_following_plane ||
-          (32 == event.keyCode
+          (32 == ev.keyCode
             ? Z && objG_wsConnection.sendShooting(true)
-            : 188 != event.keyCode &&
-              49 != event.keyCode &&
-              (222 == event.keyCode
+            : 188 != ev.keyCode &&
+              49 != ev.keyCode &&
+              (222 == ev.keyCode
                 ? (bool_drawUI = !bool_drawUI)
-                : 51 == event.keyCode
+                : 51 == ev.keyCode
                   ? ((bool_drawGradient = !bool_drawGradient),
                     console.log("Toggled Gradient to " + bool_drawGradient))
-                  : 52 == event.keyCode
+                  : 52 == ev.keyCode
                     ? ((bool_drawClouds = !bool_drawClouds),
                       console.log("Toggled drawClouds to " + bool_drawClouds))
-                    : 53 == event.keyCode
+                    : 53 == ev.keyCode
                       ? ((bool_drawWater = !bool_drawWater),
                         console.log("Toggled drawWater to " + bool_drawWater))
-                      : 54 == event.keyCode
+                      : 54 == ev.keyCode
                         ? ((bool_drawExplosions = !bool_drawExplosions),
                           console.log(
                             "Toggled drawExplosions to " + bool_drawExplosions,
                           ))
-                        : 55 == event.keyCode
+                        : 55 == ev.keyCode
                           ? ((bool_drawSun = !bool_drawSun),
                             console.log("Toggled drawSun to " + bool_drawSun))
-                          : 56 == event.keyCode
+                          : 56 == ev.keyCode
                             ? ((bool_drawItems = !bool_drawItems),
                               console.log(
                                 "Toggled drawItems to " + bool_drawItems,
                               ))
-                            : 57 == event.keyCode
+                            : 57 == ev.keyCode
                               ? ((bool_drawTrails = !bool_drawTrails),
                                 console.log(
                                   "Toggled drawTrails to " + bool_drawTrails,
                                 ))
-                              : 48 == event.keyCode
+                              : 48 == ev.keyCode
                                 ? ((bool_drawSplashes = !bool_drawSplashes),
                                   console.log(
                                     "Toggled drawSplashes to " +
                                       bool_drawSplashes,
                                   ))
-                                : 27 == event.keyCode
+                                : 27 == ev.keyCode
                                   ? (func_showAds(),
                                     (num_max_volume =
                                       0.05 * num_setting_muteVol),
@@ -1469,7 +1470,7 @@ let Class_Assets = function () {
                                     funcR_hc_showPf(),
                                     (bool_following_plane = true),
                                     Z || ((ka = 1), (objG_player_plane = null)))
-                                  : 70 == event.keyCode &&
+                                  : 70 == ev.keyCode &&
                                     (document.fullscreenElement ||
                                     document.mozFullScreenElement ||
                                     document.webkitFullscreenElement ||
@@ -1498,9 +1499,9 @@ let Class_Assets = function () {
                                               ),
                                     objGUI_gameInfo.clearTip())));
     };
-    _this.keyup = function (event) {
+    const keyup = (ev: KeyboardEvent) => {
       bool_following_plane ||
-        32 != event.keyCode ||
+        32 != ev.keyCode ||
         (Z
           ? objG_wsConnection.sendShooting(false)
           : (1 == ka
@@ -1509,51 +1510,52 @@ let Class_Assets = function () {
             objG_eventManager.isSpaceWars() &&
               setTimeout(objG_followMode.respawnParticles, 500)));
     };
-    _this.mousedown = function (event) {
+    const mousedown = (ev: MouseEvent) => {
       bool_following_plane ||
         (Z
-          ? 0 == event.button && objG_wsConnection.sendShooting(true)
+          ? 0 == ev.button && objG_wsConnection.sendShooting(true)
           : 0 == ka
-            ? 0 == event.button
+            ? 0 == ev.button
               ? objG_followMode.PlayerFollowing(true)
-              : 2 == event.button && objG_followMode.PlayerFollowing(false)
+              : 2 == ev.button && objG_followMode.PlayerFollowing(false)
             : ((bool_isLeftMousePressed = true),
-              (f = event.clientX),
-              (d = event.clientY)));
+              (f = ev.clientX),
+              (d = ev.clientY)));
     };
-    _this.mouseup = function (event) {
+    const mouseup = (ev: MouseEvent) => {
       bool_following_plane ||
         (Z
-          ? 0 == event.button && objG_wsConnection.sendShooting(false)
+          ? 0 == ev.button && objG_wsConnection.sendShooting(false)
           : (bool_isLeftMousePressed = false));
     };
-    _this.mousemove = function (event) {
+    const mousemove = (ev: MouseEvent) => {
       if (
         !bool_following_plane &&
-        ((_this.mouseMoved = true),
-        (qc = event.clientX),
-        (rc = event.clientY),
+        ((this.mouseMoved = true),
+        (qc = ev.clientX),
+        (rc = ev.clientY),
         bool_isLeftMousePressed)
       ) {
-        let c = event.clientY - d,
-          g = objGUI_anchor.x - (event.clientX - f),
+        let c = ev.clientY - d,
+          g = objGUI_anchor.x - (ev.clientX - f),
           h = objGUI_anchor.y - c;
         h < -E / 2 ? (h = -E / 2) : h > E / 2 && (h = E / 2);
         g < -$_sub ? (g = -$_sub) : g > $_sub && (g = $_sub);
         objGUI_anchor.setPosition(g, h);
-        f = event.clientX;
-        d = event.clientY;
+        f = ev.clientX;
+        d = ev.clientY;
       }
     };
-    this.addListeners = function () {
-      document.addEventListener("mousedown", _this.mousedown, false);
-      document.addEventListener("mousemove", _this.mousemove, false);
-      document.addEventListener("mouseup", _this.mouseup, false);
-      document.addEventListener("keydown", _this.keydown, false);
-      document.addEventListener("keyup", _this.keyup, false);
+    this.addListeners = () => {
+      document.addEventListener("mousedown", mousedown, false);
+      document.addEventListener("mousemove", mousemove, false);
+      document.addEventListener("mouseup", mouseup, false);
+      document.addEventListener("keydown", keydown, false);
+      document.addEventListener("keyup", keyup, false);
     };
-  },
-  Class_ParticleImpacts = function () {
+  }
+}
+let Class_ParticleImpacts = function () {
     let b = [];
     this.draw = function (e) {
       let f, d, a, c, g, h, q, n, k, m, l, y, r, p;
@@ -5628,7 +5630,7 @@ let Class_Assets = function () {
     objG_backgrounds = new Class_Backgrounds();
     objG_animationManager = new Class_AnimationManager();
     _this.respawnParticles();
-    objG_assets = new Class_Assets();
+    objG_assets = new Assets();
     objG_assets.load(function () {
       console.log("Resources loaded!");
       1 == int_pathMobile &&
@@ -7544,7 +7546,7 @@ window.onload = function () {
         document.getElementById("canvas"),
       )),
       window.addEventListener("resize", objG_followMode.resize, false),
-      (objG_inputManager = new Class_InputManager()),
+      (objG_inputManager = new InputManager()),
       objG_inputManager.addListeners(),
       window.requestAnimationFrame
         ? window.requestAnimationFrame(Rb)
