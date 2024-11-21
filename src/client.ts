@@ -1555,257 +1555,257 @@ class InputManager {
     };
   }
 }
-let Class_ParticleImpacts = function () {
-    let b = [];
-    this.draw = function (e) {
-      let f, d, a, c, g, h, q, n, k, m, l, y, r, p;
-      for (f = [], d = 0; d < b.length; d++) {
-        a = b[d];
-        if (void 0 == objD_planes[a.id]) f.push(a);
-        else if (a.weapon == id_weapon_railgun) {
-          e.lineWidth = 2 + 5 * (1 - a.a);
-          e.beginPath();
-          (c = parseInt(255 * a.a)),
-            (g = e.createLinearGradient(
-              a.hitPosition.x,
-              a.hitPosition.y,
-              a.origPosition.x,
-              a.origPosition.y,
-            ));
-          0 > a.a && (a.a = 0);
-          h = 255;
-          1 == a.special
-            ? ((h = 0), (c = parseInt(0.4 * c)))
-            : 2 == a.special && ((h = 200), (c = parseInt(0.1 * c)));
-          g.addColorStop(0, "rgba(255," + h + "," + c + "," + a.a + ")");
-          g.addColorStop(a.a, "rgba(255," + h + "," + c + "," + a.a + ")");
-          g.addColorStop(1, "rgba(255," + h + "," + c + ",0.0)");
-          e.strokeStyle = g;
-          e.moveTo(a.origPosition.x, a.origPosition.y);
-          e.lineTo(a.hitPosition.x, a.hitPosition.y);
-          e.stroke();
-          (g = (a.hitPosition.x - a.origPosition.x) / 100),
-            (h = (a.hitPosition.y - a.origPosition.y) / 100),
-            (q = a.angle),
-            (n = a.origPosition.x),
-            (k = a.origPosition.y),
-            (m = 0);
-          e.beginPath();
-          e.lineWidth = 2 == a.special ? 10 : 4;
-          l = 5;
-          a.special && (l = 8);
-          for (c = 0; 100 > c; c++) {
-            (m = m + Math.PI / 4),
-              (n = Math.sin(m - 4 * a.a) * (6 + (1 - a.a) * l)),
-              (y = n * Math.cos(q)),
-              (r = n * Math.sin(q)),
-              (n = a.origPosition.x + g * c),
-              (k = a.origPosition.y + h * c);
-            0 == c ? e.moveTo(n + y, k + r) : e.lineTo(n + y, k + r);
-          }
-          e.stroke();
-          a.a -= 0.04;
-          0 > a.a && f.push(a);
-        } else if (objG_eventManager.isSpaceWars())
-          (c = 45),
-            a.isKing && (c = 90),
-            (g = a.curPosition.x),
-            (h = a.curPosition.y),
-            (q = a.curPosition.x - a.origPosition.x),
-            (m = a.curPosition.y - a.origPosition.y),
-            (q = Math.sqrt(q * q + m * m)),
-            q > c
-              ? ((q = a.curPosition.x - a.direction.x * c),
-                (m = a.curPosition.y - a.direction.y * c))
-              : ((q = a.origPosition.x), (m = a.origPosition.y)),
-            a.isKing
-              ? ((e.shadowColor = "green"),
-                (e.lineWidth = 9),
-                (e.strokeStyle = "rgba(50,255,50,0.7)"),
+class ParticleImpacts {
+  b = [];
+  draw(e) {
+    let f, d, a, c, g, h, q, n, k, m, l, y, r, p;
+    for (f = [], d = 0; d < this.b.length; d++) {
+      a = this.b[d];
+      if (void 0 == objD_planes[a.id]) f.push(a);
+      else if (a.weapon == id_weapon_railgun) {
+        e.lineWidth = 2 + 5 * (1 - a.a);
+        e.beginPath();
+        (c = parseInt(255 * a.a)),
+          (g = e.createLinearGradient(
+            a.hitPosition.x,
+            a.hitPosition.y,
+            a.origPosition.x,
+            a.origPosition.y,
+          ));
+        0 > a.a && (a.a = 0);
+        h = 255;
+        1 == a.special
+          ? ((h = 0), (c = parseInt(0.4 * c)))
+          : 2 == a.special && ((h = 200), (c = parseInt(0.1 * c)));
+        g.addColorStop(0, "rgba(255," + h + "," + c + "," + a.a + ")");
+        g.addColorStop(a.a, "rgba(255," + h + "," + c + "," + a.a + ")");
+        g.addColorStop(1, "rgba(255," + h + "," + c + ",0.0)");
+        e.strokeStyle = g;
+        e.moveTo(a.origPosition.x, a.origPosition.y);
+        e.lineTo(a.hitPosition.x, a.hitPosition.y);
+        e.stroke();
+        (g = (a.hitPosition.x - a.origPosition.x) / 100),
+          (h = (a.hitPosition.y - a.origPosition.y) / 100),
+          (q = a.angle),
+          (n = a.origPosition.x),
+          (k = a.origPosition.y),
+          (m = 0);
+        e.beginPath();
+        e.lineWidth = 2 == a.special ? 10 : 4;
+        l = 5;
+        a.special && (l = 8);
+        for (c = 0; 100 > c; c++) {
+          (m = m + Math.PI / 4),
+            (n = Math.sin(m - 4 * a.a) * (6 + (1 - a.a) * l)),
+            (y = n * Math.cos(q)),
+            (r = n * Math.sin(q)),
+            (n = a.origPosition.x + g * c),
+            (k = a.origPosition.y + h * c);
+          0 == c ? e.moveTo(n + y, k + r) : e.lineTo(n + y, k + r);
+        }
+        e.stroke();
+        a.a -= 0.04;
+        0 > a.a && f.push(a);
+      } else if (objG_eventManager.isSpaceWars())
+        (c = 45),
+          a.isKing && (c = 90),
+          (g = a.curPosition.x),
+          (h = a.curPosition.y),
+          (q = a.curPosition.x - a.origPosition.x),
+          (m = a.curPosition.y - a.origPosition.y),
+          (q = Math.sqrt(q * q + m * m)),
+          q > c
+            ? ((q = a.curPosition.x - a.direction.x * c),
+              (m = a.curPosition.y - a.direction.y * c))
+            : ((q = a.origPosition.x), (m = a.origPosition.y)),
+          a.isKing
+            ? ((e.shadowColor = "green"),
+              (e.lineWidth = 9),
+              (e.strokeStyle = "rgba(50,255,50,0.7)"),
+              e.beginPath(),
+              e.moveTo(g, h),
+              e.lineTo(q, m),
+              e.stroke(),
+              (e.lineWidth = 4),
+              (e.strokeStyle = "rgba(150,255,150,1.0)"))
+            : a.weapon != id_weapon_trishoot
+              ? ((e.shadowColor = "red"),
+                (e.lineWidth = 7),
+                (e.strokeStyle = "rgba(255,50,50,1.0)"),
                 e.beginPath(),
                 e.moveTo(g, h),
                 e.lineTo(q, m),
                 e.stroke(),
-                (e.lineWidth = 4),
-                (e.strokeStyle = "rgba(150,255,150,1.0)"))
-              : a.weapon != id_weapon_trishoot
-                ? ((e.shadowColor = "red"),
-                  (e.lineWidth = 7),
-                  (e.strokeStyle = "rgba(255,50,50,1.0)"),
-                  e.beginPath(),
-                  e.moveTo(g, h),
-                  e.lineTo(q, m),
-                  e.stroke(),
-                  (e.lineWidth = 3),
-                  (e.strokeStyle = "rgba(255,150,150,1.0)"))
-                : ((e.shadowColor = "red"),
-                  (e.lineWidth = 7),
-                  (e.strokeStyle = "rgba(255,126,39,1.0)"),
-                  e.beginPath(),
-                  e.moveTo(g, h),
-                  e.lineTo(q, m),
-                  e.stroke(),
-                  (e.lineWidth = 3),
-                  (e.strokeStyle = "rgba(255,255,255,1.0)")),
-            e.beginPath(),
-            e.moveTo(g, h),
-            e.lineTo(q, m),
-            e.stroke(),
-            a.finish
-              ? f.push(a)
-              : ((c = a.curPosition.x - a.hitPosition.x),
-                (g = a.curPosition.y - a.hitPosition.y),
-                (c = Math.sqrt(c * c + g * g)),
-                (a.a -= 0.05),
-                (g = 70 + 10 * Math.random()),
-                c < g
-                  ? ((a.finish = true),
-                    (a.curPosition.x = a.hitPosition.x),
-                    (a.curPosition.y = a.hitPosition.y))
-                  : ((a.curPosition.x += a.direction.x * g),
-                    (a.curPosition.y += a.direction.y * g)));
-        else {
-          e.lineWidth = 3;
-          e.beginPath();
-          c = 140;
-          g = a.curPosition.x;
-          h = a.curPosition.y;
-          q = a.curPosition.x - a.origPosition.x;
-          m = a.curPosition.y - a.origPosition.y;
-          q = Math.sqrt(q * q + m * m);
-          q > c
-            ? ((q = a.curPosition.x - a.direction.x * c),
-              (m = a.curPosition.y - a.direction.y * c))
-            : ((q = a.origPosition.x), (m = a.origPosition.y));
-          (c = e),
-            (n = r = y = l = void 0),
-            (n = q - g),
-            (r = m - h),
-            (p = g + 0.05 * n),
-            (k = h + 0.05 * r),
-            (l = Math.sqrt(n * n + r * r)),
-            (n = n / l),
-            (r = r / l),
-            (n = 3 * n),
-            (r = 3 * r),
-            (l = p + -r),
-            (y = k + n),
-            (r = p - -r),
-            (n = k - n);
-          c.moveTo(g, h);
-          c.lineTo(l, y);
-          c.lineTo(q, m);
-          c.lineTo(r, n);
-          e.fillStyle = "rgba(255,255,255," + a.a + ")";
-          e.fill();
+                (e.lineWidth = 3),
+                (e.strokeStyle = "rgba(255,150,150,1.0)"))
+              : ((e.shadowColor = "red"),
+                (e.lineWidth = 7),
+                (e.strokeStyle = "rgba(255,126,39,1.0)"),
+                e.beginPath(),
+                e.moveTo(g, h),
+                e.lineTo(q, m),
+                e.stroke(),
+                (e.lineWidth = 3),
+                (e.strokeStyle = "rgba(255,255,255,1.0)")),
+          e.beginPath(),
+          e.moveTo(g, h),
+          e.lineTo(q, m),
+          e.stroke(),
           a.finish
             ? f.push(a)
             : ((c = a.curPosition.x - a.hitPosition.x),
               (g = a.curPosition.y - a.hitPosition.y),
               (c = Math.sqrt(c * c + g * g)),
               (a.a -= 0.05),
-              (g = 100),
+              (g = 70 + 10 * Math.random()),
               c < g
                 ? ((a.finish = true),
                   (a.curPosition.x = a.hitPosition.x),
                   (a.curPosition.y = a.hitPosition.y))
                 : ((a.curPosition.x += a.direction.x * g),
                   (a.curPosition.y += a.direction.y * g)));
-        }
+      else {
+        e.lineWidth = 3;
+        e.beginPath();
+        c = 140;
+        g = a.curPosition.x;
+        h = a.curPosition.y;
+        q = a.curPosition.x - a.origPosition.x;
+        m = a.curPosition.y - a.origPosition.y;
+        q = Math.sqrt(q * q + m * m);
+        q > c
+          ? ((q = a.curPosition.x - a.direction.x * c),
+            (m = a.curPosition.y - a.direction.y * c))
+          : ((q = a.origPosition.x), (m = a.origPosition.y));
+        (c = e),
+          (n = r = y = l = void 0),
+          (n = q - g),
+          (r = m - h),
+          (p = g + 0.05 * n),
+          (k = h + 0.05 * r),
+          (l = Math.sqrt(n * n + r * r)),
+          (n = n / l),
+          (r = r / l),
+          (n = 3 * n),
+          (r = 3 * r),
+          (l = p + -r),
+          (y = k + n),
+          (r = p - -r),
+          (n = k - n);
+        c.moveTo(g, h);
+        c.lineTo(l, y);
+        c.lineTo(q, m);
+        c.lineTo(r, n);
+        e.fillStyle = "rgba(255,255,255," + a.a + ")";
+        e.fill();
+        a.finish
+          ? f.push(a)
+          : ((c = a.curPosition.x - a.hitPosition.x),
+            (g = a.curPosition.y - a.hitPosition.y),
+            (c = Math.sqrt(c * c + g * g)),
+            (a.a -= 0.05),
+            (g = 100),
+            c < g
+              ? ((a.finish = true),
+                (a.curPosition.x = a.hitPosition.x),
+                (a.curPosition.y = a.hitPosition.y))
+              : ((a.curPosition.x += a.direction.x * g),
+                (a.curPosition.y += a.direction.y * g)));
       }
-      for (c = 0; c < f.length; c++) (e = b.indexOf(f[c])), b.splice(e, 1);
-      f.length = 0;
-    };
-    this.addShot = function (e, f, d, a) {
-      if (func_isTimeElapsed_50ms() && xa) {
-        let c = objD_planes[e];
-        if (c) {
-          let g = {};
-          g.id = e;
-          g.angle = c.angle;
-          g.isKing = qa == e;
-          g.hitPosition = {
-            x: 10 * f,
-            y: 10 * d,
-          };
-          g.special = 0;
-          objG_eventManager.isInstagib()
-            ? (g.special = 1)
-            : objG_eventManager.isSpaceWars() && (g.special = 2);
-          g.a = 1;
-          g.weapon = a;
-          f = func_rotatePoint(0, -10, c.angle);
-          e = c.x + f.x;
-          d = c.y + f.y;
-          g.origPosition = {
+    }
+    for (c = 0; c < f.length; c++)
+      (e = this.b.indexOf(f[c])), this.b.splice(e, 1);
+    f.length = 0;
+  }
+  addShot(e, f, d, a) {
+    if (func_isTimeElapsed_50ms() && xa) {
+      let c = objD_planes[e];
+      if (c) {
+        let g = {};
+        g.id = e;
+        g.angle = c.angle;
+        g.isKing = qa == e;
+        g.hitPosition = {
+          x: 10 * f,
+          y: 10 * d,
+        };
+        g.special = 0;
+        objG_eventManager.isInstagib()
+          ? (g.special = 1)
+          : objG_eventManager.isSpaceWars() && (g.special = 2);
+        g.a = 1;
+        g.weapon = a;
+        f = func_rotatePoint(0, -10, c.angle);
+        e = c.x + f.x;
+        d = c.y + f.y;
+        g.origPosition = {
+          x: e,
+          y: d,
+        };
+        c = g.hitPosition.x - e;
+        f = g.hitPosition.y - d;
+        a != id_weapon_superweapon &&
+          ((a = Math.sqrt(c * c + f * f)),
+          (g.direction = {
+            x: c / a,
+            y: f / a,
+          }),
+          (g.curPosition = {
             x: e,
             y: d,
-          };
-          c = g.hitPosition.x - e;
-          f = g.hitPosition.y - d;
-          a != id_weapon_superweapon &&
-            ((a = Math.sqrt(c * c + f * f)),
-            (g.direction = {
-              x: c / a,
-              y: f / a,
-            }),
-            (g.curPosition = {
-              x: e,
-              y: d,
-            }),
-            (g.finish = false),
-            (func_isInsideBox(e, d, 100) ||
-              func_isInsideBox(g.hitPosition.x, g.hitPosition.y, 100)) &&
-              b.push(g));
-          a = E / 2;
-          g.hitPosition.y > a &&
-            ((e = f / c),
-            obj_particleImpacts.addSplash(
-              (a - (g.hitPosition.y - e * g.hitPosition.x)) / e,
-              a + 6,
-              1,
-              false,
-            ));
-        }
+          }),
+          (g.finish = false),
+          (func_isInsideBox(e, d, 100) ||
+            func_isInsideBox(g.hitPosition.x, g.hitPosition.y, 100)) &&
+            this.b.push(g));
+        a = E / 2;
+        g.hitPosition.y > a &&
+          ((e = f / c),
+          obj_particleImpacts.addSplash(
+            (a - (g.hitPosition.y - e * g.hitPosition.x)) / e,
+            a + 6,
+            1,
+            false,
+          ));
       }
-    };
-    this.addMissileImpact = function (b, f) {
-      let d = 10 * b,
-        a = 10 * f;
-      if (func_isInsideBox(d, a, 100) && func_isTimeElapsed_50ms()) {
-        let c = objG_animationManager.createAnimation("explosion");
-        c.setScale(1);
-        c.posX = 10 * b;
-        c.posY = 10 * f;
-        objG_animationManager.runAnimationBehind(c);
-        d =
-          1 - func_calculateDistance2D(d, a, H.x, H.y) / num_sound_max_distance;
-        objG_sfxManager.playSound(str_sfxid_mexpl, d, 1, const_Sa_3, null);
-      }
-    };
-    this.addSplash = function (b, f, d, a) {
-      if (
-        bool_drawSplashes &&
-        !objG_eventManager.isSpaceWars() &&
-        func_isInsideBox(b, f, 100) &&
-        func_isTimeElapsed_50ms()
-      ) {
-        let c = objG_animationManager.createAnimation("splash"),
-          g = objG_animationManager.createAnimation("splashReflex");
-        c.setScale(d);
-        a && (c.scaleX *= 1.2 + 0.4 * Math.random());
-        c.posX = b;
-        c.posY = f - (61 * c.scaleY) / 2;
-        objG_animationManager.runAnimation(c);
-        g.scaleX = c.scaleX;
-        g.posX = c.posX;
-        g.posY = c.posY + 77;
-        g.scaleY = -2;
-        objG_animationManager.runAnimationLayer2(g);
-      }
-    };
-  },
-  Class_UI_GameInfo = function () {
+    }
+  }
+  addMissileImpact(b, f) {
+    let d = 10 * b,
+      a = 10 * f;
+    if (func_isInsideBox(d, a, 100) && func_isTimeElapsed_50ms()) {
+      let c = objG_animationManager.createAnimation("explosion");
+      c.setScale(1);
+      c.posX = 10 * b;
+      c.posY = 10 * f;
+      objG_animationManager.runAnimationBehind(c);
+      d = 1 - func_calculateDistance2D(d, a, H.x, H.y) / num_sound_max_distance;
+      objG_sfxManager.playSound(str_sfxid_mexpl, d, 1, const_Sa_3, null);
+    }
+  }
+  addSplash(b, f, d, a) {
+    if (
+      bool_drawSplashes &&
+      !objG_eventManager.isSpaceWars() &&
+      func_isInsideBox(b, f, 100) &&
+      func_isTimeElapsed_50ms()
+    ) {
+      let c = objG_animationManager.createAnimation("splash"),
+        g = objG_animationManager.createAnimation("splashReflex");
+      c.setScale(d);
+      a && (c.scaleX *= 1.2 + 0.4 * Math.random());
+      c.posX = b;
+      c.posY = f - (61 * c.scaleY) / 2;
+      objG_animationManager.runAnimation(c);
+      g.scaleX = c.scaleX;
+      g.posX = c.posX;
+      g.posY = c.posY + 77;
+      g.scaleY = -2;
+      objG_animationManager.runAnimationLayer2(g);
+    }
+  }
+}
+let Class_UI_GameInfo = function () {
     let b,
       e,
       f,
@@ -5638,7 +5638,7 @@ let Class_ParticleImpacts = function () {
           ? messageHandlers.didLoad(JSON.stringify({}))
           : window.webkit.messageHandlers.didLoad.postMessage({}));
       objGUI_gameInfo = new Class_UI_GameInfo();
-      obj_particleImpacts = new Class_ParticleImpacts();
+      obj_particleImpacts = new ParticleImpacts();
       objG_wsConnection.hasConnection &&
         !objG_wsConnection.sentHello &&
         objG_wsConnection.hello();
