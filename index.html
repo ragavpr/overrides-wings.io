@@ -1,46 +1,53 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-<meta charset="utf-8">
-<title>Wings!</title>
-<link rel="stylesheet" type="text/css" href="css/main.css?v=2" />
-<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-<meta charset="utf-8" />
-<meta name="title" content="Wings!" />
-<meta name="keywords" content="wingsio, wings, io, game, games, web game, html5, fun, flash">
-<meta name="description" content="Wings.io - Massive multiplayer online game. Control your plane and shoot down other players! Play with millions of players around the world and try to become the King!" />
-<meta property="og:description" content="Wings.io - Massive multiplayer online game. Control your plane and shoot down other players! Play with millions of players around the world and try to become the King!" />
-<meta property="og:title" content="Wings.io" />
-<meta property="og:url" content="http://Wings.io/" />
-<meta property="og:image" content="http://wings.io/images/thumbnail.png" />
-<meta property="og:image:type" content="image/png" />
-<meta property="og:type" content="website" />
-<link id="favicon" rel="icon" type="image/png" href="images/favicon.png" />
-<style>
-
-    .modalDialog {
+  <head>
+    <meta charset="utf-8" />
+    <title>Wings!</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css?v=2" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <meta charset="utf-8" />
+    <meta name="title" content="Wings!" />
+    <meta
+      name="keywords"
+      content="wingsio, wings, io, game, games, web game, html5, fun, flash"
+    />
+    <meta
+      name="description"
+      content="Wings.io - Massive multiplayer online game. Control your plane and shoot down other players! Play with millions of players around the world and try to become the King!"
+    />
+    <meta
+      property="og:description"
+      content="Wings.io - Massive multiplayer online game. Control your plane and shoot down other players! Play with millions of players around the world and try to become the King!"
+    />
+    <meta property="og:title" content="Wings.io" />
+    <meta property="og:url" content="http://Wings.io/" />
+    <meta property="og:image" content="http://wings.io/images/thumbnail.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:type" content="website" />
+    <link id="favicon" rel="icon" type="image/png" href="images/favicon.png" />
+    <style>
+      .modalDialog {
         position: fixed;
         font-family: Arial, Helvetica, sans-serif;
         top: 0;
         right: 0;
         bottom: 0;
         left: 0;
-        background: rgba(0,0,0,0.8);
+        background: rgba(0, 0, 0, 0.8);
         z-index: 99999;
-        opacity:0;
+        opacity: 0;
         -webkit-transition: opacity 200ms ease-in;
         -moz-transition: opacity 200ms ease-in;
         transition: opacity 200ms ease-in;
         pointer-events: none;
-    }
+      }
 
-    .modalDialog:target {
-        opacity:1;
+      .modalDialog:target {
+        opacity: 1;
         pointer-events: auto;
-    }
+      }
 
-    .modalDialog > div {
+      .modalDialog > div {
         width: 400px;
         position: relative;
         margin: 10% auto;
@@ -50,12 +57,12 @@
         background: -moz-linear-gradient(#fff, #999);
         background: -webkit-linear-gradient(#fff, #999);
         background: -o-linear-gradient(#fff, #999);
-    }
+      }
 
-    .close {
+      .close {
         background: #606061;
-        opacity:1.0;
-        color: #FFFFFF;
+        opacity: 1;
+        color: #ffffff;
         line-height: 25px;
         position: absolute;
         right: -12px;
@@ -70,58 +77,57 @@
         -moz-box-shadow: 1px 1px 3px #000;
         -webkit-box-shadow: 1px 1px 3px #000;
         box-shadow: 1px 1px 3px #000;
-    }
+      }
 
-    .close:hover {
+      .close:hover {
         background: #00d9ff;
-        opacity:1.0;
-    }
+        opacity: 1;
+      }
 
-    .notbold{
-        font-weight:normal
-    }​
-
-    #adsBottom {
+      .notbold {
+        font-weight: normal;
+      }
+      ​ #adsBottom {
         position: absolute;
         left: 0;
         right: 0;
         top: 0;
         z-index: 2;
-    }
+      }
 
-    #adsBottomInner {
+      #adsBottomInner {
         margin: 0px auto;
         width: 728px;
         height: 90px;
         border: 5px solid white;
         border-radius: 0px 0px 5px 5px;
-        background-color: #FFFFFF;
+        background-color: #ffffff;
         box-sizing: content-box;
-    }
+      }
 
-    .check {
+      .check {
         position: relative;
-        top:-15px;
-        left:16px;
-    }
+        top: -15px;
+        left: 16px;
+      }
 
-    .btn-test {
+      .btn-test {
         position: relative;
         -webkit-transform: rotate(0deg);
         -moz-transform: rotate(0deg);
         -ms-transform: rotate(0deg);
         -o-transform: rotate(0deg);
         transform: rotate(0deg);
-    }
+      }
 
-    .btn-naked {
+      .btn-naked {
         display: block;
         border: 0px solid white;
         background-color: transparent;
         outline-width: 0px !important;
-    }
+      }
 
-    .btn-test:before {
+      .btn-test:before {
         content: "";
         position: absolute;
         width: 200%;
@@ -135,67 +141,76 @@
         -ms-transform: rotate(-90deg);
         -o-transform: rotate(-90deg);
         transform: rotate(-90deg);
-    }
+      }
 
-    .btn-decal, .btn-decal:focus, .btn-decal:disabled {
+      .btn-decal,
+      .btn-decal:focus,
+      .btn-decal:disabled {
         display: block;
         height: 41px;
         width: 13.1%;
         float: left;
         border-color: #798996;
-        margin-left:3.05%;
+        margin-left: 3.05%;
         background-color: #cac9cf;
         border-width: 2px;
         outline-width: 0px !important;
-    }
+      }
 
-    .btn-decal:hover {
+      .btn-decal:hover {
         border-width: 3px;
         background-color: #bab9bf;
         border-color: #798996;
-    }
+      }
 
-    .btn-color {
+      .btn-color {
         display: block;
         height: 41px;
         width: 13.1%;
         float: left;
         border-color: #8d898a;
         border-width: 2px;
-        margin-left:3.05%;
-    }
+        margin-left: 3.05%;
+      }
 
-    .btn-color:hover, .btn-color:focus {
+      .btn-color:hover,
+      .btn-color:focus {
         border-color: #798996;
         border-width: 3px;
         outline-width: 0px !important;
-    }
+      }
 
-    .btn-color1, .btn-color1:focus {
+      .btn-color1,
+      .btn-color1:focus {
         background-image: linear-gradient(#ff0000, #dd0000);
-    }
+      }
 
-    .btn-color2, .btn-color2:focus {
+      .btn-color2,
+      .btn-color2:focus {
         background-image: linear-gradient(#ff7700, #e86c00);
-    }
+      }
 
-    .btn-color3, .btn-color3:focus {
+      .btn-color3,
+      .btn-color3:focus {
         background-image: linear-gradient(#ffca00, #ddaf00);
-    }
+      }
 
-    .btn-color4, .btn-color4:focus {
+      .btn-color4,
+      .btn-color4:focus {
         background-image: linear-gradient(#aee718, #97c814);
-    }
+      }
 
-    .btn-color5, .btn-color5:focus {
+      .btn-color5,
+      .btn-color5:focus {
         background-image: linear-gradient(#0077ff, #0067dd);
-    }
+      }
 
-    .btn-color6, .btn-color6:focus {
+      .btn-color6,
+      .btn-color6:focus {
         background-image: linear-gradient(#ec13d5, #c911b5);
-    }
+      }
 
-    .btn-cfg {
+      .btn-cfg {
         display: block;
         height: 35px;
         width: 12.5%;
@@ -204,437 +219,1025 @@
         border-color: #51b6fc;
         padding-left: 0px;
         padding-top: 0px;
-    }
+      }
 
-    .btn-cfg, .btn-cfg:hover, .btn-cfg:focus, .btn-cfg:disabled {
+      .btn-cfg,
+      .btn-cfg:hover,
+      .btn-cfg:focus,
+      .btn-cfg:disabled {
         background-image: url("images/menuicon.png");
         background-position: center center;
         background-repeat: no-repeat;
-    }
+      }
 
-    .btn-cfg:hover, .btn-cfg:focus, .btn-cfg:disabled {
+      .btn-cfg:hover,
+      .btn-cfg:focus,
+      .btn-cfg:disabled {
         background-color: #459cd8;
         border-color: #459cd8;
-    }
+      }
 
-    .btn-copy {
+      .btn-copy {
         display: block;
         height: 33px;
         background-color: #ff944c;
         border-color: #ff944c;
         width: 50%;
         margin-left: 25%;
-    }
+      }
 
-    .btn-copy:hover, .btn-copy:focus, .btn-copy:disabled {
+      .btn-copy:hover,
+      .btn-copy:focus,
+      .btn-copy:disabled {
         background-color: #d47d42;
         border-color: #d47d42;
-        outline-color: #FF0000 !important;
-    }
+        outline-color: #ff0000 !important;
+      }
 
-    .btn-continue {
+      .btn-continue {
         display: block;
         height: 33px;
         background-color: #ff944c;
         border-color: #ff944c;
         width: 60%;
         margin-left: 20%;
-    }
+      }
 
-    .btn-continue:hover, .btn-continue:focus, .btn-continue:disabled {
+      .btn-continue:hover,
+      .btn-continue:focus,
+      .btn-continue:disabled {
         background-color: #d47d42;
         border-color: #d47d42;
-        outline-color: #FF0000 !important;
-    }
+        outline-color: #ff0000 !important;
+      }
 
-    .btn-play {
+      .btn-play {
         display: block;
         height: 35px;
         background-color: #ff944c;
         border-color: #ff944c;
         width: 69%;
         float: right;
-    }
+      }
 
-    .btn-play:hover, .btn-play:focus, .btn-play:disabled {
+      .btn-play:hover,
+      .btn-play:focus,
+      .btn-play:disabled {
         background-color: #d47d42;
         border-color: #d47d42;
-        outline-color: #FF0000 !important;
-    }
+        outline-color: #ff0000 !important;
+      }
 
-    .btn-spectate {
+      .btn-spectate {
         display: block;
         height: 35px;
         width: 12.5%;
         float: right;
         background-color: #ff5c44;
         border-color: #ff5c44;
-        margin-left:10px;
-    }
+        margin-left: 10px;
+      }
 
-    .btn-spectate, .btn-spectate:hover, .btn-spectate:focus, .btn-spectate:disabled {
+      .btn-spectate,
+      .btn-spectate:hover,
+      .btn-spectate:focus,
+      .btn-spectate:disabled {
         background-image: url("images/spectateicon.png");
         background-position: center center;
         background-repeat: no-repeat;
-    }
+      }
 
-    .btn-spectate:hover, .btn-spectate:focus, .btn-spectate:disabled {
+      .btn-spectate:hover,
+      .btn-spectate:focus,
+      .btn-spectate:disabled {
         background-color: #dd4f3a;
         border-color: #dd4f3a;
-        outline-color: #FF0000 !important;
-    }
+        outline-color: #ff0000 !important;
+      }
 
-    .rightBox {
+      .rightBox {
         z-index: 1000;
         position: absolute;
         bottom: 0;
         right: 0;
         height: 84px;
         width: 240px;
-        background-color: #FFF;
+        background-color: #fff;
         border-radius: 5px 0px 0px 0px;
         padding: 5px 10px;
         opacity: 0.9;
-    }
+      }
 
-    .rightBoxSmall {
+      .rightBoxSmall {
         z-index: 1000;
         position: absolute;
         bottom: 0;
         right: 0;
-        background-color: #FFF;
+        background-color: #fff;
         border-radius: 5px 0px 0px 0px;
         padding: 5px 10px;
         opacity: 0.9;
-    }
+      }
 
-    .leftBox {
+      .leftBox {
         z-index: 1000;
         position: absolute;
         top: 0;
         left: 0;
-        background-color: #FFF;
+        background-color: #fff;
         border-radius: 0px 0px 5px 0px;
         padding: 5px 10px;
-    }
+      }
 
-    .leftBottomBox {
+      .leftBottomBox {
         z-index: 1000;
         position: absolute;
         bottom: 0;
         left: 0;
-        background-color: #FFF;
+        background-color: #fff;
         border-radius: 0px 5px 0px 0px;
         padding: 5px 10px;
-    }
+      }
 
-    .form-control:focus {
+      .form-control:focus {
         border-color: #ff944c;
-        box-shadow: inset 0 0 0px #ff944c, 0 0 10px #ff944c;
-    }
+        box-shadow:
+          inset 0 0 0px #ff944c,
+          0 0 10px #ff944c;
+      }
 
-    #canvas {
+      #canvas {
         position: absolute;
-        cursor: url(images/crosshair.png) 16 16, auto;
-    }
-
-
+        cursor:
+          url(images/crosshair.png) 16 16,
+          auto;
+      }
     </style>
-<script>
-        window.startTime = +new Date();
-        window.didSendLoadingTime = false;
+    <script>
+      window.startTime = +new Date();
+      window.didSendLoadingTime = false;
     </script>
-<script>
-    (function(zonefile) { 
-    let rnd = Math.round(Math.random()*999999);
-    let s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
-    let proto = document.location.protocol;
-    let host = ( proto == "https:" || proto == "file:")?"https://server":"//cdn";
-    if(window.location.hash=="#cpmstarDev") host = "//dev.server";
-    if(window.location.hash=="#cpmstarStaging") host = "//staging.server"; 
-    s.src = host + ".cpmstar.com/cached/zonefiles/" + zonefile + ".js?rnd="+rnd; 
-    let s2=document.getElementsByTagName('script')[0];
-    s2.parentNode.insertBefore(s, s2);
-    let y=window.location.href.split('#')[0].split('').reduce(function(a,b){return(a<<5)-a+b.charCodeAt(0)>>>1},0);y=(10+((y*7)%26)).toString(36)+y.toString(36);
-    let drutObj = window[y] = window[y] || {};
-    window.cpmstarAPI = function(o) { (drutObj.cmd = drutObj.cmd || []).push(o); }
-    }('98_47747_powerline'));
+    <script>
+      (function (zonefile) {
+        let rnd = Math.round(Math.random() * 999999);
+        let s = document.createElement("script");
+        s.type = "text/javascript";
+        s.async = true;
+        let proto = document.location.protocol;
+        let host =
+          proto == "https:" || proto == "file:" ? "https://server" : "//cdn";
+        if (window.location.hash == "#cpmstarDev") host = "//dev.server";
+        if (window.location.hash == "#cpmstarStaging")
+          host = "//staging.server";
+        s.src =
+          host + ".cpmstar.com/cached/zonefiles/" + zonefile + ".js?rnd=" + rnd;
+        let s2 = document.getElementsByTagName("script")[0];
+        s2.parentNode.insertBefore(s, s2);
+        let y = window.location.href
+          .split("#")[0]
+          .split("")
+          .reduce(function (a, b) {
+            return ((a << 5) - a + b.charCodeAt(0)) >>> 1;
+          }, 0);
+        y = (10 + ((y * 7) % 26)).toString(36) + y.toString(36);
+        let drutObj = (window[y] = window[y] || {});
+        window.cpmstarAPI = function (o) {
+          (drutObj.cmd = drutObj.cmd || []).push(o);
+        };
+      })("98_47747_powerline");
     </script>
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-<script src="lib/jquery-1.4.2.min.js"></script>
-<script src="lib/advertisement.js"></script>
-<script async="async" src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
-<script>
-        let debug = false;
-        let queryString = {};
-        let adsense = true;
-        let showads = false;
-        let googletag, hasTopAd, hasAdblock;
-        (function(){
-            let suffix = window.location.search;
-            if(suffix.charAt(0) == '?')
-                suffix = suffix.slice(1);
-            let array = suffix.split('&');
-            for (let i = 0; i < array.length; i++) {
-                let suffixPart = array[i].split('=');
-                let p2 = suffixPart[1];
-                if(!p2) p2 = 1;
-                queryString[suffixPart[0]] = p2;
-            }
-        })();
-        if(!showads)
-        {
-            window['ads'] = [];
-            hasAdblock = (document.getElementById("ads") == null);
-            hasTopAd = false;
-            if(window.innerHeight > 980){
-                hasTopAd = true;
-            }
-            if(hasAdblock){
-                hasTopAd = false;
-            }
-
-            googletag = googletag || {};
-            googletag.cmd = googletag.cmd || [];
-            googletag.cmd.push(function() {
-                window['ads'].push(googletag.defineSlot('/77853486/wings_mainpage_300x250', [300, 250], 'mpu-top').addService(googletag.pubads()));
-                if(hasTopAd){
-                    window['ads'].push(googletag.defineSlot('/77853486/wings_leaderboard_728x90', [728, 90], 'ldr-top').addService(googletag.pubads()));
-                }
-                googletag.pubads().enableSingleRequest();
-                googletag.pubads().disableInitialLoad();
-                googletag.enableServices();
-                googletag.cmd.push(function() { googletag.display('mpu-top'); });
-                googletag.cmd.push(function() { googletag.display('ldr-top'); });
-            });
+    <script
+      async
+      src="//platform.twitter.com/widgets.js"
+      charset="utf-8"
+    ></script>
+    <script src="lib/jquery-1.4.2.min.js"></script>
+    <script src="lib/advertisement.js"></script>
+    <script
+      async="async"
+      src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
+    ></script>
+    <script>
+      let debug = false;
+      let queryString = {};
+      let adsense = true;
+      let showads = false;
+      let googletag, hasTopAd, hasAdblock;
+      (function () {
+        let suffix = window.location.search;
+        if (suffix.charAt(0) == "?") suffix = suffix.slice(1);
+        let array = suffix.split("&");
+        for (let i = 0; i < array.length; i++) {
+          let suffixPart = array[i].split("=");
+          let p2 = suffixPart[1];
+          if (!p2) p2 = 1;
+          queryString[suffixPart[0]] = p2;
         }
+      })();
+      if (!showads) {
+        window["ads"] = [];
+        hasAdblock = document.getElementById("ads") == null;
+        hasTopAd = false;
+        if (window.innerHeight > 980) {
+          hasTopAd = true;
+        }
+        if (hasAdblock) {
+          hasTopAd = false;
+        }
+
+        googletag = googletag || {};
+        googletag.cmd = googletag.cmd || [];
+        googletag.cmd.push(function () {
+          window["ads"].push(
+            googletag
+              .defineSlot(
+                "/77853486/wings_mainpage_300x250",
+                [300, 250],
+                "mpu-top",
+              )
+              .addService(googletag.pubads()),
+          );
+          if (hasTopAd) {
+            window["ads"].push(
+              googletag
+                .defineSlot(
+                  "/77853486/wings_leaderboard_728x90",
+                  [728, 90],
+                  "ldr-top",
+                )
+                .addService(googletag.pubads()),
+            );
+          }
+          googletag.pubads().enableSingleRequest();
+          googletag.pubads().disableInitialLoad();
+          googletag.enableServices();
+          googletag.cmd.push(function () {
+            googletag.display("mpu-top");
+          });
+          googletag.cmd.push(function () {
+            googletag.display("ldr-top");
+          });
+        });
+      }
     </script>
-<script type="text/javascript">
-    (function (f, b) { if (!b.__SV) { let e, g, i, h; window.mixpanel = b; b._i = []; b.init = function (e, f, c) { function g(a, d) { let b = d.split("."); 2 == b.length && ((a = a[b[0]]), (d = b[1])); a[d] = function () { a.push([d].concat(Array.prototype.slice.call(arguments, 0))); }; } let a = b; "undefined" !== typeof c ? (a = b[c] = []) : (c = "mixpanel"); a.people = a.people || []; a.toString = function (a) { let d = "mixpanel"; "mixpanel" !== c && (d += "." + c); a || (d += " (stub)"); return d; }; a.people.toString = function () { return a.toString(1) + ".people (stub)"; }; i = "disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split( " "); for (h = 0; h < i.length; h++) g(a, i[h]); let j = "set set_once union unset remove delete".split(" "); a.get_group = function () { function b(c) { d[c] = function () { call2_args = arguments; call2 = [c].concat(Array.prototype.slice.call(call2_args, 0)); a.push([e, call2]); }; } for ( let d = {}, e = ["get_group"].concat( Array.prototype.slice.call(arguments, 0)), c = 0; c < j.length; c++) b(j[c]); return d; }; b._i.push([e, f, c]); }; b.__SV = 1.2; e = f.createElement("script"); e.type = "text/javascript"; e.async = true; e.src = "undefined" !== typeof MIXPANEL_CUSTOM_LIB_URL ? MIXPANEL_CUSTOM_LIB_URL : "file:" === f.location.protocol && "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//) ? "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js" : "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js"; g = f.getElementsByTagName("script")[0]; g.parentNode.insertBefore(e, g); } })(document, window.mixpanel || []);
-    </script>
-</head>
-<body data-feedly-mini="yes">
-<canvas id="canvas"></canvas>
-<div id="fps"></div>
-<div id="overlay" style="display:none; position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: rgba(0,0,0,0.25); z-index: 2;" />
-<div id="mainDialog" style="width:350px;background-color:#FFFFFF;margin:10px auto;border-radius:15px;padding:5px 15px 5px 15px;position:absolute;top:17%;left:50%;transform-origin:top center;transform:translate(-50%,0%);-ms-transform:translate(-50%,0%);-ms-transform-origin:top center;-webkit-transform:translate(-50%,0%);-webkit-transform-origin:top center;">
-<div style="height:80px;">
-<a href="https://mechazilla.io">
-<img src="images/mechazilla_banner.png" style="display:inherit;position:absolute;top:0px;left:102%;width:350px;" />
-</a>
-<center>
-<img src="images/logo.png" style="display:inherit;position:relative;bottom: 110px;" />
-</center>
-<div style="position:absolute;left:17px;top:56px"><a href="https://twitter.com/AndredAlmeida" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false"></a></div>
-<div id="sndIcon" style="position:absolute;left:10px;top:10px">
-<button type="submit" id="muteButton" onclick="toggleMute(); return false;" class="btn-naked">
-<img id="soundImg" src="images/sound_on.png" />
-</button>
-</div>
-</div>
-<form role="form">
-<div class="form-group">
-<div id="topGui" style="height:84px;">
-<div id="nickInput" style="height:50px;">
-<input id="nick" class="form-control" placeholder="Type a Nickname..." maxlength="15" onkeydown="if (event.keyCode == 13) document.getElementById('playButton').click()" autofocus />
-</div>
-<div hidden id="continueTop" style="height:30px;-webkit-transform:translate(0%,-20%);transform:translate(0%,-20%);}">
-<center><font size="5" style="font-weight:bold;">Continue ?</font></center>
-</div>
-<br hidden id="continueBR">
-<button disabled type="submit" id="spectateButton" onclick="setSpectate(); return false;" class="btn btn-info btn-primary btn-spectate btn-needs-server"></button>
-<button disabled type="submit" id="playButton" onclick="clickPlay(document.getElementById('nick').value); return false;" class="btn btn-play btn-primary btn-needs-server">Play</button>
-<button id="btnCfg" type="submit" id="skinsButton" onclick="switchSkins(); return false;" class="btn btn-primary btn-cfg"><img name="jsbutton" height="15" /></button>
-<br clear="both" />
-</div>
-<div hidden id="topGuiConnecting" style="height:84px; transform: translateY(30%);">
-<h3><center>Connecting...</center></h3>
-</div>
-<div hidden id="roomFailed" style="height:90px; transform: translateY(0%);">
-<h4><center>Unable to join room.<br>Please join another one.</center></h4>
-<div style="line-height:50%;">
-<br>
-</div>
-<form role="form">
-<div class="form-group">
-<button type="submit" id="continueButton" onclick="setContinue(); return false;" class="btn btn-continue btn-primary">Continue</button>
-</div>
-</form>
-</div>
-<hr/>
-<div hidden id="continue">
-<center><div id="countdownText" style="font-weight:bold;color:red;font-size:90px;display: inline-block;height:5px; position: relative;margin-top:-30px;margin-bottom:110px;">10</div>
-<br>
-<font id="curScore" size="4" style="font-weight:bold;color:#ff6c00;">Current Score: 0</font>
-</center>
-</div>
-<div id="howto">
-<center><span class="text-muted">
-<b>Move your mouse</b> to control your plane<br/>
-<b>Click</b> <u>OR</u> <b>press space</b> to shoot<br/>
-</span></center>
-</div>
-<div hidden id="skinPanel">
-<center>
-<span class="text-muted">Color</span>
-<div>
-<button type="submit" id="skinsButton" onclick="setSkinColor(0); return false;" class="btn btn-primary btn-color btn-color1">
-<img hidden id="check0" class="check" src="images/check.png" />
-</button>
-<button type="submit" id="skinsButton" onclick="setSkinColor(1); return false;" class="btn btn-primary btn-color btn-color2">
-<img hidden id="check1" class="check" src="images/check.png" />
-</button>
-<button type="submit" id="skinsButton" onclick="setSkinColor(2); return false;" class="btn btn-primary btn-color btn-color3">
-<img hidden id="check2" class="check" src="images/check.png" />
-</button>
-<button type="submit" id="skinsButton" onclick="setSkinColor(3); return false;" class="btn btn-primary btn-color btn-color4">
-<img hidden id="check3" class="check" src="images/check.png" />
-</button>
-<button type="submit" id="skinsButton" onclick="setSkinColor(4); return false;" class="btn btn-primary btn-color btn-color5">
-<img hidden id="check4" class="check" src="images/check.png" />
-</button>
-<button type="submit" id="skinsButton" onclick="setSkinColor(5); return false;" class="btn btn-primary btn-color btn-color6">
-<img hidden id="check5" class="check" src="images/check.png" />
-</button>
-</div>
-</center>
-<br><br>
-<center>
-<span class="text-muted">Decal</span>
-<div>
-<button type="submit" id="skinsButton1" onclick="setDecal(0); return false;" class="btn btn-primary btn-decal btn-test btn-decal1">
-<img id="checkD0" class="check" src="images/check.png" name="decal1" />
-</button>
-<button type="submit" id="skinsButton" onclick="setDecal(1); return false;" class="btn btn-primary btn-decal btn-test btn-decal2">
-<img hidden id="checkD1" class="check" src="images/check.png" />
-</button>
-<button type="submit" id="skinsButton" onclick="setDecal(2); return false;" class="btn btn-primary btn-decal btn-test btn-decal3">
-<img hidden id="checkD2" class="check" src="images/check.png" />
-</button>
-<button type="submit" id="skinsButton" onclick="setDecal(3); return false;" class="btn btn-primary btn-decal btn-test btn-decal4">
-<img hidden id="checkD3" class="check" src="images/check.png" />
-</button>
-<button type="submit" id="skinsButton" onclick="setDecal(4); return false;" class="btn btn-primary btn-decal btn-test btn-decal5">
-<img hidden id="checkD4" class="check" src="images/check.png" />
-</button>
-<button type="submit" id="skinsButton" onclick="setDecal(5); return false;" class="btn btn-primary btn-decal btn-test btn-decal6">
-<img hidden id="checkD5" class="check" src="images/check.png" />
-</button>
-</div>
-</center>
-<br clear="both" />
-<div style="line-height:50%;">
-<br>
-</div>
-<div style="padding-left: 15px;"><label><input type="checkbox" id="cbox1" onclick="clickNoNames(this); return true;"><span class="notbold"> No Names</span></label>
-</div>
-</div>
-<hr id="divOff" />
-<hr hidden id="divOn" style="margin-top:-0.1em" />
-<center><span class="text-muted" style="font-size:12px">
-Advertisement<br/>
-</span></center>
-<br>
-<center>
-<div id="mpu-top"></div>
-<script type="text/javascript">
-                    if(hasAdblock){
-                        $('#mpu-top').css('height', "250px");
-                        $('#mpu-top').css('background-image', "url('images/ab.png')");
-                        $('#mpu-top').css('background-position', "center");
-                    }
-                </script>
-</center>
-</div>
-</form>
-</div>
-<script>
-            if(hasTopAd)
-            {
-                document.write('<div id=\'ldr-top\'></div>');
-                $('#ldr-top').css('top', "0");
+    <script type="text/javascript">
+      (function (f, b) {
+        if (!b.__SV) {
+          let e, g, i, h;
+          window.mixpanel = b;
+          b._i = [];
+          b.init = function (e, f, c) {
+            function g(a, d) {
+              let b = d.split(".");
+              2 == b.length && ((a = a[b[0]]), (d = b[1]));
+              a[d] = function () {
+                a.push([d].concat(Array.prototype.slice.call(arguments, 0)));
+              };
             }
-        </script>
-<footer id="firstRightBox" class="rightBox">
-<center><font style="font-weight:bold;font-size:13px;">Updated - October 10st 2024</font></center>
-<div style="line-height:50%;"><br></div>
-<font style="font-size:14px;">• Added new game <b><a href="https://mechazilla.io">Mechazilla.io</a></b>
-</font>
-<div style="line-height:60%;"><br></div>
-<div align="right"><a href="more_info"><b>Tell me more</b></a></div>
-</footer>
-<footer hidden id="afterRightBox" class="rightBoxSmall">
-<div align="right"><a href="more_info"><b>Tell me more</b></a></div>
-</footer>
-<footer id="linksID" class="linkBox" style="z-index: 1000;position: absolute;right: 0px;padding: 5px 5px;bottom: 85px;">
-<a href="https://discord.gg/EC74vZAB" target="_blank">
-<img src="images/discord.png"></a>
-</a>
-</footer>
-<footer hidden id="copyLink" class="leftBox">
-<a href="javascript:copyRoomLink();"><font style="font-weight:bold;font-size:15px;">Copy Room Link</font></a> • <a href="javascript:toggleGraphics();"><font id="graphicsID" style="font-weight:bold;font-size:15px;">Graphics: High</font></a>
-</a>
-<img id="pfArrow" src="images/playfriendsarrow.png" style="position:absolute;top:100%;left:20%;transform:translate(0%,20%);-ms-transform:translate(0%,20%);-webkit-transform:translate(0%,20%);-webkit-filter: brightness(0%);" />
-<img id="pfText" src="images/playfriendstext.png" style="position:absolute;top:258%;left:50%;transform:translate(0%,20%);-ms-transform:translate(0%,20%);-webkit-transform:translate(0%,20%);-webkit-filter: brightness(0%);" />
-</footer>
-<footer hidden id="copyLinkBox" class="leftBox">
-<div style="line-height:50%;"><br></div>
-<font style="font-weight:bold;font-size:15px;" class="text-muted">Share this link with your friends!</font>
-<div style="line-height:50%;"><br></div>
-<center>
-<div id="linkInput" style="height:43px;width:90%;">
-<input id="roomlinkInput" class="linkInput form-control" readonly style="cursor: text;" />
-</div>
-</center>
-<div hidden id="safariTooltip" style="width:160px;height:20px;background-color:rgba(0,0,0,0.6);margin:10px auto;border-radius:5px;padding:5px 15px 5px 15px;position:relative;top:0%;left:0%;transform-origin:top center;transform:translate(0%,0%);-ms-transform:translate(0%,0%);-ms-transform-origin:top center;-webkit-transform:translate(0%,-30%);">
-<font style="position:relative;top:-5px;font-weight:bold;font-size:13px;color:#FFFFFF;">Press ⌘+C to Copy!</font>
-</div>
-<button id="copyButton" type="submit" onclick="setCopy(); return false;" class="btn btn-copy btn-primary">Copy</button>
-<div style="line-height:50%;"><br></div>
-</footer>
-</div>
-</div>
-<div id="openModal" class="modalDialog">
-<div>
-<a href="#close" title="Close" class="close">X</a>
-<h2>Send Feedback</h2>
-<br>
-<div style="background: #BBBBBB"><font style="font-weight:bold;">We really need to hear from you! Let us know what you think about this game and how we can improve it!</font></div>
-<br>
-<form action="/sendfeedback" method="post">
-Name:
-<div><textarea name="name" placeholder=" Optional" rows="1" cols="30"></textarea></div>
-<br>
-Email:
-<div><textarea name="address" placeholder=" Optional" rows="1" cols="30"></textarea></div>
-<br>
-Feedback:
-<div><textarea name="body" rows="10" cols="49"></textarea></div>
-<div><input type="submit" value="Submit" style="height:25px; width:60px"></div>
-</form>
-</div>
-</div>
-<div hidden id="overlay2" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: rgba(0,0,0,0.25); z-index: 2;">
-<div style="width:280px;height:180px;background-color:rgba(0,0,0,0.65);margin:10px auto;border-radius:15px;padding:5px 15px 5px 15px;position:absolute;top:27%;left:50%;transform-origin:top center;transform:translate(-50%,0%);-ms-transform:translate(-50%,0%);-ms-transform-origin:top center;-webkit-transform:translate(-50%,0%);-webkit-transform-origin:top center;">
-<center><font face="Arial Black, Arial, sans-serif" style="position:relative;top:30px;font-weight:bold;font-size:28px;color:#FFFFFF;">LINK COPIED!</font>
-<img id="copycheckimage" src="images/copycheck.png" style="position:relative;top:43px;" /></center>
-</div>
-</div>
-<div hidden id="overlayads" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: rgba(0,0,0,1.0); z-index: 2;">
-<div id="videocontent" style="width:640px;height:360px;position:absolute;top:35%;left:50%;transform-origin:top center;transform:translate(-50%,0%);-ms-transform:translate(-50%,0%);-ms-transform-origin:top center;-webkit-transform:translate(-50%,0%);-webkit-transform-origin:top center;">
-<div id="my-content" style="display:none;position:absolute;"></div>
-</div>
-</div>
-<script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-71565695-1', 'auto');
-        ga('send', 'pageview');
+            let a = b;
+            "undefined" !== typeof c ? (a = b[c] = []) : (c = "mixpanel");
+            a.people = a.people || [];
+            a.toString = function (a) {
+              let d = "mixpanel";
+              "mixpanel" !== c && (d += "." + c);
+              a || (d += " (stub)");
+              return d;
+            };
+            a.people.toString = function () {
+              return a.toString(1) + ".people (stub)";
+            };
+            i =
+              "disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(
+                " ",
+              );
+            for (h = 0; h < i.length; h++) g(a, i[h]);
+            let j = "set set_once union unset remove delete".split(" ");
+            a.get_group = function () {
+              function b(c) {
+                d[c] = function () {
+                  call2_args = arguments;
+                  call2 = [c].concat(Array.prototype.slice.call(call2_args, 0));
+                  a.push([e, call2]);
+                };
+              }
+              for (
+                let d = {},
+                  e = ["get_group"].concat(
+                    Array.prototype.slice.call(arguments, 0),
+                  ),
+                  c = 0;
+                c < j.length;
+                c++
+              )
+                b(j[c]);
+              return d;
+            };
+            b._i.push([e, f, c]);
+          };
+          b.__SV = 1.2;
+          e = f.createElement("script");
+          e.type = "text/javascript";
+          e.async = true;
+          e.src =
+            "undefined" !== typeof MIXPANEL_CUSTOM_LIB_URL
+              ? MIXPANEL_CUSTOM_LIB_URL
+              : "file:" === f.location.protocol &&
+                  "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)
+                ? "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js"
+                : "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";
+          g = f.getElementsByTagName("script")[0];
+          g.parentNode.insertBefore(e, g);
+        }
+      })(document, window.mixpanel || []);
     </script>
-<script src="lib/modernizr-1.5.min.js"></script>
-<script src="lib/Stats.js"></script>
-<script src="lib/howler.min.js"></script>
-<script src="game/client.js"></script>
-</body></html>
+  </head>
+  <body data-feedly-mini="yes">
+    <canvas id="canvas"></canvas>
+    <div id="fps"></div>
+    <div
+      id="overlay"
+      style="
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.25);
+        z-index: 2;
+      "
+    />
+    <div
+      id="mainDialog"
+      style="
+        width: 350px;
+        background-color: #ffffff;
+        margin: 10px auto;
+        border-radius: 15px;
+        padding: 5px 15px 5px 15px;
+        position: absolute;
+        top: 17%;
+        left: 50%;
+        transform-origin: top center;
+        transform: translate(-50%, 0%);
+        -ms-transform: translate(-50%, 0%);
+        -ms-transform-origin: top center;
+        -webkit-transform: translate(-50%, 0%);
+        -webkit-transform-origin: top center;
+      "
+    >
+      <div style="height: 80px">
+        <a href="https://mechazilla.io">
+          <img
+            src="images/mechazilla_banner.png"
+            style="
+              display: inherit;
+              position: absolute;
+              top: 0px;
+              left: 102%;
+              width: 350px;
+            "
+          />
+        </a>
+        <center>
+          <img
+            src="images/logo.png"
+            style="display: inherit; position: relative; bottom: 110px"
+          />
+        </center>
+        <div style="position: absolute; left: 17px; top: 56px">
+          <a
+            href="https://twitter.com/AndredAlmeida"
+            class="twitter-follow-button"
+            data-show-count="false"
+            data-show-screen-name="false"
+          ></a>
+        </div>
+        <div id="sndIcon" style="position: absolute; left: 10px; top: 10px">
+          <button
+            type="submit"
+            id="muteButton"
+            onclick="toggleMute(); return false;"
+            class="btn-naked"
+          >
+            <img id="soundImg" src="images/sound_on.png" />
+          </button>
+        </div>
+      </div>
+      <form role="form">
+        <div class="form-group">
+          <div id="topGui" style="height: 84px">
+            <div id="nickInput" style="height: 50px">
+              <input
+                id="nick"
+                class="form-control"
+                placeholder="Type a Nickname..."
+                maxlength="15"
+                onkeydown="if (event.keyCode == 13) document.getElementById('playButton').click()"
+                autofocus
+              />
+            </div>
+            <div
+              hidden
+              id="continueTop"
+              style="height:30px;-webkit-transform:translate(0%,-20%);transform:translate(0%,-20%);}"
+            >
+              <center>
+                <font size="5" style="font-weight: bold">Continue ?</font>
+              </center>
+            </div>
+            <br hidden id="continueBR" />
+            <button
+              disabled
+              type="submit"
+              id="spectateButton"
+              onclick="setSpectate(); return false;"
+              class="btn btn-info btn-primary btn-spectate btn-needs-server"
+            ></button>
+            <button
+              disabled
+              type="submit"
+              id="playButton"
+              onclick="clickPlay(document.getElementById('nick').value); return false;"
+              class="btn btn-play btn-primary btn-needs-server"
+            >
+              Play
+            </button>
+            <button
+              id="btnCfg"
+              type="submit"
+              id="skinsButton"
+              onclick="switchSkins(); return false;"
+              class="btn btn-primary btn-cfg"
+            >
+              <img name="jsbutton" height="15" />
+            </button>
+            <br clear="both" />
+          </div>
+          <div
+            hidden
+            id="topGuiConnecting"
+            style="height: 84px; transform: translateY(30%)"
+          >
+            <h3><center>Connecting...</center></h3>
+          </div>
+          <div
+            hidden
+            id="roomFailed"
+            style="height: 90px; transform: translateY(0%)"
+          >
+            <h4>
+              <center>
+                Unable to join room.<br />Please join another one.
+              </center>
+            </h4>
+            <div style="line-height: 50%">
+              <br />
+            </div>
+            <form role="form">
+              <div class="form-group">
+                <button
+                  type="submit"
+                  id="continueButton"
+                  onclick="setContinue(); return false;"
+                  class="btn btn-continue btn-primary"
+                >
+                  Continue
+                </button>
+              </div>
+            </form>
+          </div>
+          <hr />
+          <div hidden id="continue">
+            <center>
+              <div
+                id="countdownText"
+                style="
+                  font-weight: bold;
+                  color: red;
+                  font-size: 90px;
+                  display: inline-block;
+                  height: 5px;
+                  position: relative;
+                  margin-top: -30px;
+                  margin-bottom: 110px;
+                "
+              >
+                10
+              </div>
+              <br />
+              <font
+                id="curScore"
+                size="4"
+                style="font-weight: bold; color: #ff6c00"
+                >Current Score: 0</font
+              >
+            </center>
+          </div>
+          <div id="howto">
+            <center>
+              <span class="text-muted">
+                <b>Move your mouse</b> to control your plane<br />
+                <b>Click</b> <u>OR</u> <b>press space</b> to shoot<br />
+              </span>
+            </center>
+          </div>
+          <div hidden id="skinPanel">
+            <center>
+              <span class="text-muted">Color</span>
+              <div>
+                <button
+                  type="submit"
+                  id="skinsButton"
+                  onclick="setSkinColor(0); return false;"
+                  class="btn btn-primary btn-color btn-color1"
+                >
+                  <img
+                    hidden
+                    id="check0"
+                    class="check"
+                    src="images/check.png"
+                  />
+                </button>
+                <button
+                  type="submit"
+                  id="skinsButton"
+                  onclick="setSkinColor(1); return false;"
+                  class="btn btn-primary btn-color btn-color2"
+                >
+                  <img
+                    hidden
+                    id="check1"
+                    class="check"
+                    src="images/check.png"
+                  />
+                </button>
+                <button
+                  type="submit"
+                  id="skinsButton"
+                  onclick="setSkinColor(2); return false;"
+                  class="btn btn-primary btn-color btn-color3"
+                >
+                  <img
+                    hidden
+                    id="check2"
+                    class="check"
+                    src="images/check.png"
+                  />
+                </button>
+                <button
+                  type="submit"
+                  id="skinsButton"
+                  onclick="setSkinColor(3); return false;"
+                  class="btn btn-primary btn-color btn-color4"
+                >
+                  <img
+                    hidden
+                    id="check3"
+                    class="check"
+                    src="images/check.png"
+                  />
+                </button>
+                <button
+                  type="submit"
+                  id="skinsButton"
+                  onclick="setSkinColor(4); return false;"
+                  class="btn btn-primary btn-color btn-color5"
+                >
+                  <img
+                    hidden
+                    id="check4"
+                    class="check"
+                    src="images/check.png"
+                  />
+                </button>
+                <button
+                  type="submit"
+                  id="skinsButton"
+                  onclick="setSkinColor(5); return false;"
+                  class="btn btn-primary btn-color btn-color6"
+                >
+                  <img
+                    hidden
+                    id="check5"
+                    class="check"
+                    src="images/check.png"
+                  />
+                </button>
+              </div>
+            </center>
+            <br /><br />
+            <center>
+              <span class="text-muted">Decal</span>
+              <div>
+                <button
+                  type="submit"
+                  id="skinsButton1"
+                  onclick="setDecal(0); return false;"
+                  class="btn btn-primary btn-decal btn-test btn-decal1"
+                >
+                  <img
+                    id="checkD0"
+                    class="check"
+                    src="images/check.png"
+                    name="decal1"
+                  />
+                </button>
+                <button
+                  type="submit"
+                  id="skinsButton"
+                  onclick="setDecal(1); return false;"
+                  class="btn btn-primary btn-decal btn-test btn-decal2"
+                >
+                  <img
+                    hidden
+                    id="checkD1"
+                    class="check"
+                    src="images/check.png"
+                  />
+                </button>
+                <button
+                  type="submit"
+                  id="skinsButton"
+                  onclick="setDecal(2); return false;"
+                  class="btn btn-primary btn-decal btn-test btn-decal3"
+                >
+                  <img
+                    hidden
+                    id="checkD2"
+                    class="check"
+                    src="images/check.png"
+                  />
+                </button>
+                <button
+                  type="submit"
+                  id="skinsButton"
+                  onclick="setDecal(3); return false;"
+                  class="btn btn-primary btn-decal btn-test btn-decal4"
+                >
+                  <img
+                    hidden
+                    id="checkD3"
+                    class="check"
+                    src="images/check.png"
+                  />
+                </button>
+                <button
+                  type="submit"
+                  id="skinsButton"
+                  onclick="setDecal(4); return false;"
+                  class="btn btn-primary btn-decal btn-test btn-decal5"
+                >
+                  <img
+                    hidden
+                    id="checkD4"
+                    class="check"
+                    src="images/check.png"
+                  />
+                </button>
+                <button
+                  type="submit"
+                  id="skinsButton"
+                  onclick="setDecal(5); return false;"
+                  class="btn btn-primary btn-decal btn-test btn-decal6"
+                >
+                  <img
+                    hidden
+                    id="checkD5"
+                    class="check"
+                    src="images/check.png"
+                  />
+                </button>
+              </div>
+            </center>
+            <br clear="both" />
+            <div style="line-height: 50%">
+              <br />
+            </div>
+            <div style="padding-left: 15px">
+              <label
+                ><input
+                  type="checkbox"
+                  id="cbox1"
+                  onclick="clickNoNames(this); return true;"
+                /><span class="notbold"> No Names</span></label
+              >
+            </div>
+          </div>
+          <hr id="divOff" />
+          <hr hidden id="divOn" style="margin-top: -0.1em" />
+          <center>
+            <span class="text-muted" style="font-size: 12px">
+              Advertisement<br />
+            </span>
+          </center>
+          <br />
+          <center>
+            <div id="mpu-top"></div>
+            <script type="text/javascript">
+              if (hasAdblock) {
+                $("#mpu-top").css("height", "250px");
+                $("#mpu-top").css("background-image", "url('images/ab.png')");
+                $("#mpu-top").css("background-position", "center");
+              }
+            </script>
+          </center>
+        </div>
+      </form>
+    </div>
+    <script>
+      if (hasTopAd) {
+        document.write("<div id='ldr-top'></div>");
+        $("#ldr-top").css("top", "0");
+      }
+    </script>
+    <footer id="firstRightBox" class="rightBox">
+      <center>
+        <font style="font-weight: bold; font-size: 13px"
+          >Updated - October 10st 2024</font
+        >
+      </center>
+      <div style="line-height: 50%"><br /></div>
+      <font style="font-size: 14px"
+        >• Added new game
+        <b><a href="https://mechazilla.io">Mechazilla.io</a></b>
+      </font>
+      <div style="line-height: 60%"><br /></div>
+      <div align="right">
+        <a href="more_info"><b>Tell me more</b></a>
+      </div>
+    </footer>
+    <footer hidden id="afterRightBox" class="rightBoxSmall">
+      <div align="right">
+        <a href="more_info"><b>Tell me more</b></a>
+      </div>
+    </footer>
+    <footer
+      id="linksID"
+      class="linkBox"
+      style="
+        z-index: 1000;
+        position: absolute;
+        right: 0px;
+        padding: 5px 5px;
+        bottom: 85px;
+      "
+    >
+      <a href="https://discord.gg/EC74vZAB" target="_blank">
+        <img src="images/discord.png" />
+      </a>
+    </footer>
+    <footer hidden id="copyLink" class="leftBox">
+      <a href="javascript:copyRoomLink();"
+        ><font style="font-weight: bold; font-size: 15px"
+          >Copy Room Link</font
+        ></a
+      >
+      •
+      <a href="javascript:toggleGraphics();"
+        ><font id="graphicsID" style="font-weight: bold; font-size: 15px"
+          >Graphics: High</font
+        ></a
+      >
+      <img
+        id="pfArrow"
+        src="images/playfriendsarrow.png"
+        style="
+          position: absolute;
+          top: 100%;
+          left: 20%;
+          transform: translate(0%, 20%);
+          -ms-transform: translate(0%, 20%);
+          -webkit-transform: translate(0%, 20%);
+          -webkit-filter: brightness(0%);
+        "
+      />
+      <img
+        id="pfText"
+        src="images/playfriendstext.png"
+        style="
+          position: absolute;
+          top: 258%;
+          left: 50%;
+          transform: translate(0%, 20%);
+          -ms-transform: translate(0%, 20%);
+          -webkit-transform: translate(0%, 20%);
+          -webkit-filter: brightness(0%);
+        "
+      />
+    </footer>
+    <footer hidden id="copyLinkBox" class="leftBox">
+      <div style="line-height: 50%"><br /></div>
+      <font style="font-weight: bold; font-size: 15px" class="text-muted"
+        >Share this link with your friends!</font
+      >
+      <div style="line-height: 50%"><br /></div>
+      <center>
+        <div id="linkInput" style="height: 43px; width: 90%">
+          <input
+            id="roomlinkInput"
+            class="linkInput form-control"
+            readonly
+            style="cursor: text"
+          />
+        </div>
+      </center>
+      <div
+        hidden
+        id="safariTooltip"
+        style="
+          width: 160px;
+          height: 20px;
+          background-color: rgba(0, 0, 0, 0.6);
+          margin: 10px auto;
+          border-radius: 5px;
+          padding: 5px 15px 5px 15px;
+          position: relative;
+          top: 0%;
+          left: 0%;
+          transform-origin: top center;
+          transform: translate(0%, 0%);
+          -ms-transform: translate(0%, 0%);
+          -ms-transform-origin: top center;
+          -webkit-transform: translate(0%, -30%);
+        "
+      >
+        <font
+          style="
+            position: relative;
+            top: -5px;
+            font-weight: bold;
+            font-size: 13px;
+            color: #ffffff;
+          "
+          >Press ⌘+C to Copy!</font
+        >
+      </div>
+      <button
+        id="copyButton"
+        type="submit"
+        onclick="setCopy(); return false;"
+        class="btn btn-copy btn-primary"
+      >
+        Copy
+      </button>
+      <div style="line-height: 50%"><br /></div>
+    </footer>
+    <div id="openModal" class="modalDialog">
+      <div>
+        <a href="#close" title="Close" class="close">X</a>
+        <h2>Send Feedback</h2>
+        <br />
+        <div style="background: #bbbbbb">
+          <font style="font-weight: bold"
+            >We really need to hear from you! Let us know what you think about
+            this game and how we can improve it!</font
+          >
+        </div>
+        <br />
+        <form action="/sendfeedback" method="post">
+          Name:
+          <div>
+            <textarea
+              name="name"
+              placeholder=" Optional"
+              rows="1"
+              cols="30"
+            ></textarea>
+          </div>
+          <br />
+          Email:
+          <div>
+            <textarea
+              name="address"
+              placeholder=" Optional"
+              rows="1"
+              cols="30"
+            ></textarea>
+          </div>
+          <br />
+          Feedback:
+          <div><textarea name="body" rows="10" cols="49"></textarea></div>
+          <div>
+            <input
+              type="submit"
+              value="Submit"
+              style="height: 25px; width: 60px"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+    <div
+      hidden
+      id="overlay2"
+      style="
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.25);
+        z-index: 2;
+      "
+    >
+      <div
+        style="
+          width: 280px;
+          height: 180px;
+          background-color: rgba(0, 0, 0, 0.65);
+          margin: 10px auto;
+          border-radius: 15px;
+          padding: 5px 15px 5px 15px;
+          position: absolute;
+          top: 27%;
+          left: 50%;
+          transform-origin: top center;
+          transform: translate(-50%, 0%);
+          -ms-transform: translate(-50%, 0%);
+          -ms-transform-origin: top center;
+          -webkit-transform: translate(-50%, 0%);
+          -webkit-transform-origin: top center;
+        "
+      >
+        <center>
+          <font
+            face="Arial Black, Arial, sans-serif"
+            style="
+              position: relative;
+              top: 30px;
+              font-weight: bold;
+              font-size: 28px;
+              color: #ffffff;
+            "
+            >LINK COPIED!</font
+          >
+          <img
+            id="copycheckimage"
+            src="images/copycheck.png"
+            style="position: relative; top: 43px"
+          />
+        </center>
+      </div>
+    </div>
+    <div
+      hidden
+      id="overlayads"
+      style="
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 1);
+        z-index: 2;
+      "
+    >
+      <div
+        id="videocontent"
+        style="
+          width: 640px;
+          height: 360px;
+          position: absolute;
+          top: 35%;
+          left: 50%;
+          transform-origin: top center;
+          transform: translate(-50%, 0%);
+          -ms-transform: translate(-50%, 0%);
+          -ms-transform-origin: top center;
+          -webkit-transform: translate(-50%, 0%);
+          -webkit-transform-origin: top center;
+        "
+      >
+        <div id="my-content" style="display: none; position: absolute"></div>
+      </div>
+    </div>
+    <script>
+      (function (i, s, o, g, r, a, m) {
+        i["GoogleAnalyticsObject"] = r;
+        (i[r] =
+          i[r] ||
+          function () {
+            (i[r].q = i[r].q || []).push(arguments);
+          }),
+          (i[r].l = 1 * new Date());
+        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+      })(
+        window,
+        document,
+        "script",
+        "//www.google-analytics.com/analytics.js",
+        "ga",
+      );
+      ga("create", "UA-71565695-1", "auto");
+      ga("send", "pageview");
+    </script>
+    <script src="lib/modernizr-1.5.min.js"></script>
+    <script src="lib/Stats.js"></script>
+    <script src="lib/howler.min.js"></script>
+    <script src="game/client.js"></script>
+  </body>
+</html>
