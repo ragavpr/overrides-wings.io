@@ -51,7 +51,11 @@ export class EventManager {
   getEventColor() {
     return this.type == this.eventType.EVENT_SPACEWARS ? "#FF3300" : "#fe6800";
   }
-  setWarshipInfo(warshipsLeft: number, warshipsDestroyed: number, warshipsEscaped: number) {
+  setWarshipInfo(
+    warshipsLeft: number,
+    warshipsDestroyed: number,
+    warshipsEscaped: number,
+  ) {
     this.warshipsLeft = warshipsLeft;
     this.warshipsDestroyed = warshipsDestroyed;
     this.warshipsEscaped = warshipsEscaped;

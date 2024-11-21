@@ -542,13 +542,13 @@ function func_isIframe() {
 function func_padZerosPrefix(num_val: number) {
   let e = "";
   10 > num_val && (e = "0");
-  return e + num_val;
+  return e + Math.floor(num_val);
 }
 function func_millisToTimeFormat(total_millis: number) {
-  let total_seconds = total_millis / 1e3;
-  let minutes = total_seconds / 60;
-  let seconds = total_seconds - 60 * minutes,
-    hours = minutes / 60;
+  let total_seconds = Math.floor(total_millis / 1e3);
+  let minutes = Math.floor(total_seconds / 60);
+  let seconds = total_seconds - 60 * minutes;
+  let hours = Math.floor(minutes / 60);
   minutes -= 60 * hours;
   return 0 == hours
     ? func_padZerosPrefix(minutes) + ":" + func_padZerosPrefix(seconds)
@@ -581,23 +581,12 @@ function func_isInsideBox(x: number, y: number, dist: number) {
 function func_clamp(val: number, l: number, u: number) {
   return val < l ? l : val > u ? u : val;
 }
-function Class_StrokeStyle(size, color, is_stroke_enabled, stroke_color) {
-  size && (this._size = size);
-  color && (this._color = color);
-  this._stroke = !!is_stroke_enabled;
-  stroke_color && (this._strokeColor = stroke_color);
-}
-function Class_TextStyle(size, color, second_color) {
-  size && (this._size = size);
-  color && (this._color = color);
-  second_color && (this._secondColor = second_color);
-}
 function func_renameBlankPlayerNames(str_name: string) {
   "" == str_name && (str_name = "<Unnamed>");
   return str_name;
 }
 function func_drawRoundedRectangle(
-  canvas,
+  canvas: CanvasRenderingContext2D,
   x: number,
   y: number,
   width: number,
@@ -624,7 +613,7 @@ function func_drawRoundedRectangle(
   canvas.fill();
 }
 function func_drawRoundedRectangleHalf(
-  canvas,
+  canvas: CanvasRenderingContext2D,
   x: number,
   y: number,
   width: number,
@@ -865,201 +854,251 @@ document.oncontextmenu = function () {
   return false;
 };
 int_pathMobile && (str_font_name = "Arial-BoldMT");
-Class_StrokeStyle.prototype = {
-  _value: "",
-  _color: "#000000",
-  _stroke: false,
-  _strokeColor: "#000000",
-  _strokeWidth: 3,
-  _size: 16,
-  _canvas: null,
-  _ctx: null,
-  _dirty: false,
-  _scale: 1,
-  _font: "px 'proxima-nova-1','proxima-nova-2', " + str_font_name,
-  _usingRoundedFrame: false,
-  _hmargin: 3,
-  _vmargin: -1,
-  _frameOpacity: 0.2,
-  setFont: function (b) {
+class StyleStroke {
+  _value = "";
+  _color = "#000000";
+  _stroke = false;
+  _strokeColor = "#000000";
+  _strokeWidth = 3;
+  _size = 16;
+  _canvas?: HTMLCanvasElement;
+  _ctx?: CanvasRenderingContext2D;
+  _dirty = false;
+  _scale = 1;
+  _font = "px 'proxima-nova-1','proxima-nova-2', " + str_font_name;
+  _usingRoundedFrame = false;
+  _hmargin = 3;
+  _vmargin = -1;
+  _frameOpacity = 0.2;
+  constructor(
+    size: number,
+    color: string,
+    is_stroke_enabled: boolean,
+    stroke_color: string,
+  ) {
+    size && (this._size = size);
+    color && (this._color = color);
+    this._stroke = !!is_stroke_enabled;
+    stroke_color && (this._strokeColor = stroke_color);
+  }
+  setFont(b: string) {
     this._font != b && ((this._font = b), (this._dirty = true));
-  },
-  setSize: function (b) {
+  }
+  setSize(b: number) {
     this._size != b && ((this._size = b), (this._dirty = true));
-  },
-  setScale: function (b) {
-    this._scale != b && ((this._scale = b), (this._dirty = true));
-  },
-  setColor: function (b) {
-    this._color != b && ((this._color = b), (this._dirty = true));
-  },
-  setStroke: function (b) {
-    this._stroke != b && ((this._stroke = b), (this._dirty = true));
-  },
-  setStrokeWidth: function (b) {
-    this._stroke != b && ((this._strokeWidth = b), (this._dirty = true));
-  },
-  setStrokeColor: function (b) {
-    this._strokeColor != b && ((this._strokeColor = b), (this._dirty = true));
-  },
-  setValue: function (b) {
-    b != this._value && ((this._value = b), (this._dirty = true));
-  },
-  setHMargin: function (b) {
-    b != this._hmargin && ((this._hmargin = b), (this._dirty = true));
-  },
-  setVMargin: function (b) {
-    b != this._vmargin && ((this._vmargin = b), (this._dirty = true));
-  },
-  setUsingRoundedFrame: function (b) {
-    b != this._usingRoundedFrame &&
-      ((this._usingRoundedFrame = b), (this._dirty = true));
-  },
-  setRoundedFrameOpacity: function (b) {
-    b != this._frameOpacity && ((this._frameOpacity = b), (this._dirty = true));
-  },
-  render: function () {
-    null == this._canvas &&
-      ((this._canvas = document.createElement("canvas")),
-      (this._ctx = this._canvas.getContext("2d")));
+  }
+  setScale(scale: number) {
+    this._scale != scale && ((this._scale = scale), (this._dirty = true));
+  }
+  setColor(color: string) {
+    this._color != color && ((this._color = color), (this._dirty = true));
+  }
+  setStroke(stroke: boolean) {
+    this._stroke != stroke && ((this._stroke = stroke), (this._dirty = true));
+  }
+  setStrokeWidth(stroke_width: number) {
+    this._strokeWidth != stroke_width &&
+      ((this._strokeWidth = stroke_width), (this._dirty = true));
+  }
+  setStrokeColor(stroke_color: string) {
+    this._strokeColor != stroke_color &&
+      ((this._strokeColor = stroke_color), (this._dirty = true));
+  }
+  setValue(value: string) {
+    value != this._value && ((this._value = value), (this._dirty = true));
+  }
+  setHMargin(h_margin: number) {
+    h_margin != this._hmargin &&
+      ((this._hmargin = h_margin), (this._dirty = true));
+  }
+  setVMargin(v_margin: number) {
+    v_margin != this._vmargin &&
+      ((this._vmargin = v_margin), (this._dirty = true));
+  }
+  setUsingRoundedFrame(using_rounded_frame: boolean) {
+    using_rounded_frame != this._usingRoundedFrame &&
+      ((this._usingRoundedFrame = using_rounded_frame), (this._dirty = true));
+  }
+  setRoundedFrameOpacity(rounded_frame_opacity: number) {
+    rounded_frame_opacity != this._frameOpacity &&
+      ((this._frameOpacity = rounded_frame_opacity), (this._dirty = true));
+  }
+  render() {
+    if (!this._canvas) {
+      this._canvas = document.createElement("canvas");
+      this._ctx = this._canvas.getContext("2d")!;
+    }
     if (this._dirty) {
       this._dirty = false;
-      let b = this._canvas,
-        e = this._ctx,
-        f = this._value,
-        d = this._scale,
-        a = this._size,
-        c = "Bold " + a + this._font;
-      e.font = c;
-      let g = e.measureText(f).width,
-        h = this._hmargin,
-        q = 2;
-      -1 < this._vmargin && (q = this._vmargin);
+      let _canvas = this._canvas,
+        _ctx = this._ctx!,
+        _value = this._value,
+        _scale = this._scale,
+        _size = this._size,
+        bold_font = "Bold " + _size + this._font;
+      _ctx.font = bold_font;
+      let text_width = _ctx.measureText(_value).width,
+        _hmargin = this._hmargin,
+        _vmargin = 2;
+      -1 < this._vmargin && (_vmargin = this._vmargin);
       let n = 0;
       this._stroke && (n = this._strokeWidth);
-      b.width = (g + 2 * h + n) * d;
-      b.height = (a + 2 * q + n) * d;
-      e.font = c;
-      e.scale(d, d);
-      e.globalAlpha = 1;
-      e.lineJoin = "round";
-      e.lineWidth = this._strokeWidth;
-      e.strokeStyle = this._strokeColor;
+      _canvas.width = (text_width + 2 * _hmargin + n) * _scale;
+      _canvas.height = (_size + 2 * _vmargin + n) * _scale;
+      _ctx.font = bold_font;
+      _ctx.scale(_scale, _scale);
+      _ctx.globalAlpha = 1;
+      _ctx.lineJoin = "round";
+      _ctx.lineWidth = this._strokeWidth;
+      _ctx.strokeStyle = this._strokeColor;
       this._usingRoundedFrame &&
-        ((e.fillStyle = "#000000"),
-        (e.globalAlpha = this._frameOpacity),
-        func_drawRoundedRectangle(e, 0, 0, b.width, b.height, 10),
-        (e.globalAlpha = 1));
-      e.fillStyle = this._color;
-      this._stroke && e.strokeText(f, h + 2, a + q / 2);
-      e.fillText(f, h + 2, a + q / 2);
+        ((_ctx.fillStyle = "#000000"),
+        (_ctx.globalAlpha = this._frameOpacity),
+        func_drawRoundedRectangle(
+          _ctx,
+          0,
+          0,
+          _canvas.width,
+          _canvas.height,
+          10,
+        ),
+        (_ctx.globalAlpha = 1));
+      _ctx.fillStyle = this._color;
+      this._stroke &&
+        _ctx.strokeText(_value, _hmargin + 2, _size + _vmargin / 2);
+      _ctx.fillText(_value, _hmargin + 2, _size + _vmargin / 2);
     }
     return this._canvas;
-  },
-};
-Class_TextStyle.prototype = {
-  _value: "",
-  _color: "#000000",
-  _secondColor: "#FFFFFF",
-  _size: 16,
-  _canvas: null,
-  _ctx: null,
-  _dirty: false,
-  _scale: 1,
-  _font: "px 'proxima-nova-1','proxima-nova-2', " + str_font_name,
-  _extrude: 3,
-  _usingFrame: false,
-  _usingRoundedFrame: false,
-  _angX: 0,
-  _angY: 0,
-  _d: 5,
-  _addTop: 0,
-  setAddTop: function (b) {
-    b != this._addTop && ((this._addTop = b), (this._dirty = true));
-  },
-  setFont: function (b) {
-    this._font != b && ((this._font = b), (this._dirty = true));
-  },
-  setSize: function (b) {
-    this._size != b && ((this._size = b), (this._dirty = true));
-  },
-  setScale: function (b) {
-    this._scale != b && ((this._scale = b), (this._dirty = true));
-  },
-  setColor: function (b) {
-    this._color != b && ((this._color = b), (this._dirty = true));
-  },
-  setSecondColor: function (b) {
-    this._secondColor != b && ((this._secondColor = b), (this._dirty = true));
-  },
-  setValue: function (b) {
-    b != this._value && ((this._value = b), (this._dirty = true));
-  },
-  setUsingRoundedFrame: function (b) {
-    b != this.__usingRoundedFrame &&
-      ((this._usingRoundedFrame = b), (this._dirty = true));
-  },
-  setUsingFrame: function (b) {
-    b != this._usingFrame && ((this._usingFrame = b), (this._dirty = true));
-  },
-  calcAngVector: function (b) {
-    this._angX = Math.sin(b) * this._d;
-    this._angY = Math.cos(b) * this._d;
-  },
-  render: function () {
-    null == this._canvas &&
-      ((this._canvas = document.createElement("canvas")),
-      (this._ctx = this._canvas.getContext("2d")));
+  }
+}
+class StyleText {
+  _value = "";
+  _color = "#000000";
+  _secondColor = "#FFFFFF";
+  _size = 16;
+  _canvas?: HTMLCanvasElement;
+  _ctx?: CanvasRenderingContext2D;
+  _dirty = false;
+  _scale = 1;
+  _font = "px 'proxima-nova-1','proxima-nova-2', " + str_font_name;
+  _extrude = 3;
+  _usingFrame = false;
+  _usingRoundedFrame = false;
+  _angX = 0;
+  _angY = 0;
+  _d = 5;
+  _addTop = 0;
+  constructor(size: number, color: string, second_color: string) {
+    size && (this._size = size);
+    color && (this._color = color);
+    second_color && (this._secondColor = second_color);
+  }
+  setAddTop(add_top: number) {
+    add_top != this._addTop && ((this._addTop = add_top), (this._dirty = true));
+  }
+  setFont(font: string) {
+    this._font != font && ((this._font = font), (this._dirty = true));
+  }
+  setSize(size: number) {
+    this._size != size && ((this._size = size), (this._dirty = true));
+  }
+  setScale(scale: number) {
+    this._scale != scale && ((this._scale = scale), (this._dirty = true));
+  }
+  setColor(color: string) {
+    this._color != color && ((this._color = color), (this._dirty = true));
+  }
+  setSecondColor(second_color: string) {
+    this._secondColor != second_color &&
+      ((this._secondColor = second_color), (this._dirty = true));
+  }
+  setValue(value: string) {
+    value != this._value && ((this._value = value), (this._dirty = true));
+  }
+  setUsingRoundedFrame(using_rounded_frame: boolean) {
+    using_rounded_frame != this._usingRoundedFrame &&
+      ((this._usingRoundedFrame = using_rounded_frame), (this._dirty = true));
+  }
+  setUsingFrame(using_frame: boolean) {
+    using_frame != this._usingFrame &&
+      ((this._usingFrame = using_frame), (this._dirty = true));
+  }
+  calcAngVector(angle: number) {
+    this._angX = Math.sin(angle) * this._d;
+    this._angY = Math.cos(angle) * this._d;
+  }
+  render() {
+    if (!this._canvas) {
+      this._canvas = document.createElement("canvas");
+      this._ctx = this._canvas.getContext("2d")!;
+    }
     if (this._dirty) {
       this._dirty = false;
-      let b = this._canvas,
-        e = this._ctx,
-        f = this._value,
-        d = this._scale,
-        a = this._size,
-        c = "Bold " + a + this._font;
-      e.font = c;
-      let g = e.measureText(f).width,
-        h = ~~(0.2 * a);
-      b.width = (g + 6 + 10 + 2 * this._d) * d;
-      b.height = (a + h + this._extrude + 2 * this._d + this._addTop) * d;
-      e.font = c;
-      e.scale(d, d);
+      let _canvas = this._canvas,
+        _ctx = this._ctx!,
+        _value = this._value,
+        _scale = this._scale,
+        _size = this._size,
+        bold_text = "Bold " + _size + this._font;
+      _ctx.font = bold_text;
+      let text_width = _ctx.measureText(_value).width,
+        _vmargin = Math.floor(0.2 * _size);
+      _canvas.width = (text_width + 6 + 10 + 2 * this._d) * _scale;
+      _canvas.height =
+        (_size + _vmargin + this._extrude + 2 * this._d + this._addTop) *
+        _scale;
+      _ctx.font = bold_text;
+      _ctx.scale(_scale, _scale);
       this._usingFrame &&
-        ((e.globalAlpha = 1),
-        (e.fillStyle = "#000000"),
-        e.moveTo(this._angX, this._angY + 15 * num_scale_factor),
-        e.lineTo(
-          b.width + this._angX - 4 * num_scale_factor,
+        ((_ctx.globalAlpha = 1),
+        (_ctx.fillStyle = "#000000"),
+        _ctx.moveTo(this._angX, this._angY + 15 * num_scale_factor),
+        _ctx.lineTo(
+          _canvas.width + this._angX - 4 * num_scale_factor,
           this._angY + 7 * num_scale_factor,
         ),
-        e.lineTo(
-          b.width + this._angX - 15 * num_scale_factor,
-          b.height + this._angY - 9 * num_scale_factor,
+        _ctx.lineTo(
+          _canvas.width + this._angX - 15 * num_scale_factor,
+          _canvas.height + this._angY - 9 * num_scale_factor,
         ),
-        e.lineTo(
+        _ctx.lineTo(
           this._angX + 5 * num_scale_factor,
-          b.height + this._angY - 17 * num_scale_factor,
+          _canvas.height + this._angY - 17 * num_scale_factor,
         ),
-        e.fill());
+        _ctx.fill());
       this._usingRoundedFrame &&
-        ((e.globalAlpha = 0.3),
-        func_drawRoundedRectangle(e, 0, 0, b.width, b.height, 40),
-        (e.globalAlpha = 1));
+        ((_ctx.globalAlpha = 0.3),
+        func_drawRoundedRectangle(
+          _ctx,
+          0,
+          0,
+          _canvas.width,
+          _canvas.height,
+          40,
+        ),
+        (_ctx.globalAlpha = 1));
       int_pathMobile &&
-        ((e.lineJoin = "round"),
-        (e.lineWidth = 3),
-        (e.strokeStyle = this._secondColor),
-        e.strokeText(f, 8 + this._d, a - h / 2 + 1 + this._d + this._addTop),
+        ((_ctx.lineJoin = "round"),
+        (_ctx.lineWidth = 3),
+        (_ctx.strokeStyle = this._secondColor),
+        _ctx.strokeText(
+          _value,
+          8 + this._d,
+          _size - _vmargin / 2 + 1 + this._d + this._addTop,
+        ),
         (this._extrude = 0));
-      for (b = this._extrude; 0 <= b; b--)
-        (d = b),
-          (e.fillStyle = 0 == b ? this._color : this._secondColor),
-          e.fillText(f, 8 + this._d, a - h / 2 + d + this._d + this._addTop);
+      for (let _extrude = this._extrude; 0 <= _extrude; _extrude--)
+        (_scale = _extrude),
+          (_ctx.fillStyle = 0 == _extrude ? this._color : this._secondColor),
+          _ctx.fillText(
+            _value,
+            8 + this._d,
+            _size - _vmargin / 2 + _scale + this._d + this._addTop,
+          );
     }
     return this._canvas;
-  },
-};
+  }
+}
 let Class_Assets = function () {
     this.loaded = false;
     this.onLoad = null;
@@ -1832,8 +1871,8 @@ let Class_Assets = function () {
     this.draw = function (I) {
       let r, K, P, O, R, S;
       if (ta) {
-        C = document.createElement("canvas");
-        r = C.getContext("2d");
+        C = document.createElement("canvas") as HTMLCanvasElement;
+        r = C.getContext("2d")!;
         this.renderLeaderboard(r, C);
       }
       if (0 < na) this.DrawWinnerLabel(I);
@@ -1854,7 +1893,7 @@ let Class_Assets = function () {
           this.DrawCurrentWeaponIcon(I, objG_player_plane.weapon);
           (r = 19), (P = 0);
           int_pathMobile && ((r = 24), (P = -5));
-          null == pa && (pa = new Class_StrokeStyle(r, "#FFFFFF"));
+          null == pa && (pa = new StyleStroke(r, "#FFFFFF"));
           R = objG_eventManager.isInstagib();
           if (z != objG_player_plane.GetAmmo() || null == s) {
             S = "\u221e";
@@ -1879,21 +1918,13 @@ let Class_Assets = function () {
             f
               ? ((r = 40),
                 int_pathMobile && (r = 50),
-                (q = new Class_TextStyle(
-                  r * num_scale_factor,
-                  "#FF0000",
-                  "#990000",
-                )),
+                (q = new StyleText(r * num_scale_factor, "#FF0000", "#990000")),
                 q.setValue(f),
                 q.setUsingFrame(true),
                 (r = true),
                 int_pathMobile ? q.setAddTop(35) : q.setAddTop(25))
               : ((q = null), (P = int_pathMobile ? 45 : 35)),
-            (h = new Class_TextStyle(
-              P * num_scale_factor,
-              "#FF0000",
-              "#990000",
-            )),
+            (h = new StyleText(P * num_scale_factor, "#FF0000", "#990000")),
             h.setValue(e),
             h.setUsingFrame(!r));
           P = 0.25 * canvas.height;
@@ -1918,11 +1949,7 @@ let Class_Assets = function () {
           g ||
             ((r = 30),
             int_pathMobile && (r = 40),
-            (g = new Class_TextStyle(
-              r * num_scale_factor,
-              "#FF0000",
-              "#990000",
-            ))),
+            (g = new StyleText(r * num_scale_factor, "#FF0000", "#990000"))),
           g.setValue(k),
           g.setUsingFrame(true),
           (r = g.render()),
@@ -1940,11 +1967,7 @@ let Class_Assets = function () {
           y ||
             ((r = 20),
             int_pathMobile && (r = 30),
-            (y = new Class_TextStyle(
-              r * num_scale_factor,
-              "#FF0000",
-              "#990000",
-            ))),
+            (y = new StyleText(r * num_scale_factor, "#FF0000", "#990000"))),
           y.setValue(l),
           y.setUsingFrame(false),
           (r = y.render()),
@@ -1976,12 +1999,7 @@ let Class_Assets = function () {
               ? "Following " +
                 func_renameBlankPlayerNames(objG_player_plane.name)
               : "FOLLOW MODE"),
-          c ||
-            (c = new Class_TextStyle(
-              30 * num_scale_factor,
-              "#ffd118",
-              "#b56006",
-            )),
+          c || (c = new StyleText(30 * num_scale_factor, "#ffd118", "#b56006")),
           c.setValue(O),
           c.setUsingFrame(true),
           (r = c.render()),
@@ -1993,7 +2011,7 @@ let Class_Assets = function () {
             ? (null == Ia &&
                 ((r = 20),
                 int_pathMobile && (r = 30),
-                (Ha = new Class_StrokeStyle(
+                (Ha = new StyleStroke(
                   r * num_scale_factor,
                   "#ffd118",
                   true,
@@ -2038,11 +2056,7 @@ let Class_Assets = function () {
           d != Fa &&
             ((c = 25),
             int_pathMobile && (c = 35),
-            (ua = new Class_TextStyle(
-              c * num_scale_factor,
-              "#fe9b00",
-              "#6e3800",
-            )),
+            (ua = new StyleText(c * num_scale_factor, "#fe9b00", "#6e3800")),
             (c = " "),
             bool_setting_highQuality || (c = ""),
             int_pathMobile && (c = "  "),
@@ -2075,7 +2089,7 @@ let Class_Assets = function () {
         X = Ma;
         c = 25;
         int_pathMobile && (c = 35);
-        L = new Class_TextStyle(c * num_scale_factor, "#fbc521", "#c78109");
+        L = new StyleText(c * num_scale_factor, "#fbc521", "#c78109");
         Ma
           ? L.setValue("     Super Weapon: " + Ma)
           : L.setValue("     Find The Super Weapon!");
@@ -2110,7 +2124,7 @@ let Class_Assets = function () {
             200,
             30 * num_scale_factor,
           ),
-          (ca = new Class_StrokeStyle(15 * num_scale_factor, "#EEEEEE")),
+          (ca = new StyleStroke(15 * num_scale_factor, "#EEEEEE")),
           ca.setValue(objG_player_plane.rank),
           ca.setUsingRoundedFrame(false),
           (fa = ca.render()),
@@ -2160,21 +2174,17 @@ let Class_Assets = function () {
         U = false;
         let c = objG_eventManager.endTime - T;
         if (0 > parseInt(c)) return;
-        W = new Class_TextStyle(
+        W = new StyleText(
           23 * num_scale_factor,
           objG_eventManager.getEventColor(),
           "#6e3800",
         );
         W.setValue(objG_eventManager.getEventName());
         N = W.render();
-        $_sub = new Class_TextStyle(
-          20 * num_scale_factor,
-          "#fe9b00",
-          "#6e3800",
-        );
+        $_sub = new StyleText(20 * num_scale_factor, "#fe9b00", "#6e3800");
         $_sub.setValue("STARTS IN");
         da = $_sub.render();
-        Q = new Class_TextStyle(27 * num_scale_factor, "#fe9b00", "#6e3800");
+        Q = new StyleText(27 * num_scale_factor, "#fe9b00", "#6e3800");
         Q.setValue(func_millisToTimeFormat(c));
         M = Q.render();
       }
@@ -2198,14 +2208,14 @@ let Class_Assets = function () {
         U = false;
         let c = objG_eventManager.endTime - T;
         0 > parseInt(c) && (c = 0);
-        W = new Class_TextStyle(
+        W = new StyleText(
           25 * num_scale_factor,
           objG_eventManager.getEventColor(),
           "#6e3800",
         );
         W.setValue(objG_eventManager.getEventName());
         N = W.render();
-        Q = new Class_TextStyle(25 * num_scale_factor, "#fe9b00", "#6e3800");
+        Q = new StyleText(25 * num_scale_factor, "#fe9b00", "#6e3800");
         objG_eventManager.isWarship()
           ? 0 < objG_eventManager.warshipsLeft
             ? Q.setValue("Warships Left: " + objG_eventManager.warshipsLeft)
@@ -2234,14 +2244,10 @@ let Class_Assets = function () {
     this.DrawWinnerLabel = function (a) {
       !ia &&
         aa &&
-        ((ia = new Class_TextStyle(
-          55 * num_scale_factor,
-          "#fe6800",
-          "#6e3800",
-        )),
+        ((ia = new StyleText(55 * num_scale_factor, "#fe6800", "#6e3800")),
         ia.setValue("WINNER"),
         (ha = ia.render()),
-        (wa = new Class_TextStyle(45 * num_scale_factor, "#fe9b00", "#6e3800")),
+        (wa = new StyleText(45 * num_scale_factor, "#fe9b00", "#6e3800")),
         wa.setValue(aa),
         (renderedWinnerNameCachedText = wa.render()));
       if (ha) {
@@ -2264,14 +2270,10 @@ let Class_Assets = function () {
     };
     this.DrawWarshipDestroyedLabel = function (a) {
       la ||
-        ((la = new Class_TextStyle(
-          45 * num_scale_factor,
-          "#fe6800",
-          "#6e3800",
-        )),
+        ((la = new StyleText(45 * num_scale_factor, "#fe6800", "#6e3800")),
         null == va ? la.setValue("WARSHIP") : la.setValue(va),
         (ma = la.render()),
-        (ya = new Class_TextStyle(35 * num_scale_factor, "#fe9b00", "#6e3800")),
+        (ya = new StyleText(35 * num_scale_factor, "#fe9b00", "#6e3800")),
         null == va
           ? ya.setValue("ESCAPED!")
           : ya.setValue("DESTROYED A WARSHIP!"),
@@ -2290,7 +2292,7 @@ let Class_Assets = function () {
     this.DrawLastEventWinner = function (a) {
       null != aa &&
         aa != ja &&
-        ((ca = new Class_StrokeStyle(15 * num_scale_factor, "#EEEEEE")),
+        ((ca = new StyleStroke(15 * num_scale_factor, "#EEEEEE")),
         ca.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black"),
         ca.setValue(
           "Last Event Winner: " + func_renameBlankPlayerNames(aa) + " ",
@@ -2590,7 +2592,7 @@ let Class_Assets = function () {
         );
     };
     this.addActivityMessage = function (f) {
-      let d = new Class_StrokeStyle(14 * num_scale_factor, "#EEEEEE");
+      let d = new StyleStroke(14 * num_scale_factor, "#EEEEEE");
       d.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
       d.setValue("\u2022 " + f);
       d.setUsingRoundedFrame(true);
@@ -7008,7 +7010,7 @@ let Class_Assets = function () {
       let a = false,
         c;
       f && 500 > T - f && (a = true);
-      c = new Class_StrokeStyle(13, "#FFFFFF");
+      c = new StyleStroke(13, "#FFFFFF");
       c.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
       a ? (d = b[b.length - 1].number + d) : (f = T);
       c.setValue("+" + d);
@@ -7193,11 +7195,11 @@ let Class_Assets = function () {
                     (m = ""),
                     (k = true));
       "" != e &&
-        ((f = new Class_StrokeStyle(40, s, true, "#000000")),
+        ((f = new StyleStroke(40, s, true, "#000000")),
         f.setValue(e),
         f.setStrokeWidth(10),
         (d = f.render()),
-        (a = new Class_StrokeStyle(40, s, true, "#000000")),
+        (a = new StyleStroke(40, s, true, "#000000")),
         a.setValue(m),
         a.setStrokeWidth(10),
         (currentText2Render = a.render()));

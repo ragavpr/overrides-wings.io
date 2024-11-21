@@ -47,6 +47,14 @@ Use bun to build the project
 
 ### To build `client.js`
 
+#### For debugging
+
+```
+bun build src/client.ts --outfile build/client.js --target browser
+```
+
+#### For release
+
 ```
 bun build src/client.ts --minify --outfile build/client.js --target browser
 ```
