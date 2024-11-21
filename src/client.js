@@ -1,3 +1,4 @@
+import { Class_ParticleDust } from "./lib/ParticleDust";
 const $ = jQuery;
 let Zb,
   $b,
@@ -3297,7 +3298,7 @@ let Class_EventManager = function () {
             objGUI_gameInfo.clearNearMiss()))
         : 25 <= a &&
           obj_particleManager &&
-          (obj_particleManager = null, l = 1);
+          ((obj_particleManager = null), (l = 1));
     };
     this.GetAmmo = function () {
       return 1 == this.weapon ? -1 : this.ammo;
@@ -4995,7 +4996,7 @@ let Class_EventManager = function () {
                 obj_particleImpacts.addShot(n, r, s, q);
               else {
                 (t = d.getUint32(c, true)), (c = c + 4), (x = objD_missiles[t]);
-                x && (delete objD_missiles[t]);
+                x && delete objD_missiles[t];
                 t = true;
               }
               for (x = false; ; ) {
@@ -6114,14 +6115,10 @@ let Class_EventManager = function () {
       }
     };
     this.update = function (b) {
-      for (const i in e)
-        e[i].update(b), e[i].deleting && (e.splice(i, 1));
-      for (const i in d)
-        d[i].update(b), d[i].deleting && (d.splice(i, 1));
-      for (const i in f)
-        f[i].update(b), f[i].deleting && (f.splice(i, 1));
-      for (const i in a)
-        a[i].update(b), a[i].deleting && (a.splice(i, 1));
+      for (const i in e) e[i].update(b), e[i].deleting && e.splice(i, 1);
+      for (const i in d) d[i].update(b), d[i].deleting && d.splice(i, 1);
+      for (const i in f) f[i].update(b), f[i].deleting && f.splice(i, 1);
+      for (const i in a) a[i].update(b), a[i].deleting && a.splice(i, 1);
     };
     this.drawBehind = function (a) {
       for (let b in d) {
@@ -6475,7 +6472,7 @@ let Class_EventManager = function () {
       for (debreeID in e) {
         let d = e[debreeID];
         d.update(a);
-        d.deleting && (e.splice(debreeID, 1));
+        d.deleting && e.splice(debreeID, 1);
         b++;
       }
       0 == b && (this.deleting = true);
@@ -7265,32 +7262,6 @@ let Class_EventManager = function () {
     };
     this.shouldDraw = function () {
       return g;
-    };
-  },
-  Class_ParticleDust = function () {
-    let _this = this;
-    _this.x = 0;
-    _this.y = 0;
-    _this.z = 1 * Math.random() + 0.3;
-    _this.size = 1.2;
-    _this.opacity = 0.8 * Math.random() + 0.1;
-    _this.update = function (e) {
-      if (0 == _this.x || 0 == _this.y)
-        (_this.x = Math.random() * (e[1].x - e[0].x) + e[0].x),
-          (_this.y = Math.random() * (e[1].y - e[0].y) + e[0].y);
-      let f = e[1].x - e[0].x,
-        d = e[1].y - e[0].y;
-      _this.x < e[0].x && (_this.x += Math.ceil((e[0].x - _this.x) / f) * f);
-      _this.y < e[0].y && (_this.y += Math.ceil((e[0].y - _this.y) / d) * d);
-      _this.x > e[1].x && (_this.x -= Math.ceil((_this.x - e[1].x) / f) * f);
-      _this.y > e[1].y && (_this.y -= Math.ceil((_this.y - e[1].y) / d) * d);
-    };
-    _this.draw = function (e) {
-      e.fillStyle = "rgba(226,219,226," + _this.opacity + ")";
-      e.beginPath();
-      e.arc(_this.x, _this.y, this.z * this.size, 0, 2 * Math.PI, true);
-      e.closePath();
-      e.fill();
     };
   },
   Class_Warship = function () {
