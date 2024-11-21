@@ -1,0 +1,11 @@
+[
+  {
+    "applyTo": "client.js",
+    "headers": [
+      {
+        "name": "content-type",
+        "value": "application/javascript; charset=utf-8"
+      }
+    ]
+  }
+]
