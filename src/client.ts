@@ -313,12 +313,12 @@ let Zb,
     ["turbo2", 622, 86, 23, 39, 0.348, 0.5],
     ["wing", 770, 203, 27, 27, 0.5, 0.5],
   ];
-let func_detect_country = function () {
+let func_detect_country = () => {
     let temp_http_s = "";
     bool_isHttps && (temp_http_s = "s");
     $.get(
       "http" + temp_http_s + "://ip2l.wings.io/cc",
-      function (b) {
+      (b) => {
         str_conutryCode = b.substring(0, 2);
         window.localStorage.wingsCC = str_conutryCode;
         window.localStorage.wingsCCTime = +new Date();
@@ -326,7 +326,7 @@ let func_detect_country = function () {
       "text",
     );
   },
-  Rb = function () {
+  Rb = () => {
     T = +new Date();
     let b = 0;
     0 < Mb && (b = T - Mb);
@@ -406,10 +406,10 @@ function func_displayCopyLink() {
   $("#overlay2").fadeIn(200);
   $("#pfArrow").hide();
   $("#pfText").hide();
-  setTimeout(function () {
+  setTimeout(() => {
     $("#copycheckimage").fadeIn(300);
   }, 200);
-  setTimeout(function () {
+  setTimeout(() => {
     $("#overlay2").fadeOut(200);
   }, 1e3);
   eb = false;
@@ -448,10 +448,10 @@ function func_showAds() {
         },
       }),
       window.googletag &&
-        (window.googletag.cmd.push(function () {
+        (window.googletag.cmd.push(() => {
           Cb &&
             ((Cb = false),
-            setTimeout(function () {
+            setTimeout(() => {
               Cb = true;
             }, 6e4 * lc),
             window.googletag &&
@@ -652,7 +652,7 @@ function func_rotatePoint(x: number, y: number, angle: number) {
 window.location.href.split("/");
 -1 == int_pathMobile && (int_pathMobile = 0);
 int_pathMobile && (xa = true);
-(function () {
+(() => {
   let b = window.location.search;
   "?" == b.charAt(0) && (b = b.slice(1));
   b = b.split("&");
@@ -676,10 +676,10 @@ void 0 == window.localStorage.wingsCCTime ||
   : 288e5 < +new Date() - window.localStorage.wingsCCTime
     ? func_detect_country()
     : (str_conutryCode = window.localStorage.wingsCC);
-document.body.onselectstart = function () {
+document.body.onselectstart = () => {
   return false;
 };
-window.switchSkins = function () {
+window.switchSkins = () => {
   funcR_showBeta();
   bool_hideCustomization
     ? ($("#howto").show(),
@@ -692,13 +692,13 @@ window.switchSkins = function () {
       $("#divOn").show());
   bool_hideCustomization = !bool_hideCustomization;
 };
-window.setSkinColor = function (b) {
+window.setSkinColor = (b) => {
   func_displaySelectedColor(b);
 };
-window.setDecal = function (b) {
+window.setDecal = (b) => {
   func_displaySelectedDecal(b);
 };
-window.clickPlay = function (b) {
+window.clickPlay = (b) => {
   Z
     ? func_hideOverlay()
     : ((window.localStorage.nick = b),
@@ -720,7 +720,7 @@ window.clickPlay = function (b) {
           (2 != kb && 4 != kb && 6 != kb) ||
           objGUI_gameInfo.showTip("Press 'F' to toggle Fullscreen"));
 };
-window.setSpectate = function (b) {
+window.setSpectate = (b) => {
   xa = true;
   document.getElementsByTagName("canvas")[0].style.cursor = "default";
   func_hideOverlay();
@@ -736,19 +736,19 @@ window.setSpectate = function (b) {
     ? objGUI_gameInfo.showTip("Press 'ESC' to go back")
     : objGUI_gameInfo.showTip("Click to follow next player");
 };
-window.setContinue = function () {
+window.setContinue = () => {
   $("#topGui").show();
   $("#roomFailed").hide();
   func_isIframe() || (parent.location.hash = "");
   objG_wsConnection.getServerAndConnect();
 };
-window.toggleGraphics = function () {
+window.toggleGraphics = () => {
   bool_setting_highQuality = !bool_setting_highQuality;
   objG_followMode.resize();
   window.localStorage.lq = !bool_setting_highQuality;
   func_setGraphicsQuality();
 };
-window.copyRoomLink = function () {
+window.copyRoomLink = () => {
   $("#copyLink").hide();
   $("#copyLinkBox").show();
   let b = $("#roomlinkInput")[0];
@@ -757,13 +757,13 @@ window.copyRoomLink = function () {
   func_isNotChrome() &&
     (($("#copyButton")[0].childNodes[0].data = "Close"),
     $("#safariTooltip").show());
-  setTimeout(function () {
+  setTimeout(() => {
     b.setSelectionRange(0, b.value.length);
     b.select();
     b.focus();
   }, 100);
 };
-window.setCopy = function () {
+window.setCopy = () => {
   let b = $("#roomlinkInput")[0];
   b.value = "http://wings.io/#" + objG_wsConnection.roomID;
   b.setSelectionRange(0, b.value.length);
@@ -779,11 +779,11 @@ window.setCopy = function () {
   }
 };
 null != adsense && adsense && func_showAds();
-window.clickNoNames = function (b) {
+window.clickNoNames = (b) => {
   lb = !lb;
   b.checked = lb;
 };
-window.toggleMute = function () {
+window.toggleMute = () => {
   func_displayMuteAudio();
 };
 void 0 == num_setting_muteVol && (num_setting_muteVol = 1);
@@ -794,7 +794,7 @@ void 0 == num_setting_muteVol && (num_setting_muteVol = 1);
 if (0 == num_setting_muteVol || bool_internet_explorer)
   (num_setting_muteVol = 1), int_pathMobile || func_displayMuteAudio();
 bool_internet_explorer && $("#sndIcon").hide();
-window.onblur = function () {
+window.onblur = () => {
   window.didSendLoadingTime = true;
   timeout_ws_conn = setTimeout(func_wsConnDisconnect, 3e5);
   wa = false;
@@ -806,27 +806,27 @@ window.onblur = function () {
     objG_sfxManager.sound.volume(0, na),
     nb && objG_sfxManager.sound.volume(0, nb));
 };
-window.onfocus = function () {
+window.onfocus = () => {
   timeout_ws_conn && (clearTimeout(timeout_ws_conn), (timeout_ws_conn = null));
   Lb = wa = true;
   num_max_volume = 1 * num_setting_muteVol;
   for (let b in objD_planes) objD_planes[b].clearTrail();
 };
-window.connectToServer = function (b) {
+window.connectToServer = (b) => {
   objG_wsConnection.roomNumber = 0;
   objG_wsConnection.remoteHost = b;
   objG_wsConnection.connect();
   console.log("CONNECTING NOW to " + b);
 };
-window.disconnect = function () {
+window.disconnect = () => {
   objG_wsConnection.disconnect();
   console.log("Disconnected.");
 };
-window.enterGame = function (b) {
+window.enterGame = (b) => {
   clickPlay(b);
   onfocus();
 };
-window.setInput = function (b, e, f) {
+window.setInput = (b, e, f) => {
   objG_inputManager.angle = b;
   objG_inputManager.hover = e;
   !Sb && f
@@ -834,7 +834,7 @@ window.setInput = function (b, e, f) {
     : Sb && !f && objG_wsConnection.sendShooting(f);
   Sb = f;
 };
-window.wasKilled = function (b) {
+window.wasKilled = (b) => {
   objG_inputManager.angle = Math.PI;
   objG_inputManager.hover = 1;
   int_pathMobile &&
@@ -846,7 +846,7 @@ window.wasKilled = function (b) {
       ? messageHandlers.wasKilled(JSON.stringify(b))
       : window.webkit.messageHandlers.wasKilled.postMessage(b));
 };
-window.connectionClosed = function () {
+window.connectionClosed = () => {
   console.log("Connection was closed");
   objG_inputManager.angle = Math.PI;
   objG_inputManager.hover = 1;
@@ -859,7 +859,7 @@ if (int_pathMobile) window.onblur();
 window.localStorage.nick &&
   $("#nick")[0] &&
   ($("#nick")[0].value = window.localStorage.nick);
-document.oncontextmenu = function () {
+document.oncontextmenu = () => {
   return false;
 };
 int_pathMobile && (str_font_name = "Arial-BoldMT");
@@ -1135,7 +1135,7 @@ class Assets {
   loadGameSpritesheet() {
     this.gameSheet = new Image();
     this.gameSheet.src = "images/sheet.png";
-    this.gameSheet.onload = function () {
+    this.gameSheet.onload = () => {
       objG_assets.loadGameSpritesheetFrames();
       objG_assets.spriteSheetLoaded = true;
       objG_assets.loadAnimations();
@@ -1371,11 +1371,11 @@ class Assets {
     this.warshipLoaded ||
       ((this.warshipImage = new Image()),
       (this.warshipImage.src = "images/events/battleship.png"),
-      (this.warshipImage.onload = function () {
+      (this.warshipImage.onload = () => {
         objG_assets.warshipLoaded = true;
         objG_assets.loadTintImage(
           objG_assets.warshipImage,
-          function (b) {
+          (b) => {
             objG_assets.whiteWarshipImage = b;
             objG_assets.warshipTextureLoadCount++;
             objG_assets.verifyWarshipLoaded();
@@ -1385,13 +1385,13 @@ class Assets {
       }),
       (this.cannonImage = new Image()),
       (this.cannonImage.src = "images/events/shipcannon.png"),
-      (this.cannonImage.onload = function () {
+      (this.cannonImage.onload = () => {
         objG_assets.warshipTextureLoadCount++;
         objG_assets.verifyWarshipLoaded();
       }),
       (this.warshipIcon = new Image()),
       (this.warshipIcon.src = "images/events/warshipIcon.png"),
-      (this.warshipIcon.onload = function () {
+      (this.warshipIcon.onload = () => {
         objG_assets.warshipTextureLoadCount++;
         objG_assets.verifyWarshipLoaded();
       }));
@@ -1400,11 +1400,11 @@ class Assets {
     this.asteroidLoaded ||
       ((this.asteroidImage = new Image()),
       (this.asteroidImage.src = "images/events/asteroid.png"),
-      (this.asteroidImage.onload = function () {
+      (this.asteroidImage.onload = () => {
         objG_assets.asteroidLoaded = true;
         objG_assets.loadTintImage(
           objG_assets.asteroidImage,
-          function (b) {
+          (b) => {
             objG_assets.whiteAsteroidImage = b;
           },
           "#FF3333",
@@ -1428,7 +1428,7 @@ class InputManager {
       d = 0;
     const keydown = (ev: KeyboardEvent) => {
       67 == ev.keyCode && bool_following_plane && eb
-        ? setTimeout(function () {
+        ? setTimeout(() => {
             func_displayCopyLink();
           }, 10)
         : bool_following_plane ||
@@ -3841,7 +3841,7 @@ class Backgrounds {
       let e = new XMLHttpRequest();
       e.open("GET", c, true);
       e.responseType = "arraybuffer";
-      e.onload = function (c) {
+      e.onload = (c) => {
         if ((c = e.response)) {
           let g, f, m, l, y, v, u;
           c = new DataView(c);
@@ -4587,7 +4587,7 @@ class WS_Connection {
         $.ajax({
           url: "http" + c + "://master.wings.io/",
           type: "POST",
-          success: function (a) {
+          success: (a) => {
             if ("0" == a)
               $("#topGui").hide(),
                 $("#topGuiConnecting").hide(),
@@ -4605,7 +4605,7 @@ class WS_Connection {
               objG_wsConnection.connect();
             }
           },
-          error: function () {
+          error: () => {
             setTimeout(objG_wsConnection.getServerAndConnect, 1e3);
           },
           dataType: "text",
@@ -5272,7 +5272,7 @@ class FollowMode_R {
     objG_animationManager = new AnimationManager();
     this.respawnParticles();
     objG_assets = new Assets();
-    objG_assets.load(function () {
+    objG_assets.load(() => {
       console.log("Resources loaded!");
       1 == int_pathMobile &&
         ("undefined" != typeof messageHandlers && messageHandlers.didLoad
@@ -5288,7 +5288,7 @@ class FollowMode_R {
       func_displaySelectedColor(Math.floor(5 * Math.random()) + 1);
       console.log("Loading sounds!");
       objG_sfxManager = new SFXmanager();
-      objG_sfxManager.load(function () {
+      objG_sfxManager.load(() => {
         objG_sfxManager.playSound(str_sfxid_env, 1, 1, const_Q_0, (a) => {
           mb = a;
         });
@@ -5715,152 +5715,156 @@ class FollowMode_R {
     };
 }
 class UI_Anchor {
+      #c = 0
+      #g
+      #h = 0
+      #q = 0
+      #n = 0
+      #k = 0
+      #minZoom = 1
+      #maxZoom = 2
+      #zoom = this.#minZoom
+      #html_canvas
+      #ctx_canvas
   constructor(html_canvas, ctx_canvas, x, y) {
-    let _this = this,
-      c = 0,
-      g,
-      h = 0,
-      q = 0,
-      n = 0,
-      k = 0;
-    this.x = x;
-    this.y = y;
-    this.minZoom = 1;
-    this.maxZoom = 2;
-    this.zoom = this.minZoom;
-    this.setupContext = function () {
-      let c = _this.zoom,
-        d = html_canvas.width / 2 - _this.x * c,
-        f = html_canvas.height / 2 - _this.y * c;
-      ctx_canvas.setTransform(1, 0, 0, 1, 0, 0);
-      ctx_canvas.translate(d + n, f + k);
-      ctx_canvas.scale(c, c);
+    this.x = x
+    this.y = y
+    this.#html_canvas = html_canvas
+    this.#ctx_canvas = ctx_canvas
+  }
+  
+    setupContext() {
+      let c = this.zoom,
+        d = this.#html_canvas.width / 2 - this.x * c,
+        f = this.#html_canvas.height / 2 - this.y * c;
+      this.#ctx_canvas.setTransform(1, 0, 0, 1, 0, 0);
+      this.#ctx_canvas.translate(d + this.#n, f + this.#k);
+      this.#ctx_canvas.scale(c, c);
     };
-    this.applyShake = function (a) {
+    applyShake(a) {
       if (xa)
-        if (0 < c) {
-          let b = g,
+        if (0 < this.#c) {
+          let b = this.#g,
             d;
-          250 > c && (b = (c / 1e3 / 0.5) * g);
-          h += 1;
-          q += 1.1;
-          (d = Math.sin(h) * (b / 4)), (b = Math.cos(q) * b);
-          n = d;
-          k = b;
-          c -= a;
-        } else k = n = 0;
+          250 > this.#c && (b = (this.#c / 1e3 / 0.5) * this.#g);
+          this.#h += 1;
+          this.#q += 1.1;
+          (d = Math.sin(this.#h) * (b / 4)), (b = Math.cos(this.#q) * b);
+          this.#n = d;
+          this.#k = b;
+          this.#c -= a;
+        } else this.#k = this.#n = 0;
     };
-    this.update = function (b) {
-      let c = _this.maxZoom + (_this.minZoom - _this.maxZoom);
-      xa || (_this.y = 470);
+    update(b) {
+      let c = this.maxZoom + (this.minZoom - this.maxZoom);
+      xa || (this.y = 470);
       Z || 1 != ka || bool_following_plane
-        ? ((_this.zoom =
+        ? ((this.zoom =
             (1 / (window.devicePixelRatio / int_pixel_ratio)) * 1.2),
-          (_this.zoom *= num_scale_factor),
-          int_pathMobile && (_this.zoom += 0.3),
+          (this.zoom *= num_scale_factor),
+          int_pathMobile && (this.zoom += 0.3),
           null != objG_player_plane &&
-            ((ca.x = objG_player_plane.x - _this.x),
-            (ca.y = objG_player_plane.y - _this.y),
-            (_this.x = objG_player_plane.x),
-            (_this.y = objG_player_plane.y)))
+            ((ca.x = objG_player_plane.x - this.x),
+            (ca.y = objG_player_plane.y - this.y),
+            (this.x = objG_player_plane.x),
+            (this.y = objG_player_plane.y)))
         : ((c =
             (1 / (window.devicePixelRatio / int_pixel_ratio)) *
             0.7 *
             num_scale_factor),
-          (_this.zoom += (c - _this.zoom) / 10));
+          (this.zoom += (c - this.zoom) / 10));
       this.applyShake(b);
     };
-    this.setPosition = function (x, y) {
-      ca.x = x - _this.x;
-      ca.y = y - _this.y;
-      _this.x = x;
-      _this.y = y;
+    setPosition(x, y) {
+      ca.x = x - this.x;
+      ca.y = y - this.y;
+      this.x = x;
+      this.y = y;
     };
-    this.shake = function () {
-      xa && ((c = 500), (g = 7));
+    shake() {
+      xa && ((this.#c = 500), (this.#g = 7));
     };
-    this.getBounds = function () {
+    getBounds() {
       return [
         {
-          x: _this.x - html_canvas.width / 2 / _this.zoom,
-          y: _this.y - html_canvas.height / 2 / _this.zoom,
+          x: this.x - this.#html_canvas.width / 2 / this.zoom,
+          y: this.y - this.#html_canvas.height / 2 / this.zoom,
         },
         {
-          x: _this.x + html_canvas.width / 2 / _this.zoom,
-          y: _this.y + html_canvas.height / 2 / _this.zoom,
+          x: this.x + this.#html_canvas.width / 2 / this.zoom,
+          y: this.y + this.#html_canvas.height / 2 / this.zoom,
         },
       ];
     };
-    this.getOuterBounds = function () {
+    getOuterBounds() {
       return [
         {
-          x: _this.x - html_canvas.width / 2 / _this.minZoom,
-          y: _this.y - html_canvas.height / 2 / _this.minZoom,
+          x: this.x - this.#html_canvas.width / 2 / this.minZoom,
+          y: this.y - this.#html_canvas.height / 2 / this.minZoom,
         },
         {
-          x: _this.x + html_canvas.width / 2 / _this.minZoom,
-          y: _this.y + html_canvas.height / 2 / _this.minZoom,
+          x: this.x + this.#html_canvas.width / 2 / this.minZoom,
+          y: this.y + this.#html_canvas.height / 2 / this.minZoom,
         },
       ];
     };
-    this.getInnerBounds = function () {
+    getInnerBounds() {
       return [
         {
-          x: _this.x - html_canvas.width / 2 / _this.maxZoom,
-          y: _this.y - html_canvas.height / 2 / _this.maxZoom,
+          x: this.x - this.#html_canvas.width / 2 / this.maxZoom,
+          y: this.y - this.#html_canvas.height / 2 / this.maxZoom,
         },
         {
-          x: _this.x + html_canvas.width / 2 / _this.maxZoom,
-          y: _this.y + html_canvas.height / 2 / _this.maxZoom,
+          x: this.x + this.#html_canvas.width / 2 / this.maxZoom,
+          y: this.y + this.#html_canvas.height / 2 / this.maxZoom,
         },
       ];
     };
-    this.startUILayer = function () {
-      ctx_canvas.setTransform(1, 0, 0, 1, 0, 0);
+    startUILayer() {
+      this.#ctx_canvas.setTransform(1, 0, 0, 1, 0, 0);
     };
-  }
 }
 class RenderManager {
-  constructor() {
-    let b,
-      e,
-      f,
-      d,
-      a = void 0,
-      c,
-      g;
-    this.width;
-    this.height;
-    this.y = this.x = 0;
-    this.canvas;
-    this.frameWithCanvas = function (a, b, d) {
+      #b
+      #e
+      #f
+      #d
+      #a = void 0
+      #c
+      #g
+    width;
+    height;
+    y = 0
+    x = 0;
+    canvas;
+    frameWithCanvas(a, b, d) {
       this.width = a.width;
       this.height = a.height;
       this.canvas = a;
-      c = b;
-      g = d;
+      this.#c = b;
+      this.#g = d;
     };
-    this.setFrameInfo = function (h, q) {
-      a = q;
-      b = h[1];
-      e = h[2];
+    setFrameInfo(h, q) {
+      this.#a = q;
+      this.#b = h[1];
+      this.#e = h[2];
       this.width = h[3];
       this.height = h[4];
-      f = h[5];
-      d = h[6];
-      c = -this.width * f;
-      g = -this.height * d;
+      this.#f = h[5];
+      this.#d = h[6];
+      this.#c = -this.width * this.#f;
+      this.#g = -this.height * this.#d;
     };
-    this.draw = function (d) {
-      a
+    draw(d) {
+      this.#a
         ? d.drawImage(
-            a,
-            b,
-            e,
+            this.#a,
+            this.#b,
+            this.#e,
             this.width,
             this.height,
-            c + this.x,
-            g + this.y,
+            this.#c + this.x,
+            this.#g + this.y,
             this.width,
             this.height,
           )
@@ -5870,13 +5874,13 @@ class RenderManager {
             0,
             this.width,
             this.height,
-            c + this.x,
-            g + this.y,
+            this.#c + this.x,
+            this.#g + this.y,
             this.width,
             this.height,
           );
     };
-    this.renderTintedFrame = function (d) {
+    renderTintedFrame(d) {
       let f = document.createElement("canvas"),
         n = f.getContext("2d");
       f.width = this.width;
@@ -5889,9 +5893,9 @@ class RenderManager {
       m.fillRect(0, 0, k.width, k.height);
       m.globalCompositeOperation = "destination-atop";
       m.drawImage(
-        a,
-        b,
-        e,
+        this.#a,
+        this.#b,
+        this.#e,
         this.width,
         this.height,
         0,
@@ -5902,18 +5906,18 @@ class RenderManager {
       n.globalAlpha = 1;
       n.drawImage(k, 0, 0);
       d = new RenderManager();
-      d.frameWithCanvas(f, c, g);
+      d.frameWithCanvas(f, this.#c, this.#g);
       return d;
     };
-    this.getImageCopy = function () {
+    getImageCopy() {
       let c = document.createElement("canvas");
       c.width = this.width;
       c.height = this.height;
       let d = c.getContext("2d");
       d.drawImage(
-        a,
-        b,
-        e,
+        this.#a,
+        this.#b,
+        this.#e,
         this.width,
         this.height,
         0,
@@ -5929,15 +5933,15 @@ class RenderManager {
         to: f,
       };
     };
-    this.generateTintImage2 = function (d, f, n, k) {
+    generateTintImage2(d, f, n, k) {
       let m = document.createElement("canvas");
       m.width = this.width;
       m.height = this.height;
       let l = m.getContext("2d");
       l.drawImage(
-        a,
-        b,
-        e,
+        this.#a,
+        this.#b,
+        this.#e,
         this.width,
         this.height,
         0,
@@ -5960,10 +5964,10 @@ class RenderManager {
           (r[t] = 0.8 * r[t++]);
       l.putImageData(p, 0, 0);
       d = new RenderManager();
-      d.frameWithCanvas(m, c, g);
+      d.frameWithCanvas(m, this.#c, this.#g);
       return d;
     };
-    this.generateTintImage = function (a, b, d, e) {
+    generateTintImage(a, b, d, e) {
       let f = document.createElement("canvas");
       f.width = this.width;
       f.height = this.height;
@@ -5976,10 +5980,10 @@ class RenderManager {
       0 < d && ((l.globalAlpha = d / 255), l.drawImage(a[1], 0, 0));
       0 < e && ((l.globalAlpha = e / 255), l.drawImage(a[2], 0, 0));
       a = new RenderManager();
-      a.frameWithCanvas(f, c, g);
+      a.frameWithCanvas(f, this.#c, this.#g);
       return a;
     };
-    this.generateRGBKs = function () {
+    generateRGBKs() {
       let c = [],
         d = document.createElement("canvas");
       d.getContext("2d");
@@ -5990,9 +5994,9 @@ class RenderManager {
       d.height = this.height;
       d = d.getContext("2d");
       d.drawImage(
-        a,
-        b,
-        e,
+        this.#a,
+        this.#b,
+        this.#e,
         this.width,
         this.height,
         0,
@@ -6041,7 +6045,7 @@ class RenderManager {
       c.push(p);
       return c;
     };
-    this.renderToCanvas = function () {
+    renderToCanvas() {
       let c = document.createElement("canvas"),
         d = c.getContext("2d");
       c.width = this.width;
@@ -6050,11 +6054,11 @@ class RenderManager {
       f.width = this.width;
       f.height = this.height;
       f.getContext("2d");
-      a
+      this.#a
         ? d.drawImage(
-            a,
-            b,
-            e,
+            this.#a,
+            this.#b,
+            this.#e,
             this.width,
             this.height,
             0,
@@ -6077,37 +6081,35 @@ class RenderManager {
       d.drawImage(f, 0, 0);
       return c;
     };
-  }
 }
 class AnimationManager {
-  constructor() {
-    let b = {},
-      e = [],
-      f = [],
-      d = [],
-      a = [];
-    this.addAnimationInfo = function (a, d) {
-      b[a] = d;
+  #b = {}
+  #e = []
+  #f = []
+  #d = []
+  #a = [];
+    addAnimationInfo(a, d) {
+      this.#b[a] = d;
     };
-    this.setAnimationInterval = function (a, d) {
-      b[a].setInterval(d);
+    setAnimationInterval(a, d) {
+      this.#b[a].setInterval(d);
     };
-    this.createAnimation = function (a) {
-      a = b[a];
+    createAnimation(a) {
+      a = this.#b[a];
       let d = new DrawAnimation();
       d.setup(a);
       return d;
     };
-    this.runAnimation = function (a) {
-      e.push(a);
+    runAnimation(a) {
+      this.#e.push(a);
     };
-    this.runAnimationLayer2 = function (a) {
-      f.push(a);
+    runAnimationLayer2(a) {
+      this.#f.push(a);
     };
-    this.runAnimationBehind = function (a) {
-      d.push(a);
+    runAnimationBehind(a) {
+      this.#d.push(a);
     };
-    this.addBlast = function (a, b, d, e, f) {
+    addBlast(a, b, d, e, f) {
       let k = objG_animationManager.createAnimation("explosion");
       k.setScale(d);
       k.posX = a;
@@ -6117,30 +6119,30 @@ class AnimationManager {
       0.01 < a &&
         objG_sfxManager.playSound(str_sfxid_mexpl2, a * f, 1, e, null);
     };
-    this.addExplosion = function (b, d, e, f) {
+    addExplosion(b, d, e, f) {
       if (
         bool_drawExplosions &&
         func_isInsideBox(b, d, 100) &&
         func_isTimeElapsed_50ms()
       ) {
-        if (1 >= a.length) {
+        if (1 >= this.#a.length) {
           let n = new ParticleDebrisManager();
           n.init(b, d, e, f);
-          a.push(n);
+          this.#a.push(n);
         }
         this.addBlast(b, d, 1, const_Sa_3, 1);
         objGUI_anchor.shake();
       }
     };
-    this.update = function (b) {
-      for (const i in e) e[i].update(b), e[i].deleting && e.splice(i, 1);
-      for (const i in d) d[i].update(b), d[i].deleting && d.splice(i, 1);
-      for (const i in f) f[i].update(b), f[i].deleting && f.splice(i, 1);
-      for (const i in a) a[i].update(b), a[i].deleting && a.splice(i, 1);
+    update(b) {
+      for (const i in this.#e) this.#e[i].update(b), this.#e[i].deleting && this.#e.splice(i, 1);
+      for (const i in this.#d) this.#d[i].update(b), this.#d[i].deleting && this.#d.splice(i, 1);
+      for (const i in this.#f) this.#f[i].update(b), this.#f[i].deleting && this.#f.splice(i, 1);
+      for (const i in this.#a) this.#a[i].update(b), this.#a[i].deleting && this.#a.splice(i, 1);
     };
-    this.drawBehind = function (a) {
-      for (let b in d) {
-        let e = d[b];
+    drawBehind(a) {
+      for (let b in this.#d) {
+        let e = this.#d[b];
         a.save();
         a.translate(e.posX, e.posY);
         a.scale(e.scaleX, e.scaleY);
@@ -6149,9 +6151,9 @@ class AnimationManager {
         a.restore();
       }
     };
-    this.drawLayer2 = function (a) {
-      for (let b in f) {
-        let d = f[b];
+    drawLayer2(a) {
+      for (let b in this.#f) {
+        let d = this.#f[b];
         a.save();
         a.translate(d.posX, d.posY);
         a.scale(d.scaleX, d.scaleY);
@@ -6160,9 +6162,9 @@ class AnimationManager {
         a.restore();
       }
     };
-    this.draw = function (a) {
-      for (let b in e) {
-        let d = e[b];
+    draw(a) {
+      for (let b in this.#e) {
+        let d = this.#e[b];
         a.save();
         a.translate(d.posX, d.posY);
         a.scale(d.scaleX, d.scaleY);
@@ -6171,24 +6173,24 @@ class AnimationManager {
         a.restore();
       }
     };
-    this.drawExplosions = function (b) {
-      for (let d in a) a[d].draw(b);
+    drawExplosions(b) {
+      for (let d in this.#a) this.#a[d].draw(b);
     };
-  }
 }
 class DrawAnimation {
-  constructor() {
-    let b = 0,
-      e = 0,
-      f = 0;
-    this.frames;
-    this.frameCount = 0;
-    this.deleting = false;
-    this.posY = this.posX = 0;
-    this.scaleY = this.scaleX = 1;
-    this.rotation = 0;
-    this.alpha = 1;
-    this.copy = function (b) {
+  #b = 0
+  #e = 0
+  #f = 0;
+    frames;
+    frameCount = 0;
+    deleting = false;
+    posY = 0
+    posX = 0;
+    scaleY = 1
+    scaleX = 1;
+    rotation = 0;
+    alpha = 1;
+    copy(b) {
       b = new DrawAnimation();
       b.frames = this.frames;
       b.frameCount = this.frameCount;
@@ -6199,66 +6201,62 @@ class DrawAnimation {
       b.scaleY = this.scaleY;
       b.rotation = this.rotation;
       b.alpha = this.alpha;
-      b.setInterval(e);
+      b.setInterval(this.#e);
       return b;
     };
-    this.setup = function (b) {
-      e = b.interval;
+    setup(b) {
+      this.#e = b.interval;
       this.frames = b.frames;
       this.frameCount = b.frames.length;
     };
-    this.setInterval = function (b) {
-      e = b;
+    setInterval(b) {
+      this.#e = b;
     };
-    this.update = function (d) {
+    update(d) {
       this.deleting ||
-        (f > e && (b++, (f -= e)),
-        (f += d),
-        b >= this.frameCount && (this.deleting = true));
+        (this.#f > this.#e && (this.#b++, (this.#f -= this.#e)),
+        (this.#f += d),
+        this.#b >= this.frameCount && (this.deleting = true));
     };
-    this.setScale = function (b) {
+    setScale(b) {
       this.scaleY = this.scaleX = b;
     };
-    this.draw = function (d) {
+    draw(d) {
       1 > this.alpha && (d.globalAlpha = this.alpha);
-      this.frames[b].draw(d);
+      this.frames[this.#b].draw(d);
     };
-  }
 }
 class Animation {
-  constructor() {
-    this.frames = [];
-    this.interval = 0;
-    this.addFrame = function (b) {
+    frames = [];
+    interval = 0;
+    addFrame(b) {
       this.frames.push(b);
     };
-    this.setInterval = function (b) {
+    setInterval(b) {
       this.interval = b;
     };
-  }
 }
 class ParticleU_R {
-  constructor() {
-    this.color = {
+    color = {
       h: "61",
       s: "100%",
       l: "100%",
       a: 1,
     };
-    this.rotation = 0;
-    this.scale = 1;
-    this.pos = {
+    rotation = 0;
+    scale = 1;
+    pos = {
       x: 0,
       y: 0,
     };
-    this.speed = {
+    speed = {
       x: 0,
       y: 0,
     };
-    this.time = 0;
-    this.used = this.active = false;
-    this.rotationSpeed = 0;
-    this.draw = function (b) {
+    time = 0;
+    used = this.active = false;
+    rotationSpeed = 0;
+    draw(b) {
       b.save();
       b.translate(this.pos.x, this.pos.y);
       b.scale(this.scale, this.scale);
@@ -6284,51 +6282,49 @@ class ParticleU_R {
       b.fill();
       b.restore();
     };
-  }
 }
 class ParticleManager {
-  constructor() {
-    let b = 0,
-      e = 0,
-      f = [],
-      d = 0,
-      a,
-      c,
-      g,
-      h;
-    this.life = 400;
-    this.debreeAge = 0;
-    this.alpha = 1;
-    this.init = function (q, n, k) {
-      d = q;
-      a = 0;
-      c = -0.03;
-      h = g = 0;
-      b = n;
-      e = k;
-      q = this.life / d;
-      for (n = 0; n < d; n++)
+      #b = 0
+      #e = 0
+      #f = []
+      #d = 0
+      #a
+      #c
+      #g
+      #h;
+    life = 400;
+    debreeAge = 0;
+    alpha = 1;
+    init(q, n, k) {
+      this.#d = q;
+      this.#a = 0;
+      this.#c = -0.03;
+      this.#h = this.#g = 0;
+      this.#b = n;
+      this.#e = k;
+      q = this.life / this.#d;
+      for (n = 0; n < this.#d; n++)
         (k = new ParticleU_R()),
           this.resetParticle(k),
           (k.active = false),
           (k.time = q * n),
-          f.push(k);
+          this.#f.push(k);
     };
-    this.resetParticle = function (a) {
-      a.pos.x = b;
-      a.pos.y = e;
-      a.speed.x = g;
-      a.speed.y = h;
+    resetParticle(a) {
+      a.pos.x = this.#b;
+      a.pos.y = this.#e;
+      a.speed.x = this.#g;
+      a.speed.y = this.#h;
       a.time = 0;
       a.color.a = 1;
       a.rotationSpeed = (Math.random() - 0.5) / 10;
       a.rotation = 360 * Math.random();
     };
-    this.update = function (b) {
+    update(b) {
       b = 1e3 / 60;
       let e, g, h, l;
-      for (e = 0; e < d; e++) {
-        g = f[e];
+      for (e = 0; e < this.#d; e++) {
+        g = this.#f[e];
         g.time >= this.life &&
           (g.active || ((g.active = true), (g.time %= this.life)),
           this.resetParticle(g));
@@ -6357,16 +6353,16 @@ class ParticleManager {
               (g.color.h = 0),
               (g.color.s = 100 * (1 - l) + "%"),
               (g.color.l = 100 * (0.4 + 0.1 * (1 - l)) + "%"));
-          g.speed.x += 1 * a;
-          g.speed.y += 1 * c;
+          g.speed.x += 1 * this.#a;
+          g.speed.y += 1 * this.#c;
         }
       }
     };
-    this.updateExplosion = function (b) {
+    updateExplosion(b) {
       b = 1e3 / 60;
       let e, g, h, l;
-      for (e = 0; e < d; e++) {
-        g = f[e];
+      for (e = 0; e < this.#d; e++) {
+        g = this.#f[e];
         g.time >= this.life &&
           (g.active || ((g.active = true), (g.time %= this.life)),
           this.resetParticle(g));
@@ -6401,16 +6397,16 @@ class ParticleManager {
               (h = 100 * (1 - l) * (1 - this.debreeAge)),
               (g.color.s = h.toFixed(2) + "%"),
               (g.color.l = (100 * (0.4 + 0.1 * (1 - l))).toFixed(2) + "%"));
-          g.speed.x += 1 * a;
-          g.speed.y += 1 * c;
+          g.speed.x += 1 * this.#a;
+          g.speed.y += 1 * this.#c;
         }
       }
     };
-    this.updateMissileSmoke = function (b) {
+    updateMissileSmoke(b) {
       b = 1e3 / 60;
       let e, g, h, l;
-      for (e = 0; e < d; e++) {
-        g = f[e];
+      for (e = 0; e < this.#d; e++) {
+        g = this.#f[e];
         g.time >= this.life &&
           (g.active || ((g.active = true), (g.time %= this.life)),
           this.resetParticle(g));
@@ -6437,157 +6433,160 @@ class ParticleManager {
               (h = 50 - 50 * l),
               10 > h && (h = 10),
               (g.color.l = h + "%"));
-          g.speed.x += 1 * a;
-          g.speed.y += 1 * c;
+          g.speed.x += 1 * this.#a;
+          g.speed.y += 1 * this.#c;
         }
       }
     };
-    this.setPosition = function (a, c) {
-      b = a;
-      e = c;
+    setPosition(a, c) {
+      this.#b = a;
+      this.#e = c;
     };
-    this.setLife = function (a) {
+    setLife(a) {
       this.life = a;
     };
-    this.draw = function (a) {
-      for (let b = d - 1; 0 <= b; b--) {
-        let c = f[b];
+    draw(a) {
+      for (let b = this.#d - 1; 0 <= b; b--) {
+        let c = this.#f[b];
         c.active && c.draw(a);
       }
     };
-  }
 }
 class ParticleDebrisManager {
-  constructor() {
-    let e = [],
-      f,
-      d;
-    function b(a) {
+  #e = []
+  #f
+  #d
+  deleting = false;
+    #b(a) {
       return Math.random() * a - a / 2;
     }
-    this.deleting = false;
-    this.init = function (a, c, e, h) {
+    init(a, c, e, h) {
       let q, n, k, m, l, p, r;
-      f = a;
-      d = c;
+      this.#f = a;
+      this.#d = c;
       a = 2 + 4 * Math.random();
       c = 2 + 4 * Math.random();
       q = 2 + 4 * Math.random();
       Math.random();
       (n = Math.PI / 4),
-        (k = b(Math.PI / 2)),
-        (m = b(n) + k),
+        (k = this.#b(Math.PI / 2)),
+        (m = this.#b(n) + k),
         (l = Math.cos(m)),
         (m = Math.sin(m)),
-        (p = (2 / 3) * Math.PI + b(n) + k),
+        (p = (2 / 3) * Math.PI + this.#b(n) + k),
         (r = Math.cos(p)),
         (p = Math.sin(p)),
-        (k = (4 / 3) * Math.PI + b(n) + k),
+        (k = (4 / 3) * Math.PI + this.#b(n) + k),
         (n = Math.cos(k)),
         (k = Math.sin(k));
       this.addDebree(l * a + e, m * a + h);
       this.addDebree(r * c + e, p * c + h);
       this.addDebree(n * q + e, k * q + h);
     };
-    this.addDebree = function (a, b) {
+    addDebree(a, b) {
       let g = new ParticleDebris();
-      g.init(f, d);
+      g.init(this.#f, this.#d);
       g.setSpeed(a, b);
-      e.push(g);
+      this.#e.push(g);
     };
-    this.update = function (a) {
+    update(a) {
       let b = 0;
-      for (let debreeID in e) {
-        let d = e[debreeID];
+      for (let debreeID in this.#e) {
+        let d = this.#e[debreeID];
         d.update(a);
-        d.deleting && e.splice(debreeID, 1);
+        d.deleting && this.#e.splice(debreeID, 1);
         b++;
       }
       0 == b && (this.deleting = true);
     };
-    this.draw = function (a) {
-      for (let debreeID in e) e[debreeID].draw(a);
+    draw(a) {
+      for (let debreeID in this.#e) this.#e[debreeID].draw(a);
     };
-  }
 }
 class ParticleDebris {
+  #b
+  #e
+  #f
+  #d
+  #a
+  #c = 0.08
+  #g
+  #h
+  #q
+  #n = 0
+  deleting = false;
   constructor() {
-    let b,
-      e,
-      f,
-      d,
-      a,
-      c = 0.08,
-      g,
-      h,
-      q,
-      n = 0;
-    objG_eventManager.isSpaceWars() && (c = 0);
-    this.deleting = false;
-    this.init = function (a, b) {
-      g = a;
-      h = b;
-      q = new ParticleManager();
-      q.init(15, g, h);
-    };
-    this.setSpeed = function (c, g) {
-      b = c;
-      e = g;
-      f = 0;
-      d = 0.2 * b;
-      a = 0.2 * e;
-    };
-    this.update = function (k) {
-      f += c;
-      g += b;
-      h += e + f;
-      b *= 0.975;
-      e *= 0.975;
-      c *= 0.975;
-      Math.abs(b) < Math.abs(d) && (b = d);
-      Math.abs(e) < Math.abs(a) && (e = a);
-      3 < f && (f = 3);
-      n += k;
-      500 < n && 2300 >= n
-        ? (q.debreeAge = (n - 500) / 2300)
-        : 2300 < n && 2500 >= n
-          ? (q.alpha = (2500 - n) / 200)
-          : 2500 < n && (this.deleting = true);
-      this.deleting || (q.setPosition(g, h), q.updateExplosion(k));
-    };
-    this.draw = function (a) {
-      this.deleting || q.draw(a);
-    };
+    objG_eventManager.isSpaceWars() && (this.#c = 0);
   }
+    init(a, b) {
+      this.#g = a;
+      this.#h = b;
+      this.#q = new ParticleManager();
+      this.#q.init(15, this.#g, this.#h);
+    };
+    setSpeed(c, g) {
+      this.#b = c;
+      this.#e = g;
+      this.#f = 0;
+      this.#d = 0.2 * this.#b;
+      this.#a = 0.2 * this.#e;
+    };
+    update(k) {
+      this.#f += this.#c;
+      this.#g += this.#b;
+      this.#h += this.#e + this.#f;
+      this.#b *= 0.975;
+      this.#e *= 0.975;
+      this.#c *= 0.975;
+      Math.abs(this.#b) < Math.abs(this.#d) && (this.#b = this.#d);
+      Math.abs(this.#e) < Math.abs(this.#a) && (this.#e = this.#a);
+      3 < this.#f && (this.#f = 3);
+      this.#n += k;
+      500 < this.#n && 2300 >= this.#n
+        ? (this.#q.debreeAge = (this.#n - 500) / 2300)
+        : 2300 < this.#n && 2500 >= this.#n
+          ? (this.#q.alpha = (2500 - this.#n) / 200)
+          : 2500 < this.#n && (this.deleting = true);
+      this.deleting || (this.#q.setPosition(this.#g, this.#h), this.#q.updateExplosion(k));
+    };
+    draw(a) {
+      this.deleting || this.#q.draw(a);
+    };
 }
 class Missile {
-  constructor() {
-    let obj_particleTrails = new ParticleTrails(),
-      e = 0,
-      f = 0;
-    this.lastUpdate = 0;
-    this.id = -1;
-    this.angle =
-      this.speed =
-      this.dstY =
-      this.dstX =
-      this.origY =
-      this.origX =
-      this.prevY =
-      this.prevX =
-      this.y =
-      this.x =
-        0;
-    this.controlAngle = -90;
-    this.frameSwitchTime = 40;
-    this.timeToNextFrame = 0;
-    this.flameState = 1;
-    this.lastImage;
-    this.first_set = true;
-    this.colorHue = 0;
-    this.finished = false;
-    this.type = 0;
-    this.update = function (d) {
+  #obj_particleTrails: ParticleTrails
+  #e = 0
+  #f = 0
+    lastUpdate = 0;
+    id = -1;
+    angle =0
+    speed =0
+    dstY =0
+    dstX =0
+    origY =0
+    origX =0
+    prevY =0
+    prevX =0
+    y =0
+    x =0
+    controlAngle = -90;
+    frameSwitchTime = 40;
+    timeToNextFrame = 0;
+    flameState = 1;
+    lastImage;
+    first_set = true;
+    colorHue = 0;
+    finished = false;
+    type = 0;
+    constructor() {
+      this.#obj_particleTrails = new ParticleTrails()
+      this.#obj_particleTrails.tailAddJointInterval = 30;
+      this.#obj_particleTrails.enabled = true;
+      this.#obj_particleTrails.trailTime = 100;
+      this.#obj_particleTrails.width = 1.2;
+      this.#obj_particleTrails.fixedColor = true;
+    }
+    update(d) {
       let a = func_clamp(
           (T - this.lastUpdate) / num_global_physics_step_ms,
           0,
@@ -6597,20 +6596,20 @@ class Missile {
         g;
       0 == this.x - this.prevX &&
         0 == c &&
-        (f++, 50 < f && (this.finished = true));
+        (this.#f++, 50 < this.#f && (this.finished = true));
       this.prevX = this.x;
       this.prevY = this.y;
       this.x = a * (this.dstX - this.origX) + this.origX;
       this.y = a * (this.dstY - this.origY) + this.origY;
-      obj_particleTrails.setPosition(this.x, this.y);
-      obj_particleTrails.update(d);
+      this.#obj_particleTrails.setPosition(this.x, this.y);
+      this.#obj_particleTrails.update(d);
       if (1 == this.type)
         objG_eventManager.isSpaceWars() && (this.angle += 0.2);
       else if (2 != this.type) {
         a = E / 2;
         c = a - 100;
-        if (this.y > c && this.y < a && 0 >= e) {
-          e = 5;
+        if (this.y > c && this.y < a && 0 >= this.#e) {
+          this.#e = 5;
           (g = Math.random() / 2),
             (c = (0.2 + (0.5 - ((a - this.y) / (a - c)) * 0.5)) * (0.95 + g)),
             (g = 20 * Math.sin(this.angle));
@@ -6621,10 +6620,10 @@ class Missile {
             true,
           );
         }
-        e -= d;
+        this.#e -= d;
       }
     };
-    this.draw = function (d, a) {
+    draw(d, a) {
       let c = 1;
       this.timeToNextFrame -= a;
       0 >= this.timeToNextFrame &&
@@ -6633,12 +6632,12 @@ class Missile {
       let e = 0.7;
       this.flameState && (e = 1);
       0 == this.type &&
-        ((obj_particleTrails.width = 1.5 * e),
-        (obj_particleTrails.style = "rgba(247, 189, 57, 1.0)"),
-        obj_particleTrails.draw(d),
-        (obj_particleTrails.width = 0.4 * e),
-        (obj_particleTrails.style = "rgba(232, 247, 59, 1.0)"),
-        obj_particleTrails.draw(d),
+        ((this.#obj_particleTrails.width = 1.5 * e),
+        (this.#obj_particleTrails.style = "rgba(247, 189, 57, 1.0)"),
+        this.#obj_particleTrails.draw(d),
+        (this.#obj_particleTrails.width = 0.4 * e),
+        (this.#obj_particleTrails.style = "rgba(232, 247, 59, 1.0)"),
+        this.#obj_particleTrails.draw(d),
         d.save(),
         d.translate(this.x, this.y),
         this.flameState ? d.scale(0.7, 0.7) : d.scale(0.9, 0.9),
@@ -6675,7 +6674,7 @@ class Missile {
           d.fill());
       d.restore();
     };
-    this.drawReflection = function (b, a) {
+    drawReflection(b, a) {
       let c = E / 2,
         e = c - this.y;
       if (!(0 > e || 170 < e)) {
@@ -6693,7 +6692,7 @@ class Missile {
         b.restore();
       }
     };
-    this.setPosition = function (b, a, c) {
+    setPosition(b, a, c) {
       this.origX = this.dstX;
       this.origY = this.dstY;
       this.dstX = 10 * b;
@@ -6716,38 +6715,33 @@ class Missile {
         (a = this.dstY - this.origY),
         (this.angle = 0 <= b ? Math.atan(a / b) : Math.atan(a / b) + Math.PI));
     };
-    this.setColorHue = function (b) {
+    setColorHue(b) {
       this.colorHue = b;
     };
-    this.setType = function (d) {
+    setType(d) {
       this.type = d;
     };
-    this.getSpeedDirectionX = function () {
+    getSpeedDirectionX() {
       return this.x - this.prevX;
     };
-    this.getSpeedDirectionY = function () {
+    getSpeedDirectionY() {
       return this.y - this.prevY;
     };
-    obj_particleTrails.tailAddJointInterval = 30;
-    obj_particleTrails.enabled = true;
-    obj_particleTrails.trailTime = 100;
-    obj_particleTrails.width = 1.2;
-    obj_particleTrails.fixedColor = true;
-  }
 }
 class ParticleTrails {
-  constructor() {
-    let b, e;
-    this.tailAddJointInterval = 50;
-    this.timeToNextJoint = 0;
-    this.tailJoints = [[]];
-    this.trailTimeEffectStart = this.trailTime = 600;
-    this.trailEffectTime = 0;
-    this.enabled = false;
-    this.width = 1;
-    this.fixedColor = false;
-    this.style;
-    this.update = function (f) {
+  #b
+  #e
+    tailAddJointInterval = 50;
+    timeToNextJoint = 0;
+    tailJoints = [[]];
+    trailTimeEffectStart = 600
+    trailTime = 600;
+    trailEffectTime = 0;
+    enabled = false;
+    width = 1;
+    fixedColor = false;
+    style;
+    update(f) {
       let d = this.tailJoints.length - 1,
         c,
         g,
@@ -6756,10 +6750,10 @@ class ParticleTrails {
         this.timeToNextJoint = this.tailAddJointInterval;
         this.enabled &&
           this.tailJoints[d].push({
-            x: b,
-            y: e,
-            origX: b,
-            origY: e,
+            x: this.#b,
+            y: this.#e,
+            origX: this.#b,
+            origY: this.#e,
             t: T,
             fx: (600 - Math.abs(this.trailEffectTime - 600)) / 600,
             style: this.style,
@@ -6794,7 +6788,7 @@ class ParticleTrails {
       this.trailEffectTime =
         0 > this.trailEffectTime ? 0 : this.trailEffectTime - f;
     };
-    this.draw = function (b) {
+    draw(b) {
       if (bool_drawTrails)
         for (let d = this.tailJoints.length, a = 0; a < d; a++)
           for (let c = this.tailJoints[a].length, e = 0; e < c - 1; e++) {
@@ -6808,83 +6802,84 @@ class ParticleTrails {
             b.stroke();
           }
     };
-    this.setPosition = function (f, d) {
-      b = f;
-      e = d;
+    setPosition(f, d) {
+      this.#b = f;
+      this.#e = d;
     };
-    this.push = function () {
+    push() {
       this.tailJoints.push([]);
     };
-    this.trailEffect = function () {
+    trailEffect() {
       this.trailEffectTime = 1200;
     };
-    this.clear = function () {
+    clear() {
       this.tailJoints = [[]];
     };
-  }
 }
 class ParticleFlags {
-  constructor() {
-    let b, e;
-    this.tailJoints = [[]];
-    this.maxPoints = 1;
-    this.flagDivisions = 5;
-    this.letterMinDistance = this.pointMinDistance = 10;
-    this.texture;
-    this.textureWidth;
-    this.textureHeight;
-    this.loaded = this.enabled = false;
-    this.width = 1;
-    this.style;
-    this.flagHeight;
-    this.flipX = false;
-    this.flipY = true;
-    this.stringScale = this.scale = 1;
-    this.setTexture = function (b) {
+  #b
+  #e
+    tailJoints = [[]];
+    maxPoints = 1;
+    flagDivisions = 5;
+    letterMinDistance = 10
+    pointMinDistance = 10;
+    texture;
+    textureWidth;
+    textureHeight;
+    loaded = false
+    enabled = false;
+    width = 1;
+    style;
+    flagHeight;
+    flipX = false;
+    flipY = true;
+    stringScale = 1
+    scale = 1;
+    setTexture(b) {
       this.texture = new Image();
       this.texture.src = "flags/" + b.toLowerCase() + ".png";
-      let _this = this;
-      this.texture.onload = function () {
-        _this.textureWidth = _this.texture.width;
-        _this.textureHeight = _this.texture.height;
-        _this.maxPoints = parseInt(_this.textureWidth / 12);
-        _this.flagDivisions = _this.maxPoints - 1;
-        let a = _this.scale;
-        _this.flagHeight = 0.5 * _this.textureHeight * a;
-        a = (_this.textureWidth * a) / _this.flagDivisions;
-        _this.pointMinDistance = a;
-        _this.letterMinDistance = a;
-        _this.enabled = true;
-        _this.loaded = true;
+      this.texture.onload = () => {
+        this.textureWidth = this.texture.width;
+        this.textureHeight = this.texture.height;
+        this.maxPoints = parseInt(this.textureWidth / 12);
+        this.flagDivisions = this.maxPoints - 1;
+        let a = this.scale;
+        this.flagHeight = 0.5 * this.textureHeight * a;
+        a = (this.textureWidth * a) / this.flagDivisions;
+        this.pointMinDistance = a;
+        this.letterMinDistance = a;
+        this.enabled = true;
+        this.loaded = true;
       };
     };
-    this.update = function (f) {
+    update(f) {
       f = false;
       let d = this.tailJoints[0].length;
       if (0 == d) f = true;
       else {
         let a = this.tailJoints[0][d - 1],
-          c = (a = Math.sqrt(Math.pow(a.x - b, 2) + Math.pow(a.y - e, 2)));
+          c = (a = Math.sqrt(Math.pow(a.x - this.#b, 2) + Math.pow(a.y - this.#e, 2)));
         1 < d &&
           ((c = this.tailJoints[0][d - 2]),
-          (c = Math.sqrt(Math.pow(c.x - b, 2) + Math.pow(c.y - e, 2))));
+          (c = Math.sqrt(Math.pow(c.x - this.#b, 2) + Math.pow(c.y - this.#e, 2))));
         a > this.pointMinDistance &&
           c > 3 * this.pointMinDistance &&
           (f = true);
       }
       f &&
         (this.tailJoints[0].push({
-          x: b,
-          y: e,
-          origX: b,
-          origY: e,
+          x: this.#b,
+          y: this.#e,
+          origX: this.#b,
+          origY: this.#e,
           t: T,
           fx: 0,
           style: this.style,
         }),
         d > this.maxPoints && this.tailJoints[0].splice(0, 1));
     };
-    this.draw = function (f) {
+    draw(f) {
       if (bool_drawTrails && this.loaded && 0 < this.tailJoints.length)
         for (
           let d,
@@ -6906,7 +6901,7 @@ class ParticleFlags {
           let t = this.tailJoints[0][s].x,
             w = this.tailJoints[0][s].y,
             u;
-          g && ((d = b), (a = e));
+          g && ((d = this.#b), (a = this.#e));
           let v = t - d,
             x = w - a,
             A,
@@ -7030,8 +7025,8 @@ class ParticleFlags {
               r = B - n;
             } else
               (d = this.flagHeight),
-                (n = z - b),
-                (k = B - e),
+                (n = z - this.#b),
+                (k = B - this.#e),
                 (n /= this.letterMinDistance),
                 (k /= this.letterMinDistance),
                 (k = -k * d),
@@ -7043,11 +7038,11 @@ class ParticleFlags {
                 (f.strokeStyle = "rgba(255, 255, 255, 0.3)"),
                 (f.lineWidth = 2),
                 f.beginPath(),
-                f.lineTo(b, e),
+                f.lineTo(this.#b, this.#e),
                 f.lineTo(z + k * this.stringScale, B + n * this.stringScale),
                 f.stroke(),
                 f.beginPath(),
-                f.lineTo(b, e),
+                f.lineTo(this.#b, this.#e),
                 f.lineTo(z - k * this.stringScale, B - n * this.stringScale),
                 f.stroke();
             n = z;
@@ -7059,81 +7054,78 @@ class ParticleFlags {
           g && (g = false);
         }
     };
-    this.setPosition = function (f, d) {
-      b = f;
-      e = d;
+    setPosition(f, d) {
+      this.#b = f;
+      this.#e = d;
     };
-    this.push = function () {};
-    this.trailEffect = function () {};
-    this.clear = function () {
+    push() {};
+    trailEffect() {};
+    clear() {
       this.tailJoints = [[]];
     };
-  }
+
 }
 class ScoreAccumInfo {
-  constructor() {
-    let b = [],
-      e = [],
-      f;
-    this.update = function (d) {
-      0 < e.length && 2e3 < T - e[0] && (b.shift(), e.shift());
+  #b = []
+  #e = []
+  #f;
+    update(d) {
+      0 < this.#e.length && 2e3 < T - this.#e[0] && (this.#b.shift(), this.#e.shift());
     };
-    this.draw = function (d) {
+    draw(d) {
       d.globalAlpha = 1;
-      for (let a in b) {
-        let c = b[a],
-          f = Math.sqrt((T - e[a]) / 2e3),
+      for (let a in this.#b) {
+        let c = this.#b[a],
+          f = Math.sqrt((T - this.#e[a]) / 2e3),
           h = 0.8 >= f ? f / 0.8 : 1 - (f - 0.8) / 0.2;
         d.globalAlpha = h;
         d.drawImage(c, -c.width / 2, 40 * -f - 10);
       }
       d.globalAlpha = 1;
     };
-    this.addScore = function (d) {
+    addScore(d) {
       let a = false,
         c;
-      f && 500 > T - f && (a = true);
+      this.#f && 500 > T - this.#f && (a = true);
       c = new StyleStroke(13, "#FFFFFF");
       c.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
-      a ? (d = b[b.length - 1].number + d) : (f = T);
+      a ? (d = this.#b[this.#b.length - 1].number + d) : (this.#f = T);
       c.setValue("+" + d);
       c = c.render();
       c.number = d;
-      a ? (b.pop(), b.push(c)) : (b.push(c), e.push(+new Date()));
+      a ? (this.#b.pop(), this.#b.push(c)) : (this.#b.push(c), this.#e.push(+new Date()));
     };
-  }
 }
 class SFXmanager {
-  constructor() {
-    let b = false,
-      e = {},
-      f = {
-        bigsplash: [0, 1889.795918367347],
-        cannonshoot: [3e3, 777.8684807256235],
-        crash: [5e3, 991.7913832199545],
-        env: [7e3, 4486.984126984126, 1],
-        hgrab: [13e3, 208.9115646258506],
-        king: [15e3, 1162.01814058957],
-        kinglaser: [18e3, 533.9909297052152],
-        laser: [2e4, 203.4467120181418],
-        laserloop: [22e3, 898.934240362813, 1],
-        lasershot: [24e3, 367.6643990929698],
-        lockon: [26e3, 46.14512471655274],
-        mexpl: [28e3, 1007.8231292517011],
-        mlaunch: [31e3, 661.4512471655338],
-        phit: [33e3, 206.30385487528002],
-        planeloop: [35e3, 1427.7551020408196, 1],
-        rail: [38e3, 840.7482993197277],
-        shot: [4e4, 101.81405895691853],
-        trishot: [42e3, 392.81179138321676],
-        warn: [44e3, 2109.365079365077],
-        waterloop: [48e3, 629.9092970521514, 1],
-        weapgrab: [5e4, 202.06349206349472],
-        winggrab: [52e3, 111.97278911564723],
-        woosh: [54e3, 486.2585034013591],
-      };
-    this.sound;
-    this.load = function (d) {
+  #b = false
+  #e = {}
+  #f = {
+    bigsplash: [0, 1889.795918367347],
+    cannonshoot: [3e3, 777.8684807256235],
+    crash: [5e3, 991.7913832199545],
+    env: [7e3, 4486.984126984126, 1],
+    hgrab: [13e3, 208.9115646258506],
+    king: [15e3, 1162.01814058957],
+    kinglaser: [18e3, 533.9909297052152],
+    laser: [2e4, 203.4467120181418],
+    laserloop: [22e3, 898.934240362813, 1],
+    lasershot: [24e3, 367.6643990929698],
+    lockon: [26e3, 46.14512471655274],
+    mexpl: [28e3, 1007.8231292517011],
+    mlaunch: [31e3, 661.4512471655338],
+    phit: [33e3, 206.30385487528002],
+    planeloop: [35e3, 1427.7551020408196, 1],
+    rail: [38e3, 840.7482993197277],
+    shot: [4e4, 101.81405895691853],
+    trishot: [42e3, 392.81179138321676],
+    warn: [44e3, 2109.365079365077],
+    waterloop: [48e3, 629.9092970521514, 1],
+    weapgrab: [5e4, 202.06349206349472],
+    winggrab: [52e3, 111.97278911564723],
+    woosh: [54e3, 486.2585034013591],
+  };
+    sound;
+    load(d) {
       this.sound = new Howl({
         urls: [
           "sounds/out.ogg",
@@ -7141,210 +7133,214 @@ class SFXmanager {
           "sounds/out.mp3",
           "sounds/out.ac3",
         ],
-        sprite: f,
-        onload: function () {
-          b = true;
+        sprite: this.#f,
+        onload: () => {
+          this.#b = true;
           d && d();
         },
       });
     };
-    this.playSound = function (d, a, c, g, h) {
-      if (b && 0 != num_setting_muteVol && wa) {
+    playSound(d, a, c, g, h) {
+      if (this.#b && 0 != num_setting_muteVol && wa) {
         a *= num_max_volume;
-        let q = f[d];
-        e[d] || (e[d] = 0);
-        (0 < g && e[d] >= g) ||
-          (this.sound.play(d, function (b) {
+        let q = this.#f[d];
+        this.#e[d] || (this.#e[d] = 0);
+        (0 < g && this.#e[d] >= g) ||
+          (this.sound.play(d, (b) => {
             d = objG_sfxManager.sound._nodeById(b);
             d && d.bufferSource && (d.bufferSource.playbackRate.value = c);
             objG_sfxManager.sound.volume(a, b);
             h && h(b);
           }),
           (q = q[1]),
-          g != const_Q_0 && e[d]++,
-          setTimeout(function () {
-            g != const_Q_0 && e[d]--;
+          g != const_Q_0 && this.#e[d]++,
+          setTimeout(() => {
+            g != const_Q_0 && this.#e[d]--;
           }, q));
       }
     };
-    this.stop = function (d) {
-      b && d.stop();
+    stop(d) {
+      this.#b && d.stop();
     };
-    this.setVolume = function (b) {
+    setVolume(b) {
       this.sound.volume(b);
     };
-  }
+
 }
 class UI_KillStatus {
-  constructor() {
-    let b = [],
-      f = null,
-      d = null,
-      a = null,
-      c = null,
-      g = 0,
-      h = 0,
-      e = 2e3,
-      q = false,
-      n = 1,
-      k = false,
-      m = 0,
-      l = 0,
-      currentText2Render;
-    this.update = function (a) {
-      1 == g && ((h += a), h > e && (q = true));
-      q
-        ? ((g -= 0.2),
-          0 > g &&
-            ((g = 0),
-            b.shift(),
-            0 < b.length ? this.processCode(b[0]) : (d = null)),
-          (m = -(1 - g)))
-        : (1 > g && ((g += 0.2), 1 < g && (g = 1)),
-          (m = 1 - (1.5 * g - 0.75) / 0.75));
+  #b = []
+  #f = null
+  #d = null
+  #a = null
+  #c = null
+  #g = 0
+  #h = 0
+  #e = 2e3
+  #q = false
+  #n = 1
+  #k = false
+  #m = 0
+  #l = 0
+  #currentText2Render
+    update(a) {
+      1 == this.#g && ((this.#h += a), this.#h > this.#e && (this.#q = true));
+      this.#q
+        ? ((this.#g -= 0.2),
+          0 > this.#g &&
+            ((this.#g = 0),
+            this.#b.shift(),
+            0 < this.#b.length ? this.processCode(this.#b[0]) : (this.#d = null)),
+          (this.#m = -(1 - this.#g)))
+        : (1 > this.#g && ((this.#g += 0.2), 1 < this.#g && (this.#g = 1)),
+          (this.#m = 1 - (1.5 * this.#g - 0.75) / 0.75));
     };
-    this.draw = function (a) {
-      d &&
-        ((a.globalAlpha = g),
+    draw(a) {
+      this.#d &&
+        ((a.globalAlpha = this.#g),
         a.scale(
-          (n + 0.2 * m) * num_scale_factor,
-          (n + 0.2 * m) * num_scale_factor,
+          (this.#n + 0.2 * this.#m) * num_scale_factor,
+          (this.#n + 0.2 * this.#m) * num_scale_factor,
         ),
-        a.drawImage(d, -d.width / 2, -d.height + 120),
-        a.drawImage(currentText2Render, -currentText2Render.width / 2, 110),
-        k
-          ? ((c.y = 30), c.draw(a))
-          : a.drawImage(c, -c.width / 2 - 5, -c.height - d.height + 120));
+        a.drawImage(this.#d, -this.#d.width / 2, -this.#d.height + 120),
+        a.drawImage(this.#currentText2Render, -this.#currentText2Render.width / 2, 110),
+        this.#k
+          ? ((this.#c.y = 30), this.#c.draw(a))
+          : a.drawImage(this.#c, -this.#c.width / 2 - 5, -this.#c.height - this.#d.height + 120));
     };
-    this.replaceCode = function (a) {
-      for (let c in b) {
-        if (64 >= b[c] && 64 >= a) return b[c] < a ? ((b[c] = a), c) : -2;
-        if ((256 == b[c] && 256 == a) || (128 == b[c] && 128 == a) || 4096 == a)
+    replaceCode(a) {
+      for (let c in this.#b) {
+        if (64 >= this.#b[c] && 64 >= a) return this.#b[c] < a ? ((this.#b[c] = a), c) : -2;
+        if ((256 == this.#b[c] && 256 == a) || (128 == this.#b[c] && 128 == a) || 4096 == a)
           return c;
       }
       return -1;
     };
-    this.push = function (a, c) {
-      256 == a && (l = c);
+    push(a, c) {
+      256 == a && (this.#l = c);
       let d = this.replaceCode(a);
       -1 == d
-        ? (b.push(a), 1 == b.length && this.processCode(a))
+        ? (this.#b.push(a), 1 == this.#b.length && this.processCode(a))
         : 0 == d && this.processCode(a);
     };
-    this.processCode = function (b) {
-      q = false;
-      g = h = 0;
+    processCode(b) {
+      this.#q = false;
+      this.#g = this.#h = 0;
       let e = "",
         m = "KILL",
         s;
-      k = false;
+      this.#k = false;
       8 == b
         ? ((e = "DOUBLE"),
           (s = "#cd9a6d"),
-          (c = objG_assets.doubleKillCanvas),
-          (n = 0.8))
+          (this.#c = objG_assets.doubleKillCanvas),
+          (this.#n = 0.8))
         : 16 == b
           ? ((e = "TRIPLE"),
             (s = "#95b9c9"),
-            (c = objG_assets.tripleKillCanvas),
-            (n = 0.9),
+            (this.#c = objG_assets.tripleKillCanvas),
+            (this.#n = 0.9),
             (m += "!"))
           : 32 == b
             ? ((e = "QUAD"),
               (s = "#f0a400"),
-              (c = objG_assets.quadKillCanvas),
-              (n = 1),
+              (this.#c = objG_assets.quadKillCanvas),
+              (this.#n = 1),
               (m += "!!"))
             : 64 == b
               ? ((e = "MULTI"),
                 (s = "#de0000"),
-                (c = objG_assets.multiKillCanvas),
-                (n = 1.1),
+                (this.#c = objG_assets.multiKillCanvas),
+                (this.#n = 1.1),
                 (m += "!!"))
               : 128 == b
                 ? ((e = "NEAR"),
                   (s = "#ffe774"),
-                  (c = objG_assets.frames.nearmiss),
-                  (n = 0.8),
+                  (this.#c = objG_assets.frames.nearmiss),
+                  (this.#n = 0.8),
                   (m = "MISS"),
-                  (k = true))
+                  (this.#k = true))
                 : 4096 == b
                   ? ((e = "REVENGE"),
                     (s = "#dd1824"),
-                    (c = objG_assets.frames.revenge),
-                    (n = 1),
+                    (this.#c = objG_assets.frames.revenge),
+                    (this.#n = 1),
                     (m = "KILL"),
-                    (k = true))
+                    (this.#k = true))
                   : 256 == b &&
-                    ((e = l + " KILL STREAK!"),
+                    ((e = this.#l + " KILL STREAK!"),
                     (s = "#a5dd11"),
-                    (c = objG_assets.frames.frenzy),
-                    (n = 0.8),
+                    (this.#c = objG_assets.frames.frenzy),
+                    (this.#n = 0.8),
                     (m = ""),
-                    (k = true));
+                    (this.#k = true));
       "" != e &&
-        ((f = new StyleStroke(40, s, true, "#000000")),
-        f.setValue(e),
-        f.setStrokeWidth(10),
-        (d = f.render()),
-        (a = new StyleStroke(40, s, true, "#000000")),
-        a.setValue(m),
-        a.setStrokeWidth(10),
-        (currentText2Render = a.render()));
+        ((this.#f = new StyleStroke(40, s, true, "#000000")),
+        this.#f.setValue(e),
+        this.#f.setStrokeWidth(10),
+        (this.#d = this.#f.render()),
+        (this.#a = new StyleStroke(40, s, true, "#000000")),
+        this.#a.setValue(m),
+        this.#a.setStrokeWidth(10),
+        (this.#currentText2Render = this.#a.render()));
     };
-    this.clearNearMiss = function () {
-      for (let a in b)
-        if (128 == b[a]) {
-          0 == a ? (h = e) : b.splice(a, 1);
+    clearNearMiss() {
+      for (let a in this.#b)
+        if (128 == this.#b[a]) {
+          0 == a ? (this.#h = this.#e) : this.#b.splice(a, 1);
           break;
         }
     };
-    this.clear = function () {
-      b = [];
-      null != d && (q = true);
+    clear() {
+      this.#b = [];
+      null != this.#d && (this.#q = true);
     };
-    this.shouldDraw = function () {
-      return g;
+    shouldDraw() {
+      return this.#g;
     };
-  }
 }
 class Warship {
-  constructor() {
-    let e = 1,
-      f = 20,
-      d = 100,
-      a = 1,
-      b = (this.isShooting = this.isBot = false);
-    this.lastUpdate = this.highlightValue = this.state = 0;
-    this.id = -1;
-    this.dstFloatValue =
-      this.dstY =
-      this.dstX =
-      this.origFloatValue =
-      this.origY =
-      this.origX =
-      this.prevFloatValue =
-      this.prevY =
-      this.prevX =
-      this.floatValue =
-      this.y =
-      this.x =
-        0;
-    this.energy = 255;
-    this.inGame = true;
-    this.updateBool = false;
-    this.dstAngle = this.origAngle = this.angle = Math.PI / 2;
-    this.name = "";
-    this.first_set = true;
-    this.type = 0;
-    this.warshipContext = this.warshipCanvas = null;
-    this.fragment = 1;
-    this.recoilTime = this.cannonAngle = 0;
-    this.update = function (c) {
+  #e = 1
+  #f = 20
+  #d = 100
+  #a = 1
+  #b = false
+  isShooting = false
+  isBot = false
+    lastUpdate = 0
+    highlightValue = 0
+    state = 0;
+    id = -1;
+    dstFloatValue =0
+    dstY =0
+    dstX =0
+    origFloatValue =0
+    origY =0
+    origX =0
+    prevFloatValue =0
+    prevY =0
+    prevX =0
+    floatValue =0
+    y =0
+    x =0
+    energy = 255;
+    inGame = true;
+    updateBool = false;
+    dstAngle = Math.PI / 2
+    origAngle = Math.PI / 2
+    angle = Math.PI / 2;
+    name = "";
+    first_set = true;
+    type = 0;
+    warshipContext = null
+    warshipCanvas = null;
+    fragment = 1;
+    recoilTime = 0
+    cannonAngle = 0;
+    update(c) {
       if (this.inGame) {
         func_isInsideBox(this.x, this.y + this.floatValue, 120)
-          ? b || (b = true)
-          : (b = false);
+          ? this.#b || (this.#b = true)
+          : (this.#b = false);
         let g = func_clamp(
           (T - this.lastUpdate) / num_global_physics_step_ms,
           0,
@@ -7369,13 +7365,13 @@ class Warship {
           0 > this.highlightValue && (this.highlightValue = 0));
         this.type == id_entity_warship &&
           1 == this.state &&
-          0 < f &&
-          ((e -= 0.02),
-          0 > e && (e = 0),
-          (d -= c),
-          0 > d &&
-            ((d = 150),
-            (f -= 1),
+          0 < this.#f &&
+          ((this.#e -= 0.02),
+          0 > this.#e && (this.#e = 0),
+          (this.#d -= c),
+          0 > this.#d &&
+            ((this.#d = 150),
+            (this.#f -= 1),
             (g =
               Math.random() * objG_assets.warshipImage.width -
               objG_assets.warshipImage.width / 2),
@@ -7390,12 +7386,12 @@ class Warship {
               2,
             )));
         2 == this.state
-          ? ((a -= 0.01), 0 > a && (a = 0))
-          : ((a += 0.01), 1 < a && (a = 1));
+          ? ((this.#a -= 0.01), 0 > this.#a && (this.#a = 0))
+          : ((this.#a += 0.01), 1 < this.#a && (this.#a = 1));
         this.recoilTime = 0 < this.recoilTime ? this.recoilTime - c : 0;
       }
     };
-    this.loadWarshipCanvas = function () {
+    loadWarshipCanvas() {
       let a = document.createElement("canvas"),
         b = a.getContext("2d"),
         d = objG_assets.warshipImage.height;
@@ -7404,8 +7400,8 @@ class Warship {
       this.warshipCanvas = a;
       this.warshipContext = b;
     };
-    this.draw = function (c) {
-      if (this.inGame && b)
+    draw(c) {
+      if (this.inGame && this.#b)
         if (this.type == id_entity_warship && objG_assets.warshipLoaded) {
           if (
             (objG_assets.warshipImage &&
@@ -7414,7 +7410,7 @@ class Warship {
             this.warshipCanvas)
           ) {
             c.save();
-            c.globalAlpha = a;
+            c.globalAlpha = this.#a;
             c.translate(this.x, this.y - 4);
             this.warshipContext.clearRect(
               0,
@@ -7477,11 +7473,11 @@ class Warship {
           this.type == id_entity_asteroid &&
             objG_assets.asteroidImage &&
             (c.save(),
-            (c.globalAlpha = a),
+            (c.globalAlpha = this.#a),
             c.translate(this.x, this.y),
             c.rotate(-this.angle),
-            (d = (3 - this.fragment + 1) / 3),
-            c.scale(d, d),
+            (this.#d = (3 - this.fragment + 1) / 3),
+            c.scale(this.#d, this.#d),
             c.drawImage(
               objG_assets.asteroidImage,
               -objG_assets.asteroidImage.width / 2,
@@ -7497,13 +7493,13 @@ class Warship {
               (c.globalAlpha = 1)),
             c.restore());
     };
-    this.drawReflection = function (c, d) {
+    drawReflection(c, d) {
       this.inGame &&
-        b &&
+        this.#b &&
         this.type == id_entity_warship &&
         objG_assets.warshipLoaded &&
         (c.save(),
-        (c.globalAlpha = 0.15 * a),
+        (c.globalAlpha = 0.15 * this.#a),
         c.translate(this.x, this.y + this.warshipCanvas.height - 4),
         c.scale(1, -1),
         c.drawImage(
@@ -7517,7 +7513,7 @@ class Warship {
           this.x + 85 + this.floatValue + 100 * this.angle,
           this.y + this.warshipCanvas.height / 2 - 4,
         ),
-        (c.globalAlpha = e * a),
+        (c.globalAlpha = this.#e * this.#a),
         c.beginPath(),
         c.moveTo(-3, 1.5),
         c.lineTo(0, -1.5),
@@ -7527,11 +7523,11 @@ class Warship {
         c.restore(),
         (c.globalAlpha = 1));
     };
-    this.drawInput = function (a) {};
-    this.drawInfo = function (a) {
+    drawInput(a) {};
+    drawInfo(a) {
       if (
         this.inGame &&
-        b &&
+        this.#b &&
         this.state == const_Ic_0 &&
         65535 != this.energy
       ) {
@@ -7559,7 +7555,7 @@ class Warship {
         a.restore();
       }
     };
-    this.hit = function (a) {
+    hit(a) {
       func_isTimeElapsed_50ms() &&
         ((this.highlightValue =
           a == id_weapon_missile || this.type == id_entity_asteroid
@@ -7567,7 +7563,7 @@ class Warship {
             : this.highlightValue + 0.3),
         1 < this.highlightValue && (this.highlightValue = 1));
     };
-    this.setPose = function (a, b, d) {
+    setPose(a, b, d) {
       this.origX = this.x;
       this.origY = this.y;
       this.origAngle = this.dstAngle;
@@ -7586,45 +7582,44 @@ class Warship {
           (this.speed = Math.sqrt(a * a + b * b) / 3));
       this.inGame || (this.inGame = true);
     };
-    this.setFloatValue = function (a) {
+    setFloatValue(a) {
       this.origFloatValue = this.floatValue;
       this.dstFloatValue = 10 * a;
       this.first_set && (this.floatValue = this.dstFloatValue);
     };
-    this.setType = function (a) {
+    setType(a) {
       this.type = a;
     };
-    this.setState = function (a) {
+    setState(a) {
       this.state = a;
     };
-    this.setEnergy = function (a) {
+    setEnergy(a) {
       this.energy = a;
     };
-    this.setFragment = function (b) {
+    setFragment(b) {
       this.fragment = b;
-      3 != b && 1 == b && (a = 0);
+      3 != b && 1 == b && (this.#a = 0);
     };
-    this.setCannonAngle = function (a) {
+    setCannonAngle(a) {
       this.origCannonAngle = this.cannonAngle;
       this.dstCannonAngle = a;
       this.first_set && (this.cannonAngle = this.dstCannonAngle);
     };
-    this.cannonShoot = function () {
+    cannonShoot() {
       this.recoilTime = 200;
     };
-    this.getSpeedDirectionX = function () {
+    getSpeedDirectionX() {
       return this.x - this.prevX;
     };
-    this.getSpeedDirectionY = function () {
+    getSpeedDirectionY() {
       return this.y - this.prevY;
     };
-    this.cleanup = function () {
+    cleanup() {
       this.first_set = true;
       this.inGame = false;
     };
-  }
 }
-window.onload = function () {
+window.onload = () => {
   Modernizr.canvas &&
     Modernizr.websockets &&
     (null == objG_followMode &&
