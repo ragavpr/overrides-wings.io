@@ -2831,7 +2831,7 @@ class Plane {
               0.6,
               1,
               const_Q_0,
-              function (a) {
+              (a) => {
                 ia = a;
               },
             ),
@@ -2841,7 +2841,7 @@ class Plane {
               0,
               1,
               const_Q_0,
-              function (a) {
+              (a) => {
                 na = a;
               },
             ),
@@ -2884,7 +2884,7 @@ class Plane {
                     0.2 * g,
                     1,
                     const_Q_0,
-                    function (a) {
+                    (a) => {
                       nb = this.#ua = a;
                     },
                   ))
@@ -3370,6 +3370,11 @@ class WaterSea {
   #g
   #h = []
   #q = 0;
+  constructor() {
+    this.#e = [];
+    this.#f = [];
+    for (let a = 0; 25 > a; a++) this.#e.push(0), this.#f.push(0);
+  }
     #b(a, c) {
       0 <= a && 24 > a && (this.#f[a] += c);
     }
@@ -3495,11 +3500,6 @@ class WaterSea {
       this.#b(h + 1, d / 2);
       this.#b(h + 2, d / 2);
     };
-    (function () {
-      this.#e = [];
-      this.#f = [];
-      for (let a = 0; 25 > a; a++) this.#e.push(0), this.#f.push(0);
-    })();
 }
 class WaterSeaRipple {
   #b = [
@@ -3685,6 +3685,26 @@ class Clouds {
   ]
   #f = []
   #d = [];
+  constructor(){
+    for (let a = 0; a < this.#b.length; a++) {
+      let c = this.#b[a],
+        e = c.length,
+        h = 9999,
+        f = 9999,
+        n = -9999,
+        k = -9999,
+        m = true;
+      for (let l = 0; l < e; l++) {
+        let y = c[l];
+        m
+          ? (y < h && (h = y), y > n && (n = y))
+          : (y < f && (f = y), y > k && (k = y));
+        m = !m;
+      }
+      this.#d.push([h, f, n, k]);
+    }
+    this.preRender();
+  }
     drawCloudShape(a, c, b, d, e) {
       a.beginPath();
       let f = d.length;
@@ -3809,26 +3829,6 @@ class Clouds {
         this.#f.push(k);
       }
     };
-    (function () {
-      for (let a = 0; a < this.#b.length; a++) {
-        let c = this.#b[a],
-          e = c.length,
-          h = 9999,
-          f = 9999,
-          n = -9999,
-          k = -9999,
-          m = true;
-        for (let l = 0; l < e; l++) {
-          let y = c[l];
-          m
-            ? (y < h && (h = y), y > n && (n = y))
-            : (y < f && (f = y), y > k && (k = y));
-          m = !m;
-        }
-        this.#d.push([h, f, n, k]);
-      }
-    })();
-    preRender();
 }
 class Backgrounds {
   #b = []
@@ -4101,7 +4101,7 @@ namespace Backgrounds {
 }
 class PickupItem {
       #b = 0
-      this.alpha = 0,
+      alpha = 0
       #e = 0
       #f = Math.random() * Math.PI * 2
       #d = 1
@@ -5254,11 +5254,20 @@ class FollowMode_R {
       #Ca = 1
       #ta
       #N;
+      resize: (a: any) => void
   constructor(b) {
+    this.resize = (a) => {
+      this.C();
+      objG_eventManager.isSpaceWars() &&
+        (this.#N && clearTimeout(this.#N), (this.#N = setTimeout(this.respawnParticles, 200)));
+    };
+    let e = () => {
+      Z && objG_wsConnection.hasConnection && objG_wsConnection.sendInput();
+    }
     this.whiteFlash = 0;
     this.#html_canvas = b;
     this.#ctx_canvas = this.#html_canvas.getContext("2d");
-    this.#C();
+    this.C();
     objG_backgrounds = new Backgrounds();
     objG_animationManager = new AnimationManager();
     this.respawnParticles();
@@ -5274,13 +5283,13 @@ class FollowMode_R {
       objG_wsConnection.hasConnection &&
         !objG_wsConnection.sentHello &&
         objG_wsConnection.hello();
-      setInterval(this.#e, 40);
+      setInterval(e, 40);
       func_displaySelectedDecal(Math.floor(5 * Math.random()) + 1);
       func_displaySelectedColor(Math.floor(5 * Math.random()) + 1);
       console.log("Loading sounds!");
       objG_sfxManager = new SFXmanager();
       objG_sfxManager.load(function () {
-        objG_sfxManager.playSound(str_sfxid_env, 1, 1, const_Q_0, function (a) {
+        objG_sfxManager.playSound(str_sfxid_env, 1, 1, const_Q_0, (a) => {
           mb = a;
         });
       });
@@ -5290,9 +5299,6 @@ class FollowMode_R {
     objG_wsConnection = new WS_Connection();
     objG_wsConnection.getServerAndConnect();
   }
-    #e() {
-      Z && objG_wsConnection.hasConnection && objG_wsConnection.sendInput();
-    }
     
     followTopPlayer() {
       let a = -1,
@@ -5663,12 +5669,7 @@ class FollowMode_R {
       for (id in objD_specialEntities) delete objD_specialEntities[id];
       objD_specialEntities = {};
     };
-    resize(a) {
-      this.#C();
-      objG_eventManager.isSpaceWars() &&
-        (this.#N && clearTimeout(this.#N), (this.#N = setTimeout(this.respawnParticles, 200)));
-    };
-    #C() {
+    C() {
       let a = 2,
         b,
         c;
@@ -7188,7 +7189,8 @@ class UI_KillStatus {
       n = 1,
       k = false,
       m = 0,
-      l = 0;
+      l = 0,
+      currentText2Render;
     this.update = function (a) {
       1 == g && ((h += a), h > e && (q = true));
       q
