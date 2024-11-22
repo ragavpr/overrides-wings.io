@@ -1,5 +1,14 @@
 import { EventManager } from "./lib/EventManager";
 import { ParticleDust } from "./lib/ParticleDust";
+type GameSheetMapping = [
+  id: string,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  u1: number,
+  u2: number,
+]
 let Zb,
   $b,
   bool_isHttps = "https:" == window.location.protocol,
@@ -174,15 +183,7 @@ let Zb,
   id_entity_asteroid = 2,
   const_Ic_0 = 0,
   myName: string,
-  gameSheetInfo: [
-    id: string,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    u1: number,
-    u2: number,
-  ][] = [
+  gameSheetInfo: GameSheetMapping[] = [
     ["bomb", 522, 34, 11, 8, 0.545, 0.5],
     ["bombdrop", 887, 196, 23, 23, 0.5, 0.5],
     ["crown", 775, 232, 23, 19, 0.5, 0.5],
@@ -347,6 +348,7 @@ function func_displaySelectedColor(int_color_id: number) {
       g = objG_assets.frames.plane8;
     a.width = g.width;
     a.height = g.height;
+    if(!c) throw new Error("WARN: Canvas is empty")
     c.translate(g.width / 2, g.height / 2);
     g.draw(c);
     d.draw(c);
@@ -899,12 +901,12 @@ class Assets {
   loaded = false;
   onLoad = null;
   spriteSheetLoaded = false;
-  gameSheet;
-  frames = {};
+  gameSheet!: HTMLImageElement;
+  frames: Record<string, FrameImage> = {};
   whitePlaneImages = {};
   planeFrames;
   planeFramesReflex;
-  planes = [];
+  planes: [][] = [];
   doubleKillCanvas;
   tripleKillCanvas;
   quadKillCanvas;
@@ -933,10 +935,10 @@ class Assets {
   }
   loadGameSpritesheetFrames() {
     for (let b = gameSheetInfo.length, e = 0; e < b; e++) {
-      let f = gameSheetInfo[e],
-        obj_renderManager = new RenderManager();
-      obj_renderManager.setFrameInfo(f, this.gameSheet);
-      this.frames[f[0]] = obj_renderManager;
+      let gamesheet_mapping = gameSheetInfo[e],
+        obj_frameImage = new FrameImage();
+      obj_frameImage.setFrameInfo(gamesheet_mapping, this.gameSheet);
+      this.frames[gamesheet_mapping[0]] = obj_frameImage;
     }
     for (let e = 1, b; 8 >= e; e++)
       (b = this.frames["plane" + e].renderTintedFrame("#FFFFFF").canvas),
@@ -5689,78 +5691,78 @@ class UI_Anchor {
     this.#ctx_canvas.setTransform(1, 0, 0, 1, 0, 0);
   }
 }
-class RenderManager {
-  #b;
-  #e;
-  #f;
-  #d;
-  #a = void 0;
-  #c;
-  #g;
-  width;
-  height;
+class FrameImage {
+  #x!: number;
+  #y!: number;
+  #u1!: number;
+  #u2!: number;
+  #image!: HTMLImageElement;
+  #draw_width!: number;
+  #draw_height!: number;
+  width!: number;
+  height!: number;
   y = 0;
   x = 0;
-  canvas;
-  frameWithCanvas(a, b, d) {
-    this.width = a.width;
-    this.height = a.height;
-    this.canvas = a;
-    this.#c = b;
-    this.#g = d;
+  canvas!: HTMLCanvasElement;
+  frameWithCanvas(canvas: HTMLCanvasElement, draw_width: number, draw_height: number) {
+    this.width = canvas.width;
+    this.height = canvas.height;
+    this.canvas = canvas;
+    this.#draw_width = draw_width;
+    this.#draw_height = draw_height;
   }
-  setFrameInfo(h, q) {
-    this.#a = q;
-    this.#b = h[1];
-    this.#e = h[2];
-    this.width = h[3];
-    this.height = h[4];
-    this.#f = h[5];
-    this.#d = h[6];
-    this.#c = -this.width * this.#f;
-    this.#g = -this.height * this.#d;
+  setFrameInfo(gamesheet_info: GameSheetMapping, gamesheet: HTMLImageElement) {
+    this.#image = gamesheet;
+    this.#x = gamesheet_info[1];
+    this.#y = gamesheet_info[2];
+    this.width = gamesheet_info[3];
+    this.height = gamesheet_info[4];
+    this.#u1 = gamesheet_info[5];
+    this.#u2 = gamesheet_info[6];
+    this.#draw_width = -this.width * this.#u1;
+    this.#draw_height = -this.height * this.#u2;
   }
-  draw(d) {
-    this.#a
-      ? d.drawImage(
-          this.#a,
-          this.#b,
-          this.#e,
+  draw(ctx: CanvasRenderingContext2D) {
+    this.#image
+      ? ctx.drawImage(
+          this.#image,
+          this.#x,
+          this.#y,
           this.width,
           this.height,
-          this.#c + this.x,
-          this.#g + this.y,
+          this.#draw_width + this.x,
+          this.#draw_height + this.y,
           this.width,
           this.height,
         )
-      : d.drawImage(
+      : ctx.drawImage(
           this.canvas,
           0,
           0,
           this.width,
           this.height,
-          this.#c + this.x,
-          this.#g + this.y,
+          this.#draw_width + this.x,
+          this.#draw_height + this.y,
           this.width,
           this.height,
         );
   }
-  renderTintedFrame(d) {
+  renderTintedFrame(tint_color: string) {
     let f = document.createElement("canvas"),
-      n = f.getContext("2d");
+      n = f.getContext("2d")!;
     f.width = this.width;
     f.height = this.height;
     let k = document.createElement("canvas");
     k.width = this.width;
     k.height = this.height;
-    let m = k.getContext("2d");
-    m.fillStyle = d;
+    let m = k.getContext("2d")!;
+    m.fillStyle = tint_color;
     m.fillRect(0, 0, k.width, k.height);
     m.globalCompositeOperation = "destination-atop";
     m.drawImage(
-      this.#a,
-      this.#b,
-      this.#e,
+      this.#image,
+      this.#x,
+      this.#y,
       this.width,
       this.height,
       0,
@@ -5770,19 +5772,19 @@ class RenderManager {
     );
     n.globalAlpha = 1;
     n.drawImage(k, 0, 0);
-    d = new RenderManager();
-    d.frameWithCanvas(f, this.#c, this.#g);
-    return d;
+    let tinted_frame_image = new FrameImage();
+    tinted_frame_image.frameWithCanvas(f, this.#draw_width, this.#draw_height);
+    return tinted_frame_image;
   }
   getImageCopy() {
     let c = document.createElement("canvas");
     c.width = this.width;
     c.height = this.height;
-    let d = c.getContext("2d");
+    let d = c.getContext("2d")!;
     d.drawImage(
-      this.#a,
-      this.#b,
-      this.#e,
+      this.#image,
+      this.#x,
+      this.#y,
       this.width,
       this.height,
       0,
@@ -5798,15 +5800,15 @@ class RenderManager {
       to: f,
     };
   }
-  generateTintImage2(d, f, n, k) {
-    let m = document.createElement("canvas");
-    m.width = this.width;
-    m.height = this.height;
-    let l = m.getContext("2d");
-    l.drawImage(
-      this.#a,
-      this.#b,
-      this.#e,
+  generateTintImage2(r: number, g: number, b: number, a: number) {
+    let canvas = document.createElement("canvas");
+    canvas.width = this.width;
+    canvas.height = this.height;
+    let ctx = canvas.getContext("2d")!;
+    ctx.drawImage(
+      this.#image,
+      this.#x,
+      this.#y,
       this.width,
       this.height,
       0,
@@ -5814,54 +5816,45 @@ class RenderManager {
       this.width,
       this.height,
     );
-    let p, r, s, t;
-    for (
-      p = l.getImageData(0, 0, this.width, this.height),
-        r = p.data,
-        s = r.length,
-        t = 0;
-      t < s;
-
-    )
-      (r[t] = r[t++] * (1 - k) + d * k),
-        (r[t] = r[t++] * (1 - k) + f * k),
-        (r[t] = r[t++] * (1 - k) + n * k),
-        (r[t] = 0.8 * r[t++]);
-    l.putImageData(p, 0, 0);
-    d = new RenderManager();
-    d.frameWithCanvas(m, this.#c, this.#g);
-    return d;
+    let p = ctx.getImageData(0, 0, this.width, this.height),
+        image_raw = p.data,
+        size = image_raw.length;
+    for (let t = 0; t < size; ) {
+      image_raw[t] = image_raw[t++] * (1 - a) + r * a;
+      image_raw[t] = image_raw[t++] * (1 - a) + g * a;
+      image_raw[t] = image_raw[t++] * (1 - a) + b * a;
+      image_raw[t] = 0.8 * image_raw[t++];
+    }
+    ctx.putImageData(p, 0, 0);
+    let tinted_frame_image = new FrameImage();
+    tinted_frame_image.frameWithCanvas(canvas, this.#draw_width, this.#draw_height);
+    return tinted_frame_image;
   }
-  generateTintImage(a, b, d, e) {
-    let f = document.createElement("canvas");
-    f.width = this.width;
-    f.height = this.height;
-    let l = f.getContext("2d");
-    l.globalAlpha = 1;
-    l.globalCompositeOperation = "copy";
-    l.drawImage(a[3], 0, 0);
-    l.globalCompositeOperation = "lighter";
-    0 < b && ((l.globalAlpha = b / 255), l.drawImage(a[0], 0, 0));
-    0 < d && ((l.globalAlpha = d / 255), l.drawImage(a[1], 0, 0));
-    0 < e && ((l.globalAlpha = e / 255), l.drawImage(a[2], 0, 0));
-    a = new RenderManager();
-    a.frameWithCanvas(f, this.#c, this.#g);
-    return a;
+  generateTintImage(img_rgbk: FrameImage.ImgRGBK, r: number, g: number, b: number) {
+    let canvas = document.createElement("canvas");
+    canvas.width = this.width;
+    canvas.height = this.height;
+    let ctx = canvas.getContext("2d")!;
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = "copy";
+    ctx.drawImage(img_rgbk[3], 0, 0);
+    ctx.globalCompositeOperation = "lighter";
+    if(0 < r) {(ctx.globalAlpha = r / 255); ctx.drawImage(img_rgbk[0], 0, 0)}
+    if(0 < g) {(ctx.globalAlpha = g / 255); ctx.drawImage(img_rgbk[1], 0, 0)}
+    if(0 < b) {(ctx.globalAlpha = b / 255); ctx.drawImage(img_rgbk[2], 0, 0)}
+    let frame_image = new FrameImage();
+    frame_image.frameWithCanvas(canvas, this.#draw_width, this.#draw_height);
+    return frame_image;
   }
-  generateRGBKs() {
-    let c = [],
-      d = document.createElement("canvas");
-    d.getContext("2d");
-    d.width = this.width;
-    d.height = this.height;
-    d = document.createElement("canvas");
-    d.width = this.width;
-    d.height = this.height;
-    d = d.getContext("2d");
-    d.drawImage(
-      this.#a,
-      this.#b,
-      this.#e,
+  generateRGBKs(): FrameImage.ImgRGBK {
+    let canvas = document.createElement("canvas");
+    canvas.width = this.width;
+    canvas.height = this.height;
+    let ctx = canvas.getContext("2d")!;
+    ctx.drawImage(
+      this.#image,
+      this.#x,
+      this.#y,
       this.width,
       this.height,
       0,
@@ -5869,61 +5862,58 @@ class RenderManager {
       this.width,
       this.height,
     );
-    let f = d.getImageData(0, 0, this.width, this.height).data,
-      g = f.length,
-      m = this.getImageCopy(),
-      l = this.getImageCopy(),
-      p = this.getImageCopy();
-    d = this.getImageCopy();
-    for (let r = 0; r < g; r += 4)
-      (m.toData[r] = f[r]),
-        (m.toData[r + 1] = 0),
-        (m.toData[r + 2] = 0),
-        (m.toData[r + 3] = f[r + 3]),
-        (l.toData[r] = 0),
-        (l.toData[r + 1] = f[r + 1]),
-        (l.toData[r + 2] = 0),
-        (l.toData[r + 3] = f[r + 3]),
-        (p.toData[r] = 0),
-        (p.toData[r + 1] = 0),
-        (p.toData[r + 2] = f[r + 2]),
-        (p.toData[r + 3] = f[r + 3]),
-        (d.toData[r] = 0),
-        (d.toData[r + 1] = 0),
-        (d.toData[r + 2] = 0),
-        (d.toData[r + 3] = f[r + 3]);
-    m.ctx.putImageData(m.to, 0, 0);
-    l.ctx.putImageData(l.to, 0, 0);
-    p.ctx.putImageData(p.to, 0, 0);
-    d.ctx.putImageData(d.to, 0, 0);
-    f = new Image();
-    f.src = m.canvas.toDataURL();
-    m = new Image();
-    m.src = l.canvas.toDataURL();
-    l = new Image();
-    l.src = p.canvas.toDataURL();
-    p = new Image();
-    p.src = d.canvas.toDataURL();
-    c.push(f);
-    c.push(m);
-    c.push(l);
-    c.push(p);
-    return c;
+    let image_data = ctx.getImageData(0, 0, this.width, this.height).data;
+    let size = image_data.length;
+    let img_R = this.getImageCopy();
+    let img_G = this.getImageCopy();
+    let img_B = this.getImageCopy();
+    let img_K = this.getImageCopy();
+    for (let i = 0; i < size; i += 4) {
+      img_R.toData[i] = image_data[i];
+      img_R.toData[i + 1] = 0;
+      img_R.toData[i + 2] = 0;
+      img_R.toData[i + 3] = image_data[i + 3];
+      img_G.toData[i] = 0;
+      img_G.toData[i + 1] = image_data[i + 1];
+      img_G.toData[i + 2] = 0;
+      img_G.toData[i + 3] = image_data[i + 3];
+      img_B.toData[i] = 0;
+      img_B.toData[i + 1] = 0;
+      img_B.toData[i + 2] = image_data[i + 2];
+      img_B.toData[i + 3] = image_data[i + 3];
+      img_K.toData[i] = 0;
+      img_K.toData[i + 1] = 0;
+      img_K.toData[i + 2] = 0;
+      img_K.toData[i + 3] = image_data[i + 3];
+    }
+    img_R.ctx.putImageData(img_R.to, 0, 0);
+    img_G.ctx.putImageData(img_G.to, 0, 0);
+    img_B.ctx.putImageData(img_B.to, 0, 0);
+    img_K.ctx.putImageData(img_K.to, 0, 0);
+    let R = new Image();
+    let G = new Image();
+    let B = new Image();
+    let K = new Image();
+    R.src = img_R.canvas.toDataURL();
+    G.src = img_G.canvas.toDataURL();
+    B.src = img_B.canvas.toDataURL();
+    K.src = img_K.canvas.toDataURL();
+    return [R, G, B, K];
   }
   renderToCanvas() {
     let c = document.createElement("canvas"),
-      d = c.getContext("2d");
+      d = c.getContext("2d")!;
     c.width = this.width;
     c.height = this.height;
     let f = document.createElement("canvas");
     f.width = this.width;
     f.height = this.height;
     f.getContext("2d");
-    this.#a
+    this.#image
       ? d.drawImage(
-          this.#a,
-          this.#b,
-          this.#e,
+          this.#image,
+          this.#x,
+          this.#y,
           this.width,
           this.height,
           0,
@@ -5946,6 +5936,14 @@ class RenderManager {
     d.drawImage(f, 0, 0);
     return c;
   }
+}
+namespace FrameImage {
+  export type ImgRGBK = [
+      R: HTMLImageElement,
+      G: HTMLImageElement,
+      B: HTMLImageElement,
+      K: HTMLImageElement,
+  ]
 }
 class AnimationManager {
   #b = {};
