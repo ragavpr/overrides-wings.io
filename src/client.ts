@@ -1565,11 +1565,11 @@ class InputManager {
   }
 }
 class ParticleImpacts {
-  b = [];
+  #b = [];
   draw(e) {
     let f, d, a, c, g, h, q, n, k, m, l, y, r, p;
-    for (f = [], d = 0; d < this.b.length; d++) {
-      a = this.b[d];
+    for (f = [], d = 0; d < this.#b.length; d++) {
+      a = this.#b[d];
       if (void 0 == objD_planes[a.id]) f.push(a);
       else if (a.weapon == id_weapon_railgun) {
         e.lineWidth = 2 + 5 * (1 - a.a);
@@ -1723,7 +1723,7 @@ class ParticleImpacts {
       }
     }
     for (c = 0; c < f.length; c++)
-      (e = this.b.indexOf(f[c])), this.b.splice(e, 1);
+      (e = this.#b.indexOf(f[c])), this.#b.splice(e, 1);
     f.length = 0;
   }
   addShot(e, f, d, a) {
@@ -1766,7 +1766,7 @@ class ParticleImpacts {
           (g.finish = false),
           (func_isInsideBox(e, d, 100) ||
             func_isInsideBox(g.hitPosition.x, g.hitPosition.y, 100)) &&
-            this.b.push(g));
+            this.#b.push(g));
         a = E / 2;
         g.hitPosition.y > a &&
           ((e = f / c),
@@ -1815,82 +1815,81 @@ class ParticleImpacts {
   }
 }
 class UI_GameInfo {
-  constructor() {
-    let b,
-      e,
-      f,
-      d = 0,
-      a = true,
-      c,
-      g,
-      h,
-      q,
-      objUI_killStatus = new UI_KillStatus(),
-      k,
-      m,
-      l,
-      y,
-      r,
-      K,
-      pa,
-      s,
-      w,
-      z = -1,
-      ta = false,
-      F,
-      C,
-      P,
-      R,
-      S,
-      O,
-      Vb,
-      ea = 1,
-      Ga = 0,
-      objUI_ActivityMessages = new UI_ActivityMessages(),
-      Fa,
-      ua,
-      E,
-      I = 0,
-      Ta,
-      Ha,
-      Ia,
-      H = 0,
-      ab,
-      L,
-      X = -1,
-      U = false,
-      V = 0,
-      Q,
-      W,
-      $_sub,
-      M,
-      N,
-      da,
-      aa = null,
-      ja = null,
-      ca,
-      fa,
-      ia,
-      ha,
-      wa,
-      na = 0,
-      oa = 0,
-      va = null,
-      la,
-      ma,
-      ya,
-      sa;
-    this.draw = function (I) {
+      #b
+      #e
+      #f
+      #d = 0
+      #a = true
+      #c
+      #g
+      #h
+      #q
+      #objUI_killStatus = new UI_KillStatus()
+      #k
+      #m
+      #l
+      #y
+      #r
+      #K
+      #pa
+      #s
+      #w
+      #z = -1
+      #ta = false
+      #F
+      #C
+      #P
+      #R
+      #S
+      #O
+      #Vb
+      #ea = 1
+      #Ga = 0
+      #objUI_ActivityMessages = new UI_ActivityMessages()
+      #Fa
+      #ua
+      #E
+      #I = 0
+      #Ta
+      #Ha
+      #Ia
+      #H = 0
+      #ab
+      #L
+      #X = -1
+      #U = false
+      #V = 0
+      #Q
+      #W
+      #$_sub
+      #M
+      #N
+      #da
+      #aa = null
+      #ja = null
+      #ca
+      #fa
+      #ia
+      #ha
+      #wa
+      #na = 0
+      #oa = 0
+      #va = null
+      #la
+      #ma
+      #ya
+      #sa;
+    draw(I) {
       let r, K, P, O, R, S;
-      if (ta) {
-        C = document.createElement("canvas") as HTMLCanvasElement;
-        r = C.getContext("2d")!;
-        this.renderLeaderboard(r, C);
+      if (this.#ta) {
+        this.#C = document.createElement("canvas") as HTMLCanvasElement;
+        r = this.#C.getContext("2d")!;
+        this.renderLeaderboard(r, this.#C);
       }
-      if (0 < na) this.DrawWinnerLabel(I);
-      else if (0 < oa) this.DrawWarshipDestroyedLabel(I);
+      if (0 < this.#na) this.DrawWinnerLabel(I);
+      else if (0 < this.#oa) this.DrawWarshipDestroyedLabel(I);
       else {
-        C &&
+        this.#C &&
           0 < numG_player_count &&
           (!bool_following_plane || bool_continueGame) &&
           this.drawLeaderboard(I);
@@ -1905,67 +1904,67 @@ class UI_GameInfo {
           this.DrawCurrentWeaponIcon(I, objG_player_plane.weapon);
           (r = 19), (P = 0);
           int_pathMobile && ((r = 24), (P = -5));
-          null == pa && (pa = new StyleStroke(r, "#FFFFFF"));
+          null == this.#pa && (this.#pa = new StyleStroke(r, "#FFFFFF"));
           R = objG_eventManager.isInstagib();
-          if (z != objG_player_plane.GetAmmo() || null == s) {
+          if (this.#z != objG_player_plane.GetAmmo() || null == this.#s) {
             S = "\u221e";
-            R || ((z = objG_player_plane.GetAmmo()), -1 < z && (S = z));
-            pa.setValue(S);
-            s = pa.render();
-            w = s.width;
+            R || ((this.#z = objG_player_plane.GetAmmo()), -1 < this.#z && (S = this.#z));
+            this.#pa.setValue(S);
+            this.#s = this.#pa.render();
+            this.#w = this.#s.width;
           }
           I.globalAlpha = 1;
-          I.drawImage(s, 0.57 * -w, 0.19 * K.height + r / 2 + P);
+          I.drawImage(this.#s, 0.57 * -this.#w, 0.19 * K.height + r / 2 + P);
           I.restore();
           this.DrawScore(I);
         }
-        if (0 < d) {
+        if (0 < this.#d) {
           K = 0;
-          r = +new Date() - d;
-          4e3 > r ? (K = 3e3 > r ? 1 : 1 - (r - 3e3) / 1e3) : (d = 0);
-          h ||
+          r = +new Date() - this.#d;
+          4e3 > r ? (K = 3e3 > r ? 1 : 1 - (r - 3e3) / 1e3) : (this.#d = 0);
+          this.#h ||
             ((P = 20),
             int_pathMobile && (P = 30),
             (r = false),
-            f
+            this.#f
               ? ((r = 40),
                 int_pathMobile && (r = 50),
-                (q = new StyleText(r * num_scale_factor, "#FF0000", "#990000")),
-                q.setValue(f),
-                q.setUsingFrame(true),
+                (this.#q = new StyleText(r * num_scale_factor, "#FF0000", "#990000")),
+                this.#q.setValue(this.#f),
+                this.#q.setUsingFrame(true),
                 (r = true),
-                int_pathMobile ? q.setAddTop(35) : q.setAddTop(25))
-              : ((q = null), (P = int_pathMobile ? 45 : 35)),
-            (h = new StyleText(P * num_scale_factor, "#FF0000", "#990000")),
-            h.setValue(e),
-            h.setUsingFrame(!r));
+                int_pathMobile ? this.#q.setAddTop(35) : this.#q.setAddTop(25))
+              : ((this.#q = null), (P = int_pathMobile ? 45 : 35)),
+            (this.#h = new StyleText(P * num_scale_factor, "#FF0000", "#990000")),
+            this.#h.setValue(this.#e),
+            this.#h.setUsingFrame(!r));
           P = 0.25 * canvas.height;
-          a
-            ? (h.setColor("#00ea11"),
-              h.setSecondColor("#006b08"),
-              q && (q.setColor("#00ea11"), q.setSecondColor("#006b08")))
-            : (h.setColor("#ff0608"),
-              h.setSecondColor("#a20400"),
-              q && (q.setColor("#ff0608"), q.setSecondColor("#a20400")));
-          (r = h.render()), O;
-          f && (O = q.render());
+          this.#a
+            ? (this.#h.setColor("#00ea11"),
+              this.#h.setSecondColor("#006b08"),
+              this.#q && (this.#q.setColor("#00ea11"), this.#q.setSecondColor("#006b08")))
+            : (this.#h.setColor("#ff0608"),
+              this.#h.setSecondColor("#a20400"),
+              this.#q && (this.#q.setColor("#ff0608"), this.#q.setSecondColor("#a20400")));
+          (r = this.#h.render()), O;
+          this.#f && (O = this.#q.render());
           I.globalAlpha = K;
           O && I.drawImage(O, 0.5 * canvas.width - O.width / 2, P - 5);
           I.drawImage(r, 0.5 * canvas.width - r.width / 2, P);
           I.globalAlpha = 1;
         }
-        k &&
+        this.#k &&
           ((P = 0.6 * canvas.height),
-          (K = (m / 1e3) * 10),
+          (K = (this.#m / 1e3) * 10),
           1 < K && (K = 1),
-          g ||
+          this.#g ||
             ((r = 30),
             int_pathMobile && (r = 40),
-            (g = new StyleText(r * num_scale_factor, "#FF0000", "#990000"))),
-          g.setValue(k),
-          g.setUsingFrame(true),
-          (r = g.render()),
-          (O = 0.1 * Math.sin(m / 100) * num_scale_factor),
+            (this.#g = new StyleText(r * num_scale_factor, "#FF0000", "#990000"))),
+          this.#g.setValue(this.#k),
+          this.#g.setUsingFrame(true),
+          (r = this.#g.render()),
+          (O = 0.1 * Math.sin(this.#m / 100) * num_scale_factor),
           I.save(),
           I.translate(0.5 * canvas.width, P),
           I.scale(1 + O, 1 + O),
@@ -1973,16 +1972,16 @@ class UI_GameInfo {
           (I.globalAlpha = K),
           I.drawImage(r, 0, 0),
           I.restore());
-        l &&
+        this.#l &&
           ((P = 0.397 * canvas.height),
           (K = 1),
-          y ||
+          this.#y ||
             ((r = 20),
             int_pathMobile && (r = 30),
-            (y = new StyleText(r * num_scale_factor, "#FF0000", "#990000"))),
-          y.setValue(l),
-          y.setUsingFrame(false),
-          (r = y.render()),
+            (this.#y = new StyleText(r * num_scale_factor, "#FF0000", "#990000"))),
+          this.#y.setValue(this.#l),
+          this.#y.setUsingFrame(false),
+          (r = this.#y.render()),
           I.save(),
           I.translate(0.5 * canvas.width, P),
           I.scale(0.8, 0.8),
@@ -1997,11 +1996,11 @@ class UI_GameInfo {
             : objG_eventManager.isInEvent()
               ? this.DrawEventLabel(I)
               : La && !bool_following_plane && this.DrawLaserDeployed(I));
-        null == k &&
-          objUI_killStatus.shouldDraw() &&
+        null == this.#k &&
+          this.#objUI_killStatus.shouldDraw() &&
           (I.save(),
           I.translate(0.5 * canvas.width, 0.67 * canvas.height),
-          objUI_killStatus.draw(I),
+          this.#objUI_killStatus.draw(I),
           I.restore());
         Z ||
           bool_following_plane ||
@@ -2011,81 +2010,81 @@ class UI_GameInfo {
               ? "Following " +
                 func_renameBlankPlayerNames(objG_player_plane.name)
               : "FOLLOW MODE"),
-          c || (c = new StyleText(30 * num_scale_factor, "#ffd118", "#b56006")),
-          c.setValue(O),
-          c.setUsingFrame(true),
-          (r = c.render()),
+          this.#c || (this.#c = new StyleText(30 * num_scale_factor, "#ffd118", "#b56006")),
+          this.#c.setValue(O),
+          this.#c.setUsingFrame(true),
+          (r = this.#c.render()),
           (I.globalAlpha = 1),
           (P = 0.14 * canvas.height),
           I.drawImage(r, 0.5 * canvas.width - r.width / 2, P));
-        Ta &&
-          (4e3 > H
-            ? (null == Ia &&
+        this.#Ta &&
+          (4e3 > this.#H
+            ? (null == this.#Ia &&
                 ((r = 20),
                 int_pathMobile && (r = 30),
-                (Ha = new StyleStroke(
+                (this.#Ha = new StyleStroke(
                   r * num_scale_factor,
                   "#ffd118",
                   true,
                   "#633504",
                 )),
-                Ha.setValue(Ta),
-                Ha.setStrokeWidth(5),
-                Ha.setRoundedFrameOpacity(0.5),
-                Ha.setHMargin(5),
-                Ha.setUsingRoundedFrame(true),
-                (Ia = Ha.render())),
+                this.#Ha.setValue(this.#Ta),
+                this.#Ha.setStrokeWidth(5),
+                this.#Ha.setRoundedFrameOpacity(0.5),
+                this.#Ha.setHMargin(5),
+                this.#Ha.setUsingRoundedFrame(true),
+                (this.#Ia = this.#Ha.render())),
               (O = 1),
-              300 > H
-                ? ((O = H / 300), (O = Math.sqrt(O, 10)))
-                : 3700 < H &&
-                  ((O = 1 - (H - 3700) / 300), (O = Math.sqrt(O, 10))),
+              300 > this.#H
+                ? ((O = this.#H / 300), (O = Math.sqrt(O, 10)))
+                : 3700 < this.#H &&
+                  ((O = 1 - (this.#H - 3700) / 300), (O = Math.sqrt(O, 10))),
               I.drawImage(
-                Ia,
-                canvas_width / 2 - Ia.width / 2,
-                1.1 * Ia.height * O - Ia.height,
+                this.#Ia,
+                canvas_width / 2 - this.#Ia.width / 2,
+                1.1 * this.#Ia.height * O - this.#Ia.height,
               ))
-            : (Ta = null));
+            : (this.#Ta = null));
         bool_following_plane ||
           int_pathMobile ||
-          objUI_ActivityMessages.draw(I);
+          this.#objUI_ActivityMessages.draw(I);
         !bool_following_plane && 0 < qa && this.DrawKing(I);
-        ta && (ta = false);
-        b != num_scale_factor && ((c = g = null), (b = num_scale_factor));
+        this.#ta && (this.#ta = false);
+        this.#b != num_scale_factor && ((this.#c = this.#g = null), (this.#b = num_scale_factor));
       }
     };
-    this.DrawKing = function (a) {
-      if (F && 0 < F.length && 0 < Object.keys(objD_planes).length) {
-        let c = objD_planes[F[0]],
+    DrawKing(a) {
+      if (this.#F && 0 < this.#F.length && 0 < Object.keys(objD_planes).length) {
+        let c = objD_planes[this.#F[0]],
           d;
         if (c) {
           d = func_renameBlankPlayerNames(c.name);
           objG_player_plane &&
-            I != c.id &&
+            this.#I != c.id &&
             c.id == objG_player_plane.id &&
             objG_sfxManager.playSound(str_sfxid_king, 1, 1, 1, null);
-          I = c.id;
-          d != Fa &&
+          this.#I = c.id;
+          d != this.#Fa &&
             ((c = 25),
             int_pathMobile && (c = 35),
-            (ua = new StyleText(c * num_scale_factor, "#fe9b00", "#6e3800")),
+            (this.#ua = new StyleText(c * num_scale_factor, "#fe9b00", "#6e3800")),
             (c = " "),
             bool_setting_highQuality || (c = ""),
             int_pathMobile && (c = "  "),
-            ua.setValue(c + "  King: " + d),
-            ua.setUsingRoundedFrame(true));
-          Fa = d;
-          E = ua.render();
+            this.#ua.setValue(c + "  King: " + d),
+            this.#ua.setUsingRoundedFrame(true));
+          this.#Fa = d;
+          this.#E = this.#ua.render();
         }
-        ua &&
+        this.#ua &&
           (a.save(),
           (d = 0.83 * canvas.height),
-          a.drawImage(E, 0.5 * canvas.width - E.width / 2, d),
+          a.drawImage(this.#E, 0.5 * canvas.width - this.#E.width / 2, d),
           (c = 20),
           bool_setting_highQuality || (c = 13),
           a.translate(
-            0.5 * canvas.width - E.width / 2 + c,
-            d + E.height / 2 - 2 * num_scale_factor,
+            0.5 * canvas.width - this.#E.width / 2 + c,
+            d + this.#E.height / 2 - 2 * num_scale_factor,
           ),
           (d = 1),
           int_pathMobile && (d = 1.5),
@@ -2094,30 +2093,30 @@ class UI_GameInfo {
           a.restore());
       }
     };
-    this.DrawLaserDeployed = function (a) {
+    DrawLaserDeployed(a) {
       a.save();
       let c, d;
-      if (str_name_superweapon_holder != X) {
-        X = str_name_superweapon_holder;
+      if (str_name_superweapon_holder != this.#X) {
+        this.#X = str_name_superweapon_holder;
         c = 25;
         int_pathMobile && (c = 35);
-        L = new StyleText(c * num_scale_factor, "#fbc521", "#c78109");
+        this.#L = new StyleText(c * num_scale_factor, "#fbc521", "#c78109");
         str_name_superweapon_holder
-          ? L.setValue("     Super Weapon: " + str_name_superweapon_holder)
-          : L.setValue("     Find The Super Weapon!");
-        L.setUsingRoundedFrame(true);
-        ab = L.render();
+          ? this.#L.setValue("     Super Weapon: " + str_name_superweapon_holder)
+          : this.#L.setValue("     Find The Super Weapon!");
+        this.#L.setUsingRoundedFrame(true);
+        this.#ab = this.#L.render();
       }
       c = 0.05 * canvas.height;
-      a.drawImage(ab, 0.5 * canvas.width - ab.width / 2, c);
+      a.drawImage(this.#ab, 0.5 * canvas.width - this.#ab.width / 2, c);
       d = 30;
       bool_setting_highQuality || (d = 20);
-      a.translate(0.5 * canvas.width - ab.width / 2 + d, c + ab.height / 2);
+      a.translate(0.5 * canvas.width - this.#ab.width / 2 + d, c + this.#ab.height / 2);
       a.scale(num_scale_factor, num_scale_factor);
       objG_assets.frames.laser.draw(a);
       a.restore();
     };
-    this.DrawRank = function (a) {
+    DrawRank(a) {
       0 < objG_player_plane.rank &&
         (void 0 == rankCanvas &&
           ((rankCanvas = document.createElement("canvas")),
@@ -2136,143 +2135,143 @@ class UI_GameInfo {
             200,
             30 * num_scale_factor,
           ),
-          (ca = new StyleStroke(15 * num_scale_factor, "#EEEEEE")),
-          ca.setValue(objG_player_plane.rank),
-          ca.setUsingRoundedFrame(false),
-          (fa = ca.render()),
+          (this.#ca = new StyleStroke(15 * num_scale_factor, "#EEEEEE")),
+          this.#ca.setValue(objG_player_plane.rank),
+          this.#ca.setUsingRoundedFrame(false),
+          (this.#fa = this.#ca.render()),
           (lastRankNumber = objG_player_plane.rank)),
         a.drawImage(rankCanvas, canvas_width - 200, canvas_height - 200));
     };
-    this.DrawScore = function (a) {
+    DrawScore(a) {
       if (0 < objG_player_plane.rank) {
         let c = 16 * num_scale_factor,
           d = "Arial Black";
         int_pathMobile && ((c = 36 * num_scale_factor), (d = "Arial-BoldMT"));
-        let b = P * num_scale_factor,
+        let b = this.#P * num_scale_factor,
           g = b,
           h = 30 * num_scale_factor,
           e = 5 * num_scale_factor,
           k = 10 * num_scale_factor,
           n = canvas_width - b - 5,
-          f = S + 5 + 5;
+          f = this.#S + 5 + 5;
         int_pathMobile && ((h = 60 * num_scale_factor), (g = b));
-        void 0 == r &&
-          ((r = document.createElement("canvas")), (K = r.getContext("2d")));
+        void 0 == this.#r &&
+          ((this.#r = document.createElement("canvas")), (this.#K = this.#r.getContext("2d")));
         if (-1 != objG_player_plane.score)
           for (
-            r.width = g,
-              r.height = h,
-              K.font = c + "px 'proxima-nova-1','proxima-nova-2', " + d,
-              K.globalAlpha = 0.3,
-              K.textBaseline = "hanging",
-              func_drawRoundedRectangle(K, 0, 0, b, h, 30 * num_scale_factor),
-              K.globalAlpha = 1,
+            this.#r.width = g,
+              this.#r.height = h,
+              this.#K.font = c + "px 'proxima-nova-1','proxima-nova-2', " + d,
+              this.#K.globalAlpha = 0.3,
+              this.#K.textBaseline = "hanging",
+              func_drawRoundedRectangle(this.#K, 0, 0, b, h, 30 * num_scale_factor),
+              this.#K.globalAlpha = 1,
               c = 2;
             0 <= c;
             c--
           )
             (d = 0),
               0 != c
-                ? ((K.fillStyle = "rgba(100,49,0,1.0)"), (d = c))
-                : (K.fillStyle = "rgba(255,156,0,1.0)"),
-              K.fillText(objG_player_plane.rank + ". You ", e, k + d),
-              (g = K.measureText(objG_player_plane.score).width),
-              K.fillText(objG_player_plane.score, b - e - g, k + d);
-        a.drawImage(r, n, f + 5);
+                ? ((this.#K.fillStyle = "rgba(100,49,0,1.0)"), (d = c))
+                : (this.#K.fillStyle = "rgba(255,156,0,1.0)"),
+              this.#K.fillText(objG_player_plane.rank + ". You ", e, k + d),
+              (g = this.#K.measureText(objG_player_plane.score).width),
+              this.#K.fillText(objG_player_plane.score, b - e - g, k + d);
+        a.drawImage(this.#r, n, f + 5);
       }
     };
-    this.DrawWarmupTime = function (a) {
-      if (U) {
-        U = false;
+    DrawWarmupTime(a) {
+      if (this.#U) {
+        this.#U = false;
         let c = objG_eventManager.endTime - T;
         if (0 > parseInt(c)) return;
-        W = new StyleText(
+        this.#W = new StyleText(
           23 * num_scale_factor,
           objG_eventManager.getEventColor(),
           "#6e3800",
         );
-        W.setValue(objG_eventManager.getEventName());
-        N = W.render();
-        $_sub = new StyleText(20 * num_scale_factor, "#fe9b00", "#6e3800");
-        $_sub.setValue("STARTS IN");
-        da = $_sub.render();
-        Q = new StyleText(27 * num_scale_factor, "#fe9b00", "#6e3800");
-        Q.setValue(func_millisToTimeFormat(c));
-        M = Q.render();
+        this.#W.setValue(objG_eventManager.getEventName());
+        this.#N = this.#W.render();
+        this.#$_sub = new StyleText(20 * num_scale_factor, "#fe9b00", "#6e3800");
+        this.#$_sub.setValue("STARTS IN");
+        this.#da = this.#$_sub.render();
+        this.#Q = new StyleText(27 * num_scale_factor, "#fe9b00", "#6e3800");
+        this.#Q.setValue(func_millisToTimeFormat(c));
+        this.#M = this.#Q.render();
       }
-      if (M) {
+      if (this.#M) {
         let c = 0.8 * canvas.height,
           d;
-        (d = N.width),
-          (d = da.width > d ? da.width : d),
-          (d = M.width > d ? M.width : d);
+        (d = this.#N.width),
+          (d = this.#da.width > d ? this.#da.width : d),
+          (d = this.#M.width > d ? this.#M.width : d);
         a.fillStyle = "#000000";
         a.globalAlpha = 0.3;
         func_drawRoundedRectangle(a, canvas.width - d - 20, c, d, 102, 20);
         a.globalAlpha = 1;
-        a.drawImage(N, canvas.width - d - 20, c);
-        a.drawImage(da, canvas.width - d / 2 - da.width / 2 - 20, c + 36);
-        a.drawImage(M, canvas.width - d / 2 - M.width / 2 - 20, c + 60);
+        a.drawImage(this.#N, canvas.width - d - 20, c);
+        a.drawImage(this.#da, canvas.width - d / 2 - this.#da.width / 2 - 20, c + 36);
+        a.drawImage(this.#M, canvas.width - d / 2 - this.#M.width / 2 - 20, c + 60);
       }
     };
-    this.DrawEventLabel = function (a) {
-      if (U) {
-        U = false;
+    DrawEventLabel(a) {
+      if (this.#U) {
+        this.#U = false;
         let c = objG_eventManager.endTime - T;
         0 > parseInt(c) && (c = 0);
-        W = new StyleText(
+        this.#W = new StyleText(
           25 * num_scale_factor,
           objG_eventManager.getEventColor(),
           "#6e3800",
         );
-        W.setValue(objG_eventManager.getEventName());
-        N = W.render();
-        Q = new StyleText(25 * num_scale_factor, "#fe9b00", "#6e3800");
+        this.#W.setValue(objG_eventManager.getEventName());
+        this.#N = this.#W.render();
+        this.#Q = new StyleText(25 * num_scale_factor, "#fe9b00", "#6e3800");
         objG_eventManager.isWarship()
           ? 0 < objG_eventManager.warshipsLeft
-            ? Q.setValue("Warships Left: " + objG_eventManager.warshipsLeft)
+            ? this.#Q.setValue("Warships Left: " + objG_eventManager.warshipsLeft)
             : 0 == objG_eventManager.warshipsEscaped
-              ? Q.setValue("All Warships Destroyed!")
-              : Q.setValue(
+              ? this.#Q.setValue("All Warships Destroyed!")
+              : this.#Q.setValue(
                   objG_eventManager.warshipsDestroyed +
                     " Destroyed, " +
                     objG_eventManager.warshipsEscaped +
                     " Escaped!",
                 )
-          : Q.setValue(func_millisToTimeFormat(c));
-        M = Q.render();
+          : this.#Q.setValue(func_millisToTimeFormat(c));
+        this.#M = this.#Q.render();
       }
-      if (M) {
+      if (this.#M) {
         let c = 0.04 * canvas.height,
-          d = M.width < N.width ? N.width : M.width;
+          d = this.#M.width < this.#N.width ? this.#N.width : this.#M.width;
         a.fillStyle = "#000000";
         a.globalAlpha = 0.3;
         func_drawRoundedRectangle(a, canvas.width / 2 - d / 2, c, d, 69, 20);
         a.globalAlpha = 1;
-        a.drawImage(N, canvas.width / 2 - N.width / 2, c);
-        a.drawImage(M, canvas.width / 2 - M.width / 2, c + 30);
+        a.drawImage(this.#N, canvas.width / 2 - this.#N.width / 2, c);
+        a.drawImage(this.#M, canvas.width / 2 - this.#M.width / 2, c + 30);
       }
     };
-    this.DrawWinnerLabel = function (a) {
-      !ia &&
-        aa &&
-        ((ia = new StyleText(55 * num_scale_factor, "#fe6800", "#6e3800")),
-        ia.setValue("WINNER"),
-        (ha = ia.render()),
-        (wa = new StyleText(45 * num_scale_factor, "#fe9b00", "#6e3800")),
-        wa.setValue(aa),
-        (renderedWinnerNameCachedText = wa.render()));
-      if (ha) {
+    DrawWinnerLabel(a) {
+      !this.#ia &&
+        this.#aa &&
+        ((this.#ia = new StyleText(55 * num_scale_factor, "#fe6800", "#6e3800")),
+        this.#ia.setValue("WINNER"),
+        (this.#ha = this.#ia.render()),
+        (this.#wa = new StyleText(45 * num_scale_factor, "#fe9b00", "#6e3800")),
+        this.#wa.setValue(this.#aa),
+        (renderedWinnerNameCachedText = this.#wa.render()));
+      if (this.#ha) {
         let c = 0.13 * canvas.height,
           d =
-            ha.width > renderedWinnerNameCachedText.width
-              ? ha.width
+            this.#ha.width > renderedWinnerNameCachedText.width
+              ? this.#ha.width
               : renderedWinnerNameCachedText.width;
         a.fillStyle = "#000000";
         a.globalAlpha = 0.3;
         func_drawRoundedRectangle(a, canvas.width / 2 - d / 2, c, d, 140, 20);
         a.globalAlpha = 1;
-        a.drawImage(ha, canvas.width / 2 - ha.width / 2, c);
+        a.drawImage(this.#ha, canvas.width / 2 - this.#ha.width / 2, c);
         a.drawImage(
           renderedWinnerNameCachedText,
           canvas.width / 2 - renderedWinnerNameCachedText.width / 2,
@@ -2280,58 +2279,58 @@ class UI_GameInfo {
         );
       }
     };
-    this.DrawWarshipDestroyedLabel = function (a) {
-      la ||
-        ((la = new StyleText(45 * num_scale_factor, "#fe6800", "#6e3800")),
-        null == va ? la.setValue("WARSHIP") : la.setValue(va),
-        (ma = la.render()),
-        (ya = new StyleText(35 * num_scale_factor, "#fe9b00", "#6e3800")),
-        null == va
-          ? ya.setValue("ESCAPED!")
-          : ya.setValue("DESTROYED A WARSHIP!"),
-        (sa = ya.render()));
-      if (ma) {
+    DrawWarshipDestroyedLabel(a) {
+      this.#la ||
+        ((this.#la = new StyleText(45 * num_scale_factor, "#fe6800", "#6e3800")),
+        null == this.#va ? this.#la.setValue("WARSHIP") : this.#la.setValue(this.#va),
+        (this.#ma = this.#la.render()),
+        (this.#ya = new StyleText(35 * num_scale_factor, "#fe9b00", "#6e3800")),
+        null == this.#va
+          ? this.#ya.setValue("ESCAPED!")
+          : this.#ya.setValue("DESTROYED A WARSHIP!"),
+        (this.#sa = this.#ya.render()));
+      if (this.#ma) {
         let c = 0.13 * canvas.height,
-          d = ma.width > sa.width ? ma.width : sa.width;
+          d = this.#ma.width > this.#sa.width ? this.#ma.width : this.#sa.width;
         a.fillStyle = "#000000";
         a.globalAlpha = 0.3;
         func_drawRoundedRectangle(a, canvas.width / 2 - d / 2, c, d, 114, 20);
         a.globalAlpha = 1;
-        a.drawImage(ma, canvas.width / 2 - ma.width / 2, c);
-        a.drawImage(sa, canvas.width / 2 - sa.width / 2, c + 60);
+        a.drawImage(this.#ma, canvas.width / 2 - this.#ma.width / 2, c);
+        a.drawImage(this.#sa, canvas.width / 2 - this.#sa.width / 2, c + 60);
       }
     };
-    this.DrawLastEventWinner = function (a) {
-      null != aa &&
-        aa != ja &&
-        ((ca = new StyleStroke(15 * num_scale_factor, "#EEEEEE")),
-        ca.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black"),
-        ca.setValue(
-          "Last Event Winner: " + func_renameBlankPlayerNames(aa) + " ",
+    DrawLastEventWinner(a) {
+      null != this.#aa &&
+        this.#aa != this.#ja &&
+        ((this.#ca = new StyleStroke(15 * num_scale_factor, "#EEEEEE")),
+        this.#ca.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black"),
+        this.#ca.setValue(
+          "Last Event Winner: " + func_renameBlankPlayerNames(this.#aa) + " ",
         ),
-        ca.setUsingRoundedFrame(true),
-        (ja = aa),
-        (fa = ca.render()));
-      if (fa) {
+        this.#ca.setUsingRoundedFrame(true),
+        (this.#ja = this.#aa),
+        (this.#fa = this.#ca.render()));
+      if (this.#fa) {
         let c = 10 * num_scale_factor;
         a.drawImage(
-          fa,
-          canvas.width - fa.width - c,
-          canvas.height - fa.height - c,
+          this.#fa,
+          canvas.width - this.#fa.width - c,
+          canvas.height - this.#fa.height - c,
         );
       }
     };
-    this.DrawCurrentWeaponIcon = function (a, c) {
-      Vb != c && ((Vb = c), (Ga = 1));
-      1 == Ga
-        ? ((ea -= 0.15), 0 >= ea && ((O = Vb), (ea = 0), (Ga = 2)))
-        : 2 == Ga && ((ea += 0.15), 1 <= ea && ((ea = 1), (Ga = 0)));
+    DrawCurrentWeaponIcon(a, c) {
+      this.#Vb != c && ((this.#Vb = c), (this.#Ga = 1));
+      1 == this.#Ga
+        ? ((this.#ea -= 0.15), 0 >= this.#ea && ((this.#O = this.#Vb), (this.#ea = 0), (this.#Ga = 2)))
+        : 2 == this.#Ga && ((this.#ea += 0.15), 1 <= this.#ea && ((this.#ea = 1), (this.#Ga = 0)));
       let d = 0,
         b = 0,
         g = 0,
         h,
         e = true;
-      switch (O) {
+      switch (this.#O) {
         case id_weapon_missile:
           d = 254;
           b = 69;
@@ -2374,7 +2373,7 @@ class UI_GameInfo {
           return;
       }
       a.save();
-      let k = Math.sqrt(ea);
+      let k = Math.sqrt(this.#ea);
       a.translate(0, -16);
       a.scale(k, k);
       a.translate(0, 16);
@@ -2396,19 +2395,19 @@ class UI_GameInfo {
       h.draw(a);
       a.restore();
     };
-    this.update = function (a) {
-      m += a;
-      H += a;
-      objUI_ActivityMessages.update(a);
-      objUI_killStatus.update(a);
-      V -= a;
-      0 > V && ((V += 1e3), (U = true));
-      0 < na && (na -= a);
-      0 < oa && (oa -= a);
+    update(a) {
+      this.#m += a;
+      this.#H += a;
+      this.#objUI_ActivityMessages.update(a);
+      this.#objUI_killStatus.update(a);
+      this.#V -= a;
+      0 > this.#V && ((this.#V += 1e3), (this.#U = true));
+      0 < this.#na && (this.#na -= a);
+      0 < this.#oa && (this.#oa -= a);
     };
-    this.renderLeaderboard = function (a, c) {
-      P = 270;
-      S = 0;
+    renderLeaderboard(a, c) {
+      this.#P = 270;
+      this.#S = 0;
       let d = 5 * num_scale_factor,
         b = 10 * num_scale_factor,
         g = 23 * num_scale_factor,
@@ -2425,37 +2424,37 @@ class UI_GameInfo {
         m;
       int_pathMobile &&
         ((f = 42),
-        (P = 300),
+        (this.#P = 300),
         (g = 33 * num_scale_factor),
         (h = 28 * num_scale_factor),
         (q = "Arial-BoldMT"));
-      e = S += d + g + d;
-      m = F.length;
+      e = this.#S += d + g + d;
+      m = this.#F.length;
       int_pathMobile && (m = 5);
       10 < m && (m = 10);
       for (l = 0; l < m; l++) {
-        r = objD_planes[F[l]];
+        r = objD_planes[this.#F[l]];
         r &&
-          ((S += h + b),
+          ((this.#S += h + b),
           (r = a.measureText(func_renameBlankPlayerNames(r.name)).width),
           I < r && (I = r));
       }
-      S -= b;
-      I > k && (P += I - k);
-      R = P * num_scale_factor;
-      S += d;
-      S += n;
-      c.width = R;
-      c.height = S;
+      this.#S -= b;
+      I > k && (this.#P += I - k);
+      this.#R = this.#P * num_scale_factor;
+      this.#S += d;
+      this.#S += n;
+      c.width = this.#R;
+      c.height = this.#S;
       k = h + "px 'proxima-nova-1','proxima-nova-2', " + q;
       a.fillStyle = "rgba(0,0,0,0.3)";
-      func_drawRoundedRectangle(a, 0, 0, R, S, 30 * num_scale_factor);
+      func_drawRoundedRectangle(a, 0, 0, this.#R, this.#S, 30 * num_scale_factor);
       a.fillStyle = "rgba(204,84,0,1.0)";
       func_drawRoundedRectangleHalf(
         a,
         0,
         2,
-        R,
+        this.#R,
         f * num_scale_factor,
         30 * num_scale_factor,
       );
@@ -2464,7 +2463,7 @@ class UI_GameInfo {
         a,
         0,
         0,
-        R,
+        this.#R,
         f * num_scale_factor,
         30 * num_scale_factor,
       );
@@ -2474,13 +2473,13 @@ class UI_GameInfo {
       a.textBaseline = "hanging";
       r = a.measureText(l).width;
       a.fillStyle = "rgba(255,255,0,0.5)";
-      a.fillText(l, R / 2 - r / 2, d + 1);
+      a.fillText(l, this.#R / 2 - r / 2, d + 1);
       a.fillStyle = "rgba(178,32,0,1.0)";
-      a.fillText(l, R / 2 - r / 2, d);
+      a.fillText(l, this.#R / 2 - r / 2, d);
       a.font = k;
       e += n;
       for (l = 0; l < m; l++)
-        if ((r = objD_planes[F[l]])) {
+        if ((r = objD_planes[this.#F[l]])) {
           for (n = 2; 0 <= n; n--) {
             g = ". ";
             (r.inGame && r.id != qa) || (g = ".     ");
@@ -2523,82 +2522,80 @@ class UI_GameInfo {
               objG_assets.frames.skull.draw(a);
               a.restore();
             }
-            a.fillText(r.score, R - d - q, e + g);
+            a.fillText(r.score, this.#R - d - q, e + g);
           }
           e += h + b;
         }
     };
-    this.drawLeaderboard = function (a) {
-      a.drawImage(C, canvas_width - R - 5, 5);
+    drawLeaderboard(a) {
+      a.drawImage(this.#C, canvas_width - this.#R - 5, 5);
     };
-    this.addActivityMessage = function (a) {
-      int_pathMobile || objUI_ActivityMessages.addActivityMessage(a);
+    addActivityMessage(a) {
+      int_pathMobile || this.#objUI_ActivityMessages.addActivityMessage(a);
     };
-    this.addMessage = function (c, b, g) {
-      e = c;
-      h = null;
-      f = g;
-      d = +new Date();
-      a = b;
+    addMessage(c, b, g) {
+      this.#e = c;
+      this.#h = null;
+      this.#f = g;
+      this.#d = +new Date();
+      this.#a = b;
     };
-    this.showTip = function (a) {
-      int_pathMobile || (Ta && this.clearTip(), (Ta = a), (H = 0), (Ia = null));
+    showTip(a) {
+      int_pathMobile || (this.#Ta && this.clearTip(), (this.#Ta = a), (this.#H = 0), (this.#Ia = null));
     };
-    this.clearTip = function () {
-      Ta = null;
+    clearTip() {
+      this.#Ta = null;
     };
-    this.showTargetLockedMessage = function () {
-      l || (l = "[ LOCKED ]");
+    showTargetLockedMessage() {
+      this.#l || (this.#l = "[ LOCKED ]");
     };
-    this.clearTargetLockedMessage = function () {
-      l = null;
+    clearTargetLockedMessage() {
+      this.#l = null;
     };
-    this.showWarningMessage = function (a) {
-      k = a;
-      m = 0;
+    showWarningMessage(a) {
+      this.#k = a;
+      this.#m = 0;
     };
-    this.clearWarningMessage = function () {
-      k = null;
+    clearWarningMessage() {
+      this.#k = null;
     };
-    this.refreshLeaderboard = function (a) {
-      F = a;
-      ta = true;
+    refreshLeaderboard(a) {
+      this.#F = a;
+      this.#ta = true;
     };
-    this.addBonus = function (a, c) {
-      objUI_killStatus.push(a, c);
+    addBonus(a, c) {
+      this.#objUI_killStatus.push(a, c);
     };
-    this.clearBonusDisplay = function () {
-      objUI_killStatus.clear();
+    clearBonusDisplay() {
+      this.#objUI_killStatus.clear();
     };
-    this.clearNearMiss = function () {
-      objUI_killStatus.clearNearMiss();
+    clearNearMiss() {
+      this.#objUI_killStatus.clearNearMiss();
     };
-    this.setLastWinner = function (a, c) {
-      aa = func_renameBlankPlayerNames(a);
+    setLastWinner(a, c) {
+      this.#aa = func_renameBlankPlayerNames(a);
       console.log("Last Event Winner: " + a);
-      c && ((ia = null), (na = 6e3));
+      c && ((this.#ia = null), (this.#na = 6e3));
     };
-    this.setWarshipRemoved = function (a) {
-      va = a;
-      oa = 5e3;
-      la = null;
+    setWarshipRemoved(a) {
+      this.#va = a;
+      this.#oa = 5e3;
+      this.#la = null;
     };
-  }
 }
 class UI_ActivityMessages {
-  constructor() {
-    let b = [],
-      e = [];
-    this.update = function (f) {
-      0 < e.length && 15e3 < T - e[0] && (b.shift(), e.shift());
+  #b = [];
+  #e = [];  
+    update(f) {
+      0 < this.#e.length && 15e3 < T - this.#e[0] && (this.#b.shift(), this.#e.shift());
     };
-    this.draw = function (e) {
+    draw(e) {
       e.globalAlpha = 1;
       let d = canvas.height - 180 * num_scale_factor,
         a;
-      for (a in b)
+      for (a in this.#b)
         e.drawImage(
-          b[a],
+          this.#b[a],
           25,
           d +
             26 * num_scale_factor +
@@ -2607,7 +2604,7 @@ class UI_ActivityMessages {
             15 * a * num_scale_factor,
         );
     };
-    this.addActivityMessage = function (f) {
+    addActivityMessage(f) {
       let d = new StyleStroke(14 * num_scale_factor, "#EEEEEE");
       d.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
       d.setValue("\u2022 " + f);
@@ -2615,50 +2612,47 @@ class UI_ActivityMessages {
       d.setHMargin(10);
       d.setVMargin(4);
       f = d.render();
-      b.push(f);
-      e.push(+new Date());
-      5 < b.length && (b.shift(), e.shift());
+      this.#b.push(f);
+      this.#e.push(+new Date());
+      5 < this.#b.length && (this.#b.shift(), this.#e.shift());
       f = 0;
-      for (let a in b) (d = b[a].width + 5 + 5), d > f && (f = d);
+      for (let a in this.#b) (d = this.#b[a].width + 5 + 5), d > f && (f = d);
     };
-  }
 }
 class Plane {
-  constructor() {
-    let _this = this,
-      num_spawn_cooldown_ms = 0,
-      f = 100,
-      d = false,
-      obj_particleTrails = new ParticleTrails(),
-      obj_particleFlags,
-      g,
-      h = 0,
-      q = (this.laserFrame = this.laserTimer = 0),
-      obj_particleManager,
-      k = 0,
-      m = 0,
-      l = 1,
-      y = 0,
-      r = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1],
-      obj_scoreAccumInfo,
-      pa = false,
-      s = 0,
-      w = 0,
-      t = 0,
-      x = 0,
-      z = 0,
-      C = 0,
-      P = 1,
-      R = 0,
-      S = 0,
-      O = false,
-      G = true,
-      ea = false,
-      Ga = 0,
-      D = 0,
-      Fa = 0,
-      ua = null,
-      M = {
+      #num_spawn_cooldown_ms = 0
+      #f = 100
+      #d = false
+      #obj_particleTrails = new ParticleTrails()
+      #obj_particleFlags
+      #g
+      #h = 0
+      #q = (this.laserFrame = this.laserTimer = 0)
+      #obj_particleManager
+      #k = 0
+      #m = 0
+      #l = 1
+      #y = 0
+      #r = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1]
+      #obj_scoreAccumInfo
+      #pa = false
+      #s = 0
+      #w = 0
+      #t = 0
+      #x = 0
+      #z = 0
+      #C = 0
+      #P = 1
+      #R = 0
+      #S = 0
+      #O = false
+      #G = true
+      #ea = false
+      #Ga = 0
+      #D = 0
+      #Fa = 0
+      #ua = null
+      #M = {
         1: "rgba(255, 255, 255, 0.6)",
         2: "rgba(255, 156, 0, 1.0)",
         4: "rgba(255, 43, 0, 1.0)",
@@ -2667,63 +2661,75 @@ class Plane {
         128: "rgba(255, 0, 255, 1.0)",
         256: "rgba(137, 137, 137, 1.0)",
       };
-    this.lastUpdate = this.highlightValue = 0;
-    this.id = -1;
-    this.dstY =
-      this.dstX =
-      this.origY =
-      this.origX =
-      this.prevY =
-      this.prevX =
-      this.y =
-      this.x =
-        0;
-    this.energy = 255;
-    this.inGame = true;
-    this.updateBool = false;
-    this.momentum = this.speed = this.colorHue = 0;
-    this.maxMomentum = 8;
-    this.dstAngle = this.origAngle = this.angle = 0;
-    this.controlAngle = -90;
-    this.rotSpeed = 4;
-    this.directionX = 0;
-    this.directionY = -1;
-    this.targetY = this.targetX = 0;
-    this.targetMomentum = this.maxMomentum;
-    this.name = "";
-    this.first_set = true;
-    this.rank = -1;
-    this.score = 0;
-    this.frameSwitchTime = 40;
-    this.timeToNextFrame = 0;
-    this.flameState = 1;
-    this.lastImage;
-    this.lastImageReflex;
-    this.flipLastImage = 1;
-    this.planeImages = objG_assets.planeFrames;
-    this.planeImagesReflex = objG_assets.planeFramesReflex;
-    this.decalFrames;
-    this.decalID = this.colorID = 0;
-    this.isShooting = this.isBot = this.hadHover = this.hover = false;
-    obj_particleTrails.fixedColor = true;
-    this.weapon = id_weapon_machinegun;
-    this.ammo = -1;
-    this.update = function (b) {
+    lastUpdate = 0
+    highlightValue = 0;
+    id = -1;
+    dstY = 0
+    dstX = 0
+    origY =0
+    origX =0
+    prevY =0
+    prevX =0
+    y =0
+    x =0
+    energy = 255;
+    inGame = true;
+    updateBool = false;
+    momentum = 0
+    speed = 0
+    colorHue = 0;
+    maxMomentum = 8;
+    dstAngle = 0
+    origAngle = 0
+    angle = 0;
+    controlAngle = -90;
+    rotSpeed = 4;
+    directionX = 0;
+    directionY = -1;
+    targetY = 0
+    targetX = 0;
+    targetMomentum = this.maxMomentum;
+    name = "";
+    first_set = true;
+    rank = -1;
+    score = 0;
+    frameSwitchTime = 40;
+    timeToNextFrame = 0;
+    flameState = 1;
+    lastImage;
+    lastImageReflex;
+    flipLastImage = 1;
+    planeImages = objG_assets.planeFrames;
+    planeImagesReflex = objG_assets.planeFramesReflex;
+    decalFrames;
+    decalID = 0
+    colorID = 0;
+    isShooting = false
+    isBot = false
+    hadHover = false
+    hover = false;
+    weapon = id_weapon_machinegun;
+    ammo = -1;
+    constructor() {
+      this.#obj_particleTrails.fixedColor = true;
+      this.#obj_particleTrails.style = this.#M[id_weapon_machinegun];
+    }
+    update(b) {
       if (this.inGame) {
         let g = 400,
           l;
-        ea && this.weapon == id_weapon_superweapon && (g = 800);
+        this.#ea && this.weapon == id_weapon_superweapon && (g = 800);
         func_isInsideBox(this.x, this.y, g)
-          ? pa ||
-            (obj_particleTrails && obj_particleTrails.clear(),
-            obj_particleFlags && obj_particleFlags.clear(),
-            (pa = true))
-          : (pa = false);
+          ? this.#pa ||
+            (this.#obj_particleTrails && this.#obj_particleTrails.clear(),
+            this.#obj_particleFlags && this.#obj_particleFlags.clear(),
+            (this.#pa = true))
+          : (this.#pa = false);
         g = this.weapon == id_weapon_superweapon && this.isShooting;
-        0 < num_spawn_cooldown_ms &&
-          ((f -= b),
-          0 > f && ((f = 100), (d = !d)),
-          (num_spawn_cooldown_ms -= b));
+        0 < this.#num_spawn_cooldown_ms &&
+          ((this.#f -= b),
+          0 > this.#f && ((this.#f = 100), (this.#d = !this.#d)),
+          (this.#num_spawn_cooldown_ms -= b));
         objG_followMode.moveLeft && (this.controlAngle += this.rotSpeed);
         objG_followMode.moveRight && (this.controlAngle -= this.rotSpeed);
         360 < this.controlAngle
@@ -2742,27 +2748,27 @@ class Plane {
         this.angle = k * (this.dstAngle - this.origAngle) + this.origAngle;
         k = this.x + 12 * Math.sin(-this.angle);
         m = this.y + 12 * Math.cos(-this.angle);
-        obj_particleTrails &&
-          (obj_particleTrails.setPosition(k, m),
+        this.#obj_particleTrails &&
+          (this.#obj_particleTrails.setPosition(k, m),
           objG_eventManager.isSpaceWars() &&
-            ((obj_particleTrails.width = 0.6),
+            ((this.#obj_particleTrails.width = 0.6),
             this.id == qa &&
-              "#00FF00" != obj_particleTrails.style &&
-              (obj_particleTrails.style = "#00FF00")));
-        obj_particleFlags && obj_particleFlags.setPosition(k, m);
+              "#00FF00" != this.#obj_particleTrails.style &&
+              (this.#obj_particleTrails.style = "#00FF00")));
+        this.#obj_particleFlags && this.#obj_particleFlags.setPosition(k, m);
         (k =
-          !this.hover && !obj_particleManager && !this.isInvulnerable() && !g)
+          !this.hover && !this.#obj_particleManager && !this.isInvulnerable() && !g)
           ? 0 == this.hadHover &&
-            ((this.hadHover = true), obj_particleTrails.push())
+            ((this.hadHover = true), this.#obj_particleTrails.push())
           : (this.hadHover = false);
-        obj_particleTrails &&
-          ((obj_particleTrails.enabled = k), obj_particleTrails.update(b));
-        obj_particleFlags &&
-          ((obj_particleFlags.enabled = k), obj_particleFlags.update(b));
+        this.#obj_particleTrails &&
+          ((this.#obj_particleTrails.enabled = k), this.#obj_particleTrails.update(b));
+        this.#obj_particleFlags &&
+          ((this.#obj_particleFlags.enabled = k), this.#obj_particleFlags.update(b));
         k = E / 2;
         m = k - 150;
-        if (this.y > m && this.y < k && 0 >= h) {
-          h = 5;
+        if (this.y > m && this.y < k && 0 >= this.#h) {
+          this.#h = 5;
           (l = Math.random() / 2),
             (m = (0.5 + (0.5 - ((k - this.y) / (k - m)) * 0.5)) * (0.95 + l)),
             (l = 20 * Math.sin(this.angle));
@@ -2773,21 +2779,21 @@ class Plane {
             true,
           );
         }
-        h -= b;
-        obj_particleManager &&
+        this.#h -= b;
+        this.#obj_particleManager &&
           ((k = this.x + 12 * Math.sin(-this.angle)),
           (m = this.y + 12 * Math.cos(-this.angle)),
-          obj_particleManager.setPosition(k, m),
-          obj_particleManager.update(b));
+          this.#obj_particleManager.setPosition(k, m),
+          this.#obj_particleManager.update(b));
         objG_player_plane == this && (hb = 0 == ha ? hb + b : 0);
         2 != ha
           ? objD_planes[gb] &&
-            ((w = Math.sqrt(hb / uc)),
-            1 < w && (w = 1),
-            (s -= b),
-            0 >= s &&
+            ((this.#w = Math.sqrt(hb / uc)),
+            1 < this.#w && (this.#w = 1),
+            (this.#s -= b),
+            0 >= this.#s &&
               (0 == ha
-                ? ((s = 0.7 > w ? 200 + s : 80 + s),
+                ? ((this.#s = 0.7 > this.#w ? 200 + this.#s : 80 + this.#s),
                   objG_sfxManager.playSound(
                     str_sfxid_lockon,
                     0.1,
@@ -2797,7 +2803,7 @@ class Plane {
                   ))
                 : 1 == ha &&
                   (objGUI_gameInfo.showTargetLockedMessage(),
-                  (s = 50 + s),
+                  (this.#s = 50 + this.#s),
                   objG_sfxManager.playSound(
                     str_sfxid_lockon,
                     0.1,
@@ -2805,11 +2811,11 @@ class Plane {
                     const_Q_0,
                     null,
                   ))))
-          : ((s = 0), objGUI_gameInfo.clearTargetLockedMessage());
+          : ((this.#s = 0), objGUI_gameInfo.clearTargetLockedMessage());
         0 < ma
-          ? ((t -= b),
-            0 > t &&
-              ((t = 100),
+          ? ((this.#t -= b),
+            0 > this.#t &&
+              ((this.#t = 100),
               objG_sfxManager.playSound(
                 str_sfxid_lockon,
                 0.1,
@@ -2817,7 +2823,7 @@ class Plane {
                 const_Q_0,
                 null,
               )))
-          : (t = 0);
+          : (this.#t = 0);
         this == objG_player_plane &&
           (ia ||
             objG_sfxManager.playSound(
@@ -2848,10 +2854,10 @@ class Plane {
               ? m && m.bufferSource && (m.bufferSource.playbackRate.value = 0.1)
               : ((l = this.speed / 30),
                 1 < l && (l = 1),
-                (x += (0.3 + 0.8 * l - x) / 30),
+                (this.#x += (0.3 + 0.8 * l - this.#x) / 30),
                 m &&
                   m.bufferSource &&
-                  (m.bufferSource.playbackRate.value = x))),
+                  (m.bufferSource.playbackRate.value = this.#x))),
           na &&
             ((m = 0),
             0.2 > k &&
@@ -2864,7 +2870,7 @@ class Plane {
             (g = 1 - k / 3e3),
             1 < g && (g = 1),
             0.1 > g && (g = 0),
-            0 == Fa
+            0 == this.#Fa
               ? (objG_sfxManager.playSound(
                   str_sfxid_lasershot,
                   0.2 * g,
@@ -2872,40 +2878,40 @@ class Plane {
                   const_Q_0,
                   null,
                 ),
-                ua ||
+                this.#ua ||
                   objG_sfxManager.playSound(
                     str_sfxid_laserloop,
                     0.2 * g,
                     1,
                     const_Q_0,
                     function (a) {
-                      nb = ua = a;
+                      nb = this.#ua = a;
                     },
                   ))
-              : ua &&
-                objG_sfxManager.sound.volume(0.2 * g * num_max_volume, ua),
+              : this.#ua &&
+                objG_sfxManager.sound.volume(0.2 * g * num_max_volume, this.#ua),
             (this.laserTimer += b),
-            (Fa += b))
+            (this.#Fa += b))
           : this.stopLaserSound();
-        obj_particleManager &&
+        this.#obj_particleManager &&
           this.weapon == id_weapon_punch &&
           1 < this.ammo &&
           (this.ammo = 1);
-        0 < q && (q -= b);
-        obj_scoreAccumInfo && obj_scoreAccumInfo.update(b);
-        0 < R && (R -= b);
+        0 < this.#q && (this.#q -= b);
+        this.#obj_scoreAccumInfo && this.#obj_scoreAccumInfo.update(b);
+        0 < this.#R && (this.#R -= b);
       }
     };
-    this.getCurrentFrameNum = function (a) {
-      a = parseInt(g / ((2 * Math.PI) / 28)) + 1;
-      return (a = r[(a - 1) % 14]);
+    getCurrentFrameNum(a) {
+      a = parseInt(this.#g / ((2 * Math.PI) / 28)) + 1;
+      return (a = this.#r[(a - 1) % 14]);
     };
-    this.draw = function (b, h) {
-      if (this.inGame && pa) {
+    draw(b, h) {
+      if (this.inGame && this.#pa) {
         let e, f, K, s, v, R, w, S, O, t;
-        obj_particleTrails && obj_particleTrails.draw(b);
-        obj_particleFlags && obj_particleFlags.draw(b);
-        obj_particleManager ||
+        this.#obj_particleTrails && this.#obj_particleTrails.draw(b);
+        this.#obj_particleFlags && this.#obj_particleFlags.draw(b);
+        this.#obj_particleManager ||
           (b.save(),
           b.translate(this.x, this.y),
           (this.timeToNextFrame -= h),
@@ -2919,22 +2925,22 @@ class Plane {
           this.flameState && b.scale(0.88, 0.88),
           b.rotate(this.angle - Math.PI / 2),
           b.translate(-23, 0),
-          this.isInvulnerable() && d && (b.globalAlpha = 0.3),
+          this.isInvulnerable() && this.#d && (b.globalAlpha = 0.3),
           objG_assets.frames.throttleFlame.draw(b),
           b.restore());
-        g =
+        this.#g =
           Math.abs((this.angle - Math.PI / 2) % (2 * Math.PI)) +
           (2 * Math.PI) / 28 / 2;
-        0 < this.angle - Math.PI / 2 && (g = 2 * Math.PI - g);
-        this.flipLastImage = g > 0.5 * Math.PI && g < 1.5 * Math.PI ? -1 : 1;
-        if (0 < q) {
+        0 < this.angle - Math.PI / 2 && (this.#g = 2 * Math.PI - this.#g);
+        this.flipLastImage = this.#g > 0.5 * Math.PI && this.#g < 1.5 * Math.PI ? -1 : 1;
+        if (0 < this.#q) {
           b.save();
           b.translate(this.x, this.y);
           b.scale(0.8, 0.8 * this.flipLastImage);
           b.rotate((this.angle - Math.PI / 2) * this.flipLastImage);
           b.translate(-15, -4);
           e = 1;
-          60 > q ? (e = q / 60) : 240 < q && (e = (300 - q) / 60);
+          60 > this.#q ? (e = this.#q / 60) : 240 < this.#q && (e = (300 - this.#q) / 60);
           b.globalAlpha = e;
           objG_assets.frames.punch.draw(b);
           b.restore();
@@ -2943,33 +2949,33 @@ class Plane {
         b.translate(this.x, this.y);
         b.scale(0.7, 0.7);
         b.rotate(this.angle - Math.PI / 2);
-        obj_particleManager
-          ? ((k -= h),
-            0 > k && ((k = m), y++, 8 == y && (l *= -1)),
-            (y %= 14),
-            (e = r[y]))
-          : (y = e = this.getCurrentFrameNum(b));
-        b.scale(1, this.flipLastImage * l);
+        this.#obj_particleManager
+          ? ((this.#k -= h),
+            0 > this.#k && ((this.#k = this.#m), this.#y++, 8 == this.#y && (this.#l *= -1)),
+            (this.#y %= 14),
+            (e = this.#r[this.#y]))
+          : (this.#y = e = this.getCurrentFrameNum(b));
+        b.scale(1, this.flipLastImage * this.#l);
         this.lastImage = this.planeImages[e - 1];
         void 0 == this.lastImage && (this.lastImage = this.planeImages[0]);
         this.lastImageReflex = this.planeImagesReflex[e - 1];
         void 0 == this.lastImageReflex &&
           (this.lastImageReflex = this.planeImagesReflex[0]);
-        this.isInvulnerable() && d && (b.globalAlpha = 0.3);
+        this.isInvulnerable() && this.#d && (b.globalAlpha = 0.3);
         this.lastImage.draw(b);
         f = this.decalFrames[e - 1];
         void 0 == f && (f = this.decalFrames[0]);
         f.draw(b);
         16 < this.speed
-          ? ((C += 0.06), 0.9 < C && (C = 0.9))
-          : ((C -= 0.06), 0 > C && (C = 0));
+          ? ((this.#C += 0.06), 0.9 < this.#C && (this.#C = 0.9))
+          : ((this.#C -= 0.06), 0 > this.#C && (this.#C = 0));
         b.rotate(-Math.PI / 2);
         b.translate(0, 8);
-        P++;
-        1 < P && (P = 0);
-        0 == P && ((z += 1), 2 < z && (z = 0));
-        b.globalAlpha = C;
-        objG_assets.frames["turbo" + z].draw(b);
+        this.#P++;
+        1 < this.#P && (this.#P = 0);
+        0 == this.#P && ((this.#z += 1), 2 < this.#z && (this.#z = 0));
+        b.globalAlpha = this.#C;
+        objG_assets.frames["turbo" + this.#z].draw(b);
         b.restore();
         0 < this.highlightValue &&
           !this.isInvulnerable() &&
@@ -2981,27 +2987,27 @@ class Plane {
           b.rotate(this.angle - Math.PI / 2),
           (b.globalAlpha = this.highlightValue),
           (e = objG_assets.whitePlaneImages["plane" + e]),
-          g > 0.5 * Math.PI && g < 1.5 * Math.PI
+          this.#g > 0.5 * Math.PI && this.#g < 1.5 * Math.PI
             ? b.scale(1.2, -1.2)
             : b.scale(1.2, 1.2),
           e && b.drawImage(e, -e.width / 2, -e.height / 2),
           b.restore());
-        obj_particleManager && obj_particleManager.draw(b);
+        this.#obj_particleManager && this.#obj_particleManager.draw(b);
         if (this.weapon == id_weapon_superweapon) {
           e = false;
-          (g > 0.5 * Math.PI && g < 0.5 * Math.PI + Math.PI) || (e = true);
+          (this.#g > 0.5 * Math.PI && this.#g < 0.5 * Math.PI + Math.PI) || (e = true);
           if (this.isShooting) {
             b.save();
-            (K = this.x - 10 * Ga), (s = this.y - 10 * D), (f = 500);
-            ea && (f = Math.sqrt(K * K + s * s) - 10);
+            (K = this.x - 10 * this.#Ga), (s = this.y - 10 * this.#D), (f = 500);
+            this.#ea && (f = Math.sqrt(K * K + s * s) - 10);
             100 > f && (f = 100);
             (v = objG_assets.frames.laser_opening.height),
-              (R = Fa / 50),
+              (R = this.#Fa / 50),
               (w = 1),
               (S = 0.75 * Math.PI),
               (K = false);
             R > S
-              ? ((R = R < 2 * S ? R - S : S), (w = Math.sin(0.04 * Fa)))
+              ? ((R = R < 2 * S ? R - S : S), (w = Math.sin(0.04 * this.#Fa)))
               : (K = true);
             b.translate(this.x, this.y);
             b.rotate(this.angle + Math.PI);
@@ -3024,7 +3030,7 @@ class Plane {
               50 < this.laserTimer &&
                 ((this.laserTimer = 0),
                 (this.laserFrame = (this.laserFrame + 1) % 3)),
-              ea
+              this.#ea
                 ? objG_assets.frames["laser_collision" + this.laserFrame].draw(
                     b,
                   )
@@ -3056,8 +3062,8 @@ class Plane {
         }
       }
     };
-    this.drawReflection = function (a, c) {
-      if (this.inGame && pa) {
+    drawReflection(a, c) {
+      if (this.inGame && this.#pa) {
         let b = E / 2,
           d = b - this.y;
         if (!(0 > d || 170 < d)) {
@@ -3065,8 +3071,8 @@ class Plane {
           a.save();
           a.translate(this.x, b + d - 25);
           a.scale(0.8, 0.8 * -this.flipLastImage * (1 + 4 * h));
-          g > 0.5 * Math.PI && g < 1.5 * Math.PI
-            ? a.rotate(1.5 * Math.PI + (g - Math.PI / 2) + Math.PI)
+          this.#g > 0.5 * Math.PI && this.#g < 1.5 * Math.PI
+            ? a.rotate(1.5 * Math.PI + (this.#g - Math.PI / 2) + Math.PI)
             : a.rotate(this.angle - Math.PI / 2);
           b = 1;
           30 > d && 15 <= d ? (b = (d - 15) / 15) : 15 > d && (b = 0);
@@ -3076,7 +3082,7 @@ class Plane {
         }
       }
     };
-    this.drawInput = function (a) {
+    drawInput(a) {
       if (this.inGame) {
         let c = -objG_inputManager.angle + Math.PI,
           b = !objG_inputManager.hover;
@@ -3094,7 +3100,7 @@ class Plane {
         a.restore();
         2 != ha &&
           (c = objD_planes[gb]) &&
-          this.DrawLockCrosshair(a, c.x, c.y, w, ha);
+          this.DrawLockCrosshair(a, c.x, c.y, this.#w, ha);
         0 < ma && this.DrawLockCrosshair(a, this.x, this.y, 1, 1);
         a.lineWidth = 1;
         a.beginPath();
@@ -3106,7 +3112,7 @@ class Plane {
         a.stroke();
       }
     };
-    this.DrawLockCrosshair = function (a, c, b, d, g) {
+    DrawLockCrosshair(a, c, b, d, g) {
       if (this.inGame) {
         a.lineWidth = 4;
         a.save();
@@ -3124,8 +3130,8 @@ class Plane {
         a.restore();
       }
     };
-    this.drawInfo = function (a) {
-      if (this.inGame && pa) {
+    drawInfo(a) {
+      if (this.inGame && this.#pa) {
         let c, d;
         a.save();
         a.translate(this.x, this.y);
@@ -3147,26 +3153,26 @@ class Plane {
           a.strokeStyle = "rgba(255,255,255,1.0)";
           a.strokeRect(-c / 2, 20, c, 8);
         }
-        G &&
+        this.#G &&
           !lb &&
           ((a.fillStyle = "rgba(255,255,255,1)"),
           (a.fillStyle = "rgba(255,255,255,1.0)"),
           (a.font =
             "Bold 15px 'proxima-nova-1','proxima-nova-2', arial, sans-serif"),
           (a.textBaseline = "hanging"),
-          (c = a.measureText(_this.name).width),
+          (c = a.measureText(this.name).width),
           (d = 38),
           objG_eventManager.isInstagib() && (d = 20),
-          a.fillText(_this.name, -c / 2, d));
+          a.fillText(this.name, -c / 2, d));
         a.restore();
         c = false;
         qa == this.id && (c = true);
         d = false;
         ub == this.id && (d = true);
-        if (c || 0 < R || O || d)
+        if (c || 0 < this.#R || this.#O || d)
           a.save(),
             a.translate(this.x, this.y - 30),
-            O
+            this.#O
               ? objG_assets.frames.pause.draw(a)
               : c
                 ? objG_assets.frames.crown.draw(a)
@@ -3174,16 +3180,16 @@ class Plane {
                   ? objG_assets.frames.revengeIcon.draw(a)
                   : objG_assets.frames.frenzyIcon.draw(a),
             a.restore();
-        obj_scoreAccumInfo &&
+        this.#obj_scoreAccumInfo &&
           (a.save(),
           (d = 0),
           c && (d = 30),
           a.translate(this.x, this.y - d),
-          obj_scoreAccumInfo.draw(a),
+          this.#obj_scoreAccumInfo.draw(a),
           a.restore());
       }
     };
-    this.setPose = function (b, d, g, h) {
+    setPose(b, d, g, h) {
       this.origX = this.x;
       this.origY = this.y;
       this.origAngle = this.dstAngle;
@@ -3198,41 +3204,41 @@ class Plane {
           (this.origAngle = this.dstAngle),
           (this.first_set = false),
           objG_wsConnection.firstClientListing ||
-            (num_spawn_cooldown_ms = 1e3 * tc))
+            (this.#num_spawn_cooldown_ms = 1e3 * tc))
         : ((b = this.dstX - this.origX),
           (d = this.dstY - this.origY),
           (this.speed = Math.sqrt(b * b + d * d) / 3));
       this.inGame ||
         ((this.inGame = true),
-        obj_particleTrails && obj_particleTrails.clear(),
-        obj_particleFlags && obj_particleFlags.clear());
+        this.#obj_particleTrails && this.#obj_particleTrails.clear(),
+        this.#obj_particleFlags && this.#obj_particleFlags.clear());
     };
-    this.trailEffect = function () {
-      wa && obj_particleTrails && obj_particleTrails.trailEffect();
+    trailEffect() {
+      wa && this.#obj_particleTrails && this.#obj_particleTrails.trailEffect();
     };
-    this.hit = function (a) {
+    hit(a) {
       func_isTimeElapsed_50ms() && (this.highlightValue = 1);
     };
-    this.setScore = function (a) {
+    setScore(a) {
       let c = a - this.score;
       0 < c &&
         this == objG_player_plane &&
-        (obj_scoreAccumInfo || (obj_scoreAccumInfo = new ScoreAccumInfo()),
-        func_isTimeElapsed_50ms() && obj_scoreAccumInfo.addScore(c));
+        (this.#obj_scoreAccumInfo || (this.#obj_scoreAccumInfo = new ScoreAccumInfo()),
+        func_isTimeElapsed_50ms() && this.#obj_scoreAccumInfo.addScore(c));
       this.score = a;
     };
-    this.incScore = function (a) {
+    incScore(a) {
       this.setScore(this.score + a);
     };
-    this.setName = function (c) {
+    setName(c) {
       this.name = c;
       if ("" == c || null == c)
-        (obj_particleTrails = new ParticleTrails()),
-          (obj_particleTrails.fixedColor = true),
-          (obj_particleTrails.style = M[id_weapon_machinegun]),
-          obj_particleTrails.clear();
+        (this.#obj_particleTrails = new ParticleTrails()),
+          (this.#obj_particleTrails.fixedColor = true),
+          (this.#obj_particleTrails.style = this.#M[id_weapon_machinegun]),
+          this.#obj_particleTrails.clear();
     };
-    this.setFlagInfo = function (uint32_flaginfo: number) {
+    setFlagInfo(uint32_flaginfo: number) {
       if (0 < uint32_flaginfo) {
         let d = uint32_flaginfo & 255;
         uint32_flaginfo >>= 8;
@@ -3240,26 +3246,26 @@ class Plane {
         uint32_flaginfo >>= 8;
         let h = 0 < (uint32_flaginfo & 4) ? true : false,
           e = 0 < (uint32_flaginfo & 2) ? true : false;
-        G = 0 < (uint32_flaginfo & 8) ? true : false;
-        obj_particleFlags = new ParticleFlags();
-        obj_particleFlags.flipX = e;
-        obj_particleFlags.flipY = h;
-        obj_particleFlags.scale = g / 100;
-        obj_particleFlags.stringScale = d / 100;
-        obj_particleFlags.setTexture(this.name);
+        this.#G = 0 < (uint32_flaginfo & 8) ? true : false;
+        this.#obj_particleFlags = new ParticleFlags();
+        this.#obj_particleFlags.flipX = e;
+        this.#obj_particleFlags.flipY = h;
+        this.#obj_particleFlags.scale = g / 100;
+        this.#obj_particleFlags.stringScale = d / 100;
+        this.#obj_particleFlags.setTexture(this.name);
       } else this.showName = true;
-      obj_particleTrails = new ParticleTrails();
-      obj_particleTrails.fixedColor = true;
-      obj_particleTrails.style = M[id_weapon_machinegun];
-      obj_particleTrails.clear();
+      this.#obj_particleTrails = new ParticleTrails();
+      this.#obj_particleTrails.fixedColor = true;
+      this.#obj_particleTrails.style = this.#M[id_weapon_machinegun];
+      this.#obj_particleTrails.clear();
     };
-    this.setEnergy = function (a) {
+    setEnergy(a) {
       this.energy = a;
-      25 > a && !obj_particleManager
-        ? ((obj_particleManager = new ParticleManager()),
-          obj_particleManager.init(15, this.x, this.y),
-          (k = 0),
-          (m = 20 + 40 * Math.random()),
+      25 > a && !this.#obj_particleManager
+        ? ((this.#obj_particleManager = new ParticleManager()),
+          this.#obj_particleManager.init(15, this.x, this.y),
+          (this.#k = 0),
+          (this.#m = 20 + 40 * Math.random()),
           objG_player_plane == this &&
             (objG_sfxManager.playSound(
               str_sfxid_crash,
@@ -3270,42 +3276,41 @@ class Plane {
             ),
             objGUI_gameInfo.clearNearMiss()))
         : 25 <= a &&
-          obj_particleManager &&
-          ((obj_particleManager = null), (l = 1));
+          this.#obj_particleManager &&
+          ((this.#obj_particleManager = null), (this.#l = 1));
     };
-    this.GetAmmo = function () {
+    GetAmmo() {
       return 1 == this.weapon ? -1 : this.ammo;
     };
-    this.setColorID = function (a) {
+    setColorID(a) {
       this.colorID = a;
       this.decalFrames = objG_assets.planes[this.decalID][this.colorID];
     };
-    this.setDecalID = function (a) {
+    setDecalID(a) {
       this.decalID = a;
       this.decalFrames = objG_assets.planes[this.decalID][this.colorID];
     };
-    this.setColorHue = function (a) {
+    setColorHue(a) {
       this.colorHue = a;
     };
-    this.getSpeedDirectionX = function () {
+    getSpeedDirectionX() {
       return this.x - this.prevX;
     };
-    this.getSpeedDirectionY = function () {
+    getSpeedDirectionY() {
       return this.y - this.prevY;
     };
-    this.setRank = function (a) {
+    setRank(a) {
       this.rank = a;
     };
-    this.isInvulnerable = function () {
-      return 0 < num_spawn_cooldown_ms;
+    isInvulnerable() {
+      return 0 < this.#num_spawn_cooldown_ms;
     };
-    obj_particleTrails.style = M[id_weapon_machinegun];
-    this.setWeapon = function (c) {
-      obj_particleTrails.style = M[c];
-      obj_particleTrails.width = 1;
+    setWeapon(c) {
+      this.#obj_particleTrails.style = this.#M[c];
+      this.#obj_particleTrails.width = 1;
       this.weapon = c;
     };
-    this.cleanup = function () {
+    cleanup() {
       ia && objG_sfxManager.sound.stop(ia);
       na && objG_sfxManager.sound.stop(na);
       this.stopLaserSound();
@@ -3315,116 +3320,115 @@ class Plane {
       objGUI_gameInfo.clearTargetLockedMessage();
       ma = 0;
     };
-    this.setFrenzy = function () {
-      R = 1e4;
+    setFrenzy() {
+      this.#R = 1e4;
     };
-    this.incKills = function () {
-      S++;
+    incKills() {
+      this.#S++;
     };
-    this.getKills = function () {
-      return S;
+    getKills() {
+      return this.#S;
     };
-    this.setPaused = function (a) {
-      O = a ? true : false;
+    setPaused(a) {
+      this.#O = a ? true : false;
     };
-    this.setIsBot = function (a) {
+    setIsBot(a) {
       this.isBot = a;
     };
-    this.setIsShooting = function (a) {
-      !a && this.isShooting && (this.laserTimer = Fa = 0);
+    setIsShooting(a) {
+      !a && this.isShooting && (this.laserTimer = this.#Fa = 0);
       this.isShooting = a;
     };
-    this.laserHit = function (a, c, b) {
-      Ga = a;
-      D = c;
-      ea = b;
+    laserHit(a, c, b) {
+      this.#Ga = a;
+      this.#D = c;
+      this.#ea = b;
     };
-    this.prepareFollow = function () {};
-    this.stopLaserSound = function () {
-      ua && (objG_sfxManager.sound.stop(ua), (ua = nb = null));
+    prepareFollow() {};
+    stopLaserSound() {
+      this.#ua && (objG_sfxManager.sound.stop(this.#ua), (this.#ua = nb = null));
     };
-    this.dash = function () {
+    dash() {
       this == objG_player_plane &&
         objG_sfxManager.playSound(str_sfxid_woosh, 0.15, 1, const_Q_0, null);
-      q = 300;
+      this.#q = 300;
     };
-    this.dashing = function () {
-      return 0 < q;
+    dashing() {
+      return 0 < this.#q;
     };
-    this.clearTrail = function () {
-      obj_particleTrails && obj_particleTrails.clear();
+    clearTrail() {
+      this.#obj_particleTrails && this.#obj_particleTrails.clear();
     };
-  }
+
 }
 class WaterSea {
-  constructor() {
-    let e,
-      f,
-      d,
-      a,
-      c,
-      g,
-      h = [],
-      q = 0;
-    function b(a, c) {
-      0 <= a && 24 > a && (f[a] += c);
+  #e
+  #f
+  #d
+  #a
+  #c
+  #g
+  #h = []
+  #q = 0;
+    #b(a, c) {
+      0 <= a && 24 > a && (this.#f[a] += c);
     }
-    this.update = function (b) {
+    update(b) {
       let k, m, l, y;
-      c = (1.1 * canvas.width) / objGUI_anchor.zoom;
-      g = c / 25;
-      a = Math.floor(H.x / g);
-      null != d &&
-        d != a &&
-        (0 < d - a
-          ? (f.splice(24, 24),
-            f.splice(0, 0, 0),
-            e.splice(24, 24),
-            e.splice(0, 0, 0))
-          : (f.splice(0, 1), f.push(0), e.splice(0, 1), e.push(0)));
-      d = a;
-      for (k = 0; 25 > k; k++) e[k] = 2 * f[k] - e[k];
-      k = f;
-      f = e;
-      e = k;
-      (k = f[0]), (m = f[0]), (l = f[1]);
-      f[0] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9));
-      f[0] = func_clamp(f[0], -100, 100);
+      this.#c = (1.1 * canvas.width) / objGUI_anchor.zoom;
+      this.#g = this.#c / 25;
+      this.#a = Math.floor(H.x / this.#g);
+      null != this.#d &&
+        this.#d != this.#a &&
+        (0 < this.#d - this.#a
+          ? (this.#f.splice(24, 24),
+            this.#f.splice(0, 0, 0),
+            this.#e.splice(24, 24),
+            this.#e.splice(0, 0, 0))
+          : (this.#f.splice(0, 1), this.#f.push(0), this.#e.splice(0, 1), this.#e.push(0)));
+      this.#d = this.#a;
+      for (k = 0; 25 > k; k++) this.#e[k] = 2 * this.#f[k] - this.#e[k];
+      k = this.#f;
+      this.#f = this.#e;
+      this.#e = k;
+      (k = this.#f[0]), (m = this.#f[0]), (l = this.#f[1]);
+      this.#f[0] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9));
+      this.#f[0] = func_clamp(this.#f[0], -100, 100);
       for (y = 1; 24 > y; ++y)
         (k = m),
           (m = l),
-          (l = f[y + 1]),
-          (f[y] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9))),
-          (f[y] = func_clamp(f[y], -100, 100));
+          (l = this.#f[y + 1]),
+          (this.#f[y] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9))),
+          (this.#f[y] = func_clamp(this.#f[y], -100, 100));
       k = m;
       m = l;
-      f[24] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9));
-      f[24] = func_clamp(f[24], -100, 100);
+      this.#f[24] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9));
+      this.#f[24] = func_clamp(this.#f[24], -100, 100);
       k = m;
       m = l;
-      f[0] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9));
-      f[0] = func_clamp(f[0], -100, 100);
+      this.#f[0] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9));
+      this.#f[0] = func_clamp(this.#f[0], -100, 100);
       k = m;
       m = l;
-      f[1] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9));
-      f[1] = func_clamp(f[1], -100, 100);
+      this.#f[1] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9));
+      this.#f[1] = func_clamp(this.#f[1], -100, 100);
       k = m;
-      f[24] = 0.99 * (0.9 * l + 0.5 * (k + l) * (1 - 0.9));
-      f[24] = func_clamp(f[24], -100, 100);
+      this.#f[24] = 0.99 * (0.9 * l + 0.5 * (k + l) * (1 - 0.9));
+      this.#f[24] = func_clamp(this.#f[24], -100, 100);
       k = parseInt(24 * Math.random());
       m = (20 * Math.random()) / 20;
-      f[k - 1] += m / 2;
-      f[k] += m;
-      f[k + 1] += m / 2;
+      this.#f[k - 1] += m / 2;
+      this.#f[k] += m;
+      this.#f[k + 1] += m / 2;
       l = objGUI_anchor.getBounds();
       if (l[1].y > E / 2) {
-        k = h.length;
-        q -= b;
-        0 > q &&
-          ((q = 125.6),
+        k = this.#h.length;
+        this.#q -= b;
+        0 > this.#q &&
+          ((this.#q = 125.6),
           20 > k &&
             ((m = new WaterSeaRipple()),
-            h.push(m),
+            this.#h.push(m),
             (l = l[1].x - l[0].x),
             (y = 0),
             objG_player_plane &&
@@ -3434,12 +3438,12 @@ class WaterSea {
             m.setPosition(l + H.x, E / 2 + y + 30, y)));
         l = [];
         for (y = 0; y < k; y++)
-          (m = h[y]), m.update(b), m.deleting && l.push(m);
-        for (b = 0; b < l.length; b++) (k = h.indexOf(l[b])), h.splice(k, 1);
+          (m = this.#h[y]), m.update(b), m.deleting && l.push(m);
+        for (b = 0; b < l.length; b++) (k = this.#h.indexOf(l[b])), this.#h.splice(k, 1);
         l.length = 0;
       }
     };
-    this.drawBehind = function (a) {
+    drawBehind(a) {
       let c = E / 2 - H.y,
         b = 0.5 + (c / (E / 2)) * 6;
       this.drawWaterArea(a, 2 * b, "rgba(9,188,255,1.0)", 100, 0.25, 0.6, c);
@@ -3448,9 +3452,9 @@ class WaterSea {
       this.drawWaterArea(a, 4 * b, "rgba(8,164,254,1.0)", 100, 0.75, 0.8, c);
       this.drawWaterArea(a, 13 * b, "rgba(7,142,252,1.0)", 1e3, 0, 1, c);
     };
-    this.drawFront = function (b) {
+    drawFront(b) {
       let d = E / 2 - H.y,
-        e = a * g,
+        e = this.#a * this.#g,
         f = E / 2 + -30,
         q = b.createLinearGradient(0, f, 0, f + (600 + 2 * d));
       q.addColorStop(0, "rgba(7,142,252,1.0)");
@@ -3458,234 +3462,230 @@ class WaterSea {
       q.addColorStop(1, "rgba(0,90,190,1.0)");
       b.fillStyle = q;
       b.beginPath();
-      b.moveTo(e + g - c / 2, f + 30);
-      b.lineTo(e + g + c / 2, f + 30);
-      b.lineTo(e + 25 * g - c / 2, 1030 + f);
-      b.lineTo(e + g - c / 2, 1030 + f);
+      b.moveTo(e + this.#g - this.#c / 2, f + 30);
+      b.lineTo(e + this.#g + this.#c / 2, f + 30);
+      b.lineTo(e + 25 * this.#g - this.#c / 2, 1030 + f);
+      b.lineTo(e + this.#g - this.#c / 2, 1030 + f);
       b.fill();
       b.restore();
-      e = h.length;
-      for (f = 0; f < e; f++) h[f].draw(b, d);
+      e = this.#h.length;
+      for (f = 0; f < e; f++) this.#h[f].draw(b, d);
     };
-    this.drawWaterArea = function (b, d, h, e, q, r, K) {
-      K = a * g;
+    drawWaterArea(b, d, h, e, q, r, K) {
+      K = this.#a * this.#g;
       let p = E / 2 + -30;
       b.save();
       b.fillStyle = h;
       b.beginPath();
-      b.moveTo(K + g - c / 2, f[0] * r + p + d);
+      b.moveTo(K + this.#g - this.#c / 2, this.#f[0] * r + p + d);
       for (h = 1; 25 > h; h++) {
         let s = (h + parseInt(25 * q)) % 25;
-        b.lineTo(K + (h + 1) * g - c / 2, f[s] * r + d + p);
+        b.lineTo(K + (h + 1) * this.#g - this.#c / 2, this.#f[s] * r + d + p);
       }
-      b.lineTo(K + 25 * g - c / 2, e + d + p);
-      b.lineTo(K + g - c / 2, e + d + p);
+      b.lineTo(K + 25 * this.#g - this.#c / 2, e + d + p);
+      b.lineTo(K + this.#g - this.#c / 2, e + d + p);
       b.fill();
       b.restore();
     };
-    this.disturbSurface = function (c, d) {
-      let h = Math.floor(c / g) - a + 12.5;
-      b(h - 2, d / 2);
-      b(h - 1, d / 2);
-      b(h, d);
-      b(h + 1, d / 2);
-      b(h + 2, d / 2);
+    disturbSurface(c, d) {
+      let h = Math.floor(c / this.#g) - this.#a + 12.5;
+      this.#b(h - 2, d / 2);
+      this.#b(h - 1, d / 2);
+      this.#b(h, d);
+      this.#b(h + 1, d / 2);
+      this.#b(h + 2, d / 2);
     };
     (function () {
-      e = [];
-      f = [];
-      for (let a = 0; 25 > a; a++) e.push(0), f.push(0);
+      this.#e = [];
+      this.#f = [];
+      for (let a = 0; 25 > a; a++) this.#e.push(0), this.#f.push(0);
     })();
-  }
 }
 class WaterSeaRipple {
-  constructor() {
-    let b = [
-        118.17, 11.98, 26.9, -3.43, 1.91, -19.41, 0.45, -19.48, -0.82, -19.55,
-        -52.05, 2.79, -118.88, 11.55, -121.21, 11.85, -0.57, -3.74, 0.26, -4.04,
-        0.57, -4.15, 121.8, 12.59, 118.17, 11.98,
-      ],
-      e,
-      f,
-      d,
-      a,
-      c = 0;
-    this.deleting = false;
-    this.speed = 0.02;
-    this.setPosition = function (c, b, q) {
-      e = c;
-      f = b;
-      d = q;
-      a = d / 250;
+  #b = [
+    118.17, 11.98, 26.9, -3.43, 1.91, -19.41, 0.45, -19.48, -0.82, -19.55,
+    -52.05, 2.79, -118.88, 11.55, -121.21, 11.85, -0.57, -3.74, 0.26, -4.04,
+    0.57, -4.15, 121.8, 12.59, 118.17, 11.98,
+  ]
+  #e
+  #f
+  #d
+  #a
+  #c = 0;
+    deleting = false;
+    speed = 0.02;
+    setPosition(c, b, q) {
+      this.#e = c;
+      this.#f = b;
+      this.#d = q;
+      this.#a = this.#d / 250;
     };
-    this.update = function (a) {
-      c += (a / 1e3) * this.speed * 60;
-      c >= Math.PI && (this.deleting = true);
+    update(a) {
+      this.#c += (a / 1e3) * this.speed * 60;
+      this.#c >= Math.PI && (this.deleting = true);
     };
-    this.draw = function (d, h) {
+    draw(d, h) {
       if (!this.deleting) {
         let q, n;
         d.save();
-        q = Math.sin(c);
+        q = Math.sin(this.#c);
         d.globalAlpha = Math.sqrt(q);
-        d.translate(e, f - 4 * c + (h / 500) * 150 * a);
+        d.translate(this.#e, this.#f - 4 * this.#c + (h / 500) * 150 * this.#a);
         d.scale(0 + 1 * q, 0 + 0.8 * q);
         d.translate(0, -20);
         d.fillStyle = "#b3dff9";
         d.beginPath();
-        (q = b.length), (n = 0.1 + 0.9 * a);
-        d.moveTo(b[0] * n + 0, b[1] * n + 0);
+        (q = this.#b.length), (n = 0.1 + 0.9 * this.#a);
+        d.moveTo(this.#b[0] * n + 0, this.#b[1] * n + 0);
         for (let k = 2; k < q; k += 6)
           d.bezierCurveTo(
-            b[k] * n + 0,
-            b[k + 1] * n + 0,
-            b[k + 2] * n + 0,
-            b[k + 3] * n + 0,
-            b[k + 4] * n + 0,
-            b[k + 5] * n + 0,
+            this.#b[k] * n + 0,
+            this.#b[k + 1] * n + 0,
+            this.#b[k + 2] * n + 0,
+            this.#b[k + 3] * n + 0,
+            this.#b[k + 4] * n + 0,
+            this.#b[k + 5] * n + 0,
           );
         d.fill();
         d.restore();
       }
     };
-  }
 }
 class Clouds {
-  constructor() {
-    let b = [
-        [
-          -142.21, -1.18, -143.28, 0.36, -123.09, 11.23, -103.01, 13.96, -81.96,
-          16.82, -65.17, 14.9, -64.36, 15.65, -41.42, 37.12, -28.62, 36.17,
-          -16.75, 36.02, 18.19, 35.56, 38.19, 16.67, 39.3, 18.03, 50.57, 31.83,
-          67.87, 39.26, 84.68, 33.47, 95.27, 29.83, 123.57, 5.67, 121.35, -3.74,
-          118.45, -15.98, 89.66, -8.14, 88.44, -10.77, 74.28, -41.45, 51.47,
-          -22.75, 50.8, -23.76, 38.13, -43.02, 24.97, -62.52, -2.75, -60.1,
-          -31.37, -57.6, -55.13, -17.35, -55.49, -17.57, -98.49, -44.18,
-          -132.86, -14.55, -142.21, -1.18,
-        ],
-        [
-          -162.55, -1.68, -169.22, -19.07, -134.4, -35.44, -105.42, -35.13,
-          -45.5, -34.48, -16.08, -8.51, 20.84, -12.63, 32.11, -13.89, 20.28,
-          -39.57, 35.04, -45.63, 50.56, -52, 67.52, -44.38, 81.19, -32.08,
-          94.38, -20.22, 83.96, -10.24, 86.36, -8.17, 92.3, -3.06, 110.55, -8.9,
-          114.01, -1.75, 116.98, 4.4, 87.88, 27.98, 55.69, 21.98, 53.83, 21.64,
-          55.47, 33.56, 20.71, 36.54, 5.28, 37.87, -8.91, 30.47, -14.55, 25.77,
-          -17.17, 23.58, -33.82, 38.42, -52.98, 36.38, -65.86, 35.01, -74.62,
-          20.26, -78.34, 16.38, -80.92, 13.67, -151.51, 27.09, -162.55, -1.68,
-        ],
-        [
-          -132.9, 30.86, -125.9, 10.58, -96.55, -22.97, -85.94, -23.79, -61.71,
-          -25.67, -53.16, -17.53, -50.03, -17.63, -46.79, -17.74, -37.17,
-          -49.76, -6.45, -50.02, 26.73, -50.29, 38.01, -16.34, 44.61, -16.75,
-          52.59, -17.25, 57.84, -24.32, 79.01, -23.54, 98.83, -22.8, 96.09,
-          -12.23, 103.77, -9.21, 111.97, -5.97, 134.38, -11.68, 144.73, 7.12,
-          152.17, 20.65, 110.44, 38.48, 91.74, 39.3, 47.05, 41.27, -50.64,
-          19.62, -67.45, 24.81, -90.4, 31.9, -100.01, 37.45, -121.08, 38.84,
-          -125.4, 39.13, -134.8, 36.38, -132.9, 30.86,
-        ],
-        [
-          -142.3, 3.86, -142.68, -5.86, -66.59, -26.42, -45.57, -34.65, -22.55,
-          -43.64, -21.3, -84.89, 5.81, -86.9, 25.18, -88.34, 99.82, -49.94,
-          103.2, -10.26, 104.1, 0.3, 137.86, -21.94, 136.83, -10.3, 133.75,
-          24.38, 117.81, 21.85, 111.08, 24.7, 107.63, 26.15, 88.76, 26.4, 83.17,
-          23.68, 82.44, 23.32, 49.7, 40.09, 19.75, 36.6, -18.88, 32.08, -37.22,
-          21.23, -53.51, 11.08, -57.67, 8.49, -66.63, 26.07, -94.62, 26.33,
-          -103.38, 26.41, -112.73, 24.98, -123.85, 15.85, -126.35, 13.8,
-          -141.87, 14.59, -142.3, 3.86,
-        ],
-        [
-          -142.63, 14.15, -142.06, 12.44, -131.98, 6.01, -92.96, -13.64, -80.08,
-          -20.13, -78.45, -40.22, -32.37, -45.14, 6.08, -49.25, 5.44, -26.43,
-          8.78, -26.51, 11.15, -26.56, 20.61, -40.86, 44.75, -43.15, 61.05,
-          -44.69, 72.86, -34.19, 77.21, -31.3, 84.42, -26.5, 149.08, -20.62,
-          150.6, 0.29, 152.12, 21.2, 123.52, 42.13, 64.54, 49.68, 23.28, 54.96,
-          37.73, 31.1, 25.32, 30.57, 13.73, 30.07, -6.57, 48.69, -21.45, 46.17,
-          -44.71, 42.24, -48.23, 33.33, -81.8, 18.87, -122.06, 1.53, -142.83,
-          14.75, -142.63, 14.15,
-        ],
-        [
-          -128.91, -3.91, -100.79, -29.51, -75.44, -28.12, -55.48, -25.64,
-          -35.53, -23.16, -10.93, -12.78, 7.7, -16, 15.92, -17.42, 33.99,
-          -43.08, 54.49, -43.88, 83.11, -44.99, 85.4, -21.07, 89.46, -21.25,
-          94.52, -21.48, 107.89, -29.23, 117.73, -3.17, 118.89, -0.07, 136.54,
-          16.66, 149.39, 19.53, 149.68, 19.59, 95.95, 10.58, 17.5, 16.07, -5.04,
-          17.65, -60.8, 45.1, -108.87, 48.31, -130.84, 49.78, -145.13, 42.1,
-          -143.01, 29.93, -140.38, 14.79, -134.29, 0.99, -128.91, -3.91,
-        ],
-        [
-          -105.63, 33.5, -112.73, 24.78, -104.42, 20.23, -104.9, 18.35, -106.19,
-          13.28, -101.31, -5.25, -88.8, -11.01, -73.37, -18.1, -65.27, -18.01,
-          -49.55, -16.92, -46.11, -16.68, -52.73, -32.67, -37.48, -39.53,
-          -19.05, -47.81, 18.24, -26.76, 24.38, -21.56, 26.14, -20.07, 44.72,
-          -32.26, 63.81, -26.11, 106.07, -12.51, 112.47, 3.21, 124.03, 10.2,
-          146.91, 24.05, 177.98, 16.35, 176.28, 17.17, 108.58, 50.11, -0.39,
-          35.83, -2.15, 35.9, -18.66, 36.6, -90.36, 52.25, -105.63, 33.5,
-        ],
-        [
-          -515.42, -79.84, -511.96, -82.38, -492.91, -99.15, -444.49, -84.74,
-          -379.42, -65.39, -353.57, -29.63, -347.84, -16.74, -347.52, -16.02,
-          -326.45, -32.16, -294.56, -21.93, -266.34, -12.88, -255.45, 16.99,
-          -233.61, 34.9, -195.97, 65.76, -153.63, 30.14, -135.04, 43.22, -79.08,
-          82.59, 0.11, -91.66, 104.06, 4.27, 177.97, 72.49, 215.12, 9.81,
-          234.44, 16.08, 252.34, 21.9, 289.03, 43.31, 332.29, 27.33, 368.2,
-          14.06, 416.81, -38.28, 429.68, -21.59, 445.63, -0.91, 440.5, -8.41,
-          442.5, -17, 454.3, -67.56, 497.46, -97.75, 506.29, -79.88, 515.12,
-          -62.02, 527.33, 105.09, 482.02, 105.88, 436.97, 106.67, -558.17,
-          136.12, -560.32, 90.04, -566.63, -45.23, -534.53, -65.79, -515.42,
-          -79.84,
-        ],
-      ],
-      e = [
-        [876.66, -374.819, 1, 1.26],
-        [97.633, -380.736, 0, 1],
-        [192.926, 241.051, 2, 1],
-        [-600.648, -471.205, 3, 1],
-        [-1012.119, -182.729, 4, 1],
-        [-309.131, -16.817, 5, 1],
-        [-909.922, 275.895, 6, 1],
-        [433.972, -27.105, 4, 0.82],
-        [1061.589, 28.127, 5, 1],
-        [1393.747, -174.289, 5, 0.61],
-        [1571.903, 160.019, 0, 1.4],
-        [2070.708, -424.461, 5, 1],
-        [1890.094, -38.011, 3, 0.74],
-        [2641.256, 167.835, 2, 1.3],
-        [2775.003, -273.566, 1, 1.73],
-        [3600.865, -10.901, 6, 1],
-        [4304.657, -434.446, 3, 1.02],
-        [4514.504, 49.961, 5, 1.34],
-        [-1873.248, 78.997, 2, 1.85],
-        [-1738.956, -423.752, 0, 1],
-        [-2562.487, -248.492, 5, 1],
-        [-2908.07, 273.062, 1, 1],
-        [-3511.442, -140.75, 3, 1],
-        [-3067.546, -513.007, 5, 1],
-        [-4294.653, 81.801, 4, 1.18],
-        [-4341.772, -444.099, 2, 1.49],
-        [4534.451, 552.148, 7, 1],
-        [3523.869, 548.891, 7, 1],
-        [2523.538, 545.869, 7, 1],
-        [1527.226, 539.951, 7, 1],
-        [524.44, 534.033, 7, 1],
-        [-491.107, 531.244, 7, 1],
-        [-1491.259, 530.667, 7, 1],
-        [-2491.026, 527.456, 7, 1],
-        [-3488.818, 522.618, 7, 1],
-        [-4489.133, 520.724, 7, 1],
-        [5540.582, 549.447, 7, 1],
-        [6532.003, 553.506, 7, 1],
-        [5332.871, -202.519, 3, 0.92],
-        [6297.753, -518.992, 0, 1.4],
-        [6571.46, 146.567, 1, 1],
-        [-5608.643, -91.44, 1, 1],
-        [-6554.049, -474.834, 5, 1],
-        [-6324.28, 338.097, 5, 1],
-        [-5497.194, 515.894, 7, 1],
-        [-6495.769, 511.43, 7, 1],
-      ],
-      f = [],
-      d = [];
-    this.drawCloudShape = function (a, c, b, d, e) {
+  #b = [
+    [
+      -142.21, -1.18, -143.28, 0.36, -123.09, 11.23, -103.01, 13.96, -81.96,
+      16.82, -65.17, 14.9, -64.36, 15.65, -41.42, 37.12, -28.62, 36.17,
+      -16.75, 36.02, 18.19, 35.56, 38.19, 16.67, 39.3, 18.03, 50.57, 31.83,
+      67.87, 39.26, 84.68, 33.47, 95.27, 29.83, 123.57, 5.67, 121.35, -3.74,
+      118.45, -15.98, 89.66, -8.14, 88.44, -10.77, 74.28, -41.45, 51.47,
+      -22.75, 50.8, -23.76, 38.13, -43.02, 24.97, -62.52, -2.75, -60.1,
+      -31.37, -57.6, -55.13, -17.35, -55.49, -17.57, -98.49, -44.18,
+      -132.86, -14.55, -142.21, -1.18,
+    ],
+    [
+      -162.55, -1.68, -169.22, -19.07, -134.4, -35.44, -105.42, -35.13,
+      -45.5, -34.48, -16.08, -8.51, 20.84, -12.63, 32.11, -13.89, 20.28,
+      -39.57, 35.04, -45.63, 50.56, -52, 67.52, -44.38, 81.19, -32.08,
+      94.38, -20.22, 83.96, -10.24, 86.36, -8.17, 92.3, -3.06, 110.55, -8.9,
+      114.01, -1.75, 116.98, 4.4, 87.88, 27.98, 55.69, 21.98, 53.83, 21.64,
+      55.47, 33.56, 20.71, 36.54, 5.28, 37.87, -8.91, 30.47, -14.55, 25.77,
+      -17.17, 23.58, -33.82, 38.42, -52.98, 36.38, -65.86, 35.01, -74.62,
+      20.26, -78.34, 16.38, -80.92, 13.67, -151.51, 27.09, -162.55, -1.68,
+    ],
+    [
+      -132.9, 30.86, -125.9, 10.58, -96.55, -22.97, -85.94, -23.79, -61.71,
+      -25.67, -53.16, -17.53, -50.03, -17.63, -46.79, -17.74, -37.17,
+      -49.76, -6.45, -50.02, 26.73, -50.29, 38.01, -16.34, 44.61, -16.75,
+      52.59, -17.25, 57.84, -24.32, 79.01, -23.54, 98.83, -22.8, 96.09,
+      -12.23, 103.77, -9.21, 111.97, -5.97, 134.38, -11.68, 144.73, 7.12,
+      152.17, 20.65, 110.44, 38.48, 91.74, 39.3, 47.05, 41.27, -50.64,
+      19.62, -67.45, 24.81, -90.4, 31.9, -100.01, 37.45, -121.08, 38.84,
+      -125.4, 39.13, -134.8, 36.38, -132.9, 30.86,
+    ],
+    [
+      -142.3, 3.86, -142.68, -5.86, -66.59, -26.42, -45.57, -34.65, -22.55,
+      -43.64, -21.3, -84.89, 5.81, -86.9, 25.18, -88.34, 99.82, -49.94,
+      103.2, -10.26, 104.1, 0.3, 137.86, -21.94, 136.83, -10.3, 133.75,
+      24.38, 117.81, 21.85, 111.08, 24.7, 107.63, 26.15, 88.76, 26.4, 83.17,
+      23.68, 82.44, 23.32, 49.7, 40.09, 19.75, 36.6, -18.88, 32.08, -37.22,
+      21.23, -53.51, 11.08, -57.67, 8.49, -66.63, 26.07, -94.62, 26.33,
+      -103.38, 26.41, -112.73, 24.98, -123.85, 15.85, -126.35, 13.8,
+      -141.87, 14.59, -142.3, 3.86,
+    ],
+    [
+      -142.63, 14.15, -142.06, 12.44, -131.98, 6.01, -92.96, -13.64, -80.08,
+      -20.13, -78.45, -40.22, -32.37, -45.14, 6.08, -49.25, 5.44, -26.43,
+      8.78, -26.51, 11.15, -26.56, 20.61, -40.86, 44.75, -43.15, 61.05,
+      -44.69, 72.86, -34.19, 77.21, -31.3, 84.42, -26.5, 149.08, -20.62,
+      150.6, 0.29, 152.12, 21.2, 123.52, 42.13, 64.54, 49.68, 23.28, 54.96,
+      37.73, 31.1, 25.32, 30.57, 13.73, 30.07, -6.57, 48.69, -21.45, 46.17,
+      -44.71, 42.24, -48.23, 33.33, -81.8, 18.87, -122.06, 1.53, -142.83,
+      14.75, -142.63, 14.15,
+    ],
+    [
+      -128.91, -3.91, -100.79, -29.51, -75.44, -28.12, -55.48, -25.64,
+      -35.53, -23.16, -10.93, -12.78, 7.7, -16, 15.92, -17.42, 33.99,
+      -43.08, 54.49, -43.88, 83.11, -44.99, 85.4, -21.07, 89.46, -21.25,
+      94.52, -21.48, 107.89, -29.23, 117.73, -3.17, 118.89, -0.07, 136.54,
+      16.66, 149.39, 19.53, 149.68, 19.59, 95.95, 10.58, 17.5, 16.07, -5.04,
+      17.65, -60.8, 45.1, -108.87, 48.31, -130.84, 49.78, -145.13, 42.1,
+      -143.01, 29.93, -140.38, 14.79, -134.29, 0.99, -128.91, -3.91,
+    ],
+    [
+      -105.63, 33.5, -112.73, 24.78, -104.42, 20.23, -104.9, 18.35, -106.19,
+      13.28, -101.31, -5.25, -88.8, -11.01, -73.37, -18.1, -65.27, -18.01,
+      -49.55, -16.92, -46.11, -16.68, -52.73, -32.67, -37.48, -39.53,
+      -19.05, -47.81, 18.24, -26.76, 24.38, -21.56, 26.14, -20.07, 44.72,
+      -32.26, 63.81, -26.11, 106.07, -12.51, 112.47, 3.21, 124.03, 10.2,
+      146.91, 24.05, 177.98, 16.35, 176.28, 17.17, 108.58, 50.11, -0.39,
+      35.83, -2.15, 35.9, -18.66, 36.6, -90.36, 52.25, -105.63, 33.5,
+    ],
+    [
+      -515.42, -79.84, -511.96, -82.38, -492.91, -99.15, -444.49, -84.74,
+      -379.42, -65.39, -353.57, -29.63, -347.84, -16.74, -347.52, -16.02,
+      -326.45, -32.16, -294.56, -21.93, -266.34, -12.88, -255.45, 16.99,
+      -233.61, 34.9, -195.97, 65.76, -153.63, 30.14, -135.04, 43.22, -79.08,
+      82.59, 0.11, -91.66, 104.06, 4.27, 177.97, 72.49, 215.12, 9.81,
+      234.44, 16.08, 252.34, 21.9, 289.03, 43.31, 332.29, 27.33, 368.2,
+      14.06, 416.81, -38.28, 429.68, -21.59, 445.63, -0.91, 440.5, -8.41,
+      442.5, -17, 454.3, -67.56, 497.46, -97.75, 506.29, -79.88, 515.12,
+      -62.02, 527.33, 105.09, 482.02, 105.88, 436.97, 106.67, -558.17,
+      136.12, -560.32, 90.04, -566.63, -45.23, -534.53, -65.79, -515.42,
+      -79.84,
+    ],
+  ]
+  #e = [
+    [876.66, -374.819, 1, 1.26],
+    [97.633, -380.736, 0, 1],
+    [192.926, 241.051, 2, 1],
+    [-600.648, -471.205, 3, 1],
+    [-1012.119, -182.729, 4, 1],
+    [-309.131, -16.817, 5, 1],
+    [-909.922, 275.895, 6, 1],
+    [433.972, -27.105, 4, 0.82],
+    [1061.589, 28.127, 5, 1],
+    [1393.747, -174.289, 5, 0.61],
+    [1571.903, 160.019, 0, 1.4],
+    [2070.708, -424.461, 5, 1],
+    [1890.094, -38.011, 3, 0.74],
+    [2641.256, 167.835, 2, 1.3],
+    [2775.003, -273.566, 1, 1.73],
+    [3600.865, -10.901, 6, 1],
+    [4304.657, -434.446, 3, 1.02],
+    [4514.504, 49.961, 5, 1.34],
+    [-1873.248, 78.997, 2, 1.85],
+    [-1738.956, -423.752, 0, 1],
+    [-2562.487, -248.492, 5, 1],
+    [-2908.07, 273.062, 1, 1],
+    [-3511.442, -140.75, 3, 1],
+    [-3067.546, -513.007, 5, 1],
+    [-4294.653, 81.801, 4, 1.18],
+    [-4341.772, -444.099, 2, 1.49],
+    [4534.451, 552.148, 7, 1],
+    [3523.869, 548.891, 7, 1],
+    [2523.538, 545.869, 7, 1],
+    [1527.226, 539.951, 7, 1],
+    [524.44, 534.033, 7, 1],
+    [-491.107, 531.244, 7, 1],
+    [-1491.259, 530.667, 7, 1],
+    [-2491.026, 527.456, 7, 1],
+    [-3488.818, 522.618, 7, 1],
+    [-4489.133, 520.724, 7, 1],
+    [5540.582, 549.447, 7, 1],
+    [6532.003, 553.506, 7, 1],
+    [5332.871, -202.519, 3, 0.92],
+    [6297.753, -518.992, 0, 1.4],
+    [6571.46, 146.567, 1, 1],
+    [-5608.643, -91.44, 1, 1],
+    [-6554.049, -474.834, 5, 1],
+    [-6324.28, 338.097, 5, 1],
+    [-5497.194, 515.894, 7, 1],
+    [-6495.769, 511.43, 7, 1],
+  ]
+  #f = []
+  #d = [];
+    drawCloudShape(a, c, b, d, e) {
       a.beginPath();
       let f = d.length;
       a.moveTo(d[0] * e + c, d[1] * e + b);
@@ -3700,48 +3700,48 @@ class Clouds {
         );
       a.fill();
     };
-    this.drawCloud = function (a, c, g, h, e, f, k, m) {
+    drawCloud(a, c, g, h, e, f, k, m) {
       -7e3 > c && ((c = (-c + 7e3) % 14e3), (c = 7e3 - c));
-      let l = c + d[h][0] * e,
-        y = g + d[h][1] * e,
-        r = c + d[h][2] * e,
-        K = g + d[h][3] * e,
+      let l = c + this.#d[h][0] * e,
+        y = g + this.#d[h][1] * e,
+        r = c + this.#d[h][2] * e,
+        K = g + this.#d[h][3] * e,
         p = objGUI_anchor.getBounds();
       l = l > p[1].x || r < p[0].x || y > p[1].y || K < p[0].y ? false : true;
       l &&
         (a.save(),
         (a.fillStyle = "rgba(190,227,249," + f + ")"),
-        this.drawCloudShape(a, c, g, b[h], e),
+        this.drawCloudShape(a, c, g, this.#b[h], e),
         a.clip(),
         (a.fillStyle = "rgba(179,222,250," + f + ")"),
-        this.drawCloudShape(a, c + k, g + m, b[h], e),
+        this.drawCloudShape(a, c + k, g + m, this.#b[h], e),
         a.restore());
     };
-    this.drawPreRenderedCloud = function (a, c, b, e, q, n) {
+    drawPreRenderedCloud(a, c, b, e, q, n) {
       -7e3 > c && ((c = (-c + 7e3) % 14e3), (c = 7e3 - c));
-      let k = d[q][0],
-        m = d[q][1],
+      let k = this.#d[q][0],
+        m = this.#d[q][1],
         l = c + k * n,
         y = b + m * n,
-        r = c + d[q][2] * n;
-      q = b + d[q][3] * n;
+        r = c + this.#d[q][2] * n;
+      q = b + this.#d[q][3] * n;
       let K = objGUI_anchor.getBounds();
       l = l > K[1].x || r < K[0].x || y > K[1].y || q < K[0].y ? false : true;
-      l && a.drawImage(f[e], c + k * n, b + m * n);
+      l && a.drawImage(this.#f[e], c + k * n, b + m * n);
     };
-    this.update = function (a) {
+    update(a) {
       Xa -= 0.03 * a;
     };
-    this.drawClouds = function (a) {
-      for (let c = e.length, b = 0; b < c; b++) {
+    drawClouds(a) {
+      for (let c = this.#e.length, b = 0; b < c; b++) {
         let d = 2,
-          f = e[b][0],
-          n = e[b][1],
+          f = this.#e[b][0],
+          n = this.#e[b][1],
           k = 1,
           m = 1,
           l = 3,
           y = 9;
-        0 == b % 2 && 7 != e[b][2]
+        0 == b % 2 && 7 != this.#e[b][2]
           ? ((f += 0.2 * (H.x - f)),
             (n += 0.2 * (H.y - n)),
             (k = 0.2),
@@ -3750,68 +3750,68 @@ class Clouds {
             (y = 3),
             (d = 0.5),
             (n *= Kb))
-          : 7 == e[b][2] && ((k = 0.8), (n = Nb));
-        this.drawCloud(a, f + (Xa / 4) * d, n, e[b][2], e[b][3] * m, k, l, y);
+          : 7 == this.#e[b][2] && ((k = 0.8), (n = Nb));
+        this.drawCloud(a, f + (Xa / 4) * d, n, this.#e[b][2], this.#e[b][3] * m, k, l, y);
       }
     };
-    this.drawPreRenderedClouds = function (a) {
-      let c = e.length,
+    drawPreRenderedClouds(a) {
+      let c = this.#e.length,
         b = Xa,
         d = Kb;
       xa || ((d = 0.6), (b = 200));
       for (let f = 0; f < c; f++) {
         let n = 2,
-          k = e[f][0],
-          m = e[f][1],
+          k = this.#e[f][0],
+          m = this.#e[f][1],
           l = 1;
-        0 == f % 2 && 7 != e[f][2]
+        0 == f % 2 && 7 != this.#e[f][2]
           ? ((k += 0.2 * (H.x - k)),
             (m += 0.2 * (H.y - m)),
             (n = 0.5),
             (m *= d),
             (l = 0.7))
-          : 7 == e[f][2] && (m = Nb);
+          : 7 == this.#e[f][2] && (m = Nb);
         this.drawPreRenderedCloud(
           a,
           k + (b / 4) * n,
           m,
           f,
-          e[f][2],
-          e[f][3] * l,
+          this.#e[f][2],
+          this.#e[f][3] * l,
         );
       }
     };
-    this.preRender = function (a) {
-      a = e.length;
+    preRender(a) {
+      a = this.#e.length;
       for (let c = 1, g = 0; g < a; g++) {
-        let h = e[g][2],
-          q = -d[h][0] + d[h][2],
-          n = -d[h][1] + d[h][3],
+        let h = this.#e[g][2],
+          q = -this.#d[h][0] + this.#d[h][2],
+          n = -this.#d[h][1] + this.#d[h][3],
           k;
         k = document.createElement("canvas");
         let m = k.getContext("2d"),
           l = (c = 1),
           y = 3,
           r = 9;
-        0 == g % 2 && 7 != e[g][2]
+        0 == g % 2 && 7 != this.#e[g][2]
           ? ((c = 0.2), (l = 0.7), (y = 1), (r = 3))
-          : 7 == e[g][2] && (c = 0.8);
-        l = e[g][3] * l;
-        let K = -d[h][0] * l,
-          p = -d[h][1] * l;
+          : 7 == this.#e[g][2] && (c = 0.8);
+        l = this.#e[g][3] * l;
+        let K = -this.#d[h][0] * l,
+          p = -this.#d[h][1] * l;
         k.width = q * l;
         k.height = n * l;
         m.fillStyle = "rgba(190,227,249," + c + ")";
-        this.drawCloudShape(m, K, p, b[h], l);
+        this.drawCloudShape(m, K, p, this.#b[h], l);
         m.clip();
         m.fillStyle = "rgba(179,222,250," + c + ")";
-        this.drawCloudShape(m, K + y, p + r, b[h], l);
-        f.push(k);
+        this.drawCloudShape(m, K + y, p + r, this.#b[h], l);
+        this.#f.push(k);
       }
     };
     (function () {
-      for (let a = 0; a < b.length; a++) {
-        let c = b[a],
+      for (let a = 0; a < this.#b.length; a++) {
+        let c = this.#b[a],
           e = c.length,
           h = 9999,
           f = 9999,
@@ -3825,60 +3825,19 @@ class Clouds {
             : (y < f && (f = y), y > k && (k = y));
           m = !m;
         }
-        d.push([h, f, n, k]);
+        this.#d.push([h, f, n, k]);
       }
     })();
-    this.preRender();
-  }
+    preRender();
 }
 class Backgrounds {
-  constructor() {
-    let b = [],
-      e = 0,
-      obj_clouds = new Clouds(),
-      c = false;
-    this.waves = new WaterSea();
-    let d = function () {
-        this.vertexes = [];
-        this.type = 0;
-        this.add = function (a, c, b) {
-          this.vertexes.push({
-            x: a,
-            y: c,
-          });
-          this.type = b;
-        };
-        this.draw = function (a, c) {
-          if (7 == this.type) {
-            if (((a.fillStyle = "#F0F000"), 3 != c)) return;
-          } else if (8 == this.type) {
-            if (((a.fillStyle = "#0000F0"), 2 != c)) return;
-          } else if (((a.fillStyle = "#f00000"), 1 != c)) return;
-          a.beginPath();
-          let b = this.vertexes.length,
-            d = this.vertexes[0];
-          a.moveTo(d.x, d.y);
-          for (d = 1; d < b; d++) {
-            let e = this.vertexes[d];
-            a.lineTo(e.x, e.y);
-          }
-          a.closePath();
-          a.fill();
-        };
-      },
-      a = function () {
-        this.posY = this.posX = 0;
-        this.radius = 10;
-        this.draw = function (a, c) {
-          1 == c &&
-            (a.beginPath(),
-            (a.fillStyle = "#f00"),
-            a.arc(this.posX, this.posY, this.radius, 0, 2 * Math.PI),
-            a.closePath(),
-            a.fill());
-        };
-      };
-    this.loadColliders = function (c) {
+  #b = []
+  #e = 0
+  #obj_clouds = new Clouds()
+  #c = false
+    waves = new WaterSea()
+
+    loadColliders(c) {
       let e = new XMLHttpRequest();
       e.open("GET", c, true);
       e.responseType = "arraybuffer";
@@ -3904,7 +3863,7 @@ class Backgrounds {
               )
                 if (((f = c.getUint8(g, true)), (g += 1), 1 == f)) {
                   (f = c),
-                    (m = new a()),
+                    (m = new Backgrounds.Class_a()),
                     (l = f.getFloat32(g, true)),
                     (g = g + 4),
                     (y = f.getFloat32(g, true)),
@@ -3914,7 +3873,7 @@ class Backgrounds {
                   m.posX = 10 * l;
                   m.posY = 10 * -y;
                   m.radius = 10 * f;
-                  b.push(m);
+                  this.#b.push(m);
                 } else {
                   if (2 == f)
                     for (
@@ -3925,7 +3884,7 @@ class Backgrounds {
                       for (
                         let r = f.getUint16(g, true),
                           g = g + 2,
-                          p = new d(),
+                          p = new Backgrounds.Class_d(),
                           s = 0;
                         s < r;
                         s++
@@ -3936,7 +3895,7 @@ class Backgrounds {
                           (g = g + 4);
                         p.add(10 * v, 10 * -u, m);
                       }
-                      b.push(objG_assets);
+                      this.#b.push(objG_assets);
                     }
                 }
               else
@@ -3949,17 +3908,17 @@ class Backgrounds {
       e.send(null);
       console.log("Map loaded!");
     };
-    this.drawColliders = function (a) {
-      for (let c = b.length, d = 0; d < c; d++) b[d].draw(a, 1);
+    drawColliders(a) {
+      for (let c = this.#b.length, d = 0; d < c; d++) this.#b[d].draw(a, 1);
     };
-    this.drawWater = function (a) {
+    drawWater(a) {
       if (bool_drawWater)
-        for (let c = b.length, d = 0; d < c; d++) b[d].draw(a, 2);
+        for (let c = this.#b.length, d = 0; d < c; d++) this.#b[d].draw(a, 2);
     };
-    this.drawGrassSand = function (a) {
-      for (let c = b.length, d = 0; d < c; d++) b[d].draw(a, 3);
+    drawGrassSand(a) {
+      for (let c = this.#b.length, d = 0; d < c; d++) this.#b[d].draw(a, 3);
     };
-    this.drawGradient = function (a) {
+    drawGradient(a) {
       let c, b, d, f, m;
       (c =
         (canvas.width / 2 +
@@ -3973,8 +3932,8 @@ class Backgrounds {
       objG_eventManager.isSpaceWars() && (d = E);
       (d = a.createLinearGradient(0, -d, 0, d)), (f = 39), (m = 161);
       objG_eventManager.isSpaceWars() && ((f = 0), (m = 55));
-      if (0 < e) {
-        let l = e / 2500;
+      if (0 < this.#e) {
+        let l = this.#e / 2500;
         1 < l && (l = 1);
         f += (255 - f) * l;
         m += (255 - m) * l;
@@ -3997,13 +3956,13 @@ class Backgrounds {
         canvas.height / objGUI_anchor.zoom,
       );
     };
-    this.drawWaterBehind = function (a) {
+    drawWaterBehind(a) {
       bool_drawWater && this.waves.drawBehind(a);
     };
-    this.drawWaterFront = function (a) {
+    drawWaterFront(a) {
       bool_drawWater && this.waves.drawFront(a);
     };
-    this.drawLimits = function (a) {
+    drawLimits(a) {
       let c =
           (canvas.width / 2 +
             (objGUI_anchor.x * objGUI_anchor.zoom - canvas.width / 2)) /
@@ -4057,7 +4016,7 @@ class Backgrounds {
           6,
         ));
     };
-    this.draw = function (a) {
+    draw(a) {
       if (bool_drawSun && !objG_eventManager.isSpaceWars()) {
         let c = 0.97 * objGUI_anchor.x + 450,
           b = 0.97 * objGUI_anchor.y - 100,
@@ -4075,103 +4034,152 @@ class Backgrounds {
       }
       bool_drawClouds &&
         !objG_eventManager.isSpaceWars() &&
-        obj_clouds.drawPreRenderedClouds(a);
+        this.#obj_clouds.drawPreRenderedClouds(a);
     };
-    this.update = function (a) {
-      if (xa || !c)
+    update(a) {
+      if (xa || !this.#c)
         if (
-          ((c = true),
+          ((this.#c = true),
           this.waves.update(a),
-          obj_clouds.update(a),
+          this.#obj_clouds.update(a),
           null != objG_player_plane)
         ) {
           let b = objG_player_plane.x < -$_sub || objG_player_plane.x > $_sub;
           objG_eventManager.isSpaceWars() &&
             (b |= objG_player_plane.y > E / 2 || objG_player_plane.y < -E / 2);
           b
-            ? (0 == e &&
+            ? (0 == this.#e &&
                 (objG_sfxManager.playSound(str_sfxid_warn, 1, 1, 1, null),
                 objGUI_gameInfo.showWarningMessage("YOU ABANDONED THE FIGHT!")),
-              (e += a))
-            : (0 < e && objGUI_gameInfo.clearWarningMessage(), (e = 0));
+              (this.#e += a))
+            : (0 < this.#e && objGUI_gameInfo.clearWarningMessage(), (this.#e = 0));
         }
     };
-  }
+}
+namespace Backgrounds {
+  export  class Class_d {
+        vertexes = [];
+        type = 0;
+        add(a, c, b) {
+          this.vertexes.push({
+            x: a,
+            y: c,
+          });
+          this.type = b;
+        };
+        draw(a, c) {
+          if (7 == this.type) {
+            if (((a.fillStyle = "#F0F000"), 3 != c)) return;
+          } else if (8 == this.type) {
+            if (((a.fillStyle = "#0000F0"), 2 != c)) return;
+          } else if (((a.fillStyle = "#f00000"), 1 != c)) return;
+          a.beginPath();
+          let b = this.vertexes.length,
+            d = this.vertexes[0];
+          a.moveTo(d.x, d.y);
+          for (d = 1; d < b; d++) {
+            let e = this.vertexes[d];
+            a.lineTo(e.x, e.y);
+          }
+          a.closePath();
+          a.fill();
+        };
+      }
+  export  class Class_a {
+        posY = 0;
+        posX = 0;
+        radius = 10;
+        draw(a, c) {
+          1 == c &&
+            (a.beginPath(),
+            (a.fillStyle = "#f00"),
+            a.arc(this.posX, this.posY, this.radius, 0, 2 * Math.PI),
+            a.closePath(),
+            a.fill());
+        };
+      };
 }
 class PickupItem {
-  constructor() {
-    let b = (this.alpha = 0),
-      e = 0,
-      f = Math.random() * Math.PI * 2,
-      d = 1,
-      a = 0,
-      c = 0,
-      g = 0,
-      h,
-      q,
-      n = 1,
-      k = 1,
-      m = 1,
-      l = 0,
-      y = false;
-    this.id = -1;
-    this.y = this.x = 0;
-    this.radius = 1.5;
-    this.type;
-    this.sinScaleY = this.sinScaleX = 0;
-    this.fadingOut = this.grabbing = false;
-    this.update = function (f) {
+      #b = 0
+      this.alpha = 0,
+      #e = 0
+      #f = Math.random() * Math.PI * 2
+      #d = 1
+      #a = 0
+      #c = 0
+      #g = 0
+      #h
+      #q
+      #n = 1
+      #k = 1
+      #m = 1
+      #l = 0
+      #y = false;
+
+    id = -1;
+    y = 0;
+    x = 0;
+    radius = 1.5;
+    type;
+    sinScaleY = 0
+    sinScaleX = 0;
+    fadingOut = false
+    grabbing = false;
+    constructor() {
+      objG_eventManager.isSpaceWars() && (this.#y = true);
+    }
+    update(f) {
       let p = 0.06 * f,
         s,
         v;
       if (64 != this.type) {
         if (!objG_eventManager.isSpaceWars()) {
-          (s = E / 2 - 20), (v = this.y + e);
-          l += f / 400;
+          (s = E / 2 - 20), (v = this.y + this.#e);
+          this.#l += f / 400;
           v < s
-            ? (v > s - 30 && (d = (s - v) / 30),
+            ? (v > s - 30 && (this.#d = (s - v) / 30),
               1 > this.alpha &&
                 ((this.alpha += f / 1e3), 1 < this.alpha && (this.alpha = 1)),
-              (e = ((T - b) / 1e3) * Ac * 60))
-            : ((a += 0.1 * p),
-              (e += 0.1),
-              (k -= 0.008),
-              0 > k && (k = 0),
-              (m = Math.sqrt(k)));
+              (this.#e = ((T - this.#b) / 1e3) * Ac * 60))
+            : ((this.#a += 0.1 * p),
+              (this.#e += 0.1),
+              (this.#k -= 0.008),
+              0 > this.#k && (this.#k = 0),
+              (this.#m = Math.sqrt(this.#k)));
         }
         this.fadingOut &&
-          (y ||
+          (this.#y ||
           objG_eventManager.isSpaceWars() ||
           objG_eventManager.isInstagib()
             ? delete objD_pickups[this.id]
-            : ((e += 0.25),
+            : ((this.#e += 0.25),
               (this.alpha -= f / 1e3),
               0 >= this.alpha && delete objD_pickups[this.id]));
       }
       this.grabbing &&
-        ((f = objD_planes[c])
-          ? ((s = Math.pow(g, 2)),
-            (this.x = h + (f.x - h) * s),
-            (this.y = q + (f.y - q) * s),
-            (n = 1 - s),
-            (g += 0.07 * p),
-            1 < g && delete objD_pickups[this.id])
+        ((f = objD_planes[this.#c])
+          ? ((s = Math.pow(this.#g, 2)),
+            (this.x = this.#h + (f.x - this.#h) * s),
+            (this.y = this.#q + (f.y - this.#q) * s),
+            (this.#n = 1 - s),
+            (this.#g += 0.07 * p),
+            1 < this.#g && delete objD_pickups[this.id])
           : delete objD_pickups[this.id]);
     };
-    this.drawItem = function (c, b) {
+    drawItem(c, b) {
       let g;
       if (64 == this.type)
         c.save(),
           c.beginPath(),
           (this.sinScaleX += 0.1),
           (this.sinScaleY += 0.12),
-          c.translate(this.x, this.y + e),
+          c.translate(this.x, this.y + this.#e),
           c.scale(
-            (1 + Math.sin(this.sinScaleX) / 6) * n * 1.3,
-            (1 + Math.sin(this.sinScaleY) / 6) * n * 1.3,
+            (1 + Math.sin(this.sinScaleX) / 6) * this.#n * 1.3,
+            (1 + Math.sin(this.sinScaleY) / 6) * this.#n * 1.3,
           ),
           b.draw(c);
-      else if (y || objG_eventManager.isSpaceWars())
+      else if (this.#y || objG_eventManager.isSpaceWars())
         objG_player_plane &&
           objG_eventManager.isSpaceWars() &&
           objG_player_plane.id == qa &&
@@ -4182,8 +4190,8 @@ class PickupItem {
           (this.sinScaleY += 0.12),
           c.translate(this.x, this.y),
           c.scale(
-            (1 + Math.sin(this.sinScaleX) / 6) * n * 1.3,
-            (1 + Math.sin(this.sinScaleY) / 6) * n * 1.3,
+            (1 + Math.sin(this.sinScaleX) / 6) * this.#n * 1.3,
+            (1 + Math.sin(this.sinScaleY) / 6) * this.#n * 1.3,
           ),
           c.scale(2, 2),
           (c.globalAlpha = g),
@@ -4201,29 +4209,29 @@ class PickupItem {
             this.type != id_weapon_bombs) ||
           (g = 0.3);
         let h = objG_assets.frames.parachute;
-        h.y = -h.height / 2 + 100 * (1 - m);
+        h.y = -h.height / 2 + 100 * (1 - this.#m);
         c.save();
         this.grabbing
           ? c.translate(this.x, this.y)
-          : c.translate(this.x, this.y + e);
-        c.rotate(0.2 * Math.sin(l + f) * d);
-        c.scale(1 * n, 1 * n);
+          : c.translate(this.x, this.y + this.#e);
+        c.rotate(0.2 * Math.sin(this.#l + this.#f) * this.#d);
+        c.scale(1 * this.#n, 1 * this.#n);
         c.translate(0, 10);
         c.globalAlpha = this.alpha * g * 1;
         c.save();
-        0 < a && (c.globalAlpha = m * g * 1);
-        c.scale(1 * (1 + (1 - m)), 1 * m);
+        0 < this.#a && (c.globalAlpha = this.#m * g * 1);
+        c.scale(1 * (1 + (1 - this.#m)), 1 * this.#m);
         h.draw(c);
         c.restore();
         g = 0;
         this.type == id_weapon_superweapon && (g = 8);
-        c.translate(0, 4 * Math.sin(a) + g + 10);
+        c.translate(0, 4 * Math.sin(this.#a) + g + 10);
         b.draw(c);
         c.globalAlpha = 1;
       }
       c.restore();
     };
-    this.draw = function (a) {
+    draw(a) {
       if (bool_drawItems) {
         let c = 40,
           b;
@@ -4244,40 +4252,40 @@ class PickupItem {
                       : 64 == this.type &&
                         ((c = 10), (b = objG_assets.frames.wing));
         let d = this.y;
-        this.grabbing || (d += e);
+        this.grabbing || (d += this.#e);
         if (!this.grabbing) {
           if (!func_isInsideBox(this.x, d, c)) return;
         } else if (!func_isInsideBox(this.x, this.y, c)) return;
         this.drawItem(a, b);
       }
     };
-    this.fadeOut = function () {
+    fadeOut() {
       this.fadingOut = true;
     };
-    this.playerGrab = function (a) {
+    playerGrab(a) {
       this.grabbing = true;
-      c = a;
-      this.y += e;
-      h = this.x;
-      q = this.y;
+      this.#c = a;
+      this.y += this.#e;
+      this.#h = this.x;
+      this.#q = this.y;
       delete objD_pickups[this.id];
       this.id = "g" + this.id;
       objD_pickups[this.id] = this;
       objG_player_plane &&
-        c == objG_player_plane.id &&
+        this.#c == objG_player_plane.id &&
         !objG_eventManager.isInstagib() &&
         (64 == this.type
           ? objG_player_plane.incScore(vc)
           : objG_player_plane.incScore(wc));
     };
-    this.setPosition = function (a, c) {
+    setPosition(a, c) {
       this.x = 10 * a;
       this.y = 10 * c;
       this.y > -E / 2 && (this.alpha = 1);
-      b = +new Date();
+      this.#b = +new Date();
     };
-    objG_eventManager.isSpaceWars() && (y = true);
-  }
+    
+
 }
 class WS_Connection {
   #ws_conn?: WebSocket;
@@ -5227,32 +5235,66 @@ class WS_Connection {
   }
 }
 class FollowMode_R {
+      #html_canvas: HTMLCanvasElement
+      #ctx_canvas: CanvasRenderingContext2D
+      #c = 0
+      #g = 0
+      #h = 0
+      #q = false
+      #n = 1
+      #k
+      #m = 0
+      #l = 0
+      #y = false
+      #r = 1
+      #x
+      #pa = 0
+      #L = 0
+      #T = false
+      #Ca = 1
+      #ta
+      #N;
   constructor(b) {
-    let _this = this,
-      html_canvas: HTMLCanvasElement,
-      ctx_canvas: CanvasRenderingContext2D,
-      c = 0,
-      g = 0,
-      h = 0,
-      q = false,
-      n = 1,
-      k,
-      m = 0,
-      l = 0,
-      y = false,
-      r = 1,
-      x,
-      pa = 0,
-      L = 0,
-      T = false,
-      Ca = 1,
-      ta,
-      N;
-    function e() {
+    this.whiteFlash = 0;
+    this.#html_canvas = b;
+    this.#ctx_canvas = this.#html_canvas.getContext("2d");
+    this.#C();
+    objG_backgrounds = new Backgrounds();
+    objG_animationManager = new AnimationManager();
+    this.respawnParticles();
+    objG_assets = new Assets();
+    objG_assets.load(function () {
+      console.log("Resources loaded!");
+      1 == int_pathMobile &&
+        ("undefined" != typeof messageHandlers && messageHandlers.didLoad
+          ? messageHandlers.didLoad(JSON.stringify({}))
+          : window.webkit.messageHandlers.didLoad.postMessage({}));
+      objGUI_gameInfo = new UI_GameInfo();
+      obj_particleImpacts = new ParticleImpacts();
+      objG_wsConnection.hasConnection &&
+        !objG_wsConnection.sentHello &&
+        objG_wsConnection.hello();
+      setInterval(this.#e, 40);
+      func_displaySelectedDecal(Math.floor(5 * Math.random()) + 1);
+      func_displaySelectedColor(Math.floor(5 * Math.random()) + 1);
+      console.log("Loading sounds!");
+      objG_sfxManager = new SFXmanager();
+      objG_sfxManager.load(function () {
+        objG_sfxManager.playSound(str_sfxid_env, 1, 1, const_Q_0, function (a) {
+          mb = a;
+        });
+      });
+    });
+    myName = "";
+    objGUI_anchor = new UI_Anchor(this.#html_canvas, this.#ctx_canvas, 0, 0);
+    objG_wsConnection = new WS_Connection();
+    objG_wsConnection.getServerAndConnect();
+  }
+    #e() {
       Z && objG_wsConnection.hasConnection && objG_wsConnection.sendInput();
     }
-    this.whiteFlash = 0;
-    _this.followTopPlayer = function () {
+    
+    followTopPlayer() {
       let a = -1,
         b = 0;
       for (id in objD_planes)
@@ -5265,8 +5307,8 @@ class FollowMode_R {
         objG_player_plane.prepareFollow(),
         (Oa = current_following_plane_id = b));
     };
-    _this.PlayerFollowing = function (a) {
-      c = 0;
+    PlayerFollowing(a) {
+      this.#c = 0;
       let b, d, e;
       if (0 == list_str_leaderboard_players.length)
         (current_following_plane_id = 0), (objG_player_plane = null);
@@ -5305,10 +5347,10 @@ class FollowMode_R {
         Oa = a;
       }
     };
-    _this.waitUntilNextFollow = function () {
-      c = 3e3;
+    waitUntilNextFollow() {
+      this.#c = 3e3;
     };
-    _this.update = function (a) {
+    update(a) {
       let b, e, f, s, t, w, D, C, E, Q, I, N, Y, ba;
       if (objG_assets.loaded) {
         objG_player_plane &&
@@ -5354,7 +5396,7 @@ class FollowMode_R {
         objG_eventManager.machinegunSwitch &&
           (objG_eventManager.machinegunSwitch = false);
         objGUI_anchor.update(a);
-        if (!Z && 0 == ka && null == objG_player_plane && ((c -= a), 0 >= c))
+        if (!Z && 0 == ka && null == objG_player_plane && ((this.#c -= a), 0 >= this.#c))
           for (b in objD_planes) {
             objD_planes[b].inGame &&
               ((objG_player_plane = objD_planes[b]),
@@ -5379,12 +5421,12 @@ class FollowMode_R {
         objG_animationManager.update(a);
         H = {
           x:
-            (html_canvas.width / 2 +
-              (objGUI_anchor.x * objGUI_anchor.zoom - html_canvas.width / 2)) /
+            (this.#html_canvas.width / 2 +
+              (objGUI_anchor.x * objGUI_anchor.zoom - this.#html_canvas.width / 2)) /
             objGUI_anchor.zoom,
           y:
-            (html_canvas.height / 2 +
-              (objGUI_anchor.y * objGUI_anchor.zoom - html_canvas.height / 2)) /
+            (this.#html_canvas.height / 2 +
+              (objGUI_anchor.y * objGUI_anchor.zoom - this.#html_canvas.height / 2)) /
             objGUI_anchor.zoom,
         };
         objG_backgrounds.update(a);
@@ -5395,12 +5437,12 @@ class FollowMode_R {
             Zb =
               (qc +
                 (objGUI_anchor.x * objGUI_anchor.zoom -
-                  (html_canvas.width * a) / 2)) /
+                  (this.#html_canvas.width * a) / 2)) /
               objGUI_anchor.zoom;
             $b =
               (rc +
                 (objGUI_anchor.y * objGUI_anchor.zoom -
-                  (html_canvas.height * a) / 2)) /
+                  (this.#html_canvas.height * a) / 2)) /
               objGUI_anchor.zoom;
             a = Zb - objG_player_plane.x;
             (s = $b - objG_player_plane.y), (f = Math.sqrt(a * a + s * s));
@@ -5423,18 +5465,18 @@ class FollowMode_R {
         t = t[1].y;
         if (e && !func_isInsideBox(e.x, e.y, 30)) {
           (w = H.x - e.x), (D = H.y - e.y), (C = Math.sqrt(w * w + D * D));
-          n = 1;
-          1300 < C && ((n = 1300 / C), 0.4 > n && (n = 0.4));
+          this.#n = 1;
+          1300 < C && ((this.#n = 1300 / C), 0.4 > this.#n && (this.#n = 0.4));
           D /= w;
           C = H.y - D * H.x;
-          h = 0 > w ? D * a + C : D * f + C;
-          h < s ? (h = s) : h > t && (h = t);
-          g = (h - C) / D;
+          this.#h = 0 > w ? D * a + C : D * f + C;
+          this.#h < s ? (this.#h = s) : this.#h > t && (this.#h = t);
+          this.#g = (this.#h - C) / D;
           1 < D ? (D = 1) : -1 > D && (D = -1);
-          k = Math.acos(D);
-          0 > w && (k += Math.PI);
-          q = true;
-        } else q = false;
+          this.#k = Math.acos(D);
+          0 > w && (this.#k += Math.PI);
+          this.#q = true;
+        } else this.#q = false;
         w = false;
         (ub = objG_player_plane
           ? plane_last_killed_by[objG_player_plane.id]
@@ -5442,21 +5484,21 @@ class FollowMode_R {
           0 < ub &&
           ((E = objD_planes[ub]), E == e && (w = true));
         !E || func_isInsideBox(E.x, E.y, 30) || w
-          ? (y = false)
+          ? (this.#y = false)
           : ((w = H.x - E.x),
             (D = H.y - E.y),
             (E = Math.sqrt(w * w + D * D)),
-            (r = 1),
-            1300 < E && ((r = 1300 / E), 0.4 > r && (r = 0.4)),
+            (this.#r = 1),
+            1300 < E && ((this.#r = 1300 / E), 0.4 > this.#r && (this.#r = 0.4)),
             (D /= w),
             (C = H.y - D * H.x),
-            (l = 0 > w ? D * a + C : D * f + C),
-            l < s ? (l = s) : l > t && (l = t),
-            (m = (l - C) / D),
+            (this.#l = 0 > w ? D * a + C : D * f + C),
+            this.#l < s ? (this.#l = s) : this.#l > t && (this.#l = t),
+            (this.#m = (this.#l - C) / D),
             1 < D ? (D = 1) : -1 > D && (D = -1),
-            (x = Math.acos(D)),
-            0 > w && (x += Math.PI),
-            (y = true));
+            (this.#x = Math.acos(D)),
+            0 > w && (this.#x += Math.PI),
+            (this.#y = true));
         if (objG_eventManager.isWarship()) {
           E = 99999;
           (e = 0), Q, I, N, Y;
@@ -5471,142 +5513,142 @@ class FollowMode_R {
             }
           0 < e
             ? func_isInsideBox(Q, I, 120)
-              ? (T = false)
-              : (1300 < E && ((Ca = 900 / E), 0.3 > Ca && (Ca = 0.3)),
+              ? (this.#T = false)
+              : (1300 < E && ((this.#Ca = 900 / E), 0.3 > this.#Ca && (this.#Ca = 0.3)),
                 (D = Y / N),
                 (C = H.y - D * H.x),
-                (L = 0 > N ? D * a + C : D * f + C),
-                L < s ? (L = s) : L > t && (L = t),
-                (pa = (L - C) / D),
+                (this.#L = 0 > N ? D * a + C : D * f + C),
+                this.#L < s ? (this.#L = s) : this.#L > t && (this.#L = t),
+                (this.#pa = (this.#L - C) / D),
                 1 < D ? (D = 1) : -1 > D && (D = -1),
-                (ta = Math.acos(D)),
-                0 > N && (ta += Math.PI),
-                (T = true))
-            : (T = false);
+                (this.#ta = Math.acos(D)),
+                0 > N && (this.#ta += Math.PI),
+                (this.#T = true))
+            : (this.#T = false);
         }
       }
     };
-    _this.draw = function (b) {
+    draw(b) {
       if (objG_assets.loaded) {
         objGUI_anchor.setupContext();
-        objG_backgrounds.drawGradient(ctx_canvas);
-        objG_backgrounds.draw(ctx_canvas);
+        objG_backgrounds.drawGradient(this.#ctx_canvas);
+        objG_backgrounds.draw(this.#ctx_canvas);
         let c = objGUI_anchor.getBounds()[1].y,
           e = false,
           f;
         if (objG_eventManager.isSpaceWars())
-          for (i in list_particleDust) list_particleDust[i].draw(ctx_canvas);
+          for (i in list_particleDust) list_particleDust[i].draw(this.#ctx_canvas);
         else
           c > E / 2 - 25 &&
-            ((e = true), objG_backgrounds.drawWaterBehind(ctx_canvas));
+            ((e = true), objG_backgrounds.drawWaterBehind(this.#ctx_canvas));
         if (xa) {
-          for (f in objD_pickups) objD_pickups[f].draw(ctx_canvas);
-          obj_particleImpacts.draw(ctx_canvas);
-          for (f in objD_missiles) objD_missiles[f].draw(ctx_canvas, b);
-          for (f in objD_planes) objD_planes[f].draw(ctx_canvas, b);
-          for (f in objD_planes) objD_planes[f].drawInfo(ctx_canvas);
-          Z && objG_player_plane.drawInput(ctx_canvas);
+          for (f in objD_pickups) objD_pickups[f].draw(this.#ctx_canvas);
+          obj_particleImpacts.draw(this.#ctx_canvas);
+          for (f in objD_missiles) objD_missiles[f].draw(this.#ctx_canvas, b);
+          for (f in objD_planes) objD_planes[f].draw(this.#ctx_canvas, b);
+          for (f in objD_planes) objD_planes[f].drawInfo(this.#ctx_canvas);
+          Z && objG_player_plane.drawInput(this.#ctx_canvas);
           for (f in objD_specialEntities)
-            objD_specialEntities[f].draw(ctx_canvas);
-          objG_animationManager.drawExplosions(ctx_canvas);
-          objG_animationManager.drawBehind(ctx_canvas);
+            objD_specialEntities[f].draw(this.#ctx_canvas);
+          objG_animationManager.drawExplosions(this.#ctx_canvas);
+          objG_animationManager.drawBehind(this.#ctx_canvas);
         }
-        e && objG_backgrounds.drawWaterFront(ctx_canvas);
+        e && objG_backgrounds.drawWaterFront(this.#ctx_canvas);
         if (xa) {
           if (!objG_eventManager.isSpaceWars()) {
-            for (f in objD_planes) objD_planes[f].drawReflection(ctx_canvas, b);
+            for (f in objD_planes) objD_planes[f].drawReflection(this.#ctx_canvas, b);
             for (f in objD_missiles)
-              objD_missiles[f].drawReflection(ctx_canvas, b);
+              objD_missiles[f].drawReflection(this.#ctx_canvas, b);
             for (f in objD_specialEntities)
-              objD_specialEntities[f].drawReflection(ctx_canvas, b);
+              objD_specialEntities[f].drawReflection(this.#ctx_canvas, b);
           }
-          objG_animationManager.drawLayer2(ctx_canvas);
-          objG_animationManager.draw(ctx_canvas);
+          objG_animationManager.drawLayer2(this.#ctx_canvas);
+          objG_animationManager.draw(this.#ctx_canvas);
           for (f in objD_specialEntities)
-            objD_specialEntities[f].drawInfo(ctx_canvas);
-          objG_backgrounds.drawLimits(ctx_canvas);
-          q &&
+            objD_specialEntities[f].drawInfo(this.#ctx_canvas);
+          objG_backgrounds.drawLimits(this.#ctx_canvas);
+          this.#q &&
             ((b = 1),
             (c = 0 < qa),
-            ctx_canvas.save(),
-            ctx_canvas.translate(g, h),
-            ctx_canvas.scale(n, n),
+            this.#ctx_canvas.save(),
+            this.#ctx_canvas.translate(this.#g, this.#h),
+            this.#ctx_canvas.scale(this.#n, this.#n),
             c &&
-              (ctx_canvas.save(),
-              (e = func_rotatePoint(0, 50, -k)),
-              ctx_canvas.translate(e.x, e.y),
-              objG_assets.frames.crown.draw(ctx_canvas),
-              ctx_canvas.restore()),
-            ctx_canvas.rotate(-k),
+              (this.#ctx_canvas.save(),
+              (e = func_rotatePoint(0, 50, -this.#k)),
+              this.#ctx_canvas.translate(e.x, e.y),
+              objG_assets.frames.crown.draw(this.#ctx_canvas),
+              this.#ctx_canvas.restore()),
+            this.#ctx_canvas.rotate(-this.#k),
             (e = 1.2),
             c
-              ? (ctx_canvas.translate(0, -(-20 - 10 * b)), (e = 0.9))
-              : ctx_canvas.translate(0, -(-30 - 10 * b)),
-            (ctx_canvas.fillStyle = "rgba(255,102,0,0.8)"),
-            ctx_canvas.beginPath(),
-            ctx_canvas.moveTo(-8 * b * e, 0),
-            ctx_canvas.lineTo(8 * b * e, 0),
-            ctx_canvas.lineTo(0, -20 * b * e),
-            ctx_canvas.fill(),
-            ctx_canvas.restore());
-          y &&
+              ? (this.#ctx_canvas.translate(0, -(-20 - 10 * b)), (e = 0.9))
+              : this.#ctx_canvas.translate(0, -(-30 - 10 * b)),
+            (this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)"),
+            this.#ctx_canvas.beginPath(),
+            this.#ctx_canvas.moveTo(-8 * b * e, 0),
+            this.#ctx_canvas.lineTo(8 * b * e, 0),
+            this.#ctx_canvas.lineTo(0, -20 * b * e),
+            this.#ctx_canvas.fill(),
+            this.#ctx_canvas.restore());
+          this.#y &&
             ((b = 1),
-            ctx_canvas.save(),
-            ctx_canvas.translate(m, l),
-            ctx_canvas.scale(r, r),
-            ctx_canvas.save(),
-            (e = func_rotatePoint(0, 50, -x)),
-            ctx_canvas.translate(e.x, e.y),
-            objG_assets.frames.revengeIcon.draw(ctx_canvas),
-            ctx_canvas.restore(),
-            ctx_canvas.rotate(-x),
-            ctx_canvas.translate(0, -(-20 - 10 * b)),
+            this.#ctx_canvas.save(),
+            this.#ctx_canvas.translate(this.#m, this.#l),
+            this.#ctx_canvas.scale(this.#r, this.#r),
+            this.#ctx_canvas.save(),
+            (e = func_rotatePoint(0, 50, -this.#x)),
+            this.#ctx_canvas.translate(e.x, e.y),
+            objG_assets.frames.revengeIcon.draw(this.#ctx_canvas),
+            this.#ctx_canvas.restore(),
+            this.#ctx_canvas.rotate(-this.#x),
+            this.#ctx_canvas.translate(0, -(-20 - 10 * b)),
             (e = 0.9),
-            (ctx_canvas.fillStyle = "rgba(255,102,0,0.8)"),
-            ctx_canvas.beginPath(),
-            ctx_canvas.moveTo(-8 * b * e, 0),
-            ctx_canvas.lineTo(8 * b * e, 0),
-            ctx_canvas.lineTo(0, -20 * b * e),
-            ctx_canvas.fill(),
-            ctx_canvas.restore());
-          T &&
+            (this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)"),
+            this.#ctx_canvas.beginPath(),
+            this.#ctx_canvas.moveTo(-8 * b * e, 0),
+            this.#ctx_canvas.lineTo(8 * b * e, 0),
+            this.#ctx_canvas.lineTo(0, -20 * b * e),
+            this.#ctx_canvas.fill(),
+            this.#ctx_canvas.restore());
+          this.#T &&
             objG_assets.warshipIcon &&
             ((b = 1),
-            ctx_canvas.save(),
-            ctx_canvas.translate(pa, L),
-            ctx_canvas.scale(Ca, Ca),
-            ctx_canvas.save(),
-            (e = func_rotatePoint(0, 80, -ta)),
-            ctx_canvas.translate(e.x, e.y),
-            ctx_canvas.drawImage(
+            this.#ctx_canvas.save(),
+            this.#ctx_canvas.translate(this.#pa, this.#L),
+            this.#ctx_canvas.scale(this.#Ca, this.#Ca),
+            this.#ctx_canvas.save(),
+            (e = func_rotatePoint(0, 80, -this.#ta)),
+            this.#ctx_canvas.translate(e.x, e.y),
+            this.#ctx_canvas.drawImage(
               objG_assets.warshipIcon,
               -objG_assets.warshipIcon.width / 2,
               -objG_assets.warshipIcon.height / 2,
             ),
-            ctx_canvas.restore(),
-            ctx_canvas.rotate(-ta),
+            this.#ctx_canvas.restore(),
+            this.#ctx_canvas.rotate(-this.#ta),
             (e = 0.9),
-            ctx_canvas.translate(0, -(-20 - 10 * b)),
-            (ctx_canvas.fillStyle = "rgba(255,102,0,0.8)"),
-            ctx_canvas.beginPath(),
-            ctx_canvas.moveTo(-8 * b * e, 0),
-            ctx_canvas.lineTo(8 * b * e, 0),
-            ctx_canvas.lineTo(0, -20 * b * e),
-            ctx_canvas.fill(),
-            ctx_canvas.restore());
+            this.#ctx_canvas.translate(0, -(-20 - 10 * b)),
+            (this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)"),
+            this.#ctx_canvas.beginPath(),
+            this.#ctx_canvas.moveTo(-8 * b * e, 0),
+            this.#ctx_canvas.lineTo(8 * b * e, 0),
+            this.#ctx_canvas.lineTo(0, -20 * b * e),
+            this.#ctx_canvas.fill(),
+            this.#ctx_canvas.restore());
         }
         objGUI_anchor.startUILayer();
-        bool_drawUI && objGUI_gameInfo.draw(ctx_canvas);
+        bool_drawUI && objGUI_gameInfo.draw(this.#ctx_canvas);
         0 < this.whiteFlash &&
-          (ctx_canvas.save(),
-          (ctx_canvas.globalAlpha = this.whiteFlash),
-          (ctx_canvas.fillStyle = "#FFFFFF"),
-          ctx_canvas.fillRect(0, 0, html_canvas.width, html_canvas.height),
-          ctx_canvas.restore(),
+          (this.#ctx_canvas.save(),
+          (this.#ctx_canvas.globalAlpha = this.whiteFlash),
+          (this.#ctx_canvas.fillStyle = "#FFFFFF"),
+          this.#ctx_canvas.fillRect(0, 0, this.#html_canvas.width, this.#html_canvas.height),
+          this.#ctx_canvas.restore(),
           (this.whiteFlash -= 0.015));
       }
     };
-    _this.gameCleanup = function () {
+    gameCleanup() {
       objG_player_plane = void 0;
       current_following_plane_id = 0;
       Z = false;
@@ -5621,20 +5663,20 @@ class FollowMode_R {
       for (id in objD_specialEntities) delete objD_specialEntities[id];
       objD_specialEntities = {};
     };
-    _this.resize = function (a) {
-      C();
+    resize(a) {
+      this.#C();
       objG_eventManager.isSpaceWars() &&
-        (N && clearTimeout(N), (N = setTimeout(_this.respawnParticles, 200)));
+        (this.#N && clearTimeout(this.#N), (this.#N = setTimeout(this.respawnParticles, 200)));
     };
-    let C = function () {
+    #C() {
       let a = 2,
         b,
         c;
       bool_setting_highQuality && (a = 1);
-      html_canvas.width = window.innerWidth / a;
-      html_canvas.height = window.innerHeight / a;
-      canvas_width = html_canvas.width;
-      canvas_height = html_canvas.height;
+      this.#html_canvas.width = window.innerWidth / a;
+      this.#html_canvas.height = window.innerHeight / a;
+      canvas_width = this.#html_canvas.width;
+      canvas_height = this.#html_canvas.height;
       (b = canvas_height * a),
         (c = -50 + 50 * a + "%"),
         (a = "translate(" + c + "," + c + ") scale(" + a + ")");
@@ -5666,44 +5708,10 @@ class FollowMode_R {
           top: "25%",
         }));
     };
-    _this.respawnParticles = function () {
+    respawnParticles() {
       list_particleDust = [];
       for (let a = 0; 150 > a; a++) list_particleDust.push(new ParticleDust());
     };
-    html_canvas = b;
-    ctx_canvas = html_canvas.getContext("2d");
-    C();
-    objG_backgrounds = new Backgrounds();
-    objG_animationManager = new AnimationManager();
-    _this.respawnParticles();
-    objG_assets = new Assets();
-    objG_assets.load(function () {
-      console.log("Resources loaded!");
-      1 == int_pathMobile &&
-        ("undefined" != typeof messageHandlers && messageHandlers.didLoad
-          ? messageHandlers.didLoad(JSON.stringify({}))
-          : window.webkit.messageHandlers.didLoad.postMessage({}));
-      objGUI_gameInfo = new UI_GameInfo();
-      obj_particleImpacts = new ParticleImpacts();
-      objG_wsConnection.hasConnection &&
-        !objG_wsConnection.sentHello &&
-        objG_wsConnection.hello();
-      setInterval(e, 40);
-      func_displaySelectedDecal(Math.floor(5 * Math.random()) + 1);
-      func_displaySelectedColor(Math.floor(5 * Math.random()) + 1);
-      console.log("Loading sounds!");
-      objG_sfxManager = new SFXmanager();
-      objG_sfxManager.load(function () {
-        objG_sfxManager.playSound(str_sfxid_env, 1, 1, const_Q_0, function (a) {
-          mb = a;
-        });
-      });
-    });
-    myName = "";
-    objGUI_anchor = new UI_Anchor(html_canvas, ctx_canvas, 0, 0);
-    objG_wsConnection = new WS_Connection();
-    objG_wsConnection.getServerAndConnect();
-  }
 }
 class UI_Anchor {
   constructor(html_canvas, ctx_canvas, x, y) {
