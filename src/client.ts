@@ -61,7 +61,7 @@ let Zb,
   Z = false,
   wa = true,
   Lb = false,
-  T = 0,
+  frametime_millis = 0,
   Mb = 0,
   E = 1600,
   Nb = E / 2 - 100,
@@ -78,7 +78,7 @@ let Zb,
   sc = 0,
   bool_continueGame = false,
   time_game_over: number,
-  nc = 0,
+  last_game_score = 0,
   num_max_volume = 1,
   num_setting_muteVol = window.localStorage.muteVol,
   tc = 3,
@@ -328,10 +328,10 @@ const func_detect_country = () => {
   );
 };
 const Rb = () => {
-  T = +new Date();
+  frametime_millis = +new Date();
   let b = 0;
-  0 < Mb && (b = T - Mb);
-  Mb = T;
+  0 < Mb && (b = frametime_millis - Mb);
+  Mb = frametime_millis;
   objG_followMode.update(b);
   objG_followMode.draw(b);
   window.requestAnimationFrame && window.requestAnimationFrame(Rb);
@@ -339,45 +339,43 @@ const Rb = () => {
 };
 function func_displaySelectedColor(int_color_id: number) {
   intG_color_id = int_color_id;
-  let e;
-  for (e = 0; 5 >= e; e++) {
-    let f = e,
-      d = objG_assets.planes[f][int_color_id][7],
-      a = document.createElement("canvas"),
-      c = a.getContext("2d"),
-      g = objG_assets.frames.plane8;
-    a.width = g.width;
-    a.height = g.height;
-    if(!c) throw new Error("WARN: Canvas is empty")
-    c.translate(g.width / 2, g.height / 2);
-    g.draw(c);
-    d.draw(c);
-    d = a.toDataURL("image/png");
-    a = void 0;
-    c = document.styleSheets.length;
-    for (g = 0; g < c; g++) {
-      let h = document.styleSheets[g];
+  for (let i = 0; 5 >= i; i++) {
+    let plane_frame = objG_assets.planes[i][int_color_id][7];
+    let canvas = document.createElement("canvas");
+    let ctx = canvas.getContext("2d")!;
+    let plane_body = objG_assets.frames.plane8;
+    canvas.width = plane_body.width;
+    canvas.height = plane_body.height;
+    if(!ctx) throw new Error("WARN: Canvas is empty")
+    ctx.translate(plane_body.width / 2, plane_body.height / 2);
+    plane_body.draw(ctx);
+    plane_frame.draw(ctx);
+    let image_str = canvas.toDataURL("image/png");
+    let css_style!: CSSStyleSheet;
+    let styles_len = document.styleSheets.length;
+    for (let j = 0; j < styles_len; j++) {
+      let h: CSSStyleSheet = document.styleSheets[j];
       if (null == h.href) {
-        a = h;
+        css_style = h;
         break;
       }
     }
-    a.addRule
-      ? a.addRule(
-          ".btn-decal" + (f + 1) + ":before",
-          "background-image: url(" + d + ")",
+    css_style.addRule
+      ? css_style.addRule(
+          ".btn-decal" + (i + 1) + ":before",
+          "background-image: url(" + image_str + ")",
         )
-      : a.insertRule(
-          ".btn-decal" + (f + 1) + ":before{background-image: url(" + d + ")}",
-          a.cssRules.length,
+      : css_style.insertRule(
+          ".btn-decal" + (i + 1) + ":before{background-image: url(" + image_str + ")}",
+          css_style.cssRules.length,
         );
   }
-  for (e = 0; 5 >= e; e++) $("#check" + e).hide();
+  for (let i = 0; 5 >= i; i++) $("#check" + i).hide();
   $("#check" + int_color_id).show();
 }
 function func_displaySelectedDecal(int_decal_id: number) {
   intG_decal_id = int_decal_id;
-  for (let e = 0; 5 >= e; e++) $("#checkD" + e).hide();
+  for (let i = 0; 5 >= i; i++) $("#checkD" + i).hide();
   $("#checkD" + int_decal_id).show();
 }
 function funcR_showBeta() {
@@ -386,16 +384,15 @@ function funcR_showBeta() {
   func_displayNicknameInput();
 }
 function func_isNotChrome() {
-  let b = -1 < navigator.userAgent.indexOf("Chrome"),
-    e = -1 < navigator.userAgent.indexOf("Safari");
-  b && e && (e = false);
-  return e;
+  let is_UA_Chrome = -1 < navigator.userAgent.indexOf("Chrome");
+  let is_UA_Safari = -1 < navigator.userAgent.indexOf("Safari");
+  return !(is_UA_Safari && is_UA_Chrome);
 }
 function func_setGraphicsQuality() {
-  let b = "Low",
-    e = $("#graphicsID")[0];
-  bool_setting_highQuality && (b = "High");
-  e && (e.childNodes[0].data = "Graphics: " + b);
+  let str_quality = "Low";
+  let element_quality = $("#graphicsID")[0];
+  bool_setting_highQuality && (str_quality = "High");
+  element_quality && (element_quality.childNodes[0].textContent = "Graphics: " + str_quality);
 }
 function funcR_hc_showPf() {
   $("#pfArrow").show();
@@ -425,7 +422,7 @@ function func_displayMuteAudio() {
       (num_max_volume = 0.05),
       (b = "images/sound_on.png"));
   window.localStorage.muteVol = num_setting_muteVol;
-  $("#soundImg")[0].src = b;
+  ($("#soundImg")[0] as HTMLImageElement).src = b;
 }
 function func_showAds() {
   window.mixpanel &&
@@ -479,20 +476,22 @@ function func_hideOverlay() {
 }
 function func_displayContinueCountdown() {
   if (bool_continueGame) {
-    let b = Math.floor((T - time_game_over) / 1e3);
-    0 > b && (b = 0);
-    let e = 10 - b;
-    0 > e
-      ? ((bool_continueGame = false), func_displayNicknameInput())
-      : ((b = $("#countdownText")[0]),
-        (e = document.createTextNode(e)),
-        b.replaceChild(e, b.firstChild),
-        setTimeout(func_displayContinueCountdown, 500));
+    let seconds_since_gameover = Math.floor((frametime_millis - time_game_over) / 1e3);
+    0 > seconds_since_gameover && (seconds_since_gameover = 0);
+    let continue_countdown = 10 - seconds_since_gameover;
+    if(0 > continue_countdown) {
+      ((bool_continueGame = false), func_displayNicknameInput())
+    } else {
+        let element_countdown = $("#countdownText")[0];
+        let text_countdown = document.createTextNode(continue_countdown.toString());
+        element_countdown.replaceChild(text_countdown, element_countdown.firstChild!),
+        setTimeout(func_displayContinueCountdown, 500);
+    }
   }
 }
 function func_displayGameover() {
   func_showAds();
-  0 < nc &&
+  0 < last_game_score &&
     ($("#continueTop").show(),
     $("#continueBR").show(),
     $("#continue").show(),
@@ -521,9 +520,9 @@ function func_displayGameoverScore(int_score: number) {
       f = objG_eventManager.isInstagib()
         ? document.createTextNode("Kills: " + int_score)
         : document.createTextNode("Current Score: " + int_score);
-      e.replaceChild(f, e.firstChild);
+      e.replaceChild(f, e.firstChild!);
     }
-    nc = int_score;
+    last_game_score = int_score;
     setTimeout(func_displayGameover, 1e3);
   }
 }
@@ -546,14 +545,14 @@ function func_setPlayerCount() {
 function func_isIframe() {
   try {
     return window.self !== window.top;
-  } catch (b) {
+  } catch (err) {
     return true;
   }
 }
 function func_padZerosPrefix(num_val: number) {
-  let e = "";
-  10 > num_val && (e = "0");
-  return e + Math.floor(num_val);
+  let padding = "";
+  10 > num_val && (padding = "0");
+  return padding + Math.floor(num_val);
 }
 function func_millisToTimeFormat(total_millis: number) {
   let total_seconds = Math.floor(total_millis / 1e3);
@@ -578,16 +577,14 @@ function func_calculateDistance2D(
   return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }
 function func_isTimeElapsed_50ms() {
-  return 50 > +new Date() - T;
+  return 50 > +new Date() - frametime_millis;
 }
 function func_isInsideBox(x: number, y: number, dist: number) {
   let d = objGUI_anchor.getBounds();
-  return x + dist >= d[0].x &&
-    x - dist <= d[1].x &&
-    y + dist >= d[0].y &&
-    y - dist <= d[1].y
-    ? true
-    : false;
+  return  x + dist >= d[0].x &&
+          x - dist <= d[1].x &&
+          y + dist >= d[0].y &&
+          y - dist <= d[1].y;
 }
 function func_clamp(val: number, l: number, u: number) {
   return val < l ? l : val > u ? u : val;
@@ -644,11 +641,9 @@ function func_drawRoundedRectangleHalf(
   canvas.fill();
 }
 function func_rotatePoint(x: number, y: number, angle: number) {
-  let d = x * Math.cos(angle) - y * Math.sin(angle);
-  x = y * Math.cos(angle) + x * Math.sin(angle);
   return {
-    x: d,
-    y: x,
+    x: x * Math.cos(angle) - y * Math.sin(angle),
+    y: y * Math.cos(angle) + x * Math.sin(angle),
   };
 }
 
@@ -906,7 +901,7 @@ class Assets {
   whitePlaneImages = {};
   planeFrames;
   planeFramesReflex;
-  planes: [][] = [];
+  planes: FrameImage[][][] = []; //pre-rendered for all decals, colors and rotations
   doubleKillCanvas;
   tripleKillCanvas;
   quadKillCanvas;
@@ -965,7 +960,7 @@ class Assets {
     this.planeFramesReflex = d;
   }
   loadPlaneDecal(b, e) {
-    let d = [];
+    let d: FrameImage[] = [];
     for (let f = list_decal_colors[e], a = 1; 8 >= a; a++) {
       let c;
       c = this.frames["decal" + b + "_" + a].generateTintImage2(
@@ -2008,7 +2003,7 @@ class UI_GameInfo {
   DrawWarmupTime(a) {
     if (this.#U) {
       this.#U = false;
-      let c = objG_eventManager.endTime - T;
+      let c = objG_eventManager.endTime - frametime_millis;
       if (0 > parseInt(c)) return;
       this.#W = new StyleText(
         23 * num_scale_factor,
@@ -2050,7 +2045,7 @@ class UI_GameInfo {
   DrawEventLabel(a) {
     if (this.#U) {
       this.#U = false;
-      let c = objG_eventManager.endTime - T;
+      let c = objG_eventManager.endTime - frametime_millis;
       0 > parseInt(c) && (c = 0);
       this.#W = new StyleText(
         25 * num_scale_factor,
@@ -2429,7 +2424,7 @@ class UI_ActivityMessages {
   #e = [];
   update(f) {
     0 < this.#e.length &&
-      15e3 < T - this.#e[0] &&
+      15e3 < frametime_millis - this.#e[0] &&
       (this.#b.shift(), this.#e.shift());
   }
   draw(e) {
@@ -2579,7 +2574,7 @@ class Plane {
         ? (this.controlAngle = 0)
         : 0 > this.controlAngle && (this.controlAngle = 360);
       let k = func_clamp(
-        (T - this.lastUpdate) / num_global_physics_step_ms,
+        (frametime_millis - this.lastUpdate) / num_global_physics_step_ms,
         0,
         1,
       );
@@ -3995,7 +3990,7 @@ class PickupItem {
           ? (v > s - 30 && (this.#d = (s - v) / 30),
             1 > this.alpha &&
               ((this.alpha += f / 1e3), 1 < this.alpha && (this.alpha = 1)),
-            (this.#e = ((T - this.#b) / 1e3) * Ac * 60))
+            (this.#e = ((frametime_millis - this.#b) / 1e3) * Ac * 60))
           : ((this.#a += 0.1 * p),
             (this.#e += 0.1),
             (this.#k -= 0.008),
@@ -4206,7 +4201,7 @@ class WS_Connection {
                   m.ammo--);
             }
           }
-          s.lastUpdate = T;
+          s.lastUpdate = frametime_millis;
           s.setPosition(y, r, p);
         }
         if (
@@ -4230,7 +4225,7 @@ class WS_Connection {
                   (objD_specialEntities[bool_something] = h),
                   h.setType(f));
             h.id = bool_something;
-            h.lastUpdate = T;
+            h.lastUpdate = frametime_millis;
             bool_something = dataview_message.getFloat32(l, true);
             l += 4;
             f = -dataview_message.getFloat32(l, true);
@@ -4341,7 +4336,7 @@ class WS_Connection {
         );
       else if (
         ((C.id = k),
-        (C.lastUpdate = T),
+        (C.lastUpdate = frametime_millis),
         (C.updateBool = objG_wsConnection.lastUpdateBool),
         y &&
           (C.setPose(m, w, u),
@@ -4389,13 +4384,13 @@ class WS_Connection {
           ? (objD_planes[f].trailEffect(),
             (k = str_sfxid_winggrab),
             null != this.lastGrabbedWingTime &&
-              ((q = T - this.lastGrabbedWingTime),
+              ((q = frametime_millis - this.lastGrabbedWingTime),
               1e3 > q
                 ? objG_wsConnection.wingsInARow++
                 : (objG_wsConnection.wingsInARow = 0),
               (n = 1 + 0.05 * objG_wsConnection.wingsInARow),
               1.5 < n && (n = 1.5)),
-            (this.lastGrabbedWingTime = T))
+            (this.lastGrabbedWingTime = frametime_millis))
           : 32 == q && (k = str_sfxid_hgrab);
       objG_player_plane &&
         f == objG_player_plane.id &&
@@ -5594,11 +5589,16 @@ class UI_Anchor {
   #zoom = this.#minZoom;
   #html_canvas;
   #ctx_canvas;
-  constructor(html_canvas, ctx_canvas, x, y) {
+  x
+  y
+  zoom!: number
+  minZoom!: number
+  maxZoom!: number
+  constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, x: number, y: number) {
     this.x = x;
     this.y = y;
-    this.#html_canvas = html_canvas;
-    this.#ctx_canvas = ctx_canvas;
+    this.#html_canvas = canvas;
+    this.#ctx_canvas = ctx;
   }
 
   setupContext() {
@@ -6455,7 +6455,7 @@ class Missile {
   }
   update(d) {
     let a = func_clamp(
-        (T - this.lastUpdate) / num_global_physics_step_ms,
+        (frametime_millis - this.lastUpdate) / num_global_physics_step_ms,
         0,
         1,
       ),
@@ -6620,14 +6620,14 @@ class ParticleTrails {
           y: this.#e,
           origX: this.#b,
           origY: this.#e,
-          t: T,
+          t: frametime_millis,
           fx: (600 - Math.abs(this.trailEffectTime - 600)) / 600,
           style: this.style,
         });
       for (a = 0; a <= d; a++) {
         c = this.tailJoints[a].length;
         if (0 < c) {
-          c = T - this.tailJoints[a][0].t;
+          c = frametime_millis - this.tailJoints[a][0].t;
           c > this.trailTime &&
             (this.tailJoints[a].splice(0, 1),
             0 == this.tailJoints[a].length && this.tailJoints.splice(a, 1));
@@ -6642,7 +6642,7 @@ class ParticleTrails {
     )
       (c = this.tailJoints[a].length),
         1 >= c ||
-          ((c = T - this.tailJoints[a][0].t),
+          ((c = frametime_millis - this.tailJoints[a][0].t),
           c > this.trailTime - this.tailAddJointInterval &&
             ((c = this.tailJoints[a][0].origY - this.tailJoints[a][1].origY),
             (this.tailJoints[a][0].x =
@@ -6740,7 +6740,7 @@ class ParticleFlags {
         y: this.#e,
         origX: this.#b,
         origY: this.#e,
-        t: T,
+        t: frametime_millis,
         fx: 0,
         style: this.style,
       }),
@@ -6935,14 +6935,14 @@ class ScoreAccumInfo {
   #f;
   update(d) {
     0 < this.#e.length &&
-      2e3 < T - this.#e[0] &&
+      2e3 < frametime_millis - this.#e[0] &&
       (this.#b.shift(), this.#e.shift());
   }
   draw(d) {
     d.globalAlpha = 1;
     for (let a in this.#b) {
       let c = this.#b[a],
-        f = Math.sqrt((T - this.#e[a]) / 2e3),
+        f = Math.sqrt((frametime_millis - this.#e[a]) / 2e3),
         h = 0.8 >= f ? f / 0.8 : 1 - (f - 0.8) / 0.2;
       d.globalAlpha = h;
       d.drawImage(c, -c.width / 2, 40 * -f - 10);
@@ -6952,10 +6952,10 @@ class ScoreAccumInfo {
   addScore(d) {
     let a = false,
       c;
-    this.#f && 500 > T - this.#f && (a = true);
+    this.#f && 500 > frametime_millis - this.#f && (a = true);
     c = new StyleStroke(13, "#FFFFFF");
     c.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
-    a ? (d = this.#b[this.#b.length - 1].number + d) : (this.#f = T);
+    a ? (d = this.#b[this.#b.length - 1].number + d) : (this.#f = frametime_millis);
     c.setValue("+" + d);
     c = c.render();
     c.number = d;
@@ -7222,7 +7222,7 @@ class Warship {
         ? this.#b || (this.#b = true)
         : (this.#b = false);
       let g = func_clamp(
-        (T - this.lastUpdate) / num_global_physics_step_ms,
+        (frametime_millis - this.lastUpdate) / num_global_physics_step_ms,
         0,
         1,
       );
