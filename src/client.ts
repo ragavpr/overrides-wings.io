@@ -894,28 +894,28 @@ class StyleText {
 }
 class Assets {
   loaded = false;
-  onLoad = null;
+  onLoad: () => void;
   spriteSheetLoaded = false;
   gameSheet!: HTMLImageElement;
   frames: Record<string, FrameImage> = {};
-  whitePlaneImages = {};
-  planeFrames;
-  planeFramesReflex;
+  whitePlaneImages: Record<string, HTMLCanvasElement> = {};
+  planeFrames: FrameImage[];
+  planeFramesReflex: FrameImage[];
   planes: FrameImage[][][] = []; //pre-rendered for all decals, colors and rotations
-  doubleKillCanvas;
-  tripleKillCanvas;
-  quadKillCanvas;
-  multiKillCanvas;
-  warshipImage;
-  whiteWarshipImage;
-  cannonImage;
-  warshipIcon;
+  doubleKillCanvas: HTMLCanvasElement;
+  tripleKillCanvas: HTMLCanvasElement;
+  quadKillCanvas: HTMLCanvasElement;
+  multiKillCanvas: HTMLCanvasElement;
+  warshipImage: HTMLImageElement;
+  whiteWarshipImage: HTMLCanvasElement;
+  cannonImage: HTMLImageElement;
+  warshipIcon: HTMLImageElement;
   warshipLoaded = false;
   warshipTextureLoadCount = 0;
   asteroidLoaded = false;
-  asteroidImage;
-  whiteAsteroidImage;
-  blinkImage;
+  asteroidImage: HTMLImageElement;
+  whiteAsteroidImage: HTMLCanvasElement;
+  blinkImage: HTMLImageElement;
   loadGameSpritesheet() {
     this.gameSheet = new Image();
     this.gameSheet.src = "images/sheet.png";
@@ -948,7 +948,7 @@ class Assets {
         this.loadPlaneDecal(4, e),
         this.loadPlaneDecal(5, e);
   }
-  loadPlaneImages(b, e) {
+  loadPlaneImages() {
     let f = [],
       d = [];
     for (let a = 1; 8 >= a; a++) {
@@ -959,7 +959,7 @@ class Assets {
     this.planeFrames = f;
     this.planeFramesReflex = d;
   }
-  loadPlaneDecal(b, e) {
+  loadPlaneDecal(b: number, e: number) {
     let d: FrameImage[] = [];
     for (let f = list_decal_colors[e], a = 1; 8 >= a; a++) {
       let c;
@@ -1012,126 +1012,123 @@ class Assets {
     obj_animation.setInterval(1e3 / 30);
     objG_animationManager.addAnimationInfo("explosion", obj_animation);
   }
-  generateTintedKillIcon(b, e, f, d) {
-    let a;
-    a = objG_assets.frames.iconkill;
+  generateTintedKillIcon(r: number, g: number, b: number, color: string) {
+    let img_iconkill = objG_assets.frames.iconkill;
     let frameIconR = objG_assets.frames.killR;
-    let c = a.generateRGBKs();
-    f = a.generateTintImage(c, b, e, f);
-    b = document.createElement("canvas");
-    b.width = f.width;
-    b.height = f.height;
-    e = b.getContext("2d");
-    e.drawImage(f.canvas, 0, 0);
-    d = frameIconR.renderTintedFrame(d);
-    d.x = a.width / 2;
-    d.y = a.height / 2;
-    d.draw(e);
-    return b;
+    let img_rgbk = img_iconkill.generateRGBKs();
+    let img_iconkill_tinted = img_iconkill.generateTintImage(img_rgbk, r, g, b);
+    let canvas = document.createElement("canvas");
+    canvas.width = img_iconkill_tinted.width;
+    canvas.height = img_iconkill_tinted.height;
+    let ctx = canvas.getContext("2d")!;
+    ctx.drawImage(img_iconkill_tinted.canvas, 0, 0);
+    let img_killR_tinted = frameIconR.renderTintedFrame(color);
+    img_killR_tinted.x = img_iconkill.width / 2;
+    img_killR_tinted.y = img_iconkill.height / 2;
+    img_killR_tinted.draw(ctx);
+    return canvas;
   }
   generateHudIcons() {
-    let b, e, f, d, a, c, g, h;
-    (b = 30),
-      (e = 0),
-      (e = this.generateTintedKillIcon(205, 154, 109, "#FFFFFF")),
-      (f = this.generateTintedKillIcon(172, 121, 76, "#BBBBBB")),
-      (d = document.createElement("canvas"));
-    d.width = e.width;
-    d.height = e.height + b;
-    (a = d.getContext("2d")),
-      (e = e.getContext("2d")),
-      (f = f.getContext("2d"));
-    a.drawImage(f.canvas, 0, 0);
-    a.drawImage(e.canvas, 0, b);
-    this.doubleKillCanvas = d;
-    (b = 10),
-      (e = 70),
-      (d = 0.9),
-      (c = this.generateTintedKillIcon(167, 176, 185, "#FFFFFF")),
-      (f = this.generateTintedKillIcon(129, 138, 148, "#BBBBBB")),
-      (g = document.createElement("canvas"));
-    g.width = c.width + e;
-    g.height = c.height + b;
-    (h = g.getContext("2d")),
-      (e = c.getContext("2d")),
-      (f = f.getContext("2d")),
-      (a = g.width / 2 - (c.width / 2) * d);
-    h.save();
-    h.translate(a, 0);
-    h.scale(d, d);
-    h.drawImage(f.canvas, -30, 0);
-    h.drawImage(f.canvas, 30, 0);
-    h.restore();
-    a = g.width / 2 - c.width / 2;
-    h.drawImage(e.canvas, a, b);
-    this.tripleKillCanvas = g;
-    let shift2Y = 20;
-    let shift2X = 160;
-    d = 0.95;
-    c = this.generateTintedKillIcon(240, 164, 0, "#FFFFFF");
-    f = this.generateTintedKillIcon(200, 124, 0, "#ddaf63");
-    b = this.generateTintedKillIcon(158, 98, 0, "#b25c5c");
-    g = document.createElement("canvas");
-    g.width = c.width + shift2X;
-    g.height = c.height + 1.5 * shift2Y;
-    a = g.width / 2 - (c.width / 2) * d;
-    h = g.getContext("2d");
-    e = c.getContext("2d");
-    f = f.getContext("2d");
-    b = b.getContext("2d");
-    h.save();
-    h.translate(a, 0);
-    h.scale(d, d);
-    h.drawImage(b.canvas, 0, 0);
-    h.restore();
-    a = g.width / 2 - (c.width / 2) * d;
-    h.save();
-    h.translate(a, 0);
-    h.scale(d, d);
-    h.drawImage(f.canvas, -35, 15);
-    h.drawImage(f.canvas, 35, 15);
-    h.restore();
-    a = g.width / 2 - c.width / 2;
-    h.drawImage(e.canvas, a, 1.5 * shift2Y);
-    this.quadKillCanvas = g;
-    c = this.generateTintedKillIcon(222, 0, 0, "#FFFFFF");
-    f = this.generateTintedKillIcon(172, 0, 0, "#d68080");
-    b = this.generateTintedKillIcon(133, 0, 0, "#b25c5c");
-    g = document.createElement("canvas");
-    g.width = c.width + shift2X;
-    g.height = c.height + 1.5 * shift2Y;
-    a = g.width / 2 - (c.width / 2) * 0.65;
-    h = g.getContext("2d");
-    e = c.getContext("2d");
-    f = f.getContext("2d");
-    b = b.getContext("2d");
-    h.save();
-    h.translate(a, 0);
-    h.scale(0.65, 0.65);
-    h.drawImage(b.canvas, -105, 10);
-    h.drawImage(b.canvas, 105, 10);
-    h.drawImage(b.canvas, -40, 10);
-    h.drawImage(b.canvas, 40, 10);
-    h.drawImage(b.canvas, 0, shift2Y);
-    h.restore();
-    a = g.width / 2 - (c.width / 2) * d;
-    h.save();
-    h.translate(a, 0);
-    h.scale(d, d);
-    h.drawImage(f.canvas, -35, shift2Y);
-    h.drawImage(f.canvas, 35, shift2Y);
-    h.restore();
-    a = g.width / 2 - c.width / 2;
-    h.drawImage(e.canvas, a, 1.5 * shift2Y);
-    this.multiKillCanvas = g;
+    let scale, center_offset, shift2Y = 20, shift2X = 160;
+
+    let canvas2 = document.createElement("canvas");
+    let canvas21 = this.generateTintedKillIcon(205, 154, 109, "#FFFFFF");
+    let canvas22 = this.generateTintedKillIcon(172, 121, 76, "#BBBBBB");
+    let ctx2 = canvas2.getContext("2d")!;
+    let ctx21 = canvas21.getContext("2d")!;
+    let ctx22 = canvas22.getContext("2d")!;
+    canvas2.width = canvas21.width;
+    canvas2.height = canvas21.height + 30;
+    ctx2.drawImage(ctx22.canvas, 0, 0);
+    ctx2.drawImage(ctx21.canvas, 0, 30);
+    this.doubleKillCanvas = canvas2;
+
+    let canvas3 = document.createElement("canvas");
+    let canvas31 = this.generateTintedKillIcon(167, 176, 185, "#FFFFFF");
+    let canvas32 = this.generateTintedKillIcon(129, 138, 148, "#BBBBBB");
+    let ctx3 = canvas3.getContext("2d")!;
+    let ctx31 = canvas31.getContext("2d")!;
+    let ctx32 = canvas32.getContext("2d")!;
+    canvas3.width = canvas31.width + 70;
+    canvas3.height = canvas31.height + 10;
+    scale = 0.9;
+    center_offset = canvas3.width / 2 - (canvas31.width / 2) * scale;
+    ctx3.save();
+    ctx3.translate(center_offset, 0);
+    ctx3.scale(scale, scale);
+    ctx3.drawImage(ctx32.canvas, -30, 0);
+    ctx3.drawImage(ctx32.canvas, 30, 0);
+    ctx3.restore();
+    center_offset = canvas3.width / 2 - canvas31.width / 2;
+    ctx3.drawImage(ctx31.canvas, center_offset, 10);
+    this.tripleKillCanvas = canvas3;
+
+    let canvas4 = document.createElement("canvas");
+    let canvas41 = this.generateTintedKillIcon(240, 164, 0, "#FFFFFF");
+    let canvas42 = this.generateTintedKillIcon(200, 124, 0, "#ddaf63");
+    let canvas43 = this.generateTintedKillIcon(158, 98, 0, "#b25c5c");
+    let ctx4 = canvas4.getContext("2d")!;
+    let ctx41 = canvas41.getContext("2d")!;
+    let ctx42 = canvas42.getContext("2d")!;
+    let ctx43 = canvas43.getContext("2d")!;
+    canvas4.width = canvas41.width + shift2X;
+    canvas4.height = canvas41.height + 1.5 * shift2Y;
+    scale = 0.95;
+    center_offset = canvas4.width / 2 - (canvas41.width / 2) * scale;
+    ctx4.save();
+    ctx4.translate(center_offset, 0);
+    ctx4.scale(scale, scale);
+    ctx4.drawImage(ctx43.canvas, 0, 0);
+    ctx4.restore();
+    center_offset = canvas4.width / 2 - (canvas41.width / 2) * scale;
+    ctx4.save();
+    ctx4.translate(center_offset, 0);
+    ctx4.scale(scale, scale);
+    ctx4.drawImage(ctx42.canvas, -35, 15);
+    ctx4.drawImage(ctx42.canvas, 35, 15);
+    ctx4.restore();
+    center_offset = canvas4.width / 2 - canvas41.width / 2;
+    ctx4.drawImage(ctx41.canvas, center_offset, 1.5 * shift2Y);
+    this.quadKillCanvas = canvas4;
+
+    let canvas5 = document.createElement("canvas");
+    let canvas51 = this.generateTintedKillIcon(222, 0, 0, "#FFFFFF");
+    let canvas52 = this.generateTintedKillIcon(172, 0, 0, "#d68080");
+    let canvas53 = this.generateTintedKillIcon(133, 0, 0, "#b25c5c");
+    let ctx5 = canvas5.getContext("2d")!;
+    let ctx51 = canvas51.getContext("2d")!;
+    let ctx52 = canvas52.getContext("2d")!;
+    let ctx53 = canvas53.getContext("2d")!;
+    canvas5.width = canvas51.width + shift2X;
+    canvas5.height = canvas51.height + 1.5 * shift2Y;
+    center_offset = canvas5.width / 2 - (canvas51.width / 2) * 0.65;
+    ctx5.save();
+    ctx5.translate(center_offset, 0);
+    ctx5.scale(0.65, 0.65);
+    ctx5.drawImage(ctx53.canvas, -105, 10);
+    ctx5.drawImage(ctx53.canvas, 105, 10);
+    ctx5.drawImage(ctx53.canvas, -40, 10);
+    ctx5.drawImage(ctx53.canvas, 40, 10);
+    ctx5.drawImage(ctx53.canvas, 0, shift2Y);
+    ctx5.restore();
+    center_offset = canvas5.width / 2 - (canvas51.width / 2) * scale;
+    ctx5.save();
+    ctx5.translate(center_offset, 0);
+    ctx5.scale(scale, scale);
+    ctx5.drawImage(ctx52.canvas, -35, shift2Y);
+    ctx5.drawImage(ctx52.canvas, 35, shift2Y);
+    ctx5.restore();
+    center_offset = canvas5.width / 2 - canvas51.width / 2;
+    ctx5.drawImage(ctx51.canvas, center_offset, 1.5 * shift2Y);
+    this.multiKillCanvas = canvas5;
   }
-  load(b) {
+  load(b: () => void) {
     this.onLoad = b;
     this.loadGameSpritesheet();
   }
-  loadTintImage(b, e, f) {
+  loadTintImage(b: HTMLImageElement, e: (b: HTMLCanvasElement) => void, f: string) {
     let d = document.createElement("canvas"),
-      a = d.getContext("2d"),
+      a = d.getContext("2d")!,
       c = b.width,
       g = b.height;
     d.width = c;
@@ -1139,11 +1136,11 @@ class Assets {
     let h = document.createElement("canvas");
     h.width = c;
     h.height = g;
-    c = h.getContext("2d");
-    c.fillStyle = f;
-    c.fillRect(0, 0, h.width, h.height);
-    c.globalCompositeOperation = "destination-atop";
-    c.drawImage(b, 0, 0);
+    let ctx = h.getContext("2d")!;
+    ctx.fillStyle = f;
+    ctx.fillRect(0, 0, h.width, h.height);
+    ctx.globalCompositeOperation = "destination-atop";
+    ctx.drawImage(b, 0, 0);
     a.globalAlpha = 1;
     a.drawImage(h, 0, 0);
     e(d);
