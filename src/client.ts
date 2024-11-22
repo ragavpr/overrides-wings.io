@@ -2005,7 +2005,7 @@ class UI_GameInfo {
     if (this.#U) {
       this.#U = false;
       let c = objG_eventManager.endTime - frametime_millis;
-      if (0 > parseInt(c)) return;
+      if (0 > Math.floor(c)) return;
       this.#W = new StyleText(
         23 * num_scale_factor,
         objG_eventManager.getEventColor(),
@@ -2047,7 +2047,7 @@ class UI_GameInfo {
     if (this.#U) {
       this.#U = false;
       let c = objG_eventManager.endTime - frametime_millis;
-      0 > parseInt(c) && (c = 0);
+      0 > Math.floor(c) && (c = 0);
       this.#W = new StyleText(
         25 * num_scale_factor,
         objG_eventManager.getEventColor(),
@@ -2430,7 +2430,7 @@ class UI_ActivityMessages {
   }
   draw(e: CanvasRenderingContext2D) {
     e.globalAlpha = 1;
-    let d = e.canvas.height - 180 * num_scale_factor;
+    let d = canvas.height - 180 * num_scale_factor;
     for (let key in this.#b) {
       let a = parseInt(key)
       e.drawImage(
@@ -3208,23 +3208,23 @@ class Plane {
   }
 }
 class WaterSea {
-  #e;
-  #f;
-  #d;
-  #a;
-  #c;
-  #g;
-  #h = [];
+  #e: number[];
+  #f: number[];
+  #d: number;
+  #a: number;
+  #c: number;
+  #g: number;
+  #h: WaterSeaRipple[] = [];
   #q = 0;
   constructor() {
     this.#e = [];
     this.#f = [];
     for (let a = 0; 25 > a; a++) this.#e.push(0), this.#f.push(0);
   }
-  #b(a, c) {
+  #b(a: number, c: number) {
     0 <= a && 24 > a && (this.#f[a] += c);
   }
-  update(b) {
+  update(deltatime: number) {
     let k, m, l, y;
     this.#c = (1.1 * canvas.width) / objGUI_anchor.zoom;
     this.#g = this.#c / 25;
@@ -3269,7 +3269,7 @@ class WaterSea {
     k = m;
     this.#f[24] = 0.99 * (0.9 * l + 0.5 * (k + l) * (1 - 0.9));
     this.#f[24] = func_clamp(this.#f[24], -100, 100);
-    k = parseInt(24 * Math.random());
+    k = Math.floor(24 * Math.random());
     m = (20 * Math.random()) / 20;
     this.#f[k - 1] += m / 2;
     this.#f[k] += m;
@@ -3277,7 +3277,7 @@ class WaterSea {
     l = objGUI_anchor.getBounds();
     if (l[1].y > E / 2) {
       k = this.#h.length;
-      this.#q -= b;
+      this.#q -= deltatime;
       0 > this.#q &&
         ((this.#q = 125.6),
         20 > k &&
@@ -3292,57 +3292,57 @@ class WaterSea {
           m.setPosition(l + H.x, E / 2 + y + 30, y)));
       l = [];
       for (y = 0; y < k; y++)
-        (m = this.#h[y]), m.update(b), m.deleting && l.push(m);
-      for (b = 0; b < l.length; b++)
-        (k = this.#h.indexOf(l[b])), this.#h.splice(k, 1);
+        (m = this.#h[y]), m.update(deltatime), m.deleting && l.push(m);
+      for (deltatime = 0; deltatime < l.length; deltatime++)
+        (k = this.#h.indexOf(l[deltatime])), this.#h.splice(k, 1);
       l.length = 0;
     }
   }
-  drawBehind(a) {
+  drawBehind(ctx: CanvasRenderingContext2D) {
     let c = E / 2 - H.y,
       b = 0.5 + (c / (E / 2)) * 6;
-    this.drawWaterArea(a, 2 * b, "rgba(9,188,255,1.0)", 100, 0.25, 0.6, c);
+    this.drawWaterArea(ctx, 2 * b, "rgba(9,188,255,1.0)", 100, 0.25, 0.6, c);
     c = E / 2 - H.y;
     b = 0.5 + (c / (E / 2)) * 6;
-    this.drawWaterArea(a, 4 * b, "rgba(8,164,254,1.0)", 100, 0.75, 0.8, c);
-    this.drawWaterArea(a, 13 * b, "rgba(7,142,252,1.0)", 1e3, 0, 1, c);
+    this.drawWaterArea(ctx, 4 * b, "rgba(8,164,254,1.0)", 100, 0.75, 0.8, c);
+    this.drawWaterArea(ctx, 13 * b, "rgba(7,142,252,1.0)", 1e3, 0, 1, c);
   }
-  drawFront(b) {
+  drawFront(ctx: CanvasRenderingContext2D) {
     let d = E / 2 - H.y,
       e = this.#a * this.#g,
       f = E / 2 + -30,
-      q = b.createLinearGradient(0, f, 0, f + (600 + 2 * d));
+      q = ctx.createLinearGradient(0, f, 0, f + (600 + 2 * d));
     q.addColorStop(0, "rgba(7,142,252,1.0)");
     q.addColorStop(0.55, "rgba(0,132,232,1.0)");
     q.addColorStop(1, "rgba(0,90,190,1.0)");
-    b.fillStyle = q;
-    b.beginPath();
-    b.moveTo(e + this.#g - this.#c / 2, f + 30);
-    b.lineTo(e + this.#g + this.#c / 2, f + 30);
-    b.lineTo(e + 25 * this.#g - this.#c / 2, 1030 + f);
-    b.lineTo(e + this.#g - this.#c / 2, 1030 + f);
-    b.fill();
-    b.restore();
+    ctx.fillStyle = q;
+    ctx.beginPath();
+    ctx.moveTo(e + this.#g - this.#c / 2, f + 30);
+    ctx.lineTo(e + this.#g + this.#c / 2, f + 30);
+    ctx.lineTo(e + 25 * this.#g - this.#c / 2, 1030 + f);
+    ctx.lineTo(e + this.#g - this.#c / 2, 1030 + f);
+    ctx.fill();
+    ctx.restore();
     e = this.#h.length;
-    for (f = 0; f < e; f++) this.#h[f].draw(b, d);
+    for (f = 0; f < e; f++) this.#h[f].draw(ctx, d);
   }
-  drawWaterArea(b, d, h, e, q, r, K) {
+  drawWaterArea(ctx: CanvasRenderingContext2D, d: number, fill_color: string, e: number, q: number, r: number, K: number) {
     K = this.#a * this.#g;
     let p = E / 2 + -30;
-    b.save();
-    b.fillStyle = h;
-    b.beginPath();
-    b.moveTo(K + this.#g - this.#c / 2, this.#f[0] * r + p + d);
-    for (h = 1; 25 > h; h++) {
-      let s = (h + parseInt(25 * q)) % 25;
-      b.lineTo(K + (h + 1) * this.#g - this.#c / 2, this.#f[s] * r + d + p);
+    ctx.save();
+    ctx.fillStyle = fill_color;
+    ctx.beginPath();
+    ctx.moveTo(K + this.#g - this.#c / 2, this.#f[0] * r + p + d);
+    for (let i = 1; 25 > i; i++) {
+      let s = (i + Math.floor(25 * q)) % 25;
+      ctx.lineTo(K + (i + 1) * this.#g - this.#c / 2, this.#f[s] * r + d + p);
     }
-    b.lineTo(K + 25 * this.#g - this.#c / 2, e + d + p);
-    b.lineTo(K + this.#g - this.#c / 2, e + d + p);
-    b.fill();
-    b.restore();
+    ctx.lineTo(K + 25 * this.#g - this.#c / 2, e + d + p);
+    ctx.lineTo(K + this.#g - this.#c / 2, e + d + p);
+    ctx.fill();
+    ctx.restore();
   }
-  disturbSurface(c, d) {
+  disturbSurface(c: number, d: number) {
     let h = Math.floor(c / this.#g) - this.#a + 12.5;
     this.#b(h - 2, d / 2);
     this.#b(h - 1, d / 2);
@@ -3364,31 +3364,31 @@ class WaterSeaRipple {
   #c = 0;
   deleting = false;
   speed = 0.02;
-  setPosition(c, b, q) {
+  setPosition(c: number, b: number, q: number) {
     this.#e = c;
     this.#f = b;
     this.#d = q;
     this.#a = this.#d / 250;
   }
-  update(a) {
-    this.#c += (a / 1e3) * this.speed * 60;
+  update(deltatime: number) {
+    this.#c += (deltatime / 1e3) * this.speed * 60;
     this.#c >= Math.PI && (this.deleting = true);
   }
-  draw(d, h) {
+  draw(ctx: CanvasRenderingContext2D, h: number) {
     if (!this.deleting) {
       let q, n;
-      d.save();
+      ctx.save();
       q = Math.sin(this.#c);
-      d.globalAlpha = Math.sqrt(q);
-      d.translate(this.#e, this.#f - 4 * this.#c + (h / 500) * 150 * this.#a);
-      d.scale(0 + 1 * q, 0 + 0.8 * q);
-      d.translate(0, -20);
-      d.fillStyle = "#b3dff9";
-      d.beginPath();
+      ctx.globalAlpha = Math.sqrt(q);
+      ctx.translate(this.#e, this.#f - 4 * this.#c + (h / 500) * 150 * this.#a);
+      ctx.scale(0 + 1 * q, 0 + 0.8 * q);
+      ctx.translate(0, -20);
+      ctx.fillStyle = "#b3dff9";
+      ctx.beginPath();
       (q = this.#b.length), (n = 0.1 + 0.9 * this.#a);
-      d.moveTo(this.#b[0] * n + 0, this.#b[1] * n + 0);
+      ctx.moveTo(this.#b[0] * n + 0, this.#b[1] * n + 0);
       for (let k = 2; k < q; k += 6)
-        d.bezierCurveTo(
+        ctx.bezierCurveTo(
           this.#b[k] * n + 0,
           this.#b[k + 1] * n + 0,
           this.#b[k + 2] * n + 0,
@@ -3396,13 +3396,13 @@ class WaterSeaRipple {
           this.#b[k + 4] * n + 0,
           this.#b[k + 5] * n + 0,
         );
-      d.fill();
-      d.restore();
+      ctx.fill();
+      ctx.restore();
     }
   }
 }
 class Clouds {
-  #b = [
+  #cloud_bezier = [
     [
       -142.21, -1.18, -143.28, 0.36, -123.09, 11.23, -103.01, 13.96, -81.96,
       16.82, -65.17, 14.9, -64.36, 15.65, -41.42, 37.12, -28.62, 36.17, -16.75,
@@ -3482,7 +3482,7 @@ class Clouds {
       -45.23, -534.53, -65.79, -515.42, -79.84,
     ],
   ];
-  #e = [
+  #cloud_positions = [
     [876.66, -374.819, 1, 1.26],
     [97.633, -380.736, 0, 1],
     [192.926, 241.051, 2, 1],
@@ -3530,11 +3530,11 @@ class Clouds {
     [-5497.194, 515.894, 7, 1],
     [-6495.769, 511.43, 7, 1],
   ];
-  #f = [];
-  #d = [];
+  #rendered: HTMLCanvasElement[] = [];
+  #d: number[][] = [];
   constructor() {
-    for (let a = 0; a < this.#b.length; a++) {
-      let c = this.#b[a],
+    for (let a = 0; a < this.#cloud_bezier.length; a++) {
+      let c = this.#cloud_bezier[a],
         e = c.length,
         h = 9999,
         f = 9999,
@@ -3552,12 +3552,12 @@ class Clouds {
     }
     this.preRender();
   }
-  drawCloudShape(a, c, b, d, e) {
-    a.beginPath();
+  drawCloudShape(ctx: CanvasRenderingContext2D, c: number, b: number, d: number[], e: number) {
+    ctx.beginPath();
     let f = d.length;
-    a.moveTo(d[0] * e + c, d[1] * e + b);
+    ctx.moveTo(d[0] * e + c, d[1] * e + b);
     for (let k = 2; k < f; k += 6)
-      a.bezierCurveTo(
+      ctx.bezierCurveTo(
         d[k] * e + c,
         d[k + 1] * e + b,
         d[k + 2] * e + c,
@@ -3565,26 +3565,26 @@ class Clouds {
         d[k + 4] * e + c,
         d[k + 5] * e + b,
       );
-    a.fill();
+    ctx.fill();
   }
-  drawCloud(a, c, g, h, e, f, k, m) {
+  drawCloud(ctx: CanvasRenderingContext2D, c: number, g: number, h: number, e: number, opacity: number, k: number, m: number) {
     -7e3 > c && ((c = (-c + 7e3) % 14e3), (c = 7e3 - c));
     let l = c + this.#d[h][0] * e,
       y = g + this.#d[h][1] * e,
       r = c + this.#d[h][2] * e,
       K = g + this.#d[h][3] * e,
       p = objGUI_anchor.getBounds();
-    l = l > p[1].x || r < p[0].x || y > p[1].y || K < p[0].y ? false : true;
-    l &&
-      (a.save(),
-      (a.fillStyle = "rgba(190,227,249," + f + ")"),
-      this.drawCloudShape(a, c, g, this.#b[h], e),
-      a.clip(),
-      (a.fillStyle = "rgba(179,222,250," + f + ")"),
-      this.drawCloudShape(a, c + k, g + m, this.#b[h], e),
-      a.restore());
+    let bl = l > p[1].x || r < p[0].x || y > p[1].y || K < p[0].y ? false : true;
+    bl &&
+      (ctx.save(),
+      (ctx.fillStyle = "rgba(190,227,249," + opacity + ")"),
+      this.drawCloudShape(ctx, c, g, this.#cloud_bezier[h], e),
+      ctx.clip(),
+      (ctx.fillStyle = "rgba(179,222,250," + opacity + ")"),
+      this.drawCloudShape(ctx, c + k, g + m, this.#cloud_bezier[h], e),
+      ctx.restore());
   }
-  drawPreRenderedCloud(a, c, b, e, q, n) {
+  drawPreRenderedCloud(a: CanvasRenderingContext2D, c: number, b: number, e: number, q: number, n: number) {
     -7e3 > c && ((c = (-c + 7e3) % 14e3), (c = 7e3 - c));
     let k = this.#d[q][0],
       m = this.#d[q][1],
@@ -3593,22 +3593,22 @@ class Clouds {
       r = c + this.#d[q][2] * n;
     q = b + this.#d[q][3] * n;
     let K = objGUI_anchor.getBounds();
-    l = l > K[1].x || r < K[0].x || y > K[1].y || q < K[0].y ? false : true;
-    l && a.drawImage(this.#f[e], c + k * n, b + m * n);
+    let bl = l > K[1].x || r < K[0].x || y > K[1].y || q < K[0].y ? false : true;
+    bl && a.drawImage(this.#rendered[e], c + k * n, b + m * n);
   }
-  update(a) {
-    Xa -= 0.03 * a;
+  update(deltatime: number) {
+    Xa -= 0.03 * deltatime;
   }
-  drawClouds(a) {
-    for (let c = this.#e.length, b = 0; b < c; b++) {
+  drawClouds(ctx: CanvasRenderingContext2D) {
+    for (let c = this.#cloud_positions.length, b = 0; b < c; b++) {
       let d = 2,
-        f = this.#e[b][0],
-        n = this.#e[b][1],
+        f = this.#cloud_positions[b][0],
+        n = this.#cloud_positions[b][1],
         k = 1,
         m = 1,
         l = 3,
         y = 9;
-      0 == b % 2 && 7 != this.#e[b][2]
+      0 == b % 2 && 7 != this.#cloud_positions[b][2]
         ? ((f += 0.2 * (H.x - f)),
           (n += 0.2 * (H.y - n)),
           (k = 0.2),
@@ -3617,164 +3617,164 @@ class Clouds {
           (y = 3),
           (d = 0.5),
           (n *= Kb))
-        : 7 == this.#e[b][2] && ((k = 0.8), (n = Nb));
+        : 7 == this.#cloud_positions[b][2] && ((k = 0.8), (n = Nb));
       this.drawCloud(
-        a,
+        ctx,
         f + (Xa / 4) * d,
         n,
-        this.#e[b][2],
-        this.#e[b][3] * m,
+        this.#cloud_positions[b][2],
+        this.#cloud_positions[b][3] * m,
         k,
         l,
         y,
       );
     }
   }
-  drawPreRenderedClouds(a) {
-    let c = this.#e.length,
+  drawPreRenderedClouds(ctx: CanvasRenderingContext2D) {
+    let count = this.#cloud_positions.length,
       b = Xa,
       d = Kb;
     xa || ((d = 0.6), (b = 200));
-    for (let f = 0; f < c; f++) {
+    for (let f = 0; f < count; f++) {
       let n = 2,
-        k = this.#e[f][0],
-        m = this.#e[f][1],
+        k = this.#cloud_positions[f][0],
+        m = this.#cloud_positions[f][1],
         l = 1;
-      0 == f % 2 && 7 != this.#e[f][2]
+      0 == f % 2 && 7 != this.#cloud_positions[f][2]
         ? ((k += 0.2 * (H.x - k)),
           (m += 0.2 * (H.y - m)),
           (n = 0.5),
           (m *= d),
           (l = 0.7))
-        : 7 == this.#e[f][2] && (m = Nb);
+        : 7 == this.#cloud_positions[f][2] && (m = Nb);
       this.drawPreRenderedCloud(
-        a,
+        ctx,
         k + (b / 4) * n,
         m,
         f,
-        this.#e[f][2],
-        this.#e[f][3] * l,
+        this.#cloud_positions[f][2],
+        this.#cloud_positions[f][3] * l,
       );
     }
   }
-  preRender(a) {
-    a = this.#e.length;
-    for (let c = 1, g = 0; g < a; g++) {
-      let h = this.#e[g][2],
+  preRender() {
+    let count = this.#cloud_positions.length;
+    for (let c = 1, i = 0; i < count; i++) {
+      let h = this.#cloud_positions[i][2],
         q = -this.#d[h][0] + this.#d[h][2],
         n = -this.#d[h][1] + this.#d[h][3],
         k;
       k = document.createElement("canvas");
-      let m = k.getContext("2d"),
+      let ctx = k.getContext("2d")!,
         l = (c = 1),
         y = 3,
         r = 9;
-      0 == g % 2 && 7 != this.#e[g][2]
+      0 == i % 2 && 7 != this.#cloud_positions[i][2]
         ? ((c = 0.2), (l = 0.7), (y = 1), (r = 3))
-        : 7 == this.#e[g][2] && (c = 0.8);
-      l = this.#e[g][3] * l;
+        : 7 == this.#cloud_positions[i][2] && (c = 0.8);
+      l = this.#cloud_positions[i][3] * l;
       let K = -this.#d[h][0] * l,
         p = -this.#d[h][1] * l;
       k.width = q * l;
       k.height = n * l;
-      m.fillStyle = "rgba(190,227,249," + c + ")";
-      this.drawCloudShape(m, K, p, this.#b[h], l);
-      m.clip();
-      m.fillStyle = "rgba(179,222,250," + c + ")";
-      this.drawCloudShape(m, K + y, p + r, this.#b[h], l);
-      this.#f.push(k);
+      ctx.fillStyle = "rgba(190,227,249," + c + ")";
+      this.drawCloudShape(ctx, K, p, this.#cloud_bezier[h], l);
+      ctx.clip();
+      ctx.fillStyle = "rgba(179,222,250," + c + ")";
+      this.drawCloudShape(ctx, K + y, p + r, this.#cloud_bezier[h], l);
+      this.#rendered.push(k);
     }
   }
 }
 class Backgrounds {
-  #b = [];
+  // #b: Backgrounds.Class_a[] = [];
   #e = 0;
   #obj_clouds = new Clouds();
   #c = false;
   waves = new WaterSea();
 
-  loadColliders(c) {
-    let e = new XMLHttpRequest();
-    e.open("GET", c, true);
-    e.responseType = "arraybuffer";
-    e.onload = (c) => {
-      if ((c = e.response)) {
-        let g, f, m, l, y, v, u;
-        c = new DataView(c);
-        (g = 0), (f = c.getUint8(g)), (g = g + 1);
-        if (191 != f) console.log("ERROR LOADING MAP FILE");
-        else
-          for (;;) {
-            (m = c.getUint8(g)), (g = g + 1);
-            if (0 == m) break;
-            else if (
-              1 == m ||
-              2 == m ||
-              3 == m ||
-              4 == m ||
-              5 == m ||
-              6 == m ||
-              7 == m ||
-              8 == m
-            )
-              if (((f = c.getUint8(g)), (g += 1), 1 == f)) {
-                (f = c),
-                  (m = new Backgrounds.Class_a()),
-                  (l = f.getFloat32(g, true)),
-                  (g = g + 4),
-                  (y = f.getFloat32(g, true)),
-                  (g = g + 4),
-                  (f = f.getFloat32(g, true)),
-                  (g = g + 4);
-                m.posX = 10 * l;
-                m.posY = 10 * -y;
-                m.radius = 10 * f;
-                this.#b.push(m);
-              } else {
-                if (2 == f)
-                  for (
-                    f = c, l = f.getUint16(g, true), g += 2, y = 0;
-                    y < l;
-                    y++
-                  ) {
-                    for (
-                      let r = f.getUint16(g, true),
-                        g = g + 2,
-                        p = new Backgrounds.Class_d(),
-                        s = 0;
-                      s < r;
-                      s++
-                    ) {
-                      (v = f.getFloat32(g, true)),
-                        (g = g + 4),
-                        (u = f.getFloat32(g, true)),
-                        (g = g + 4);
-                      p.add(10 * v, 10 * -u, m);
-                    }
-                    this.#b.push(objG_assets);
-                  }
-              }
-            else
-              9 == m || 10 == m || 11 == m
-                ? ((g += 4), (g += 4), (g += 4))
-                : 43 == m && ((g += 4), (g += 4), (g += 4));
-          }
-      }
-    };
-    e.send(null);
-    console.log("Map loaded!");
-  }
-  drawColliders(a) {
-    for (let c = this.#b.length, d = 0; d < c; d++) this.#b[d].draw(a, 1);
-  }
-  drawWater(a) {
-    if (bool_drawWater)
-      for (let c = this.#b.length, d = 0; d < c; d++) this.#b[d].draw(a, 2);
-  }
-  drawGrassSand(a) {
-    for (let c = this.#b.length, d = 0; d < c; d++) this.#b[d].draw(a, 3);
-  }
-  drawGradient(a) {
+  // loadColliders(url: string) {
+  //   let e = new XMLHttpRequest();
+  //   e.open("GET", url, true);
+  //   e.responseType = "arraybuffer";
+  //   e.onload = (bin: ArrayBuffer) => {
+  //     if ((bin = e.response)) {
+  //       let g, f, m, l, y, v, u, r, p, s;
+  //       let c = new DataView(bin);
+  //       (g = 0), (f = c.getUint8(g)), (g = g + 1);
+  //       if (191 != f) console.log("ERROR LOADING MAP FILE");
+  //       else
+  //         for (;;) {
+  //           (m = c.getUint8(g)), (g = g + 1);
+  //           if (0 == m) break;
+  //           else if (
+  //             1 == m ||
+  //             2 == m ||
+  //             3 == m ||
+  //             4 == m ||
+  //             5 == m ||
+  //             6 == m ||
+  //             7 == m ||
+  //             8 == m
+  //           )
+  //             if (((f = c.getUint8(g)), (g += 1), 1 == f)) {
+  //               (f = c),
+  //                 (m = new Backgrounds.Class_a()),
+  //                 (l = f.getFloat32(g, true)),
+  //                 (g = g + 4),
+  //                 (y = f.getFloat32(g, true)),
+  //                 (g = g + 4),
+  //                 (f = f.getFloat32(g, true)),
+  //                 (g = g + 4);
+  //               m.posX = 10 * l;
+  //               m.posY = 10 * -y;
+  //               m.radius = 10 * f;
+  //               this.#b.push(m);
+  //             } else {
+  //               if (2 == f)
+  //                 for (
+  //                   f = c, l = f.getUint16(g, true), g += 2, y = 0;
+  //                   y < l;
+  //                   y++
+  //                 ) {
+  //                   for (
+  //                       r = f.getUint16(g, true),
+  //                       g = g + 2,
+  //                       p = new Backgrounds.Class_d(),
+  //                       s = 0;
+  //                     s < r;
+  //                     s++
+  //                   ) {
+  //                     (v = f.getFloat32(g, true)),
+  //                       (g = g + 4),
+  //                       (u = f.getFloat32(g, true)),
+  //                       (g = g + 4);
+  //                     p.add(10 * v, 10 * -u, m);
+  //                   }
+  //                   this.#b.push(objG_assets);
+  //                 }
+  //             }
+  //           else
+  //             9 == m || 10 == m || 11 == m
+  //               ? ((g += 4), (g += 4), (g += 4))
+  //               : 43 == m && ((g += 4), (g += 4), (g += 4));
+  //         }
+  //     }
+  //   };
+  //   e.send(null);
+  //   console.log("Map loaded!");
+  // }
+  // drawColliders(a) {
+  //   for (let c = this.#b.length, d = 0; d < c; d++) this.#b[d].draw(a, 1);
+  // }
+  // drawWater(a) {
+  //   if (bool_drawWater)
+  //     for (let c = this.#b.length, d = 0; d < c; d++) this.#b[d].draw(a, 2);
+  // }
+  // drawGrassSand(a) {
+  //   for (let c = this.#b.length, d = 0; d < c; d++) this.#b[d].draw(a, 3);
+  // }
+  drawGradient(ctx: CanvasRenderingContext2D) {
     let c, b, d, f, m;
     (c =
       (canvas.width / 2 +
@@ -3786,7 +3786,7 @@ class Backgrounds {
         objGUI_anchor.zoom),
       (d = 0.75 * E);
     objG_eventManager.isSpaceWars() && (d = E);
-    (d = a.createLinearGradient(0, -d, 0, d)), (f = 39), (m = 161);
+    (d = ctx.createLinearGradient(0, -d, 0, d)), (f = 39), (m = 161);
     objG_eventManager.isSpaceWars() && ((f = 0), (m = 55));
     if (0 < this.#e) {
       let l = this.#e / 2500;
@@ -3795,30 +3795,30 @@ class Backgrounds {
       m += (255 - m) * l;
     }
     objG_eventManager.isSpaceWars()
-      ? (d.addColorStop(0, "rgba(" + parseInt(f) + ",0,0,1.0)"),
-        d.addColorStop(0.3, "rgba(" + parseInt(m) + ",0,55,1.0)"),
-        d.addColorStop(0.5, "rgba(" + parseInt(m) + ",0,75,1.0)"),
-        d.addColorStop(0.7, "rgba(" + parseInt(m) + ",0,55,1.0)"),
-        d.addColorStop(1, "rgba(" + parseInt(f) + ",0,0,1.0)"))
+      ? (d.addColorStop(0, "rgba(" + Math.floor(f) + ",0,0,1.0)"),
+        d.addColorStop(0.3, "rgba(" + Math.floor(m) + ",0,55,1.0)"),
+        d.addColorStop(0.5, "rgba(" + Math.floor(m) + ",0,75,1.0)"),
+        d.addColorStop(0.7, "rgba(" + Math.floor(m) + ",0,55,1.0)"),
+        d.addColorStop(1, "rgba(" + Math.floor(f) + ",0,0,1.0)"))
       : bool_drawGradient
-        ? (d.addColorStop(0, "rgba(" + parseInt(f) + ",145,202,1.0)"),
-          d.addColorStop(1, "rgba(" + parseInt(m) + ",231,252,1.0)"))
+        ? (d.addColorStop(0, "rgba(" + Math.floor(f) + ",145,202,1.0)"),
+          d.addColorStop(1, "rgba(" + Math.floor(m) + ",231,252,1.0)"))
         : (d = "#62bae2");
-    a.fillStyle = d;
-    a.fillRect(
+    ctx.fillStyle = d;
+    ctx.fillRect(
       c - canvas.width / 2 / objGUI_anchor.zoom,
       b - canvas.height / 2 / objGUI_anchor.zoom,
       canvas.width / objGUI_anchor.zoom,
       canvas.height / objGUI_anchor.zoom,
     );
   }
-  drawWaterBehind(a) {
-    bool_drawWater && this.waves.drawBehind(a);
+  drawWaterBehind(ctx: CanvasRenderingContext2D) {
+    bool_drawWater && this.waves.drawBehind(ctx);
   }
-  drawWaterFront(a) {
-    bool_drawWater && this.waves.drawFront(a);
+  drawWaterFront(ctx: CanvasRenderingContext2D) {
+    bool_drawWater && this.waves.drawFront(ctx);
   }
-  drawLimits(a) {
+  drawLimits(ctx: CanvasRenderingContext2D) {
     let c =
         (canvas.width / 2 +
           (objGUI_anchor.x * objGUI_anchor.zoom - canvas.width / 2)) /
@@ -3852,51 +3852,51 @@ class Backgrounds {
       : ((d = l), (d = y > d ? y : d), (l = d = r > d ? r : d));
     r = y = d;
     0 < f
-      ? ((a.fillStyle = "rgba(200,0,0," + f + ")"),
-        a.fillRect($_sub, -e / 2, 2500, e))
-      : ((a.fillStyle = "rgba(200,0,0," + l + ")"),
-        a.fillRect(-$_sub - 2500, -e / 2, 2500, e));
+      ? ((ctx.fillStyle = "rgba(200,0,0," + f + ")"),
+        ctx.fillRect($_sub, -e / 2, 2500, e))
+      : ((ctx.fillStyle = "rgba(200,0,0," + l + ")"),
+        ctx.fillRect(-$_sub - 2500, -e / 2, 2500, e));
     objG_eventManager.isSpaceWars() &&
       (0 > b
-        ? ((a.fillStyle = "rgba(200,0,0," + y + ")"),
-          a.fillRect(-$_sub, -E / 2 - 2500, 2 * $_sub, 2500))
-        : ((a.fillStyle = "rgba(200,0,0," + r + ")"),
-          a.fillRect(-$_sub, E / 2, 2 * $_sub, 2500)));
+        ? ((ctx.fillStyle = "rgba(200,0,0," + y + ")"),
+          ctx.fillRect(-$_sub, -E / 2 - 2500, 2 * $_sub, 2500))
+        : ((ctx.fillStyle = "rgba(200,0,0," + r + ")"),
+          ctx.fillRect(-$_sub, E / 2, 2 * $_sub, 2500)));
     objG_eventManager.isSpaceWars() ||
-      ((a.fillStyle = "rgba(255,255,255,0.10)"),
-      a.fillRect(
+      ((ctx.fillStyle = "rgba(255,255,255,0.10)"),
+      ctx.fillRect(
         c - canvas.width / 2 / objGUI_anchor.zoom,
         -E / 2 - 1,
         canvas.width / objGUI_anchor.zoom,
         6,
       ));
   }
-  draw(a) {
+  draw(ctx: CanvasRenderingContext2D) {
     if (bool_drawSun && !objG_eventManager.isSpaceWars()) {
       let c = 0.97 * objGUI_anchor.x + 450,
         b = 0.97 * objGUI_anchor.y - 100,
-        d = a.createRadialGradient(c, b, 70, c, b, 350);
+        d = ctx.createRadialGradient(c, b, 70, c, b, 350);
       d.addColorStop(0, "rgba(255,255,255,0.4)");
       d.addColorStop(0.1, "rgba(255,255,255,0.13)");
       d.addColorStop(0.15, "rgba(255,255,255,0.05)");
       d.addColorStop(0.2, "rgba(255,255,255,0)");
-      a.fillStyle = d;
-      a.fillRect(c - 175, b - 175, 350, 350);
-      a.fillStyle = "rgba(255,255,255,1)";
-      a.beginPath();
-      a.arc(c, b, 70, 0, 2 * Math.PI);
-      a.fill();
+      ctx.fillStyle = d;
+      ctx.fillRect(c - 175, b - 175, 350, 350);
+      ctx.fillStyle = "rgba(255,255,255,1)";
+      ctx.beginPath();
+      ctx.arc(c, b, 70, 0, 2 * Math.PI);
+      ctx.fill();
     }
     bool_drawClouds &&
       !objG_eventManager.isSpaceWars() &&
-      this.#obj_clouds.drawPreRenderedClouds(a);
+      this.#obj_clouds.drawPreRenderedClouds(ctx);
   }
-  update(a) {
+  update(deltatime: number) {
     if (xa || !this.#c)
       if (
         ((this.#c = true),
-        this.waves.update(a),
-        this.#obj_clouds.update(a),
+        this.waves.update(deltatime),
+        this.#obj_clouds.update(deltatime),
         null != objG_player_plane)
       ) {
         let b = objG_player_plane.x < -$_sub || objG_player_plane.x > $_sub;
@@ -3906,55 +3906,55 @@ class Backgrounds {
           ? (0 == this.#e &&
               (objG_sfxManager.playSound(str_sfxid_warn, 1, 1, 1, null),
               objGUI_gameInfo.showWarningMessage("YOU ABANDONED THE FIGHT!")),
-            (this.#e += a))
+            (this.#e += deltatime))
           : (0 < this.#e && objGUI_gameInfo.clearWarningMessage(),
             (this.#e = 0));
       }
   }
 }
-namespace Backgrounds {
-  export class Class_d {
-    vertexes = [];
-    type = 0;
-    add(a, c, b) {
-      this.vertexes.push({
-        x: a,
-        y: c,
-      });
-      this.type = b;
-    }
-    draw(a, c) {
-      if (7 == this.type) {
-        if (((a.fillStyle = "#F0F000"), 3 != c)) return;
-      } else if (8 == this.type) {
-        if (((a.fillStyle = "#0000F0"), 2 != c)) return;
-      } else if (((a.fillStyle = "#f00000"), 1 != c)) return;
-      a.beginPath();
-      let b = this.vertexes.length,
-        d = this.vertexes[0];
-      a.moveTo(d.x, d.y);
-      for (d = 1; d < b; d++) {
-        let e = this.vertexes[d];
-        a.lineTo(e.x, e.y);
-      }
-      a.closePath();
-      a.fill();
-    }
-  }
-  export class Class_a {
-    posY = 0;
-    posX = 0;
-    radius = 10;
-    draw(a, c) {
-      1 == c &&
-        (a.beginPath(),
-        (a.fillStyle = "#f00"),
-        a.arc(this.posX, this.posY, this.radius, 0, 2 * Math.PI),
-        a.closePath(),
-        a.fill());
-    }
-  }
-}
+// namespace Backgrounds {
+//   export class Class_d {
+//     vertexes = [];
+//     type = 0;
+//     add(a, c, b) {
+//       this.vertexes.push({
+//         x: a,
+//         y: c,
+//       });
+//       this.type = b;
+//     }
+//     draw(a, c) {
+//       if (7 == this.type) {
+//         if (((a.fillStyle = "#F0F000"), 3 != c)) return;
+//       } else if (8 == this.type) {
+//         if (((a.fillStyle = "#0000F0"), 2 != c)) return;
+//       } else if (((a.fillStyle = "#f00000"), 1 != c)) return;
+//       a.beginPath();
+//       let b = this.vertexes.length,
+//         d = this.vertexes[0];
+//       a.moveTo(d.x, d.y);
+//       for (d = 1; d < b; d++) {
+//         let e = this.vertexes[d];
+//         a.lineTo(e.x, e.y);
+//       }
+//       a.closePath();
+//       a.fill();
+//     }
+//   }
+//   export class Class_a {
+//     posY = 0;
+//     posX = 0;
+//     radius = 10;
+//     draw(a, c) {
+//       1 == c &&
+//         (a.beginPath(),
+//         (a.fillStyle = "#f00"),
+//         a.arc(this.posX, this.posY, this.radius, 0, 2 * Math.PI),
+//         a.closePath(),
+//         a.fill());
+//     }
+//   }
+// }
 class PickupItem {
   #b = 0;
   alpha = 0;
@@ -3964,38 +3964,39 @@ class PickupItem {
   #a = 0;
   #c = 0;
   #g = 0;
-  #h;
-  #q;
+  #x: number;
+  #y: number;
   #n = 1;
   #k = 1;
   #m = 1;
   #l = 0;
-  #y = false;
+  #inSpace = false;
 
   id = -1;
   y = 0;
   x = 0;
   radius = 1.5;
-  type;
+  type: number;
   sinScaleY = 0;
   sinScaleX = 0;
   fadingOut = false;
   grabbing = false;
   constructor() {
-    objG_eventManager.isSpaceWars() && (this.#y = true);
+    objG_eventManager.isSpaceWars() && (this.#inSpace = true);
   }
-  update(f) {
-    let p = 0.06 * f,
+  update(deltatime: number) {
+    let p = 0.06 * deltatime,
       s,
-      v;
+      v,
+      plane;
     if (64 != this.type) {
       if (!objG_eventManager.isSpaceWars()) {
         (s = E / 2 - 20), (v = this.y + this.#e);
-        this.#l += f / 400;
+        this.#l += deltatime / 400;
         v < s
           ? (v > s - 30 && (this.#d = (s - v) / 30),
             1 > this.alpha &&
-              ((this.alpha += f / 1e3), 1 < this.alpha && (this.alpha = 1)),
+              ((this.alpha += deltatime / 1e3), 1 < this.alpha && (this.alpha = 1)),
             (this.#e = ((frametime_millis - this.#b) / 1e3) * Ac * 60))
           : ((this.#a += 0.1 * p),
             (this.#e += 0.1),
@@ -4004,56 +4005,56 @@ class PickupItem {
             (this.#m = Math.sqrt(this.#k)));
       }
       this.fadingOut &&
-        (this.#y ||
+        (this.#inSpace ||
         objG_eventManager.isSpaceWars() ||
         objG_eventManager.isInstagib()
           ? delete objD_pickups[this.id]
           : ((this.#e += 0.25),
-            (this.alpha -= f / 1e3),
+            (this.alpha -= deltatime / 1e3),
             0 >= this.alpha && delete objD_pickups[this.id]));
     }
     this.grabbing &&
-      ((f = objD_planes[this.#c])
+      ((plane = objD_planes[this.#c])
         ? ((s = Math.pow(this.#g, 2)),
-          (this.x = this.#h + (f.x - this.#h) * s),
-          (this.y = this.#q + (f.y - this.#q) * s),
+          (this.x = this.#x + (plane.x - this.#x) * s),
+          (this.y = this.#y + (plane.y - this.#y) * s),
           (this.#n = 1 - s),
           (this.#g += 0.07 * p),
           1 < this.#g && delete objD_pickups[this.id])
         : delete objD_pickups[this.id]);
   }
-  drawItem(c, b) {
+  drawItem(ctx: CanvasRenderingContext2D, img: FrameImage) {
     let g;
     if (64 == this.type)
-      c.save(),
-        c.beginPath(),
+      ctx.save(),
+        ctx.beginPath(),
         (this.sinScaleX += 0.1),
         (this.sinScaleY += 0.12),
-        c.translate(this.x, this.y + this.#e),
-        c.scale(
+        ctx.translate(this.x, this.y + this.#e),
+        ctx.scale(
           (1 + Math.sin(this.sinScaleX) / 6) * this.#n * 1.3,
           (1 + Math.sin(this.sinScaleY) / 6) * this.#n * 1.3,
         ),
-        b.draw(c);
-    else if (this.#y || objG_eventManager.isSpaceWars())
+        img.draw(ctx);
+    else if (this.#inSpace || objG_eventManager.isSpaceWars())
       objG_player_plane &&
         objG_eventManager.isSpaceWars() &&
         objG_player_plane.id == qa &&
         (g = 0.3),
-        c.save(),
-        c.beginPath(),
+        ctx.save(),
+        ctx.beginPath(),
         (this.sinScaleX += 0.1),
         (this.sinScaleY += 0.12),
-        c.translate(this.x, this.y),
-        c.scale(
+        ctx.translate(this.x, this.y),
+        ctx.scale(
           (1 + Math.sin(this.sinScaleX) / 6) * this.#n * 1.3,
           (1 + Math.sin(this.sinScaleY) / 6) * this.#n * 1.3,
         ),
-        c.scale(2, 2),
-        (c.globalAlpha = g),
-        objG_assets.frames.wing.draw(c),
-        c.scale(0.5, 0.5),
-        b.draw(c);
+        ctx.scale(2, 2),
+        (ctx.globalAlpha = g),
+        objG_assets.frames.wing.draw(ctx),
+        ctx.scale(0.5, 0.5),
+        img.draw(ctx);
     else {
       g = 1;
       !objG_player_plane ||
@@ -4066,64 +4067,64 @@ class PickupItem {
         (g = 0.3);
       let h = objG_assets.frames.parachute;
       h.y = -h.height / 2 + 100 * (1 - this.#m);
-      c.save();
+      ctx.save();
       this.grabbing
-        ? c.translate(this.x, this.y)
-        : c.translate(this.x, this.y + this.#e);
-      c.rotate(0.2 * Math.sin(this.#l + this.#f) * this.#d);
-      c.scale(1 * this.#n, 1 * this.#n);
-      c.translate(0, 10);
-      c.globalAlpha = this.alpha * g * 1;
-      c.save();
-      0 < this.#a && (c.globalAlpha = this.#m * g * 1);
-      c.scale(1 * (1 + (1 - this.#m)), 1 * this.#m);
-      h.draw(c);
-      c.restore();
+        ? ctx.translate(this.x, this.y)
+        : ctx.translate(this.x, this.y + this.#e);
+      ctx.rotate(0.2 * Math.sin(this.#l + this.#f) * this.#d);
+      ctx.scale(1 * this.#n, 1 * this.#n);
+      ctx.translate(0, 10);
+      ctx.globalAlpha = this.alpha * g * 1;
+      ctx.save();
+      0 < this.#a && (ctx.globalAlpha = this.#m * g * 1);
+      ctx.scale(1 * (1 + (1 - this.#m)), 1 * this.#m);
+      h.draw(ctx);
+      ctx.restore();
       g = 0;
       this.type == id_weapon_superweapon && (g = 8);
-      c.translate(0, 4 * Math.sin(this.#a) + g + 10);
-      b.draw(c);
-      c.globalAlpha = 1;
+      ctx.translate(0, 4 * Math.sin(this.#a) + g + 10);
+      img.draw(ctx);
+      ctx.globalAlpha = 1;
     }
-    c.restore();
+    ctx.restore();
   }
-  draw(a) {
+  draw(ctx: CanvasRenderingContext2D) {
     if (bool_drawItems) {
       let c = 40,
-        b;
+        type;
       32 == this.type
-        ? (b = objG_assets.frames.health)
+        ? (type = objG_assets.frames.health)
         : this.type == id_weapon_trishoot
-          ? (b = objG_assets.frames.trishoot)
+          ? (type = objG_assets.frames.trishoot)
           : this.type == id_weapon_railgun
-            ? (b = objG_assets.frames.railgun)
+            ? (type = objG_assets.frames.railgun)
             : this.type == id_weapon_missile
-              ? (b = objG_assets.frames.missile)
+              ? (type = objG_assets.frames.missile)
               : this.type == id_weapon_punch
-                ? (b = objG_assets.frames.melee)
+                ? (type = objG_assets.frames.melee)
                 : this.type == id_weapon_bombs
-                  ? (b = objG_assets.frames.bombdrop)
+                  ? (type = objG_assets.frames.bombdrop)
                   : this.type == id_weapon_superweapon
-                    ? (b = objG_assets.frames.laser)
+                    ? (type = objG_assets.frames.laser)
                     : 64 == this.type &&
-                      ((c = 10), (b = objG_assets.frames.wing));
+                      ((c = 10), (type = objG_assets.frames.wing));
       let d = this.y;
       this.grabbing || (d += this.#e);
       if (!this.grabbing) {
         if (!func_isInsideBox(this.x, d, c)) return;
       } else if (!func_isInsideBox(this.x, this.y, c)) return;
-      this.drawItem(a, b);
+      this.drawItem(ctx, type!);
     }
   }
   fadeOut() {
     this.fadingOut = true;
   }
-  playerGrab(a) {
+  playerGrab(id_plane: number) {
     this.grabbing = true;
-    this.#c = a;
+    this.#c = id_plane;
     this.y += this.#e;
-    this.#h = this.x;
-    this.#q = this.y;
+    this.#x = this.x;
+    this.#y = this.y;
     delete objD_pickups[this.id];
     this.id = "g" + this.id;
     objD_pickups[this.id] = this;
@@ -4134,15 +4135,15 @@ class PickupItem {
         ? objG_player_plane.incScore(vc)
         : objG_player_plane.incScore(wc));
   }
-  setPosition(a, c) {
-    this.x = 10 * a;
-    this.y = 10 * c;
+  setPosition(x_gu: number, y_gu: number) {
+    this.x = 10 * x_gu;
+    this.y = 10 * y_gu;
     this.y > -E / 2 && (this.alpha = 1);
     this.#b = +new Date();
   }
 }
 class WS_Connection {
-  #ws_conn?: WebSocket;
+  #ws_conn: WebSocket;
   func_process_msg_extra(
     dataview_message: DataView,
     uint8_message_type: number,
@@ -5007,7 +5008,7 @@ class WS_Connection {
     objG_wsConnection.sentHello = false;
     objG_wsConnection.hasConnection = false;
     objG_wsConnection.firstClientListing = true;
-    connectionClosed();
+    // connectionClosed();
     func_displayGameoverScore(-1);
     $("#topGui").hide();
     $("#topGuiConnecting").show();
@@ -5018,73 +5019,73 @@ class WS_Connection {
     setTimeout(this.getServerAndConnect, 1e3 + 1e3 * b);
     objG_wsConnection.connectRetry++;
   }
-  sendSingleByte(b: number) {
-    let a = new ArrayBuffer(1);
-    new DataView(a).setUint8(0, b);
-    this.#ws_conn.send(a);
+  sendSingleByte(byte: number) {
+    let arr = new ArrayBuffer(1);
+    new DataView(arr).setUint8(0, byte);
+    this.#ws_conn.send(arr);
   }
-  sendNick(b, a) {
-    myName = b;
-    let c = new ArrayBuffer(3 + 2 * b.length),
-      e = new DataView(c),
-      h = 2;
-    a && (h = 8);
-    e.setUint8(0, h);
-    e.setUint8(1, intG_color_id);
-    e.setUint8(2, intG_decal_id);
-    for (h = 0; h < b.length; ++h)
-      e.setUint16(3 + 2 * h, b.charCodeAt(h), true);
-    this.#ws_conn.send(c);
+  sendNick(name: string, continue_game: boolean) {
+    myName = name;
+    let arr = new ArrayBuffer(3 + 2 * name.length),
+      datv = new DataView(arr),
+      flag_contiue_game = 2;
+    continue_game && (flag_contiue_game = 8);
+    datv.setUint8(0, flag_contiue_game);
+    datv.setUint8(1, intG_color_id);
+    datv.setUint8(2, intG_decal_id);
+    for (let i = 0; i < name.length; ++i)
+      datv.setUint16(3 + 2 * i, name.charCodeAt(i), true);
+    this.#ws_conn.send(arr);
   }
   sendInput() {
-    let b = new ArrayBuffer(10),
-      a = new DataView(b);
-    a.setUint8(0, 3);
-    a.setFloat64(1, objG_inputManager.angle, true);
-    let c = 0;
-    if (objG_inputManager.hover || !wa) c |= 1;
-    if (!wa || bool_following_plane) c |= 2;
-    a.setUint8(9, c, true);
-    this.#ws_conn.send(b);
+    let arr = new ArrayBuffer(10),
+      datv = new DataView(arr);
+    datv.setUint8(0, 3);
+    datv.setFloat64(1, objG_inputManager.angle, true);
+    let uint8_type = 0;
+    if (objG_inputManager.hover || !wa) uint8_type |= 1;
+    if (!wa || bool_following_plane) uint8_type |= 2;
+    datv.setUint8(9, uint8_type);
+    this.#ws_conn.send(arr);
   }
   sendDirection() {
-    let b = new ArrayBuffer(9),
-      a = new DataView(b);
-    a.setUint8(0, 4);
-    a.setFloat64(1, objG_inputManager.angle, true);
-    this.#ws_conn.send(b);
+    let arr = new ArrayBuffer(9),
+      datv = new DataView(arr);
+    datv.setUint8(0, 4);
+    datv.setFloat64(1, objG_inputManager.angle, true);
+    this.#ws_conn.send(arr);
   }
   sendThrottle() {
-    let b = new ArrayBuffer(2),
-      a = new DataView(b);
-    a.setUint8(0, 6);
-    1 == objG_inputManager.throttle ? a.setUint8(1, 1) : a.setUint8(1, 0);
-    this.#ws_conn.send(b);
+    let arr = new ArrayBuffer(2),
+      datv = new DataView(arr);
+    datv.setUint8(0, 6);
+    1 == objG_inputManager.throttle ? datv.setUint8(1, 1) : datv.setUint8(1, 0);
+    this.#ws_conn.send(arr);
   }
-  sendBraking(b) {
-    let a = new ArrayBuffer(2),
-      c = new DataView(a);
-    c.setUint8(0, 4);
-    b ? c.setUint8(1, 1) : c.setUint8(1, 0);
-    this.#ws_conn.send(a);
+  sendBraking(isBraking: boolean) {
+    let arr = new ArrayBuffer(2),
+      datv = new DataView(arr);
+    datv.setUint8(0, 4);
+    isBraking ? datv.setUint8(1, 1) : datv.setUint8(1, 0);
+    this.#ws_conn.send(arr);
   }
-  sendShooting(b) {
-    let a = new ArrayBuffer(2),
-      c = new DataView(a);
-    c.setUint8(0, 5);
-    b ? c.setUint8(1, 1) : c.setUint8(1, 0);
-    this.#ws_conn.send(a);
+  sendShooting(isShooting: boolean) {
+    let arr = new ArrayBuffer(2),
+      datv = new DataView(arr);
+    datv.setUint8(0, 5);
+    isShooting ? datv.setUint8(1, 1) : datv.setUint8(1, 0);
+    this.#ws_conn.send(arr);
   }
   leave() {
-    let b = new ArrayBuffer(1);
-    new DataView(b).setUint8(0, 7);
-    this.#ws_conn.send(b);
+    let arr = new ArrayBuffer(1);
+    new DataView(arr).setUint8(0, 7);
+    this.#ws_conn.send(arr);
   }
   ping() {
     if (this.hasConnection) {
-      let b = new ArrayBuffer(1);
-      new DataView(b).setUint8(0, 0);
-      this.#ws_conn.send(b);
+      let arr = new ArrayBuffer(1);
+      new DataView(arr).setUint8(0, 0);
+      this.#ws_conn.send(arr);
     }
   }
 }
@@ -5112,7 +5113,7 @@ class FollowMode_R {
   moveLeft;
   moveRight;
   resize: (a: any) => void;
-  constructor(b) {
+  constructor(canvas: HTMLCanvasElement) {
     this.resize = (a) => {
       this.C();
       objG_eventManager.isSpaceWars() &&
@@ -5123,7 +5124,7 @@ class FollowMode_R {
       Z && objG_wsConnection.hasConnection && objG_wsConnection.sendInput();
     };
     this.whiteFlash = 0;
-    this.#html_canvas = b;
+    this.#html_canvas = canvas;
     this.#ctx_canvas = this.#html_canvas.getContext("2d");
     this.C();
     objG_backgrounds = new Backgrounds();
@@ -5161,7 +5162,7 @@ class FollowMode_R {
   followTopPlayer() {
     let a = -1,
       b = 0;
-    for (id in objD_planes)
+    for (let id in objD_planes)
       if (objD_planes[id].inGame) {
         let c = objD_planes[id].score;
         a < c && ((a = c), (b = id));
@@ -5171,7 +5172,7 @@ class FollowMode_R {
       objG_player_plane.prepareFollow(),
       (Oa = current_following_plane_id = b));
   }
-  PlayerFollowing(a) {
+  PlayerFollowing(a: boolean) {
     this.#c = 0;
     let b, d, e;
     if (0 == list_str_leaderboard_players.length)
@@ -5274,7 +5275,7 @@ class FollowMode_R {
           break;
         }
       if (objG_eventManager.isSpaceWars()) {
-        for (i in list_particleDust) {
+        for (let i in list_particleDust) {
           list_particleDust[i].update(
             objGUI_anchor.getBounds(),
             objGUI_anchor.zoom,
@@ -5408,7 +5409,7 @@ class FollowMode_R {
         e = false,
         f;
       if (objG_eventManager.isSpaceWars())
-        for (i in list_particleDust)
+        for (let i in list_particleDust)
           list_particleDust[i].draw(this.#ctx_canvas);
       else
         c > E / 2 - 25 &&
@@ -5527,18 +5528,18 @@ class FollowMode_R {
     }
   }
   gameCleanup() {
-    objG_player_plane = void 0;
+    objG_player_plane = null;
     current_following_plane_id = 0;
     Z = false;
     gb = ma = 0;
     objGUI_gameInfo && objGUI_gameInfo.clearBonusDisplay();
-    for (id in objD_pickups) delete objD_pickups[id];
+    for (let id in objD_pickups) delete objD_pickups[id];
     objD_pickups = {};
-    for (id in objD_missiles) delete objD_missiles[id];
+    for (let id in objD_missiles) delete objD_missiles[id];
     objD_missiles = {};
-    for (id in objD_planes) delete objD_planes[id];
+    for (let id in objD_planes) delete objD_planes[id];
     objD_planes = {};
-    for (id in objD_specialEntities) delete objD_specialEntities[id];
+    for (let id in objD_specialEntities) delete objD_specialEntities[id];
     objD_specialEntities = {};
   }
   C() {
@@ -5588,7 +5589,7 @@ class FollowMode_R {
 }
 class UI_Anchor {
   #c = 0;
-  #g;
+  #g: number;
   #h = 0;
   #q = 0;
   #n = 0;
@@ -5963,9 +5964,9 @@ class AnimationManager {
   addAnimationInfo(id_anim: string, obj_anim: Animation) {
     this.#animations[id_anim] = obj_anim;
   }
-  setAnimationInterval(a, d) {
-    this.#animations[a].setInterval(d);
-  }
+  // setAnimationInterval(a, d) {
+  //   this.#animations[a].setInterval(d);
+  // }
   createAnimation(id_anim: string) {
     let obj_anim = this.#animations[id_anim];
     let d = new DrawAnimation();
@@ -5981,82 +5982,82 @@ class AnimationManager {
   runAnimationBehind(a: DrawAnimation) {
     this.#runBG.push(a);
   }
-  addBlast(a, b, d, e, f) {
+  addBlast(x: number, y: number, size: number, max_parallel: number, strength: number) {
     let k = objG_animationManager.createAnimation("explosion");
-    k.setScale(d);
-    k.posX = a;
-    k.posY = b;
+    k.setScale(size);
+    k.posX = x;
+    k.posY = y;
     objG_animationManager.runAnimationBehind(k);
-    a = 1 - func_calculateDistance2D(a, b, H.x, H.y) / num_sound_max_distance;
-    0.01 < a && objG_sfxManager.playSound(str_sfxid_mexpl2, a * f, 1, e, null);
+    x = 1 - func_calculateDistance2D(x, y, H.x, H.y) / num_sound_max_distance;
+    0.01 < x && objG_sfxManager.playSound(str_sfxid_mexpl2, x * strength, 1, max_parallel, null);
   }
-  addExplosion(b, d, e, f) {
+  addExplosion(x: number, y: number, v_x: number, v_y: number) {
     if (
       bool_drawExplosions &&
-      func_isInsideBox(b, d, 100) &&
+      func_isInsideBox(x, y, 100) &&
       func_isTimeElapsed_50ms()
     ) {
       if (1 >= this.#a.length) {
         let n = new ParticleDebrisManager();
-        n.init(b, d, e, f);
+        n.init(x, y, v_x, v_y);
         this.#a.push(n);
       }
-      this.addBlast(b, d, 1, const_Sa_3, 1);
+      this.addBlast(x, y, 1, const_Sa_3, 1);
       objGUI_anchor.shake();
     }
   }
-  update(b) {
+  update(deltatime: number) {
     for (const i in this.#runL1)
-      this.#runL1[i].update(b), this.#runL1[i].deleting && this.#runL1.splice(i, 1);
+      this.#runL1[i].update(deltatime), this.#runL1[i].deleting && this.#runL1.splice(i, 1);
     for (const i in this.#runBG)
-      this.#runBG[i].update(b), this.#runBG[i].deleting && this.#runBG.splice(i, 1);
+      this.#runBG[i].update(deltatime), this.#runBG[i].deleting && this.#runBG.splice(i, 1);
     for (const i in this.#runL2)
-      this.#runL2[i].update(b), this.#runL2[i].deleting && this.#runL2.splice(i, 1);
+      this.#runL2[i].update(deltatime), this.#runL2[i].deleting && this.#runL2.splice(i, 1);
     for (const i in this.#a)
-      this.#a[i].update(b), this.#a[i].deleting && this.#a.splice(i, 1);
+      this.#a[i].update(deltatime), this.#a[i].deleting && this.#a.splice(i, 1);
   }
-  drawBehind(a) {
+  drawBehind(ctx: CanvasRenderingContext2D) {
     for (let b in this.#runBG) {
       let e = this.#runBG[b];
-      a.save();
-      a.translate(e.posX, e.posY);
-      a.scale(e.scaleX, e.scaleY);
-      a.rotate(e.rotation);
-      e.draw(a);
-      a.restore();
+      ctx.save();
+      ctx.translate(e.posX, e.posY);
+      ctx.scale(e.scaleX, e.scaleY);
+      ctx.rotate(e.rotation);
+      e.draw(ctx);
+      ctx.restore();
     }
   }
-  drawLayer2(a) {
+  drawLayer2(ctx: CanvasRenderingContext2D) {
     for (let b in this.#runL2) {
       let d = this.#runL2[b];
-      a.save();
-      a.translate(d.posX, d.posY);
-      a.scale(d.scaleX, d.scaleY);
-      a.rotate(d.rotation);
-      d.draw(a);
-      a.restore();
+      ctx.save();
+      ctx.translate(d.posX, d.posY);
+      ctx.scale(d.scaleX, d.scaleY);
+      ctx.rotate(d.rotation);
+      d.draw(ctx);
+      ctx.restore();
     }
   }
-  draw(a) {
+  draw(ctx: CanvasRenderingContext2D) {
     for (let b in this.#runL1) {
       let d = this.#runL1[b];
-      a.save();
-      a.translate(d.posX, d.posY);
-      a.scale(d.scaleX, d.scaleY);
-      a.rotate(d.rotation);
-      d.draw(a);
-      a.restore();
+      ctx.save();
+      ctx.translate(d.posX, d.posY);
+      ctx.scale(d.scaleX, d.scaleY);
+      ctx.rotate(d.rotation);
+      d.draw(ctx);
+      ctx.restore();
     }
   }
-  drawExplosions(b) {
-    for (let d in this.#a) this.#a[d].draw(b);
+  drawExplosions(ctx: CanvasRenderingContext2D) {
+    for (let d in this.#a) this.#a[d].draw(ctx);
   }
 }
 class DrawAnimation {
   #b = 0;
   #e = 0;
   #f = 0;
-  frames;
+  frames: FrameImage[];
   frameCount = 0;
   deleting = false;
   posY = 0;
@@ -6065,50 +6066,50 @@ class DrawAnimation {
   scaleX = 1;
   rotation = 0;
   alpha = 1;
-  copy(b) {
-    b = new DrawAnimation();
-    b.frames = this.frames;
-    b.frameCount = this.frameCount;
-    b.deleting = this.deleting;
-    b.posX = this.posX;
-    b.posY = this.posY;
-    b.scaleX = this.scaleX;
-    b.scaleY = this.scaleY;
-    b.rotation = this.rotation;
-    b.alpha = this.alpha;
-    b.setInterval(this.#e);
-    return b;
+  // copy(b) {
+  //   b = new DrawAnimation();
+  //   b.frames = this.frames;
+  //   b.frameCount = this.frameCount;
+  //   b.deleting = this.deleting;
+  //   b.posX = this.posX;
+  //   b.posY = this.posY;
+  //   b.scaleX = this.scaleX;
+  //   b.scaleY = this.scaleY;
+  //   b.rotation = this.rotation;
+  //   b.alpha = this.alpha;
+  //   b.setInterval(this.#e);
+  //   return b;
+  // }
+  setup(anim: Animation) {
+    this.#e = anim.interval;
+    this.frames = anim.frames;
+    this.frameCount = anim.frames.length;
   }
-  setup(b) {
-    this.#e = b.interval;
-    this.frames = b.frames;
-    this.frameCount = b.frames.length;
-  }
-  setInterval(b) {
-    this.#e = b;
-  }
-  update(d) {
+  // setInterval(b) {
+  //   this.#e = b;
+  // }
+  update(deltatime: number) {
     this.deleting ||
       (this.#f > this.#e && (this.#b++, (this.#f -= this.#e)),
-      (this.#f += d),
+      (this.#f += deltatime),
       this.#b >= this.frameCount && (this.deleting = true));
   }
-  setScale(b) {
-    this.scaleY = this.scaleX = b;
+  setScale(scale: number) {
+    this.scaleY = this.scaleX = scale;
   }
-  draw(d) {
-    1 > this.alpha && (d.globalAlpha = this.alpha);
-    this.frames[this.#b].draw(d);
+  draw(ctx: CanvasRenderingContext2D) {
+    1 > this.alpha && (ctx.globalAlpha = this.alpha);
+    this.frames[this.#b].draw(ctx);
   }
 }
 class Animation {
-  frames = [];
+  frames: FrameImage[] = [];
   interval = 0;
-  addFrame(b) {
-    this.frames.push(b);
+  addFrame(img: FrameImage) {
+    this.frames.push(img);
   }
-  setInterval(b) {
-    this.interval = b;
+  setInterval(interval: number) {
+    this.interval = interval;
   }
 }
 class ParticleU_R {
@@ -6129,13 +6130,14 @@ class ParticleU_R {
     y: 0,
   };
   time = 0;
-  used = (this.active = false);
+  used = false;
+  active = false;
   rotationSpeed = 0;
-  draw(b) {
-    b.save();
-    b.translate(this.pos.x, this.pos.y);
-    b.scale(this.scale, this.scale);
-    b.rotate(this.rotation);
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.save();
+    ctx.translate(this.pos.x, this.pos.y);
+    ctx.scale(this.scale, this.scale);
+    ctx.rotate(this.rotation);
     let e =
       "hsla(" +
       this.color.h +
@@ -6146,64 +6148,65 @@ class ParticleU_R {
       "," +
       this.color.a +
       ")";
-    b.translate(20, -2);
-    b.beginPath();
-    b.arc(0, 0, 25, 0, 2 * Math.PI, false);
-    b.fillStyle = e;
-    b.fill();
-    b.beginPath();
-    b.arc(-15, -32, 7, 0, 2 * Math.PI, false);
-    b.fillStyle = e;
-    b.fill();
-    b.restore();
+    ctx.translate(20, -2);
+    ctx.beginPath();
+    ctx.arc(0, 0, 25, 0, 2 * Math.PI, false);
+    ctx.fillStyle = e;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(-15, -32, 7, 0, 2 * Math.PI, false);
+    ctx.fillStyle = e;
+    ctx.fill();
+    ctx.restore();
   }
 }
 class ParticleManager {
   #b = 0;
   #e = 0;
-  #f = [];
+  #f: ParticleU_R[] = [];
   #d = 0;
-  #a;
-  #c;
-  #g;
-  #h;
+  #a: number;
+  #c: number;
+  #g: number;
+  #h: number;
   life = 400;
   debreeAge = 0;
   alpha = 1;
-  init(q, n, k) {
+  init(q: number, x: number, y: number) {
     this.#d = q;
     this.#a = 0;
     this.#c = -0.03;
     this.#h = this.#g = 0;
-    this.#b = n;
-    this.#e = k;
+    this.#b = x;
+    this.#e = y;
     q = this.life / this.#d;
-    for (n = 0; n < this.#d; n++)
-      (k = new ParticleU_R()),
-        this.resetParticle(k),
-        (k.active = false),
-        (k.time = q * n),
-        this.#f.push(k);
+    for (let i = 0; i < this.#d; i++) {
+      let j = new ParticleU_R();
+      this.resetParticle(j);
+      j.active = false;
+      j.time = q * i;
+      this.#f.push(j);
+    }
   }
-  resetParticle(a) {
-    a.pos.x = this.#b;
-    a.pos.y = this.#e;
-    a.speed.x = this.#g;
-    a.speed.y = this.#h;
-    a.time = 0;
-    a.color.a = 1;
-    a.rotationSpeed = (Math.random() - 0.5) / 10;
-    a.rotation = 360 * Math.random();
+  resetParticle(particle: ParticleU_R) {
+    particle.pos.x = this.#b;
+    particle.pos.y = this.#e;
+    particle.speed.x = this.#g;
+    particle.speed.y = this.#h;
+    particle.time = 0;
+    particle.color.a = 1;
+    particle.rotationSpeed = (Math.random() - 0.5) / 10;
+    particle.rotation = 360 * Math.random();
   }
-  update(b) {
-    b = 1e3 / 60;
+  update(deltatime: number) {
+    deltatime = 1e3 / 60;
     let e, g, h, l;
     for (e = 0; e < this.#d; e++) {
       g = this.#f[e];
       g.time >= this.life &&
         (g.active || ((g.active = true), (g.time %= this.life)),
         this.resetParticle(g));
-      g.time += b;
+      g.time += deltatime;
       if (g.active) {
         h = g.time / this.life;
         1 < h && (h = 1);
@@ -6233,15 +6236,15 @@ class ParticleManager {
       }
     }
   }
-  updateExplosion(b) {
-    b = 1e3 / 60;
+  updateExplosion(deltatime: number) {
+    deltatime = 1e3 / 60;
     let e, g, h, l;
     for (e = 0; e < this.#d; e++) {
       g = this.#f[e];
       g.time >= this.life &&
         (g.active || ((g.active = true), (g.time %= this.life)),
         this.resetParticle(g));
-      g.time += b;
+      g.time += deltatime;
       if (g.active) {
         h = g.time / this.life;
         1 < h && (h = 1);
@@ -6277,15 +6280,15 @@ class ParticleManager {
       }
     }
   }
-  updateMissileSmoke(b) {
-    b = 1e3 / 60;
+  updateMissileSmoke(deltatime: number) {
+    deltatime = 1e3 / 60;
     let e, g, h, l;
     for (e = 0; e < this.#d; e++) {
       g = this.#f[e];
       g.time >= this.life &&
         (g.active || ((g.active = true), (g.time %= this.life)),
         this.resetParticle(g));
-      g.time += b;
+      g.time += deltatime;
       if (g.active) {
         h = g.time / this.life;
         1 < h && (h = 1);
@@ -6313,34 +6316,34 @@ class ParticleManager {
       }
     }
   }
-  setPosition(a, c) {
-    this.#b = a;
-    this.#e = c;
+  setPosition(x: number, y: number) {
+    this.#b = x;
+    this.#e = y;
   }
-  setLife(a) {
-    this.life = a;
+  setLife(duration: number) {
+    this.life = duration;
   }
-  draw(a) {
-    for (let b = this.#d - 1; 0 <= b; b--) {
-      let c = this.#f[b];
-      c.active && c.draw(a);
+  draw(ctx: CanvasRenderingContext2D) {
+    for (let i = this.#d - 1; 0 <= i; i--) {
+      let particle = this.#f[i];
+      particle.active && particle.draw(ctx);
     }
   }
 }
 class ParticleDebrisManager {
-  #e = [];
-  #f;
-  #d;
+  #e: ParticleDebris[] = [];
+  #x: number;
+  #y: number;
   deleting = false;
-  #b(a) {
+  #b(a: number) {
     return Math.random() * a - a / 2;
   }
-  init(a, c, e, h) {
+  init(x: number, y: number, v_x: number, v_y: number) {
     let q, n, k, m, l, p, r;
-    this.#f = a;
-    this.#d = c;
-    a = 2 + 4 * Math.random();
-    c = 2 + 4 * Math.random();
+    this.#x = x;
+    this.#y = y;
+    x = 2 + 4 * Math.random();
+    y = 2 + 4 * Math.random();
     q = 2 + 4 * Math.random();
     Math.random();
     (n = Math.PI / 4),
@@ -6354,79 +6357,79 @@ class ParticleDebrisManager {
       (k = (4 / 3) * Math.PI + this.#b(n) + k),
       (n = Math.cos(k)),
       (k = Math.sin(k));
-    this.addDebree(l * a + e, m * a + h);
-    this.addDebree(r * c + e, p * c + h);
-    this.addDebree(n * q + e, k * q + h);
+    this.addDebree(l * x + v_x, m * x + v_y);
+    this.addDebree(r * y + v_x, p * y + v_y);
+    this.addDebree(n * q + v_x, k * q + v_y);
   }
-  addDebree(a, b) {
-    let g = new ParticleDebris();
-    g.init(this.#f, this.#d);
-    g.setSpeed(a, b);
-    this.#e.push(g);
+  addDebree(x: number, y: number) {
+    let debris = new ParticleDebris();
+    debris.init(this.#x, this.#y);
+    debris.setSpeed(x, y);
+    this.#e.push(debris);
   }
-  update(a) {
+  update(deltatime: number) {
     let b = 0;
     for (let debreeID in this.#e) {
       let d = this.#e[debreeID];
-      d.update(a);
+      d.update(deltatime);
       d.deleting && this.#e.splice(debreeID, 1);
       b++;
     }
     0 == b && (this.deleting = true);
   }
-  draw(a) {
-    for (let debreeID in this.#e) this.#e[debreeID].draw(a);
+  draw(ctx: CanvasRenderingContext2D) {
+    for (let debreeID in this.#e) this.#e[debreeID].draw(ctx);
   }
 }
 class ParticleDebris {
-  #b;
-  #e;
-  #f;
-  #d;
-  #a;
+  #v_x: number;
+  #v_y: number;
+  #f: number;
+  #d: number;
+  #a: number;
   #c = 0.08;
-  #g;
-  #h;
-  #q;
+  #x: number;
+  #y: number;
+  #obj_particleMan: ParticleManager;
   #n = 0;
   deleting = false;
   constructor() {
     objG_eventManager.isSpaceWars() && (this.#c = 0);
   }
-  init(a, b) {
-    this.#g = a;
-    this.#h = b;
-    this.#q = new ParticleManager();
-    this.#q.init(15, this.#g, this.#h);
+  init(x: number, y: number) {
+    this.#x = x;
+    this.#y = y;
+    this.#obj_particleMan = new ParticleManager();
+    this.#obj_particleMan.init(15, this.#x, this.#y);
   }
-  setSpeed(c, g) {
-    this.#b = c;
-    this.#e = g;
+  setSpeed(x: number, y: number) {
+    this.#v_x = x;
+    this.#v_y = y;
     this.#f = 0;
-    this.#d = 0.2 * this.#b;
-    this.#a = 0.2 * this.#e;
+    this.#d = 0.2 * this.#v_x;
+    this.#a = 0.2 * this.#v_y;
   }
-  update(k) {
+  update(deltatime: number) {
     this.#f += this.#c;
-    this.#g += this.#b;
-    this.#h += this.#e + this.#f;
-    this.#b *= 0.975;
-    this.#e *= 0.975;
+    this.#x += this.#v_x;
+    this.#y += this.#v_y + this.#f;
+    this.#v_x *= 0.975;
+    this.#v_y *= 0.975;
     this.#c *= 0.975;
-    Math.abs(this.#b) < Math.abs(this.#d) && (this.#b = this.#d);
-    Math.abs(this.#e) < Math.abs(this.#a) && (this.#e = this.#a);
+    Math.abs(this.#v_x) < Math.abs(this.#d) && (this.#v_x = this.#d);
+    Math.abs(this.#v_y) < Math.abs(this.#a) && (this.#v_y = this.#a);
     3 < this.#f && (this.#f = 3);
-    this.#n += k;
+    this.#n += deltatime;
     500 < this.#n && 2300 >= this.#n
-      ? (this.#q.debreeAge = (this.#n - 500) / 2300)
+      ? (this.#obj_particleMan.debreeAge = (this.#n - 500) / 2300)
       : 2300 < this.#n && 2500 >= this.#n
-        ? (this.#q.alpha = (2500 - this.#n) / 200)
+        ? (this.#obj_particleMan.alpha = (2500 - this.#n) / 200)
         : 2500 < this.#n && (this.deleting = true);
     this.deleting ||
-      (this.#q.setPosition(this.#g, this.#h), this.#q.updateExplosion(k));
+      (this.#obj_particleMan.setPosition(this.#x, this.#y), this.#obj_particleMan.updateExplosion(deltatime));
   }
-  draw(a) {
-    this.deleting || this.#q.draw(a);
+  draw(ctx: CanvasRenderingContext2D) {
+    this.deleting || this.#obj_particleMan.draw(ctx);
   }
 }
 class Missile {
@@ -6449,7 +6452,7 @@ class Missile {
   frameSwitchTime = 40;
   timeToNextFrame = 0;
   flameState = 1;
-  lastImage;
+  //lastImage;
   first_set = true;
   colorHue = 0;
   finished = false;
@@ -6462,7 +6465,7 @@ class Missile {
     this.#obj_particleTrails.width = 1.2;
     this.#obj_particleTrails.fixedColor = true;
   }
-  update(d) {
+  update(deltatime: number) {
     let a = func_clamp(
         (frametime_millis - this.lastUpdate) / num_global_physics_step_ms,
         0,
@@ -6478,7 +6481,7 @@ class Missile {
     this.x = a * (this.dstX - this.origX) + this.origX;
     this.y = a * (this.dstY - this.origY) + this.origY;
     this.#obj_particleTrails.setPosition(this.x, this.y);
-    this.#obj_particleTrails.update(d);
+    this.#obj_particleTrails.update(deltatime);
     if (1 == this.type) objG_eventManager.isSpaceWars() && (this.angle += 0.2);
     else if (2 != this.type) {
       a = E / 2;
@@ -6495,12 +6498,12 @@ class Missile {
           true,
         );
       }
-      this.#e -= d;
+      this.#e -= deltatime;
     }
   }
-  draw(d, a) {
+  draw(ctx: CanvasRenderingContext2D, deltatime: number) {
     let c = 1;
-    this.timeToNextFrame -= a;
+    this.timeToNextFrame -= deltatime;
     0 >= this.timeToNextFrame &&
       ((this.flameState = !this.flameState),
       (this.timeToNextFrame = this.frameSwitchTime));
@@ -6509,92 +6512,96 @@ class Missile {
     0 == this.type &&
       ((this.#obj_particleTrails.width = 1.5 * e),
       (this.#obj_particleTrails.style = "rgba(247, 189, 57, 1.0)"),
-      this.#obj_particleTrails.draw(d),
+      this.#obj_particleTrails.draw(ctx),
       (this.#obj_particleTrails.width = 0.4 * e),
       (this.#obj_particleTrails.style = "rgba(232, 247, 59, 1.0)"),
-      this.#obj_particleTrails.draw(d),
-      d.save(),
-      d.translate(this.x, this.y),
-      this.flameState ? d.scale(0.7, 0.7) : d.scale(0.9, 0.9),
-      d.rotate(this.angle),
-      d.translate(-27, 0),
-      objG_assets.frames.throttleFlame.draw(d),
-      d.restore());
-    d.save();
-    d.translate(this.x, this.y);
+      this.#obj_particleTrails.draw(ctx),
+      ctx.save(),
+      ctx.translate(this.x, this.y),
+      this.flameState ? ctx.scale(0.7, 0.7) : ctx.scale(0.9, 0.9),
+      ctx.rotate(this.angle),
+      ctx.translate(-27, 0),
+      objG_assets.frames.throttleFlame.draw(ctx),
+      ctx.restore());
+    ctx.save();
+    ctx.translate(this.x, this.y);
     2 != this.type
       ? (1 == this.type && (c = 1.4),
-        d.scale(c, c),
+        ctx.scale(c, c),
         1 == this.type &&
           objG_assets.blinkImage &&
           objG_eventManager.isSpaceWars() &&
-          (d.scale(2, 2),
-          d.drawImage(
+          (ctx.scale(2, 2),
+          ctx.drawImage(
             objG_assets.blinkImage,
             -objG_assets.blinkImage.width / 2,
             -objG_assets.blinkImage.height / 2,
           ),
-          d.scale(0.5, 0.5)),
-        d.rotate(this.angle),
+          ctx.scale(0.5, 0.5)),
+        ctx.rotate(this.angle),
         0 == this.type
-          ? objG_assets.frames.missile_attack.draw(d)
-          : objG_assets.frames.bomb.draw(d))
-      : (d.beginPath(),
-        (d.fillStyle = "#FF0000"),
-        d.arc(0, 0, 6, 0, 2 * Math.PI),
-        d.fill(),
-        d.beginPath(),
-        (d.fillStyle = "#FFFFFF"),
-        d.arc(0, 0, 4, 0, 2 * Math.PI),
-        d.fill());
-    d.restore();
+          ? objG_assets.frames.missile_attack.draw(ctx)
+          : objG_assets.frames.bomb.draw(ctx))
+      : (ctx.beginPath(),
+        (ctx.fillStyle = "#FF0000"),
+        ctx.arc(0, 0, 6, 0, 2 * Math.PI),
+        ctx.fill(),
+        ctx.beginPath(),
+        (ctx.fillStyle = "#FFFFFF"),
+        ctx.arc(0, 0, 4, 0, 2 * Math.PI),
+        ctx.fill());
+    ctx.restore();
   }
-  drawReflection(b, a) {
+  drawReflection(ctx: CanvasRenderingContext2D, deltatime: number) {
     let c = E / 2,
       e = c - this.y;
     if (!(0 > e || 170 < e)) {
       let f = e / 170;
-      b.save();
-      b.translate(this.x, c + e - 25);
+      ctx.save();
+      ctx.translate(this.x, c + e - 25);
       c = 1;
       30 > e && 15 <= e ? (c = (e - 15) / 15) : 15 > e && (c = 0);
-      b.globalAlpha = 0.7 * (1 - f) * c;
-      b.scale(1.1, 0.6);
-      b.beginPath();
-      b.fillStyle = "rgba(0,100,255,1.0)";
-      b.arc(0, 0, 10, 0, 2 * Math.PI);
-      b.fill();
-      b.restore();
+      ctx.globalAlpha = 0.7 * (1 - f) * c;
+      ctx.scale(1.1, 0.6);
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(0,100,255,1.0)";
+      ctx.arc(0, 0, 10, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.restore();
     }
   }
-  setPosition(b, a, c) {
+  setPosition(x_gu: number, y_gu: number, id_plane: number) {
     this.origX = this.dstX;
     this.origY = this.dstY;
-    this.dstX = 10 * b;
-    this.dstY = 10 * a;
-    this.first_set &&
-      ((b = objD_planes[c])
-        ? ((a = 5 * Math.abs(Math.cos(b.angle + Math.PI / 2))),
-          (this.origX = b.x),
-          (this.origY = b.y + a),
-          (this.x = b.x),
-          (this.y = b.y))
-        : ((this.x = this.dstX),
-          (this.y = this.dstY),
-          (this.origX = this.dstX),
-          (this.origY = this.dstY)),
-      (this.first_set = false),
-      1 == this.type && (this.angle = Math.PI / 2));
+    this.dstX = 10 * x_gu;
+    this.dstY = 10 * y_gu;
+    if(this.first_set) {
+      let obj_plane = objD_planes[id_plane]
+      if(obj_plane) {
+        y_gu = 5 * Math.abs(Math.cos(obj_plane.angle + Math.PI / 2))
+        this.origX = obj_plane.x
+        this.origY = obj_plane.y + y_gu
+        this.x = obj_plane.x
+        this.y = obj_plane.y
+      } else {
+        this.x = this.dstX
+        this.y = this.dstY
+        this.origX = this.dstX
+        this.origY = this.dstY
+      }
+      this.first_set = false;
+      1 == this.type && (this.angle = Math.PI / 2);
+    }
     0 == this.type &&
-      ((b = this.dstX - this.origX),
-      (a = this.dstY - this.origY),
-      (this.angle = 0 <= b ? Math.atan(a / b) : Math.atan(a / b) + Math.PI));
+      ((x_gu = this.dstX - this.origX),
+      (y_gu = this.dstY - this.origY),
+      (this.angle = 0 <= x_gu ? Math.atan(y_gu / x_gu) : Math.atan(y_gu / x_gu) + Math.PI));
   }
-  setColorHue(b) {
-    this.colorHue = b;
+  setColorHue(hue: number) {
+    this.colorHue = hue;
   }
-  setType(d) {
-    this.type = d;
+  setType(flag_type: number) {
+    this.type = flag_type;
   }
   getSpeedDirectionX() {
     return this.x - this.prevX;
@@ -6604,8 +6611,8 @@ class Missile {
   }
 }
 class ParticleTrails {
-  #b;
-  #e;
+  #x: number;
+  #y: number;
   tailAddJointInterval = 50;
   timeToNextJoint = 0;
   tailJoints = [[]];
@@ -6616,7 +6623,7 @@ class ParticleTrails {
   width = 1;
   fixedColor = false;
   style;
-  update(f) {
+  update(deltatime: number) {
     let d = this.tailJoints.length - 1,
       c,
       g,
@@ -6625,10 +6632,10 @@ class ParticleTrails {
       this.timeToNextJoint = this.tailAddJointInterval;
       this.enabled &&
         this.tailJoints[d].push({
-          x: this.#b,
-          y: this.#e,
-          origX: this.#b,
-          origY: this.#e,
+          x: this.#x,
+          y: this.#y,
+          origX: this.#x,
+          origY: this.#y,
           t: frametime_millis,
           fx: (600 - Math.abs(this.trailEffectTime - 600)) / 600,
           style: this.style,
@@ -6658,27 +6665,27 @@ class ParticleTrails {
               this.tailJoints[a][1].origX +
               (this.tailJoints[a][0].origX - this.tailJoints[a][1].origX) * g),
             (this.tailJoints[a][0].y = this.tailJoints[a][1].origY + c * g)));
-    this.timeToNextJoint -= f;
+    this.timeToNextJoint -= deltatime;
     this.trailEffectTime =
-      0 > this.trailEffectTime ? 0 : this.trailEffectTime - f;
+      0 > this.trailEffectTime ? 0 : this.trailEffectTime - deltatime;
   }
-  draw(b) {
+  draw(ctx: CanvasRenderingContext2D) {
     if (bool_drawTrails)
       for (let d = this.tailJoints.length, a = 0; a < d; a++)
         for (let c = this.tailJoints[a].length, e = 0; e < c - 1; e++) {
-          b.strokeStyle = this.tailJoints[a][e].style;
+          ctx.strokeStyle = this.tailJoints[a][e].style;
           let h = (e / c) * (8 + 8 * this.tailJoints[a][e].fx);
           0 == h && (h = 0.1);
-          b.lineWidth = h * this.width;
-          b.beginPath();
-          b.lineTo(this.tailJoints[a][e].x, this.tailJoints[a][e].y);
-          b.lineTo(this.tailJoints[a][e + 1].x, this.tailJoints[a][e + 1].y);
-          b.stroke();
+          ctx.lineWidth = h * this.width;
+          ctx.beginPath();
+          ctx.lineTo(this.tailJoints[a][e].x, this.tailJoints[a][e].y);
+          ctx.lineTo(this.tailJoints[a][e + 1].x, this.tailJoints[a][e + 1].y);
+          ctx.stroke();
         }
   }
-  setPosition(f, d) {
-    this.#b = f;
-    this.#e = d;
+  setPosition(x: number, y: number) {
+    this.#x = x;
+    this.#y = y;
   }
   push() {
     this.tailJoints.push([]);
@@ -6691,8 +6698,8 @@ class ParticleTrails {
   }
 }
 class ParticleFlags {
-  #b;
-  #e;
+  #x: number;
+  #y: number;
   tailJoints = [[]];
   maxPoints = 1;
   flagDivisions = 5;
@@ -6710,13 +6717,13 @@ class ParticleFlags {
   flipY = true;
   stringScale = 1;
   scale = 1;
-  setTexture(b) {
+  setTexture(name: string) {
     this.texture = new Image();
-    this.texture.src = "flags/" + b.toLowerCase() + ".png";
+    this.texture.src = "flags/" + name.toLowerCase() + ".png";
     this.texture.onload = () => {
       this.textureWidth = this.texture.width;
       this.textureHeight = this.texture.height;
-      this.maxPoints = parseInt(this.textureWidth / 12);
+      this.maxPoints = Math.floor(this.textureWidth / 12);
       this.flagDivisions = this.maxPoints - 1;
       let a = this.scale;
       this.flagHeight = 0.5 * this.textureHeight * a;
@@ -6727,35 +6734,35 @@ class ParticleFlags {
       this.loaded = true;
     };
   }
-  update(f) {
-    f = false;
+  update(deltatime: number) {
+    deltatime = false;
     let d = this.tailJoints[0].length;
-    if (0 == d) f = true;
+    if (0 == d) deltatime = true;
     else {
       let a = this.tailJoints[0][d - 1],
         c = (a = Math.sqrt(
-          Math.pow(a.x - this.#b, 2) + Math.pow(a.y - this.#e, 2),
+          Math.pow(a.x - this.#x, 2) + Math.pow(a.y - this.#y, 2),
         ));
       1 < d &&
         ((c = this.tailJoints[0][d - 2]),
         (c = Math.sqrt(
-          Math.pow(c.x - this.#b, 2) + Math.pow(c.y - this.#e, 2),
+          Math.pow(c.x - this.#x, 2) + Math.pow(c.y - this.#y, 2),
         )));
-      a > this.pointMinDistance && c > 3 * this.pointMinDistance && (f = true);
+      a > this.pointMinDistance && c > 3 * this.pointMinDistance && (deltatime = true);
     }
-    f &&
+    deltatime &&
       (this.tailJoints[0].push({
-        x: this.#b,
-        y: this.#e,
-        origX: this.#b,
-        origY: this.#e,
+        x: this.#x,
+        y: this.#y,
+        origX: this.#x,
+        origY: this.#y,
         t: frametime_millis,
         fx: 0,
         style: this.style,
       }),
       d > this.maxPoints && this.tailJoints[0].splice(0, 1));
   }
-  draw(f) {
+  draw(ctx: CanvasRenderingContext2D) {
     if (bool_drawTrails && this.loaded && 0 < this.tailJoints.length)
       for (
         let d,
@@ -6777,7 +6784,7 @@ class ParticleFlags {
         let t = this.tailJoints[0][s].x,
           w = this.tailJoints[0][s].y,
           u;
-        g && ((d = this.#b), (a = this.#e));
+        g && ((d = this.#x), (a = this.#y));
         let v = t - d,
           x = w - a,
           A,
@@ -6814,7 +6821,7 @@ class ParticleFlags {
                   (J = ((q + 1) / this.flagDivisions) * d))
                 : ((H = d * (1 - q / this.flagDivisions)),
                   (J = d * (1 - (q + 1) / this.flagDivisions)));
-              d = f;
+              d = ctx;
               a = this.texture;
               m = [
                 {
@@ -6899,8 +6906,8 @@ class ParticleFlags {
             r = B - n;
           } else
             (d = this.flagHeight),
-              (n = z - this.#b),
-              (k = B - this.#e),
+              (n = z - this.#x),
+              (k = B - this.#y),
               (n /= this.letterMinDistance),
               (k /= this.letterMinDistance),
               (k = -k * d),
@@ -6909,16 +6916,16 @@ class ParticleFlags {
               (l = B + n),
               (p = z - k),
               (r = B - n),
-              (f.strokeStyle = "rgba(255, 255, 255, 0.3)"),
-              (f.lineWidth = 2),
-              f.beginPath(),
-              f.lineTo(this.#b, this.#e),
-              f.lineTo(z + k * this.stringScale, B + n * this.stringScale),
-              f.stroke(),
-              f.beginPath(),
-              f.lineTo(this.#b, this.#e),
-              f.lineTo(z - k * this.stringScale, B - n * this.stringScale),
-              f.stroke();
+              (ctx.strokeStyle = "rgba(255, 255, 255, 0.3)"),
+              (ctx.lineWidth = 2),
+              ctx.beginPath(),
+              ctx.lineTo(this.#x, this.#y),
+              ctx.lineTo(z + k * this.stringScale, B + n * this.stringScale),
+              ctx.stroke(),
+              ctx.beginPath(),
+              ctx.lineTo(this.#x, this.#y),
+              ctx.lineTo(z - k * this.stringScale, B - n * this.stringScale),
+              ctx.stroke();
           n = z;
           k = B;
           h++;
@@ -6928,9 +6935,9 @@ class ParticleFlags {
         g && (g = false);
       }
   }
-  setPosition(f, d) {
-    this.#b = f;
-    this.#e = d;
+  setPosition(x: number, y: number) {
+    this.#x = x;
+    this.#y = y;
   }
   push() {}
   trailEffect() {}
@@ -6939,39 +6946,42 @@ class ParticleFlags {
   }
 }
 class ScoreAccumInfo {
-  #b = [];
-  #e = [];
-  #f;
-  update(d) {
+  #b: ScoreAccumInfo.HTMLCanvasElementExtended[] = [];
+  #e: number[] = [];
+  #f: number;
+  update(deltatime: number) {
     0 < this.#e.length &&
       2e3 < frametime_millis - this.#e[0] &&
       (this.#b.shift(), this.#e.shift());
   }
-  draw(d) {
-    d.globalAlpha = 1;
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.globalAlpha = 1;
     for (let a in this.#b) {
       let c = this.#b[a],
         f = Math.sqrt((frametime_millis - this.#e[a]) / 2e3),
         h = 0.8 >= f ? f / 0.8 : 1 - (f - 0.8) / 0.2;
-      d.globalAlpha = h;
-      d.drawImage(c, -c.width / 2, 40 * -f - 10);
+      ctx.globalAlpha = h;
+      ctx.drawImage(c, -c.width / 2, 40 * -f - 10);
     }
-    d.globalAlpha = 1;
+    ctx.globalAlpha = 1;
   }
-  addScore(d) {
+  addScore(diff: number) {
     let a = false,
       c;
     this.#f && 500 > frametime_millis - this.#f && (a = true);
     c = new StyleStroke(13, "#FFFFFF");
     c.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
-    a ? (d = this.#b[this.#b.length - 1].number + d) : (this.#f = frametime_millis);
-    c.setValue("+" + d);
-    c = c.render();
-    c.number = d;
+    a ? (diff = this.#b[this.#b.length - 1].number + diff) : (this.#f = frametime_millis);
+    c.setValue("+" + diff);
+    c = c.render() as ScoreAccumInfo.HTMLCanvasElementExtended;
+    c.number = diff;
     a
       ? (this.#b.pop(), this.#b.push(c))
       : (this.#b.push(c), this.#e.push(+new Date()));
   }
+}
+namespace ScoreAccumInfo {
+  export type HTMLCanvasElementExtended = HTMLCanvasElement & {number: number}
 }
 class SFXmanager {
   #b = false;
@@ -7064,7 +7074,7 @@ namespace SFXmanager {
   }
 }
 class UI_KillStatus {
-  #b = [];
+  #b: number[] = [];
   #f = null;
   #d = null;
   #a = null;
@@ -7078,8 +7088,8 @@ class UI_KillStatus {
   #m = 0;
   #l = 0;
   #currentText2Render;
-  update(a) {
-    1 == this.#g && ((this.#h += a), this.#h > this.#e && (this.#q = true));
+  update(deltatime: number) {
+    1 == this.#g && ((this.#h += deltatime), this.#h > this.#e && (this.#q = true));
     this.#q
       ? ((this.#g -= 0.2),
         0 > this.#g &&
@@ -7090,92 +7100,92 @@ class UI_KillStatus {
       : (1 > this.#g && ((this.#g += 0.2), 1 < this.#g && (this.#g = 1)),
         (this.#m = 1 - (1.5 * this.#g - 0.75) / 0.75));
   }
-  draw(a) {
+  draw(ctx: CanvasRenderingContext2D) {
     this.#d &&
-      ((a.globalAlpha = this.#g),
-      a.scale(
+      ((ctx.globalAlpha = this.#g),
+      ctx.scale(
         (this.#n + 0.2 * this.#m) * num_scale_factor,
         (this.#n + 0.2 * this.#m) * num_scale_factor,
       ),
-      a.drawImage(this.#d, -this.#d.width / 2, -this.#d.height + 120),
-      a.drawImage(
+      ctx.drawImage(this.#d, -this.#d.width / 2, -this.#d.height + 120),
+      ctx.drawImage(
         this.#currentText2Render,
         -this.#currentText2Render.width / 2,
         110,
       ),
       this.#k
-        ? ((this.#c.y = 30), this.#c.draw(a))
-        : a.drawImage(
+        ? ((this.#c.y = 30), this.#c.draw(ctx))
+        : ctx.drawImage(
             this.#c,
             -this.#c.width / 2 - 5,
             -this.#c.height - this.#d.height + 120,
           ));
   }
-  replaceCode(a) {
+  replaceCode(flag_streak: number) {
     for (let c in this.#b) {
-      if (64 >= this.#b[c] && 64 >= a)
-        return this.#b[c] < a ? ((this.#b[c] = a), c) : -2;
+      if (64 >= this.#b[c] && 64 >= flag_streak)
+        return this.#b[c] < flag_streak ? ((this.#b[c] = flag_streak), c) : -2;
       if (
-        (256 == this.#b[c] && 256 == a) ||
-        (128 == this.#b[c] && 128 == a) ||
-        4096 == a
+        (256 == this.#b[c] && 256 == flag_streak) ||
+        (128 == this.#b[c] && 128 == flag_streak) ||
+        4096 == flag_streak
       )
         return c;
     }
     return -1;
   }
-  push(a, c) {
-    256 == a && (this.#l = c);
-    let d = this.replaceCode(a);
+  push(flag_streak: number, kills: number) {
+    256 == flag_streak && (this.#l = kills);
+    let d = this.replaceCode(flag_streak);
     -1 == d
-      ? (this.#b.push(a), 1 == this.#b.length && this.processCode(a))
-      : 0 == d && this.processCode(a);
+      ? (this.#b.push(flag_streak), 1 == this.#b.length && this.processCode(flag_streak))
+      : 0 == d && this.processCode(flag_streak);
   }
-  processCode(b) {
+  processCode(flag_streak: number) {
     this.#q = false;
     this.#g = this.#h = 0;
     let e = "",
       m = "KILL",
       s;
     this.#k = false;
-    8 == b
+    8 == flag_streak
       ? ((e = "DOUBLE"),
         (s = "#cd9a6d"),
         (this.#c = objG_assets.doubleKillCanvas),
         (this.#n = 0.8))
-      : 16 == b
+      : 16 == flag_streak
         ? ((e = "TRIPLE"),
           (s = "#95b9c9"),
           (this.#c = objG_assets.tripleKillCanvas),
           (this.#n = 0.9),
           (m += "!"))
-        : 32 == b
+        : 32 == flag_streak
           ? ((e = "QUAD"),
             (s = "#f0a400"),
             (this.#c = objG_assets.quadKillCanvas),
             (this.#n = 1),
             (m += "!!"))
-          : 64 == b
+          : 64 == flag_streak
             ? ((e = "MULTI"),
               (s = "#de0000"),
               (this.#c = objG_assets.multiKillCanvas),
               (this.#n = 1.1),
               (m += "!!"))
-            : 128 == b
+            : 128 == flag_streak
               ? ((e = "NEAR"),
                 (s = "#ffe774"),
                 (this.#c = objG_assets.frames.nearmiss),
                 (this.#n = 0.8),
                 (m = "MISS"),
                 (this.#k = true))
-              : 4096 == b
+              : 4096 == flag_streak
                 ? ((e = "REVENGE"),
                   (s = "#dd1824"),
                   (this.#c = objG_assets.frames.revenge),
                   (this.#n = 1),
                   (m = "KILL"),
                   (this.#k = true))
-                : 256 == b &&
+                : 256 == flag_streak &&
                   ((e = this.#l + " KILL STREAK!"),
                   (s = "#a5dd11"),
                   (this.#c = objG_assets.frames.frenzy),
@@ -7245,7 +7255,7 @@ class Warship {
   fragment = 1;
   recoilTime = 0;
   cannonAngle = 0;
-  update(c) {
+  update(deltatime: number) {
     if (this.inGame) {
       func_isInsideBox(this.x, this.y + this.floatValue, 120)
         ? this.#b || (this.#b = true)
@@ -7275,7 +7285,7 @@ class Warship {
         0 < this.#f &&
         ((this.#e -= 0.02),
         0 > this.#e && (this.#e = 0),
-        (this.#d -= c),
+        (this.#d -= deltatime),
         0 > this.#d &&
           ((this.#d = 150),
           (this.#f -= 1),
@@ -7295,7 +7305,7 @@ class Warship {
       2 == this.state
         ? ((this.#a -= 0.01), 0 > this.#a && (this.#a = 0))
         : ((this.#a += 0.01), 1 < this.#a && (this.#a = 1));
-      this.recoilTime = 0 < this.recoilTime ? this.recoilTime - c : 0;
+      this.recoilTime = 0 < this.recoilTime ? this.recoilTime - deltatime : 0;
     }
   }
   loadWarshipCanvas() {
@@ -7307,7 +7317,7 @@ class Warship {
     this.warshipCanvas = a;
     this.warshipContext = b;
   }
-  draw(c) {
+  draw(ctx: CanvasRenderingContext2D) {
     if (this.inGame && this.#b)
       if (this.type == id_entity_warship && objG_assets.warshipLoaded) {
         if (
@@ -7316,9 +7326,9 @@ class Warship {
             this.loadWarshipCanvas(),
           this.warshipCanvas)
         ) {
-          c.save();
-          c.globalAlpha = this.#a;
-          c.translate(this.x, this.y - 4);
+          ctx.save();
+          ctx.globalAlpha = this.#a;
+          ctx.translate(this.x, this.y - 4);
           this.warshipContext.clearRect(
             0,
             0,
@@ -7364,84 +7374,84 @@ class Warship {
             this.warshipContext.drawImage(objG_assets.whiteWarshipImage, 0, 0),
             (this.warshipContext.globalAlpha = 1));
           this.warshipContext.restore();
-          1 == this.state && (c.globalAlpha = 0.8);
-          c.drawImage(
+          1 == this.state && (ctx.globalAlpha = 0.8);
+          ctx.drawImage(
             this.warshipCanvas,
             -objG_assets.warshipImage.width / 2,
             -objG_assets.warshipImage.height / 2,
           );
-          c.restore();
+          ctx.restore();
         }
       } else
         this.type == id_entity_asteroid &&
           objG_assets.asteroidImage &&
-          (c.save(),
-          (c.globalAlpha = this.#a),
-          c.translate(this.x, this.y),
-          c.rotate(-this.angle),
+          (ctx.save(),
+          (ctx.globalAlpha = this.#a),
+          ctx.translate(this.x, this.y),
+          ctx.rotate(-this.angle),
           (this.#d = (3 - this.fragment + 1) / 3),
-          c.scale(this.#d, this.#d),
-          c.drawImage(
+          ctx.scale(this.#d, this.#d),
+          ctx.drawImage(
             objG_assets.asteroidImage,
             -objG_assets.asteroidImage.width / 2,
             -objG_assets.asteroidImage.height / 2,
           ),
           0 < this.highlightValue &&
-            ((c.globalAlpha = 0.8 * this.highlightValue),
-            c.drawImage(
+            ((ctx.globalAlpha = 0.8 * this.highlightValue),
+            ctx.drawImage(
               objG_assets.whiteAsteroidImage,
               -objG_assets.asteroidImage.width / 2,
               -objG_assets.asteroidImage.height / 2,
             ),
-            (c.globalAlpha = 1)),
-          c.restore());
+            (ctx.globalAlpha = 1)),
+          ctx.restore());
   }
-  drawReflection(c, d) {
+  drawReflection(ctx: CanvasRenderingContext2D, deltatime: number) {
     this.inGame &&
       this.#b &&
       this.type == id_entity_warship &&
       objG_assets.warshipLoaded &&
-      (c.save(),
-      (c.globalAlpha = 0.15 * this.#a),
-      c.translate(this.x, this.y + this.warshipCanvas.height - 4),
-      c.scale(1, -1),
-      c.drawImage(
+      (ctx.save(),
+      (ctx.globalAlpha = 0.15 * this.#a),
+      ctx.translate(this.x, this.y + this.warshipCanvas.height - 4),
+      ctx.scale(1, -1),
+      ctx.drawImage(
         this.warshipCanvas,
         -objG_assets.warshipImage.width / 2,
         -objG_assets.warshipImage.height / 2,
       ),
-      c.restore(),
-      c.save(),
-      c.translate(
+      ctx.restore(),
+      ctx.save(),
+      ctx.translate(
         this.x + 85 + this.floatValue + 100 * this.angle,
         this.y + this.warshipCanvas.height / 2 - 4,
       ),
-      (c.globalAlpha = this.#e * this.#a),
-      c.beginPath(),
-      c.moveTo(-3, 1.5),
-      c.lineTo(0, -1.5),
-      c.lineTo(-300, 0),
-      (c.fillStyle = "rgba(255,255,255,1.0)"),
-      c.fill(),
-      c.restore(),
-      (c.globalAlpha = 1));
+      (ctx.globalAlpha = this.#e * this.#a),
+      ctx.beginPath(),
+      ctx.moveTo(-3, 1.5),
+      ctx.lineTo(0, -1.5),
+      ctx.lineTo(-300, 0),
+      (ctx.fillStyle = "rgba(255,255,255,1.0)"),
+      ctx.fill(),
+      ctx.restore(),
+      (ctx.globalAlpha = 1));
   }
-  drawInput(a) {}
-  drawInfo(a) {
+  drawInput(ctx: CanvasRenderingContext2D) {}
+  drawInfo(ctx: CanvasRenderingContext2D) {
     if (
       this.inGame &&
       this.#b &&
       this.state == const_Ic_0 &&
       65535 != this.energy
     ) {
-      a.save();
-      a.translate(this.x, this.y);
-      a.fillStyle = "rgba(126,219,226,1)";
-      a.shadowOffsetX = 0;
-      a.shadowOffsetY = 0;
-      a.shadowBlur = 0;
-      a.shadowColor = "rgba(255, 255, 255, 0.7)";
-      a.lineWidth = 1;
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.fillStyle = "rgba(126,219,226,1)";
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "rgba(255, 255, 255, 0.7)";
+      ctx.lineWidth = 1;
       let d = 28,
         e;
       this.type == id_entity_asteroid
@@ -7451,14 +7461,14 @@ class Warship {
       32767.5 > this.energy && 16383.75 < this.energy
         ? (f = 30)
         : 16383.75 > this.energy && (f = 0);
-      a.fillStyle = "hsl(" + f + ", 100%, 50%)";
-      a.fillRect(-d / 2 + 0, e + 0, (this.energy / 65535) * d, 8);
-      a.strokeStyle = "rgba(255,255,255,1.0)";
-      a.strokeRect(-d / 2, e, d, 8);
-      a.restore();
+      ctx.fillStyle = "hsl(" + f + ", 100%, 50%)";
+      ctx.fillRect(-d / 2 + 0, e + 0, (this.energy / 65535) * d, 8);
+      ctx.strokeStyle = "rgba(255,255,255,1.0)";
+      ctx.strokeRect(-d / 2, e, d, 8);
+      ctx.restore();
     }
   }
-  hit(a) {
+  hit(a: number) {
     func_isTimeElapsed_50ms() &&
       ((this.highlightValue =
         a == id_weapon_missile || this.type == id_entity_asteroid
@@ -7490,8 +7500,8 @@ class Warship {
     this.dstFloatValue = 10 * a;
     this.first_set && (this.floatValue = this.dstFloatValue);
   }
-  setType(a) {
-    this.type = a;
+  setType(flag_type: number) {
+    this.type = flag_type;
   }
   setState(a) {
     this.state = a;
