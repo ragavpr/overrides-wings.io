@@ -56,7 +56,7 @@ let Zb,
   qc = 0,
   rc = 0,
   H: { x: number; y: number },
-  ca = {},
+  ca = { x: 0, y: 0 },
   canvas_width: number,
   canvas_height: number,
   Kb = 1,
@@ -98,9 +98,9 @@ let Zb,
   bool_setting_highQuality = true,
   lb = false,
   mb: number,
-  ia: number,
-  na: number,
-  nb: number,
+  ia: number | undefined,
+  na: number | undefined,
+  nb: number | undefined,
   xa = false,
   bool_drawClouds = true,
   bool_drawWater = true,
@@ -120,7 +120,7 @@ let Zb,
   objD_specialEntities: Record<number, SpecialEntity> = {},
   objD_missiles: Record<number, Missile> = {},
   list_str_leaderboard_players: string[] = [],
-  objG_player_plane: Plane | null,
+  objG_player_plane: Plane | undefined,
   current_following_plane_id: number,
   objG_player_plane_temp: number,
   Oa = 0,
@@ -479,7 +479,7 @@ function func_displayGameover() {
 }
 function func_displayGameoverScore(int_score: number) {
   bool_following_plane = true;
-  Z || ((ka = 1), (objG_player_plane = null));
+  Z || ((ka = 1), (objG_player_plane = undefined));
   funcR_hc_showPf();
   if (0 <= int_score) {
     bool_continueGame = true;
@@ -652,9 +652,6 @@ function W_clickPlay(name: string) {
             "Hint: Earn points faster by destroying asteroids.",
           )
         : document.fullscreenElement ||
-          document.mozFullScreenElement ||
-          document.webkitFullscreenElement ||
-          document.msFullscreenElement ||
           (2 != kb && 4 != kb && 6 != kb) ||
           objGUI_gameInfo.showTip("Press 'F' to toggle Fullscreen"));
 }
@@ -1411,35 +1408,17 @@ class InputManager {
                                     $("#overlay").show(),
                                     funcR_hc_showPf(),
                                     (bool_following_plane = true),
-                                    Z || ((ka = 1), (objG_player_plane = null)))
+                                    Z ||
+                                      ((ka = 1),
+                                      (objG_player_plane = undefined)))
                                   : 70 == ev.keyCode &&
-                                    (document.fullscreenElement ||
-                                    document.mozFullScreenElement ||
-                                    document.webkitFullscreenElement ||
-                                    document.msFullscreenElement
-                                      ? document.exitFullscreen
-                                        ? document.exitFullscreen()
-                                        : document.msExitFullscreen
-                                          ? document.msExitFullscreen()
-                                          : document.mozCancelFullScreen
-                                            ? document.mozCancelFullScreen()
-                                            : document.webkitExitFullscreen &&
-                                              document.webkitExitFullscreen()
+                                    (document.fullscreenElement
+                                      ? document.exitFullscreen &&
+                                        document.exitFullscreen()
                                       : document.documentElement
-                                            .requestFullscreen
-                                        ? document.documentElement.requestFullscreen()
-                                        : document.documentElement
-                                              .msRequestFullscreen
-                                          ? document.documentElement.msRequestFullscreen()
-                                          : document.documentElement
-                                                .mozRequestFullScreen
-                                            ? document.documentElement.mozRequestFullScreen()
-                                            : document.documentElement
-                                                .webkitRequestFullscreen &&
-                                              document.documentElement.webkitRequestFullscreen(
-                                                Element.ALLOW_KEYBOARD_INPUT,
-                                              ),
-                                    objGUI_gameInfo.clearTip())));
+                                          .requestFullscreen &&
+                                        document.documentElement.requestFullscreen()),
+              objGUI_gameInfo.clearTip()));
     };
     const keyup = (ev: KeyboardEvent) => {
       bool_following_plane ||
@@ -1448,7 +1427,7 @@ class InputManager {
           ? objG_wsConnection.sendShooting(false)
           : (1 == ka
               ? ((ka = 0), objG_followMode.followTopPlayer())
-              : ((ka = 1), (objG_player_plane = null)),
+              : ((ka = 1), (objG_player_plane = undefined)),
             objG_eventManager.isSpaceWars() &&
               setTimeout(objG_followMode.respawnParticles, 500)));
     };
@@ -1655,7 +1634,8 @@ class ParticleImpacts {
                 (a.curPosition.y += a.direction.y * g)));
       }
     }
-    for (c = 0; c < f.length; c++) this.#inst_impact_list.splice(this.#inst_impact_list.indexOf(f[c]), 1);
+    for (c = 0; c < f.length; c++)
+      this.#inst_impact_list.splice(this.#inst_impact_list.indexOf(f[c]), 1);
     f.length = 0;
   }
   addShot(plane_id: number, x_gu: number, y_gu: number, weapon_id: number) {
@@ -1809,12 +1789,12 @@ class UI_GameInfo {
   #ja = null;
   #ca;
   #fa;
-  #ia: StyleText;
+  #ia?: StyleText;
   #ha: HTMLCanvasElement;
   #wa: StyleText;
   #na = 0;
   #oa = 0;
-  #va = null;
+  #va?: string;
   #la;
   #ma;
   #ya;
@@ -2102,7 +2082,7 @@ class UI_GameInfo {
   //     ctx.drawImage(rankCanvas, canvas_width - 200, canvas_height - 200));
   // }
   DrawScore(ctx: CanvasRenderingContext2D) {
-    if (0 < objG_player_plane.rank) {
+    if (objG_player_plane && 0 < objG_player_plane.rank) {
       let c = 16 * num_scale_factor,
         d = "Arial Black";
       let b = this.#P * num_scale_factor,
@@ -2257,12 +2237,12 @@ class UI_GameInfo {
   DrawWarshipDestroyedLabel(ctx: CanvasRenderingContext2D) {
     this.#la ||
       ((this.#la = new StyleText(45 * num_scale_factor, "#fe6800", "#6e3800")),
-      null == this.#va
+      undefined == this.#va
         ? this.#la.setValue("WARSHIP")
         : this.#la.setValue(this.#va),
       (this.#ma = this.#la.render()),
       (this.#ya = new StyleText(35 * num_scale_factor, "#fe9b00", "#6e3800")),
-      null == this.#va
+      undefined == this.#va
         ? this.#ya.setValue("ESCAPED!")
         : this.#ya.setValue("DESTROYED A WARSHIP!"),
       (this.#sa = this.#ya.render()));
@@ -2387,27 +2367,26 @@ class UI_GameInfo {
   renderLeaderboard(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
     this.#P = 270;
     this.#S = 0;
-    let d = 5 * num_scale_factor,
-      b = 10 * num_scale_factor,
-      g = 23 * num_scale_factor,
-      h = 18 * num_scale_factor,
-      e,
-      k = 60 * num_scale_factor,
-      n = 5 * num_scale_factor,
-      f = 32,
-      q = "Arial Black",
-      I = 0,
-      l,
-      r,
-      y,
-      m;
-    e = this.#S += d + g + d;
+    let d = 5 * num_scale_factor;
+    let b = 10 * num_scale_factor;
+    let head_lh = 23 * num_scale_factor;
+    let item_lh = 18 * num_scale_factor;
+    let e;
+    let k = 60 * num_scale_factor;
+    let n = 5 * num_scale_factor;
+    let f = 32;
+    let font = "Arial Black";
+    let I = 0;
+    let r;
+    let y;
+    let m;
+    e = this.#S += d + head_lh + d;
     m = this.#F.length;
     10 < m && (m = 10);
-    for (l = 0; l < m; l++) {
-      r = objD_planes[this.#F[l]];
+    for (let i = 0; i < m; i++) {
+      r = objD_planes[this.#F[i]];
       r &&
-        ((this.#S += h + b),
+        ((this.#S += item_lh + b),
         (r = ctx.measureText(func_renameBlankPlayerNames(r.name)).width),
         I < r && (I = r));
     }
@@ -2418,7 +2397,8 @@ class UI_GameInfo {
     this.#S += n;
     canvas.width = this.#R;
     canvas.height = this.#S;
-    k = h + "px 'proxima-nova-1','proxima-nova-2', " + q;
+    let item_font_style =
+      item_lh + "px 'proxima-nova-1','proxima-nova-2', " + font;
     ctx.fillStyle = "rgba(0,0,0,0.3)";
     func_drawRoundedRectangle(
       ctx,
@@ -2446,41 +2426,43 @@ class UI_GameInfo {
       f * num_scale_factor,
       30 * num_scale_factor,
     );
-    l = "LEADERBOARD";
-    objG_eventManager.isInstagib() && (l = "KILLS");
-    ctx.font = g + "px 'proxima-nova-1','proxima-nova-2', " + q;
+    let txt = "LEADERBOARD";
+    objG_eventManager.isInstagib() && (txt = "KILLS");
+    ctx.font = head_lh + "px 'proxima-nova-1','proxima-nova-2', " + font;
     ctx.textBaseline = "hanging";
-    r = ctx.measureText(l).width;
+    let width_name = ctx.measureText(txt).width;
     ctx.fillStyle = "rgba(255,255,0,0.5)";
-    ctx.fillText(l, this.#R / 2 - r / 2, d + 1);
+    ctx.fillText(txt, this.#R / 2 - width_name / 2, d + 1);
     ctx.fillStyle = "rgba(178,32,0,1.0)";
-    ctx.fillText(l, this.#R / 2 - r / 2, d);
-    ctx.font = k;
+    ctx.fillText(txt, this.#R / 2 - width_name / 2, d);
+    ctx.font = item_font_style;
     e += n;
-    for (l = 0; l < m; l++)
-      if ((r = objD_planes[this.#F[l]])) {
+    for (let i = 0; i < m; i++) {
+      let obj_plane = objD_planes[this.#F[i]];
+      if (obj_plane) {
         for (n = 2; 0 <= n; n--) {
-          g = ". ";
-          (r.inGame && r.id != qa) || (g = ".     ");
-          q = l + 1 + g + func_renameBlankPlayerNames(r.name);
-          g = 0;
+          let txt_spacing = ". ";
+          (obj_plane.inGame && obj_plane.id != qa) || (txt_spacing = ".     ");
+          let txt_lb_name =
+            i + 1 + txt_spacing + func_renameBlankPlayerNames(obj_plane.name);
+          let g = 0;
           0 != n
             ? ((ctx.fillStyle = "rgba(100,49,0,1.0)"), (g = n))
             : (ctx.fillStyle =
-                current_following_plane_id == r.id
+                current_following_plane_id == obj_plane.id
                   ? "rgba(255,156,0,1.0)"
                   : "rgba(255,220,0,1.0)");
-          ctx.font = k;
-          ctx.measureText(q);
-          ctx.fillText(q, d, e + g);
-          q = ctx.measureText(r.score).width;
+          ctx.font = item_font_style;
+          ctx.measureText(txt_lb_name);
+          ctx.fillText(txt_lb_name, d, e + g);
+          let width_score = ctx.measureText(obj_plane.score.toString()).width;
           f = 1;
           I = 0;
-          if (r.inGame)
-            r.id == qa &&
+          if (obj_plane.inGame)
+            obj_plane.id == qa &&
               (ctx.save(),
               (y = 38),
-              9 == l && (y = 50),
+              9 == i && (y = 50),
               ctx.translate(
                 y * num_scale_factor * f + I,
                 e + g + 7 * num_scale_factor * f,
@@ -2491,7 +2473,7 @@ class UI_GameInfo {
           else {
             ctx.save();
             y = 38;
-            9 == l && (y = 50);
+            9 == i && (y = 50);
             ctx.translate(
               y * num_scale_factor * f + I,
               e + g + 7 * num_scale_factor * f,
@@ -2500,10 +2482,15 @@ class UI_GameInfo {
             objG_assets.frames.skull.draw(ctx);
             ctx.restore();
           }
-          ctx.fillText(r.score, this.#R - d - q, e + g);
+          ctx.fillText(
+            obj_plane.score.toString(),
+            this.#R - d - width_score,
+            e + g,
+          );
         }
-        e += h + b;
+        e += item_lh + b;
       }
+    }
   }
   drawLeaderboard(ctx: CanvasRenderingContext2D) {
     ctx.drawImage(this.#C, canvas_width - this.#R - 5, 5);
@@ -2556,7 +2543,7 @@ class UI_GameInfo {
   setLastWinner(winner_name: string, c: number) {
     this.#aa = func_renameBlankPlayerNames(winner_name);
     console.log("Last Event Winner: " + winner_name);
-    c && ((this.#ia = null), (this.#na = 6e3));
+    c && ((this.#ia = undefined), (this.#na = 6e3));
   }
   setWarshipRemoved(destroyed_by: string) {
     this.#va = destroyed_by;
@@ -2598,7 +2585,8 @@ class UI_ActivityMessages {
     let canvas = d.render();
     this.#rendered_canvas_list.push(canvas);
     this.#item_add_time.push(+new Date());
-    5 < this.#rendered_canvas_list.length && (this.#rendered_canvas_list.shift(), this.#item_add_time.shift());
+    5 < this.#rendered_canvas_list.length &&
+      (this.#rendered_canvas_list.shift(), this.#item_add_time.shift());
     for (let max = 0, d, i = 0; i < this.#rendered_canvas_list.length; i++) {
       d = this.#rendered_canvas_list[i].width + 5 + 5;
       d > max && (max = d);
@@ -2639,7 +2627,7 @@ class Plane {
   #Ga = 0;
   #D = 0;
   #Fa = 0;
-  #ua = null;
+  #ua?: number;
   #M: Record<number, string> = {
     1: "rgba(255, 255, 255, 0.6)",
     2: "rgba(255, 156, 0, 1.0)",
@@ -2698,6 +2686,7 @@ class Plane {
   hover = false;
   weapon = id_weapon_machinegun;
   ammo = -1;
+  showName = true;
   constructor() {
     this.#obj_particleTrails.fixedColor = true;
     this.#obj_particleTrails.style = this.#M[id_weapon_machinegun];
@@ -2707,22 +2696,26 @@ class Plane {
       let g = 400,
         l;
       this.#ea && this.weapon == id_weapon_superweapon && (g = 800);
-      func_isInsideBox(this.x, this.y, g)
-        ? this.#pa ||
-          (this.#obj_particleTrails && this.#obj_particleTrails.clear(),
-          this.#obj_particleFlags && this.#obj_particleFlags.clear(),
-          (this.#pa = true))
-        : (this.#pa = false);
+      if (func_isInsideBox(this.x, this.y, g)) {
+        if (!this.#pa) {
+          if (this.#obj_particleTrails) this.#obj_particleTrails.clear();
+          if (this.#obj_particleFlags) this.#obj_particleFlags.clear();
+          this.#pa = true;
+        }
+      } else this.#pa = false;
       g = this.weapon == id_weapon_superweapon && this.isShooting;
-      0 < this.#num_spawn_cooldown_ms &&
-        ((this.#f -= deltatime),
-        0 > this.#f && ((this.#f = 100), (this.#d = !this.#d)),
-        (this.#num_spawn_cooldown_ms -= deltatime));
+      if (0 < this.#num_spawn_cooldown_ms) {
+        this.#f -= deltatime;
+        if (0 > this.#f) {
+          this.#f = 100;
+          this.#d = !this.#d;
+        }
+        this.#num_spawn_cooldown_ms -= deltatime;
+      }
       // objG_followMode.moveLeft && (this.controlAngle += this.rotSpeed);
       // objG_followMode.moveRight && (this.controlAngle -= this.rotSpeed);
-      360 < this.controlAngle
-        ? (this.controlAngle = 0)
-        : 0 > this.controlAngle && (this.controlAngle = 360);
+      if (360 < this.controlAngle) this.controlAngle = 0;
+      else if (0 > this.controlAngle) this.controlAngle = 360;
       let k = func_clamp(
         (frametime_millis - this.lastUpdate) / num_global_physics_step_ms,
         0,
@@ -2736,35 +2729,41 @@ class Plane {
       this.angle = k * (this.dstAngle - this.origAngle) + this.origAngle;
       k = this.x + 12 * Math.sin(-this.angle);
       m = this.y + 12 * Math.cos(-this.angle);
-      this.#obj_particleTrails &&
-        (this.#obj_particleTrails.setPosition(k, m),
-        objG_eventManager.isSpaceWars() &&
-          ((this.#obj_particleTrails.width = 0.6),
-          this.id == qa &&
-            "#00FF00" != this.#obj_particleTrails.style &&
-            (this.#obj_particleTrails.style = "#00FF00")));
+      if (this.#obj_particleTrails) {
+        this.#obj_particleTrails.setPosition(k, m);
+        if (objG_eventManager.isSpaceWars()) {
+          this.#obj_particleTrails.width = 0.6;
+          if (this.id == qa && "#00FF00" != this.#obj_particleTrails.style)
+            this.#obj_particleTrails.style = "#00FF00";
+        }
+      }
       this.#obj_particleFlags && this.#obj_particleFlags.setPosition(k, m);
-      (k =
+      k =
         !this.hover &&
         !this.#obj_particleManager &&
         !this.isInvulnerable() &&
-        !g)
-        ? false == this.hadHover &&
-          ((this.hadHover = true), this.#obj_particleTrails.push())
-        : (this.hadHover = false);
-      this.#obj_particleTrails &&
-        ((this.#obj_particleTrails.enabled = !!k),
-        this.#obj_particleTrails.update(deltatime));
-      this.#obj_particleFlags &&
-        ((this.#obj_particleFlags.enabled = !!k),
-        this.#obj_particleFlags.update(deltatime));
+        !g;
+      if (k) {
+        if (false == this.hadHover) {
+          this.hadHover = true;
+          this.#obj_particleTrails.push();
+        }
+      } else this.hadHover = false;
+      if (this.#obj_particleTrails) {
+        this.#obj_particleTrails.enabled = !!k;
+        this.#obj_particleTrails.update(deltatime);
+      }
+      if (this.#obj_particleFlags) {
+        this.#obj_particleFlags.enabled = !!k;
+        this.#obj_particleFlags.update(deltatime);
+      }
       k = E / 2;
       m = k - 150;
       if (this.y > m && this.y < k && 0 >= this.#h) {
         this.#h = 5;
-        (l = Math.random() / 2),
-          (m = (0.5 + (0.5 - ((k - this.y) / (k - m)) * 0.5)) * (0.95 + l)),
-          (l = 20 * Math.sin(this.angle));
+        l = Math.random() / 2;
+        m = (0.5 + (0.5 - ((k - this.y) / (k - m)) * 0.5)) * (0.95 + l);
+        l = 20 * Math.sin(this.angle);
         obj_particleImpacts.addSplash(
           this.x - l,
           k + 5 * Math.random(),
@@ -2773,52 +2772,62 @@ class Plane {
         );
       }
       this.#h -= deltatime;
-      this.#obj_particleManager &&
-        ((k = this.x + 12 * Math.sin(-this.angle)),
-        (m = this.y + 12 * Math.cos(-this.angle)),
-        this.#obj_particleManager.setPosition(k, m),
-        this.#obj_particleManager.update(deltatime));
-      objG_player_plane == this && (hb = 0 == ha ? hb + deltatime : 0);
-      2 != ha
-        ? objD_planes[gb] &&
-          ((this.#w = Math.sqrt(hb / uc)),
-          1 < this.#w && (this.#w = 1),
-          (this.#s -= deltatime),
-          0 >= this.#s &&
-            (0 == ha
-              ? ((this.#s = 0.7 > this.#w ? 200 + this.#s : 80 + this.#s),
-                objG_sfxManager.playSound(
-                  str_sfxid_lockon,
-                  0.1,
-                  1,
-                  const_Q_0,
-                  null,
-                ))
-              : 1 == ha &&
-                (objGUI_gameInfo.showTargetLockedMessage(),
-                (this.#s = 50 + this.#s),
-                objG_sfxManager.playSound(
-                  str_sfxid_lockon,
-                  0.1,
-                  1.58,
-                  const_Q_0,
-                  null,
-                ))))
-        : ((this.#s = 0), objGUI_gameInfo.clearTargetLockedMessage());
-      0 < ma
-        ? ((this.#t -= deltatime),
-          0 > this.#t &&
-            ((this.#t = 100),
-            objG_sfxManager.playSound(
-              str_sfxid_lockon,
-              0.1,
-              0.5,
-              const_Q_0,
-              null,
-            )))
-        : (this.#t = 0);
-      this == objG_player_plane &&
-        (ia ||
+      if (this.#obj_particleManager) {
+        k = this.x + 12 * Math.sin(-this.angle);
+        m = this.y + 12 * Math.cos(-this.angle);
+        this.#obj_particleManager.setPosition(k, m);
+        this.#obj_particleManager.update(deltatime);
+      }
+      if (objG_player_plane == this) {
+        hb = 0 == ha ? hb + deltatime : 0;
+      }
+      if (2 != ha) {
+        if (objD_planes[gb]) {
+          this.#w = Math.sqrt(hb / uc);
+          if (1 < this.#w) this.#w = 1;
+          this.#s -= deltatime;
+          if (0 >= this.#s) {
+            if (0 == ha) {
+              this.#s = 0.7 > this.#w ? 200 + this.#s : 80 + this.#s;
+              objG_sfxManager.playSound(
+                str_sfxid_lockon,
+                0.1,
+                1,
+                const_Q_0,
+                null,
+              );
+            } else if (1 == ha) {
+              objGUI_gameInfo.showTargetLockedMessage();
+              this.#s = 50 + this.#s;
+              objG_sfxManager.playSound(
+                str_sfxid_lockon,
+                0.1,
+                1.58,
+                const_Q_0,
+                null,
+              );
+            }
+          }
+        }
+      } else {
+        this.#s = 0;
+        objGUI_gameInfo.clearTargetLockedMessage();
+      }
+      if (0 < ma) {
+        this.#t -= deltatime;
+        if (0 > this.#t) {
+          this.#t = 100;
+          objG_sfxManager.playSound(
+            str_sfxid_lockon,
+            0.1,
+            0.5,
+            const_Q_0,
+            null,
+          );
+        }
+      } else this.#t = 0;
+      if (this == objG_player_plane) {
+        if (!ia) {
           objG_sfxManager.playSound(
             str_sfxid_planeloop,
             0.6,
@@ -2827,8 +2836,9 @@ class Plane {
             (a) => {
               ia = a;
             },
-          ),
-        na ||
+          );
+        }
+        if (!na) {
           objG_sfxManager.playSound(
             str_sfxid_waterloop,
             0,
@@ -2837,65 +2847,71 @@ class Plane {
             (a) => {
               na = a;
             },
-          ),
-        (k = (E / 2 - this.y) / 1e3),
-        1 < k && (k = 1),
-        ia &&
-          ((m = objG_sfxManager.sound._nodeById(ia)),
-          objG_sfxManager.sound.volume(0.5 * num_max_volume, ia),
-          0.01 > k && !objG_eventManager.isSpaceWars()
-            ? m && m.bufferSource && (m.bufferSource.playbackRate.value = 0.1)
-            : ((l = this.speed / 30),
-              1 < l && (l = 1),
-              (this.#x += (0.3 + 0.8 * l - this.#x) / 30),
-              m &&
-                m.bufferSource &&
-                (m.bufferSource.playbackRate.value = this.#x))),
-        na &&
-          ((m = 0),
-          0.2 > k &&
-            0.01 < k &&
-            !objG_eventManager.isSpaceWars() &&
-            (m = 1.7 * (0.2 - k)),
-          objG_sfxManager.sound.volume(m * num_max_volume, na)));
-      g
-        ? ((k = func_calculateDistance2D(this.x, this.y, H.x, H.y)),
-          (g = 1 - k / 3e3),
-          1 < g && (g = 1),
-          0.1 > g && (g = 0),
-          0 == this.#Fa
-            ? (objG_sfxManager.playSound(
-                str_sfxid_lasershot,
-                0.2 * g,
-                0.5,
-                const_Q_0,
-                null,
-              ),
-              this.#ua ||
-                objG_sfxManager.playSound(
-                  str_sfxid_laserloop,
-                  0.2 * g,
-                  1,
-                  const_Q_0,
-                  (a) => {
-                    nb = this.#ua = a;
-                  },
-                ))
-            : this.#ua &&
-              objG_sfxManager.sound.volume(0.2 * g * num_max_volume, this.#ua),
-          (this.laserTimer += deltatime),
-          (this.#Fa += deltatime))
-        : this.stopLaserSound();
-      this.#obj_particleManager &&
+          );
+        }
+        k = (E / 2 - this.y) / 1e3;
+        if (1 < k) k = 1;
+        if (ia) {
+          m = objG_sfxManager.sound._nodeById(ia);
+          objG_sfxManager.sound.volume(0.5 * num_max_volume, ia);
+          if (0.01 > k && !objG_eventManager.isSpaceWars()) {
+            if (m && m.bufferSource) m.bufferSource.playbackRate.value = 0.1;
+          } else {
+            l = this.speed / 30;
+            if (1 < l) l = 1;
+            this.#x += (0.3 + 0.8 * l - this.#x) / 30;
+            if (m && m.bufferSource)
+              m.bufferSource.playbackRate.value = this.#x;
+          }
+        }
+        if (na) {
+          m = 0;
+          if (0.2 > k && 0.01 < k && !objG_eventManager.isSpaceWars())
+            m = 1.7 * (0.2 - k);
+          objG_sfxManager.sound.volume(m * num_max_volume, na);
+        }
+      }
+      if (g) {
+        k = func_calculateDistance2D(this.x, this.y, H.x, H.y);
+        g = 1 - k / 3e3;
+        if (1 < g) g = 1;
+        if (0.1 > g) g = 0;
+        if (0 == this.#Fa) {
+          objG_sfxManager.playSound(
+            str_sfxid_lasershot,
+            0.2 * g,
+            0.5,
+            const_Q_0,
+            null,
+          );
+          if (!this.#ua)
+            objG_sfxManager.playSound(
+              str_sfxid_laserloop,
+              0.2 * g,
+              1,
+              const_Q_0,
+              (a) => {
+                nb = this.#ua = a;
+              },
+            );
+        } else if (this.#ua)
+          objG_sfxManager.sound.volume(0.2 * g * num_max_volume, this.#ua);
+        this.laserTimer += deltatime;
+        this.#Fa += deltatime;
+      } else this.stopLaserSound();
+      if (
+        this.#obj_particleManager &&
         this.weapon == id_weapon_punch &&
-        1 < this.ammo &&
-        (this.ammo = 1);
-      0 < this.#q && (this.#q -= deltatime);
-      this.#obj_scoreAccumInfo && this.#obj_scoreAccumInfo.update(deltatime);
-      0 < this.#R && (this.#R -= deltatime);
+        1 < this.ammo
+      )
+        this.ammo = 1;
+      if (0 < this.#q) this.#q -= deltatime;
+      if (this.#obj_scoreAccumInfo) this.#obj_scoreAccumInfo.update(deltatime);
+      if (0 < this.#R) this.#R -= deltatime;
     }
   }
   getCurrentFrameNum(ctx: CanvasRenderingContext2D) {
+    if (this.#g == undefined) return 0;
     let a = Math.floor(this.#g / ((2 * Math.PI) / 28)) + 1;
     return (a = this.#r[(a - 1) % 14]);
   }
@@ -2904,23 +2920,26 @@ class Plane {
       let e, f, K, s, v, R, w, S, O, t;
       this.#obj_particleTrails && this.#obj_particleTrails.draw(ctx);
       this.#obj_particleFlags && this.#obj_particleFlags.draw(ctx);
-      this.#obj_particleManager ||
-        (ctx.save(),
-        ctx.translate(this.x, this.y),
-        (this.timeToNextFrame -= deltatime),
-        0 >= this.timeToNextFrame &&
-          ((this.flameState = !this.flameState),
-          (this.timeToNextFrame = this.frameSwitchTime)),
-        this.hover &&
-          (objG_eventManager.isSpaceWars()
+      if (!this.#obj_particleManager) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        this.timeToNextFrame -= deltatime;
+        if (0 >= this.timeToNextFrame) {
+          this.flameState = !this.flameState;
+          this.timeToNextFrame = this.frameSwitchTime;
+        }
+        if (this.hover) {
+          objG_eventManager.isSpaceWars()
             ? ctx.scale(0.5, 0.5)
-            : ctx.scale(0.8, 0.8)),
-        this.flameState && ctx.scale(0.88, 0.88),
-        ctx.rotate(this.angle - Math.PI / 2),
-        ctx.translate(-23, 0),
-        this.isInvulnerable() && this.#d && (ctx.globalAlpha = 0.3),
-        objG_assets.frames.throttleFlame.draw(ctx),
-        ctx.restore());
+            : ctx.scale(0.8, 0.8);
+        }
+        this.flameState && ctx.scale(0.88, 0.88);
+        ctx.rotate(this.angle - Math.PI / 2);
+        ctx.translate(-23, 0);
+        this.isInvulnerable() && this.#d && (ctx.globalAlpha = 0.3);
+        objG_assets.frames.throttleFlame.draw(ctx);
+        ctx.restore();
+      }
       this.#g =
         Math.abs((this.angle - Math.PI / 2) % (2 * Math.PI)) +
         (2 * Math.PI) / 28 / 2;
@@ -2945,13 +2964,18 @@ class Plane {
       ctx.translate(this.x, this.y);
       ctx.scale(0.7, 0.7);
       ctx.rotate(this.angle - Math.PI / 2);
-      this.#obj_particleManager
-        ? ((this.#k -= deltatime),
-          0 > this.#k &&
-            ((this.#k = this.#m), this.#y++, 8 == this.#y && (this.#l *= -1)),
-          (this.#y %= 14),
-          (e = this.#r[this.#y]))
-        : (this.#y = e = this.getCurrentFrameNum(ctx));
+      if (this.#obj_particleManager) {
+        this.#k -= deltatime;
+        if (0 > this.#k) {
+          this.#k = this.#m;
+          this.#y++;
+          if (8 == this.#y) this.#l *= -1;
+        }
+        this.#y %= 14;
+        e = this.#r[this.#y];
+      } else {
+        this.#y = e = this.getCurrentFrameNum(ctx);
+      }
       ctx.scale(1, this.flipLastImage * this.#l);
       this.lastImage = this.planeImages[e - 1];
       void 0 == this.lastImage && (this.lastImage = this.planeImages[0]);
@@ -3061,7 +3085,7 @@ class Plane {
     }
   }
   drawReflection(ctx: CanvasRenderingContext2D, deltatime: number) {
-    if (this.inGame && this.#pa) {
+    if (this.inGame && this.#pa && this.#g != undefined) {
       let b = E / 2,
         d = b - this.y;
       if (!(0 > d || 170 < d)) {
@@ -3313,7 +3337,7 @@ class Plane {
     ia && objG_sfxManager.sound.stop(ia);
     na && objG_sfxManager.sound.stop(na);
     this.stopLaserSound();
-    na = ia = null;
+    na = ia = undefined;
     this.first_set = true;
     this.inGame = false;
     objGUI_gameInfo.clearTargetLockedMessage();
@@ -3345,7 +3369,8 @@ class Plane {
   }
   prepareFollow() {}
   stopLaserSound() {
-    this.#ua && (objG_sfxManager.sound.stop(this.#ua), (this.#ua = nb = null));
+    this.#ua &&
+      (objG_sfxManager.sound.stop(this.#ua), (this.#ua = nb = undefined));
   }
   dash() {
     this == objG_player_plane &&
@@ -3460,7 +3485,8 @@ class WaterSea {
     this.drawWaterArea(ctx, 13 * b, "rgba(7,142,252,1.0)", 1e3, 0, 1, c);
   }
   drawFront(ctx: CanvasRenderingContext2D) {
-    if(this.#a == undefined || this.#g == undefined || this.#c == undefined) return
+    if (this.#a == undefined || this.#g == undefined || this.#c == undefined)
+      return;
     let d = E / 2 - H.y,
       e = this.#a * this.#g,
       f = E / 2 + -30,
@@ -3488,7 +3514,8 @@ class WaterSea {
     r: number,
     K: number,
   ) {
-    if(this.#a == undefined || this.#g == undefined || this.#c == undefined) return
+    if (this.#a == undefined || this.#g == undefined || this.#c == undefined)
+      return;
     K = this.#a * this.#g;
     let p = E / 2 + -30;
     ctx.save();
@@ -3505,7 +3532,7 @@ class WaterSea {
     ctx.restore();
   }
   disturbSurface(c: number, d: number) {
-    if(this.#a == undefined || this.#g == undefined) return
+    if (this.#a == undefined || this.#g == undefined) return;
     let h = Math.floor(c / this.#g) - this.#a + 12.5;
     this.#b(h - 2, d / 2);
     this.#b(h - 1, d / 2);
@@ -4872,11 +4899,11 @@ class WS_Connection {
                   Z
                     ? ((Z = false),
                       (objG_player_plane_temp = objG_player_plane),
-                      (objG_player_plane = null),
+                      (objG_player_plane = undefined),
                       (ka = 1),
                       W_wasKilled(d),
                       func_displayGameoverScore(d))
-                    : ((objG_player_plane = null),
+                    : ((objG_player_plane = undefined),
                       objG_followMode.waitUntilNextFollow())))
               : ((plane_last_killed_by[c.id] = 0),
                 objG_player_plane &&
@@ -4927,12 +4954,12 @@ class WS_Connection {
                                   ),
                   Z
                     ? ((Z = false),
-                      (objG_player_plane = null),
+                      (objG_player_plane = undefined),
                       (ma = 0),
                       (ka = 1),
                       W_wasKilled(d),
                       func_displayGameoverScore(d))
-                    : ((objG_player_plane = null),
+                    : ((objG_player_plane = undefined),
                       objG_followMode.waitUntilNextFollow())),
                 5 == h
                   ? objGUI_gameInfo.addActivityMessage(
@@ -5347,7 +5374,7 @@ class FollowMode_R {
     this.#c = 0;
     let b, d, e;
     if (0 == list_str_leaderboard_players.length)
-      (current_following_plane_id = 0), (objG_player_plane = null);
+      (current_following_plane_id = 0), (objG_player_plane = undefined);
     else {
       b = false;
       0 == Oa && (b = true);
@@ -5392,7 +5419,7 @@ class FollowMode_R {
       objG_player_plane &&
         !objG_player_plane.inGame &&
         0 == ka &&
-        ((objG_player_plane = null), (current_following_plane_id = 0));
+        ((objG_player_plane = undefined), (current_following_plane_id = 0));
       objGUI_gameInfo && objGUI_gameInfo.update(deltatime);
       mb && objG_sfxManager.sound.volume(num_max_volume, mb);
       La = false;
@@ -5703,7 +5730,7 @@ class FollowMode_R {
     }
   }
   gameCleanup() {
-    objG_player_plane = null;
+    objG_player_plane = undefined;
     current_following_plane_id = 0;
     Z = false;
     gb = ma = 0;
@@ -5831,7 +5858,7 @@ class UI_Anchor {
         (this.zoom += (c - this.zoom) / 10));
     this.applyShake(b);
   }
-  setPosition(x, y) {
+  setPosition(x: number, y: number) {
     ca.x = x - this.x;
     ca.y = y - this.y;
     this.x = x;
@@ -7272,9 +7299,9 @@ class SFXmanager {
   load(callback: () => void) {
     this.sound = new Howl({
       urls: [
+        "sounds/out.mp3",
         "sounds/out.ogg",
         "sounds/out.m4a",
-        "sounds/out.mp3",
         "sounds/out.ac3",
       ],
       sprite: this.#clip_info,
@@ -7341,6 +7368,7 @@ namespace SFXmanager {
       onload?: () => void;
     }): Howl;
     play(sfx_name: string, callback?: (end: number) => void): number;
+    stop(id: number): number;
     volume(volume: number, nodeId?: number): number;
     _nodeById(id: number): GainNode;
   }
