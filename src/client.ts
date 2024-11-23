@@ -15,7 +15,6 @@ const canvas = $("#canvas")[0] as HTMLCanvasElement;
 let Zb,
   $b,
   bool_isHttps = "https:" == window.location.protocol,
-  int_pathMobile = window.location.pathname.indexOf("mobile"),
   num_global_physics_step_ms = (1e3 / 30) * 3,
   list_decal_colors = [
     {
@@ -467,25 +466,21 @@ function func_displayGameover() {
   objGUI_gameInfo.clearBonusDisplay();
 }
 function func_displayGameoverScore(int_score: number) {
-  if (int_pathMobile)
-    (bool_following_plane = true), Z || ((ka = 1), (objG_player_plane = null));
-  else {
-    bool_following_plane = true;
-    Z || ((ka = 1), (objG_player_plane = null));
-    funcR_hc_showPf();
-    if (0 <= int_score) {
-      bool_continueGame = true;
-      $("#beta").hide();
-      let e = $("#curScore")[0],
-        f;
-      f = objG_eventManager.isInstagib()
-        ? document.createTextNode("Kills: " + int_score)
-        : document.createTextNode("Current Score: " + int_score);
-      e.replaceChild(f, e.firstChild!);
-    }
-    last_game_score = int_score;
-    setTimeout(func_displayGameover, 1e3);
+  bool_following_plane = true;
+  Z || ((ka = 1), (objG_player_plane = null));
+  funcR_hc_showPf();
+  if (0 <= int_score) {
+    bool_continueGame = true;
+    $("#beta").hide();
+    let e = $("#curScore")[0],
+      f;
+    f = objG_eventManager.isInstagib()
+      ? document.createTextNode("Kills: " + int_score)
+      : document.createTextNode("Current Score: " + int_score);
+    e.replaceChild(f, e.firstChild!);
   }
+  last_game_score = int_score;
+  setTimeout(func_displayGameover, 1e3);
 }
 function func_displayNicknameInput() {
   $("#continueTop").hide();
@@ -761,23 +756,11 @@ function W_setInput(angle: number, hover: number, isShooting: boolean) {
 function W_wasKilled(b: any) {
   objG_inputManager.angle = Math.PI;
   objG_inputManager.hover = 1;
-  // int_pathMobile &&
-  //   ((bool_continueGame = true),
-  //   (b = {
-  //     score: b,
-  //   }),
-  //   "undefined" != typeof messageHandlers && messageHandlers.wasKilled
-  //     ? messageHandlers.wasKilled(JSON.stringify(b))
-  //     : window.webkit.messageHandlers.wasKilled.postMessage(b));
 }
 function W_connectionClosed() {
   console.log("Connection was closed");
   objG_inputManager.angle = Math.PI;
   objG_inputManager.hover = 1;
-  // int_pathMobile &&
-  //   ("undefined" != typeof messageHandlers && messageHandlers.connectionClosed
-  //     ? messageHandlers.connectionClosed(JSON.stringify({}))
-  //     : window.webkit.messageHandlers.connectionClosed.postMessage({}));
 }
 
 let x = {
@@ -1027,16 +1010,6 @@ class StyleText {
           40,
         ),
         (_ctx.globalAlpha = 1));
-      int_pathMobile &&
-        ((_ctx.lineJoin = "round"),
-        (_ctx.lineWidth = 3),
-        (_ctx.strokeStyle = this._secondColor),
-        _ctx.strokeText(
-          _value,
-          8 + this._d,
-          _size - _vmargin / 2 + 1 + this._d + this._addTop,
-        ),
-        (this._extrude = 0));
       for (let _extrude = this._extrude; 0 <= _extrude; _extrude--)
         (_scale = _extrude),
           (_ctx.fillStyle = 0 == _extrude ? this._color : this._secondColor),
@@ -1837,15 +1810,12 @@ class UI_GameInfo {
         this.drawLeaderboard(I);
       if (objG_player_plane && !bool_following_plane) {
         I.save();
-        int_pathMobile
-          ? I.scale(1.5 * num_scale_factor, 1.5 * num_scale_factor)
-          : I.scale(num_scale_factor, num_scale_factor);
+        I.scale(num_scale_factor, num_scale_factor);
         K = objG_assets.frames.indicator;
         I.translate(K.width / 2 + 6, K.height / 2 + 6);
         K.draw(I);
         this.DrawCurrentWeaponIcon(I, objG_player_plane.weapon);
         (r = 19), (P = 0);
-        int_pathMobile && ((r = 24), (P = -5));
         null == this.#pa && (this.#pa = new StyleStroke(r, "#FFFFFF"));
         R = objG_eventManager.isInstagib();
         if (this.#z != objG_player_plane.GetAmmo() || null == this.#s) {
@@ -1868,11 +1838,9 @@ class UI_GameInfo {
         4e3 > r ? (K = 3e3 > r ? 1 : 1 - (r - 3e3) / 1e3) : (this.#d = 0);
         this.#h ||
           ((P = 20),
-          int_pathMobile && (P = 30),
           (r = false),
           this.#f
             ? ((r = 40),
-              int_pathMobile && (r = 50),
               (this.#q = new StyleText(
                 r * num_scale_factor,
                 "#FF0000",
@@ -1881,8 +1849,8 @@ class UI_GameInfo {
               this.#q.setValue(this.#f),
               this.#q.setUsingFrame(true),
               (r = true),
-              int_pathMobile ? this.#q.setAddTop(35) : this.#q.setAddTop(25))
-            : ((this.#q = null), (P = int_pathMobile ? 45 : 35)),
+              this.#q.setAddTop(25))
+            : ((this.#q = null), (P = 35)),
           (this.#h = new StyleText(P * num_scale_factor, "#FF0000", "#990000")),
           this.#h.setValue(this.#e),
           this.#h.setUsingFrame(!r));
@@ -1909,7 +1877,6 @@ class UI_GameInfo {
         1 < K && (K = 1),
         this.#g ||
           ((r = 30),
-          int_pathMobile && (r = 40),
           (this.#g = new StyleText(
             r * num_scale_factor,
             "#FF0000",
@@ -1931,7 +1898,6 @@ class UI_GameInfo {
         (K = 1),
         this.#y ||
           ((r = 20),
-          int_pathMobile && (r = 30),
           (this.#y = new StyleText(
             r * num_scale_factor,
             "#FF0000",
@@ -1949,7 +1915,7 @@ class UI_GameInfo {
         I.restore());
       objG_wsConnection.hasConnection &&
         xa &&
-        (objG_eventManager.waiting && !int_pathMobile
+        (objG_eventManager.waiting
           ? this.DrawWarmupTime(I)
           : objG_eventManager.isInEvent()
             ? this.DrawEventLabel(I)
@@ -1983,7 +1949,6 @@ class UI_GameInfo {
         (4e3 > this.#H
           ? (null == this.#Ia &&
               ((r = 20),
-              int_pathMobile && (r = 30),
               (this.#Ha = new StyleStroke(
                 r * num_scale_factor,
                 "#ffd118",
@@ -2008,7 +1973,6 @@ class UI_GameInfo {
             ))
           : (this.#Ta = null));
       bool_following_plane ||
-        int_pathMobile ||
         this.#objUI_ActivityMessages.draw(I);
       !bool_following_plane && 0 < qa && this.DrawKing(I);
       this.#ta && (this.#ta = false);
@@ -2028,7 +1992,6 @@ class UI_GameInfo {
         this.#I = obj_plane.id;
         if(d != this.#Fa) {
           let font_size = 25;
-          int_pathMobile && (font_size = 35);
           this.#ua = new StyleText(
             font_size * num_scale_factor,
             "#fe9b00",
@@ -2036,7 +1999,6 @@ class UI_GameInfo {
           );
           let spaces = " ";
           bool_setting_highQuality || (spaces = "");
-          int_pathMobile && (spaces = "  ");
           this.#ua.setValue(spaces + "  King: " + d);
           this.#ua.setUsingRoundedFrame(true);
         }
@@ -2054,7 +2016,6 @@ class UI_GameInfo {
           d + this.#E.height / 2 - 2 * num_scale_factor,
         );
         (d = 1);
-        int_pathMobile && (d = 1.5);
         ctx.scale(num_scale_factor * d, num_scale_factor * d);
         objG_assets.frames.crown.draw(ctx);
         ctx.restore();
@@ -2067,7 +2028,6 @@ class UI_GameInfo {
     if (str_name_superweapon_holder != this.#X) {
       this.#X = str_name_superweapon_holder;
       c = 25;
-      int_pathMobile && (c = 35);
       this.#L = new StyleText(c * num_scale_factor, "#fbc521", "#c78109");
       str_name_superweapon_holder
         ? this.#L.setValue("     Super Weapon: " + str_name_superweapon_holder)
@@ -2118,7 +2078,6 @@ class UI_GameInfo {
     if (0 < objG_player_plane.rank) {
       let c = 16 * num_scale_factor,
         d = "Arial Black";
-      int_pathMobile && ((c = 36 * num_scale_factor), (d = "Arial-BoldMT"));
       let b = this.#P * num_scale_factor,
         g = b,
         h = 30 * num_scale_factor,
@@ -2126,7 +2085,6 @@ class UI_GameInfo {
         k = 10 * num_scale_factor,
         n = canvas_width - b - 5,
         f = this.#S + 5 + 5;
-      int_pathMobile && ((h = 60 * num_scale_factor), (g = b));
       void 0 == this.#r &&
         ((this.#r = document.createElement("canvas")),
         (this.#K = this.#r.getContext("2d")));
@@ -2416,15 +2374,8 @@ class UI_GameInfo {
       r,
       y,
       m;
-    int_pathMobile &&
-      ((f = 42),
-      (this.#P = 300),
-      (g = 33 * num_scale_factor),
-      (h = 28 * num_scale_factor),
-      (q = "Arial-BoldMT"));
     e = this.#S += d + g + d;
     m = this.#F.length;
-    int_pathMobile && (m = 5);
     10 < m && (m = 10);
     for (l = 0; l < m; l++) {
       r = objD_planes[this.#F[l]];
@@ -2491,7 +2442,6 @@ class UI_GameInfo {
           q = ctx.measureText(r.score).width;
           f = 1;
           I = 0;
-          int_pathMobile && ((I = -6), (f = 1.5));
           if (r.inGame)
             r.id == qa &&
               (ctx.save(),
@@ -2525,7 +2475,7 @@ class UI_GameInfo {
     ctx.drawImage(this.#C, canvas_width - this.#R - 5, 5);
   }
   addActivityMessage(message_str: string) {
-    int_pathMobile || this.#objUI_ActivityMessages.addActivityMessage(message_str);
+    this.#objUI_ActivityMessages.addActivityMessage(message_str);
   }
   addMessage(plane_name: string, murderer: boolean, other_plane_name: string) {
     this.#e = plane_name;
@@ -2535,11 +2485,10 @@ class UI_GameInfo {
     this.#a = murderer;
   }
   showTip(tip_string: string) {
-    int_pathMobile ||
-      (this.#Ta && this.clearTip(),
-      (this.#Ta = tip_string),
-      (this.#H = 0),
-      (this.#Ia = null));
+      this.#Ta && this.clearTip();
+      this.#Ta = tip_string;
+      this.#H = 0;
+      this.#Ia = null;
   }
   clearTip() {
     this.#Ta = null;
@@ -4579,64 +4528,62 @@ class WS_Connection {
   roomID = 0;
   getServerAndConnect() {
     let b, c, a;
-    if (!int_pathMobile) {
-      (b = null), (b = ""), a;
-      func_isIframe() || (a = parent.location.hash);
-      if (a)
-        (b = a),
-          (b = b.substring(1, b.length)),
-          (b = ";" + b),
-          (objG_wsConnection.directed = true);
-      else if (obj_browserQueryParams.ip) {
-        b = obj_browserQueryParams.ip;
-        b = b.replace("%3A", ":");
-        objG_wsConnection.remoteHost = b;
-        objG_wsConnection.connect();
-        return;
-      }
-      a = str_conutryCode;
-      obj_browserQueryParams.cc && (a = obj_browserQueryParams.cc);
-      if (void 0 == a) setTimeout(objG_wsConnection.getServerAndConnect, 200);
-      else {
-        c = "";
-        bool_isHttps && (c = "s");
-        $.ajax({
-          url: "http" + c + "://master.wings.io/",
-          type: "POST",
-          success: (a) => {
-            if ("0" == a)
-              $("#topGui").hide(),
-                $("#topGuiConnecting").hide(),
-                $("#roomFailed").show();
-            else {
-              a = a.split("!");
-              objG_wsConnection.roomID = 0;
-              1 < a.length && (objG_wsConnection.roomID = a[1]);
-              c = a[0];
-              a = c.split("/");
-              objG_wsConnection.roomNumber = 0;
-              1 < a.length &&
-                ((objG_wsConnection.roomNumber = a[1]), (c = a[0]));
-              objG_wsConnection.remoteHost = c;
-              objG_wsConnection.connect();
-            }
-          },
-          error: () => {
-            setTimeout(objG_wsConnection.getServerAndConnect, 1e3);
-          },
-          dataType: "text",
-          contentType: "text/plain",
-          method: "PUT",
-          cache: false,
-          crossDomain: true,
-          data: a + b,
-        });
-      }
+    (b = null), (b = ""), a;
+    func_isIframe() || (a = parent.location.hash);
+    if (a)
+      (b = a),
+        (b = b.substring(1, b.length)),
+        (b = ";" + b),
+        (objG_wsConnection.directed = true);
+    else if (obj_browserQueryParams.ip) {
+      b = obj_browserQueryParams.ip;
+      b = b.replace("%3A", ":");
+      objG_wsConnection.remoteHost = b;
+      objG_wsConnection.connect();
+      return;
+    }
+    a = str_conutryCode;
+    obj_browserQueryParams.cc && (a = obj_browserQueryParams.cc);
+    if (void 0 == a) setTimeout(objG_wsConnection.getServerAndConnect, 200);
+    else {
+      c = "";
+      bool_isHttps && (c = "s");
+      $.ajax({
+        url: "http" + c + "://master.wings.io/",
+        type: "POST",
+        success: (a) => {
+          if ("0" == a)
+            $("#topGui").hide(),
+              $("#topGuiConnecting").hide(),
+              $("#roomFailed").show();
+          else {
+            a = a.split("!");
+            objG_wsConnection.roomID = 0;
+            1 < a.length && (objG_wsConnection.roomID = a[1]);
+            c = a[0];
+            a = c.split("/");
+            objG_wsConnection.roomNumber = 0;
+            1 < a.length &&
+              ((objG_wsConnection.roomNumber = a[1]), (c = a[0]));
+            objG_wsConnection.remoteHost = c;
+            objG_wsConnection.connect();
+          }
+        },
+        error: () => {
+          setTimeout(objG_wsConnection.getServerAndConnect, 1e3);
+        },
+        dataType: "text",
+        contentType: "text/plain",
+        method: "PUT",
+        cache: false,
+        crossDomain: true,
+        data: a + b,
+      });
     }
   }
   connect() {
     let b, a;
-    if (wa || int_pathMobile) {
+    if (wa) {
       b = "ws://" + objG_wsConnection.remoteHost!;
       console.log("fullhost: " + b);
       if (bool_isHttps) {
@@ -4699,9 +4646,8 @@ class WS_Connection {
     console.log("socket error");
   }
   hello() {
-    int_pathMobile
-      ? objG_wsConnection.sendSingleByte(32)
-      : objG_wsConnection.sendSingleByte(1);
+    // objG_wsConnection.sendSingleByte(32); // mobile player
+    objG_wsConnection.sendSingleByte(1);
     objG_wsConnection.ping();
     objG_wsConnection.sentHello = true;
     $("#copyLink").fadeIn(300);
@@ -4709,10 +4655,6 @@ class WS_Connection {
     $("#topGuiConnecting").hide();
     $(".btn-needs-server").removeAttr("disabled");
     $("#nick").focus();
-    // 1 == int_pathMobile &&
-    //   ("undefined" != typeof messageHandlers && messageHandlers.didConnect
-    //     ? messageHandlers.didConnect(JSON.stringify({}))
-    //     : window.webkit.messageHandlers.didConnect.postMessage({}));
   }
   processMessage(array_buffer: ArrayBuffer) {
     let a, c, f, h, q, n, k, m, l, y, r, s, t, x, z, Ca, ta;
@@ -4756,11 +4698,6 @@ class WS_Connection {
         xc = d;
       } else if (161 == a || 171 == a)
         (xa = true),
-          // int_pathMobile &&
-          //   ("undefined" != typeof messageHandlers &&
-          //   messageHandlers.didEnterGame
-          //     ? messageHandlers.didEnterGame(JSON.stringify({}))
-          //     : window.webkit.messageHandlers.didEnterGame.postMessage({})),
           (c = 1),
           (f = d.getUint32(c, true)),
           (c += 4),
@@ -5288,10 +5225,6 @@ class FollowMode_R {
     objG_assets = new Assets();
     objG_assets.load(() => {
       console.log("Resources loaded!");
-      // 1 == int_pathMobile &&
-      //   ("undefined" != typeof messageHandlers && messageHandlers.didLoad
-      //     ? messageHandlers.didLoad(JSON.stringify({}))
-      //     : window.webkit.messageHandlers.didLoad.postMessage({}));
       objGUI_gameInfo = new UI_GameInfo();
       obj_particleImpacts = new ParticleImpacts();
       objG_wsConnection.hasConnection &&
@@ -5456,7 +5389,7 @@ class FollowMode_R {
           objGUI_anchor.zoom,
       };
       objG_backgrounds.update(deltatime);
-      if (!int_pathMobile && null != objG_player_plane)
+      if (null != objG_player_plane)
         if (objG_inputManager.mouseMoved) {
           deltatime = 1;
           bool_setting_highQuality || (deltatime = 2);
@@ -5794,7 +5727,6 @@ class UI_Anchor {
     Z || 1 != ka || bool_following_plane
       ? ((this.zoom = (1 / (window.devicePixelRatio / int_pixel_ratio)) * 1.2),
         (this.zoom *= num_scale_factor),
-        int_pathMobile && (this.zoom += 0.3),
         null != objG_player_plane &&
           ((ca.x = objG_player_plane.x - this.x),
           (ca.y = objG_player_plane.y - this.y),
@@ -7690,9 +7622,6 @@ class Warship {
 
 //window.location.href.split("/");
 
--1 == int_pathMobile && (int_pathMobile = 0);
-int_pathMobile && (xa = true);
-
 let search_params = window.location.search;
 if("?" == search_params.charAt(0)) {
   search_params = search_params.slice(1);
@@ -7718,17 +7647,12 @@ if(void 0 == window.localStorage.wingsCCTime ||
 }
 
 void 0 == num_setting_muteVol && (num_setting_muteVol = 1);
-"undefined" === typeof window.orientation ||
-  int_pathMobile ||
-  (window.location.href =
-    "https://itunes.apple.com/us/app/wings.io/id1098205567?l=pt&ls=1&mt=8");
 
 if (0 == num_setting_muteVol || bool_internet_explorer)
-  (num_setting_muteVol = 1), int_pathMobile || func_displayMuteAudio();
+  (num_setting_muteVol = 1), func_displayMuteAudio();
 
 bool_internet_explorer && $("#sndIcon").hide();
 
-if (int_pathMobile) W_onblur();
 if (window.localStorage.nick && $("#nick")[0]) {
   ($("#nick")[0] as HTMLInputElement).value = window.localStorage.nick;
 }
@@ -7739,7 +7663,6 @@ document.body.onselectstart = (ev: Event) => {
 document.oncontextmenu = (ev: MouseEvent) => {
   return false;
 };
-int_pathMobile && (str_font_name = "Arial-BoldMT");
 
 window.onload = () => {
   if (Modernizr.canvas && Modernizr.websockets) {
