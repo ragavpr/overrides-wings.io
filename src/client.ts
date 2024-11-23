@@ -117,7 +117,7 @@ let Zb,
   objG_wsConnection: WS_Connection,
   objD_pickups: Record<number, PickupItem> = {},
   objD_planes: Record<number, Plane> = {},
-  objD_specialEntities: Record<number, Warship> = {},
+  objD_specialEntities: Record<number, SpecialEntity> = {},
   objD_missiles: Record<number, Missile> = {},
   list_str_leaderboard_players: string[] = [],
   objG_player_plane: Plane | null,
@@ -1037,29 +1037,29 @@ class StyleText {
   }
 }
 class Assets {
-  loaded = false;
-  onLoad: () => void;
+  loaded = false; // L1 load
+  onLoad!: () => void;
   spriteSheetLoaded = false;
   gameSheet!: HTMLImageElement;
   frames: Record<string, FrameImage> = {};
   whitePlaneImages: Record<string, HTMLCanvasElement> = {};
-  planeFrames: FrameImage[];
-  planeFramesReflex: FrameImage[];
+  planeFrames!: FrameImage[]; // L3 load
+  planeFramesReflex!: FrameImage[]; // L3 load
   planes: FrameImage[][][] = []; //pre-rendered for all decals, colors and rotations
-  doubleKillCanvas: HTMLCanvasElement;
-  tripleKillCanvas: HTMLCanvasElement;
-  quadKillCanvas: HTMLCanvasElement;
-  multiKillCanvas: HTMLCanvasElement;
-  warshipImage: HTMLImageElement;
-  whiteWarshipImage: HTMLCanvasElement;
-  cannonImage: HTMLImageElement;
-  warshipIcon: HTMLImageElement;
+  doubleKillCanvas!: HTMLCanvasElement; // L2 load
+  tripleKillCanvas!: HTMLCanvasElement; // L2 load
+  quadKillCanvas!: HTMLCanvasElement; // L2 load
+  multiKillCanvas!: HTMLCanvasElement; // L2 load
+  warshipImage!: HTMLImageElement; // depends-on warshipLoaded
+  whiteWarshipImage!: HTMLCanvasElement; // depends-on warshipLoaded
+  cannonImage!: HTMLImageElement; // depends-on warshipLoaded
+  warshipIcon!: HTMLImageElement; // depends-on warshipLoaded
   warshipLoaded = false;
   warshipTextureLoadCount = 0;
   asteroidLoaded = false;
-  asteroidImage: HTMLImageElement;
-  whiteAsteroidImage: HTMLCanvasElement;
-  blinkImage: HTMLImageElement;
+  asteroidImage!: HTMLImageElement; // depends-on asteroidLoaded
+  whiteAsteroidImage!: HTMLCanvasElement; // depends-on asteroidLoaded
+  blinkImage!: HTMLImageElement; // depends-on asteroidLoaded
   loadGameSpritesheet() {
     this.gameSheet = new Image();
     this.gameSheet.src = "images/sheet.png";
@@ -1084,13 +1084,14 @@ class Assets {
         (this.whitePlaneImages["plane" + e] = b);
     for (let e = 0; 5 >= e; e++) this.planes[e] = [];
     this.loadPlaneImages();
-    for (let e = 0; 5 >= e; e++)
-      this.loadPlaneDecal(0, e),
-        this.loadPlaneDecal(1, e),
-        this.loadPlaneDecal(2, e),
-        this.loadPlaneDecal(3, e),
-        this.loadPlaneDecal(4, e),
-        this.loadPlaneDecal(5, e);
+    for (let e = 0; 5 >= e; e++) {
+      this.loadPlaneDecal(0, e);
+      this.loadPlaneDecal(1, e);
+      this.loadPlaneDecal(2, e);
+      this.loadPlaneDecal(3, e);
+      this.loadPlaneDecal(4, e);
+      this.loadPlaneDecal(5, e);
+    }
   }
   loadPlaneImages() {
     let f = [],
@@ -1269,8 +1270,8 @@ class Assets {
     ctx5.drawImage(ctx51.canvas, center_offset, 1.5 * shift2Y);
     this.multiKillCanvas = canvas5;
   }
-  load(b: () => void) {
-    this.onLoad = b;
+  load(callback: () => void) {
+    this.onLoad = callback;
     this.loadGameSpritesheet();
   }
   loadTintImage(
@@ -1497,11 +1498,11 @@ class InputManager {
   }
 }
 class ParticleImpacts {
-  #b: ParticleImpacts.ImpactInfo[] = [];
+  #inst_impact_list: ParticleImpacts.ImpactInfo[] = [];
   draw(e: CanvasRenderingContext2D) {
     let f, d, a, c, g, h, q, n, k, m, l, y, r, p;
-    for (f = [], d = 0; d < this.#b.length; d++) {
-      a = this.#b[d];
+    for (f = [], d = 0; d < this.#inst_impact_list.length; d++) {
+      a = this.#inst_impact_list[d];
       if (void 0 == objD_planes[a.id]) f.push(a);
       else if (a.weapon == id_weapon_railgun) {
         e.lineWidth = 2 + 5 * (1 - a.a);
@@ -1654,7 +1655,7 @@ class ParticleImpacts {
                 (a.curPosition.y += a.direction.y * g)));
       }
     }
-    for (c = 0; c < f.length; c++) this.#b.splice(this.#b.indexOf(f[c]), 1);
+    for (c = 0; c < f.length; c++) this.#inst_impact_list.splice(this.#inst_impact_list.indexOf(f[c]), 1);
     f.length = 0;
   }
   addShot(plane_id: number, x_gu: number, y_gu: number, weapon_id: number) {
@@ -1699,7 +1700,7 @@ class ParticleImpacts {
             func_isInsideBox(rot_x, rot_y, 100) ||
             func_isInsideBox(g.hitPosition.x, g.hitPosition.y, 100)
           )
-            this.#b.push(g);
+            this.#inst_impact_list.push(g);
         }
         weapon_id = E / 2;
         g.hitPosition.y > weapon_id &&
@@ -2564,20 +2565,20 @@ class UI_GameInfo {
   }
 }
 class UI_ActivityMessages {
-  #b: HTMLCanvasElement[] = [];
-  #e: number[] = [];
+  #rendered_canvas_list: HTMLCanvasElement[] = [];
+  #item_add_time: number[] = [];
   update(deltatime: number) {
-    0 < this.#e.length &&
-      15e3 < frametime_millis - this.#e[0] &&
-      (this.#b.shift(), this.#e.shift());
+    0 < this.#item_add_time.length &&
+      15e3 < frametime_millis - this.#item_add_time[0] &&
+      (this.#rendered_canvas_list.shift(), this.#item_add_time.shift());
   }
   draw(e: CanvasRenderingContext2D) {
     e.globalAlpha = 1;
     let d = canvas.height - 180 * num_scale_factor;
-    for (let key in this.#b) {
+    for (let key in this.#rendered_canvas_list) {
       let a = parseInt(key);
       e.drawImage(
-        this.#b[a],
+        this.#rendered_canvas_list[a],
         25,
         d +
           26 * num_scale_factor +
@@ -2595,11 +2596,11 @@ class UI_ActivityMessages {
     d.setHMargin(10);
     d.setVMargin(4);
     let canvas = d.render();
-    this.#b.push(canvas);
-    this.#e.push(+new Date());
-    5 < this.#b.length && (this.#b.shift(), this.#e.shift());
-    for (let max = 0, d, i = 0; i < this.#b.length; i++) {
-      d = this.#b[i].width + 5 + 5;
+    this.#rendered_canvas_list.push(canvas);
+    this.#item_add_time.push(+new Date());
+    5 < this.#rendered_canvas_list.length && (this.#rendered_canvas_list.shift(), this.#item_add_time.shift());
+    for (let max = 0, d, i = 0; i < this.#rendered_canvas_list.length; i++) {
+      d = this.#rendered_canvas_list[i].width + 5 + 5;
       d > max && (max = d);
     }
   }
@@ -2609,19 +2610,19 @@ class Plane {
   #f = 100;
   #d = false;
   #obj_particleTrails = new ParticleTrails();
-  #obj_particleFlags: ParticleFlags;
-  #g;
+  #obj_particleFlags?: ParticleFlags;
+  #g?: number;
   #h = 0;
   #q = 0;
   laserFrame = 0;
   laserTimer = 0;
-  #obj_particleManager: ParticleManager | null;
+  #obj_particleManager?: ParticleManager;
   #k = 0;
   #m = 0;
   #l = 1;
   #y = 0;
   #r = [1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1];
-  #obj_scoreAccumInfo: ScoreAccumInfo;
+  #obj_scoreAccumInfo?: ScoreAccumInfo;
   #pa = false;
   #s = 0;
   #w = 0;
@@ -2683,12 +2684,12 @@ class Plane {
   frameSwitchTime = 40;
   timeToNextFrame = 0;
   flameState = true;
-  lastImage: FrameImage;
-  lastImageReflex: FrameImage;
+  lastImage?: FrameImage;
+  lastImageReflex?: FrameImage;
   flipLastImage = 1;
   planeImages = objG_assets.planeFrames;
   planeImagesReflex = objG_assets.planeFramesReflex;
-  decalFrames: FrameImage[];
+  decalFrames!: FrameImage[]; //setDecalId() //setColorId()
   decalID = 0;
   colorID = 0;
   isShooting = false;
@@ -3074,16 +3075,16 @@ class Plane {
         b = 1;
         30 > d && 15 <= d ? (b = (d - 15) / 15) : 15 > d && (b = 0);
         ctx.globalAlpha = 0.7 * (1 - h) * b;
-        this.lastImageReflex.draw(ctx);
+        this.lastImageReflex?.draw(ctx);
         ctx.restore();
       }
     }
   }
   drawInput(ctx: CanvasRenderingContext2D) {
     if (this.inGame) {
-      let c = -objG_inputManager.angle + Math.PI,
-        b = !objG_inputManager.hover;
-      0.01 >= b && (b = 0.3);
+      let c = -objG_inputManager.angle + Math.PI;
+      let b;
+      objG_inputManager.hover && (b = 0.3);
       ctx.save();
       ctx.translate(this.x, this.y);
       ctx.rotate(c);
@@ -3192,7 +3193,7 @@ class Plane {
         ctx.restore());
     }
   }
-  setPose(x_gu: number, y_gu: number, angle: number, h: never) {
+  setPose(x_gu: number, y_gu: number, angle: number) {
     this.origX = this.x;
     this.origY = this.y;
     this.origAngle = this.dstAngle;
@@ -3244,18 +3245,18 @@ class Plane {
   }
   setFlagInfo(uint32_flaginfo: number) {
     if (0 < uint32_flaginfo) {
-      let d = uint32_flaginfo & 255;
+      let stringScale = uint32_flaginfo & 255;
       uint32_flaginfo >>= 8;
-      let g = uint32_flaginfo & 255;
+      let scale = uint32_flaginfo & 255;
       uint32_flaginfo >>= 8;
-      let h = 0 < (uint32_flaginfo & 4) ? true : false,
-        e = 0 < (uint32_flaginfo & 2) ? true : false;
+      let flipY = 0 < (uint32_flaginfo & 4) ? true : false;
+      let flipX = 0 < (uint32_flaginfo & 2) ? true : false;
       this.#G = 0 < (uint32_flaginfo & 8) ? true : false;
       this.#obj_particleFlags = new ParticleFlags();
-      this.#obj_particleFlags.flipX = e;
-      this.#obj_particleFlags.flipY = h;
-      this.#obj_particleFlags.scale = g / 100;
-      this.#obj_particleFlags.stringScale = d / 100;
+      this.#obj_particleFlags.flipX = flipX;
+      this.#obj_particleFlags.flipY = flipY;
+      this.#obj_particleFlags.scale = scale / 100;
+      this.#obj_particleFlags.stringScale = stringScale / 100;
       this.#obj_particleFlags.setTexture(this.name);
     } else this.showName = true;
     this.#obj_particleTrails = new ParticleTrails();
@@ -3275,7 +3276,7 @@ class Plane {
           objGUI_gameInfo.clearNearMiss()))
       : 25 <= hp &&
         this.#obj_particleManager &&
-        ((this.#obj_particleManager = null), (this.#l = 1));
+        ((this.#obj_particleManager = undefined), (this.#l = 1));
   }
   GetAmmo() {
     return 1 == this.weapon ? -1 : this.ammo;
@@ -3361,10 +3362,10 @@ class Plane {
 class WaterSea {
   #e: number[];
   #f: number[];
-  #d: number;
-  #a: number;
-  #c: number;
-  #g: number;
+  #d?: number;
+  #a?: number;
+  #c?: number;
+  #g?: number;
   #h: WaterSeaRipple[] = [];
   #q = 0;
   constructor() {
@@ -3459,6 +3460,7 @@ class WaterSea {
     this.drawWaterArea(ctx, 13 * b, "rgba(7,142,252,1.0)", 1e3, 0, 1, c);
   }
   drawFront(ctx: CanvasRenderingContext2D) {
+    if(this.#a == undefined || this.#g == undefined || this.#c == undefined) return
     let d = E / 2 - H.y,
       e = this.#a * this.#g,
       f = E / 2 + -30,
@@ -3486,6 +3488,7 @@ class WaterSea {
     r: number,
     K: number,
   ) {
+    if(this.#a == undefined || this.#g == undefined || this.#c == undefined) return
     K = this.#a * this.#g;
     let p = E / 2 + -30;
     ctx.save();
@@ -3502,6 +3505,7 @@ class WaterSea {
     ctx.restore();
   }
   disturbSurface(c: number, d: number) {
+    if(this.#a == undefined || this.#g == undefined) return
     let h = Math.floor(c / this.#g) - this.#a + 12.5;
     this.#b(h - 2, d / 2);
     this.#b(h - 1, d / 2);
@@ -3511,23 +3515,23 @@ class WaterSea {
   }
 }
 class WaterSeaRipple {
-  #b = [
+  #bezier = [
     118.17, 11.98, 26.9, -3.43, 1.91, -19.41, 0.45, -19.48, -0.82, -19.55,
     -52.05, 2.79, -118.88, 11.55, -121.21, 11.85, -0.57, -3.74, 0.26, -4.04,
     0.57, -4.15, 121.8, 12.59, 118.17, 11.98,
   ];
-  #e;
-  #f;
-  #d;
-  #a;
+  #x!: number; // setPosition()
+  #y!: number; // setPosition()
+  #scale!: number; // setPosition()
+  #a!: number; // setPosition()
   #c = 0;
   deleting = false;
   speed = 0.02;
-  setPosition(c: number, b: number, q: number) {
-    this.#e = c;
-    this.#f = b;
-    this.#d = q;
-    this.#a = this.#d / 250;
+  setPosition(x: number, y: number, scale: number) {
+    this.#x = x;
+    this.#y = y;
+    this.#scale = scale;
+    this.#a = this.#scale / 250;
   }
   update(deltatime: number) {
     this.#c += (deltatime / 1e3) * this.speed * 60;
@@ -3539,21 +3543,21 @@ class WaterSeaRipple {
       ctx.save();
       q = Math.sin(this.#c);
       ctx.globalAlpha = Math.sqrt(q);
-      ctx.translate(this.#e, this.#f - 4 * this.#c + (h / 500) * 150 * this.#a);
+      ctx.translate(this.#x, this.#y - 4 * this.#c + (h / 500) * 150 * this.#a);
       ctx.scale(0 + 1 * q, 0 + 0.8 * q);
       ctx.translate(0, -20);
       ctx.fillStyle = "#b3dff9";
       ctx.beginPath();
-      (q = this.#b.length), (n = 0.1 + 0.9 * this.#a);
-      ctx.moveTo(this.#b[0] * n + 0, this.#b[1] * n + 0);
+      (q = this.#bezier.length), (n = 0.1 + 0.9 * this.#a);
+      ctx.moveTo(this.#bezier[0] * n + 0, this.#bezier[1] * n + 0);
       for (let k = 2; k < q; k += 6)
         ctx.bezierCurveTo(
-          this.#b[k] * n + 0,
-          this.#b[k + 1] * n + 0,
-          this.#b[k + 2] * n + 0,
-          this.#b[k + 3] * n + 0,
-          this.#b[k + 4] * n + 0,
-          this.#b[k + 5] * n + 0,
+          this.#bezier[k] * n + 0,
+          this.#bezier[k + 1] * n + 0,
+          this.#bezier[k + 2] * n + 0,
+          this.#bezier[k + 3] * n + 0,
+          this.#bezier[k + 4] * n + 0,
+          this.#bezier[k + 5] * n + 0,
         );
       ctx.fill();
       ctx.restore();
@@ -4147,19 +4151,19 @@ class PickupItem {
   #a = 0;
   #c = 0;
   #g = 0;
-  #x: number;
-  #y: number;
+  #x!: number; // setPosition()
+  #y!: number; // setPosition()
   #n = 1;
   #k = 1;
   #m = 1;
   #l = 0;
   #inSpace = false;
 
-  id = -1;
-  y = 0;
-  x = 0;
+  id!: number; // set
+  y!: number; // setPosition()
+  x!: number; // setPosition()
   radius = 1.5;
-  type: number;
+  type!: number; // set
   sinScaleY = 0;
   sinScaleX = 0;
   fadingOut = false;
@@ -4320,14 +4324,14 @@ class PickupItem {
         : objG_player_plane.incScore(wc));
   }
   setPosition(x_gu: number, y_gu: number) {
-    this.x = 10 * x_gu;
-    this.y = 10 * y_gu;
+    this.x = this.#x = 10 * x_gu;
+    this.y = this.#y = 10 * y_gu;
     this.y > -E / 2 && (this.alpha = 1);
     this.#b = +new Date();
   }
 }
 class WS_Connection {
-  #ws_conn: WebSocket;
+  #ws_conn?: WebSocket;
   func_process_msg_extra(
     dataview_message: DataView,
     uint8_message_type: number,
@@ -4412,7 +4416,7 @@ class WS_Connection {
               (f = dataview_message.getUint8(l)),
                 (l += 1),
                 null == h &&
-                  ((h = new Warship()),
+                  ((h = new SpecialEntity()),
                   (objD_specialEntities[bool_something] = h),
                   h.setType(f));
             h.id = bool_something;
@@ -4604,12 +4608,12 @@ class WS_Connection {
     let b, c, a;
     (b = null), (b = ""), a;
     func_isIframe() || (a = parent.location.hash);
-    if (a)
-      (b = a),
-        (b = b.substring(1, b.length)),
-        (b = ";" + b),
-        (objG_wsConnection.directed = true);
-    else if (obj_browserQueryParams.ip) {
+    if (a) {
+      b = a;
+      b = b.substring(1, b.length);
+      b = ";" + b;
+      objG_wsConnection.directed = true;
+    } else if (obj_browserQueryParams.ip) {
       b = obj_browserQueryParams.ip;
       b = b.replace("%3A", ":");
       objG_wsConnection.remoteHost = b;
@@ -4618,7 +4622,7 @@ class WS_Connection {
     }
     a = str_conutryCode;
     obj_browserQueryParams.cc && (a = obj_browserQueryParams.cc);
-    if (void 0 == a) setTimeout(objG_wsConnection.getServerAndConnect, 200);
+    if (!a) setTimeout(objG_wsConnection.getServerAndConnect, 200);
     else {
       c = "";
       bool_isHttps && (c = "s");
@@ -4626,18 +4630,23 @@ class WS_Connection {
         url: "http" + c + "://master.wings.io/",
         type: "POST",
         success: (a) => {
-          if ("0" == a)
-            $("#topGui").hide(),
-              $("#topGuiConnecting").hide(),
-              $("#roomFailed").show();
-          else {
+          if ("0" == a) {
+            $("#topGui").hide();
+            $("#topGuiConnecting").hide();
+            $("#roomFailed").show();
+          } else {
             a = a.split("!");
             objG_wsConnection.roomID = 0;
-            1 < a.length && (objG_wsConnection.roomID = a[1]);
+            if (1 < a.length) {
+              objG_wsConnection.roomID = a[1];
+            }
             c = a[0];
             a = c.split("/");
             objG_wsConnection.roomNumber = 0;
-            1 < a.length && ((objG_wsConnection.roomNumber = a[1]), (c = a[0]));
+            if (1 < a.length) {
+              objG_wsConnection.roomNumber = a[1];
+              c = a[0];
+            }
             objG_wsConnection.remoteHost = c;
             objG_wsConnection.connect();
           }
@@ -4655,24 +4664,24 @@ class WS_Connection {
     }
   }
   connect() {
-    let b, a;
+    let b;
     if (wa) {
       b = "ws://" + objG_wsConnection.remoteHost!;
       console.log("fullhost: " + b);
       if (bool_isHttps) {
-        (b = objG_wsConnection.remoteHost!.split(":")[0].split(".")),
-          (a = Math.floor(objG_wsConnection.roomNumber) + 8079 + 1e3),
-          (b =
-            "wss://ip-" +
-            b[0] +
-            "-" +
-            b[1] +
-            "-" +
-            b[2] +
-            "-" +
-            b[3] +
-            ".wings.io:" +
-            a);
+        b = objG_wsConnection.remoteHost!.split(":")[0].split(".");
+        let port = Math.floor(objG_wsConnection.roomNumber) + 8079 + 1e3;
+        b =
+          "wss://ip-" +
+          b[0] +
+          "-" +
+          b[1] +
+          "-" +
+          b[2] +
+          "-" +
+          b[3] +
+          ".wings.io:" +
+          port;
         console.log("isSecure RoomNumber: " + objG_wsConnection.roomNumber);
       } else
         0 < objG_wsConnection.roomNumber &&
@@ -4696,9 +4705,10 @@ class WS_Connection {
     } else setTimeout(objG_wsConnection.getServerAndConnect, 100);
   }
   disconnect() {
-    objG_wsConnection.directed &&
-      (func_isIframe() || (window.location.hash = ""),
-      (objG_wsConnection.directed = false));
+    if (objG_wsConnection.directed) {
+      if (!func_isIframe()) window.location.hash = "";
+      objG_wsConnection.directed = false;
+    }
     objG_wsConnection.roomID = 0;
     this.#ws_conn && this.#ws_conn.close();
   }
@@ -5186,7 +5196,7 @@ class WS_Connection {
   sendSingleByte(byte: number) {
     let arr = new ArrayBuffer(1);
     new DataView(arr).setUint8(0, byte);
-    this.#ws_conn.send(arr);
+    this.#ws_conn?.send(arr);
   }
   sendNick(name: string, continue_game: boolean) {
     myName = name;
@@ -5199,7 +5209,7 @@ class WS_Connection {
     datv.setUint8(2, intG_decal_id);
     for (let i = 0; i < name.length; ++i)
       datv.setUint16(3 + 2 * i, name.charCodeAt(i), true);
-    this.#ws_conn.send(arr);
+    this.#ws_conn?.send(arr);
   }
   sendInput() {
     let arr = new ArrayBuffer(10),
@@ -5210,46 +5220,46 @@ class WS_Connection {
     if (objG_inputManager.hover || !wa) uint8_type |= 1;
     if (!wa || bool_following_plane) uint8_type |= 2;
     datv.setUint8(9, uint8_type);
-    this.#ws_conn.send(arr);
+    this.#ws_conn?.send(arr);
   }
   sendDirection() {
     let arr = new ArrayBuffer(9),
       datv = new DataView(arr);
     datv.setUint8(0, 4);
     datv.setFloat64(1, objG_inputManager.angle, true);
-    this.#ws_conn.send(arr);
+    this.#ws_conn?.send(arr);
   }
   sendThrottle() {
     let arr = new ArrayBuffer(2),
       datv = new DataView(arr);
     datv.setUint8(0, 6);
     1 == objG_inputManager.throttle ? datv.setUint8(1, 1) : datv.setUint8(1, 0);
-    this.#ws_conn.send(arr);
+    this.#ws_conn?.send(arr);
   }
   sendBraking(isBraking: boolean) {
     let arr = new ArrayBuffer(2),
       datv = new DataView(arr);
     datv.setUint8(0, 4);
     isBraking ? datv.setUint8(1, 1) : datv.setUint8(1, 0);
-    this.#ws_conn.send(arr);
+    this.#ws_conn?.send(arr);
   }
   sendShooting(isShooting: boolean) {
     let arr = new ArrayBuffer(2),
       datv = new DataView(arr);
     datv.setUint8(0, 5);
     isShooting ? datv.setUint8(1, 1) : datv.setUint8(1, 0);
-    this.#ws_conn.send(arr);
+    this.#ws_conn?.send(arr);
   }
   leave() {
     let arr = new ArrayBuffer(1);
     new DataView(arr).setUint8(0, 7);
-    this.#ws_conn.send(arr);
+    this.#ws_conn?.send(arr);
   }
   ping() {
     if (this.hasConnection) {
       let arr = new ArrayBuffer(1);
       new DataView(arr).setUint8(0, 0);
-      this.#ws_conn.send(arr);
+      this.#ws_conn?.send(arr);
     }
   }
 }
@@ -6151,7 +6161,7 @@ class AnimationManager {
   #runL1: DrawAnimation[] = [];
   #runL2: DrawAnimation[] = [];
   #runBG: DrawAnimation[] = [];
-  #a: ParticleDebrisManager[] = [];
+  #instances_DebrisMan: ParticleDebrisManager[] = [];
   addAnimationInfo(id_anim: string, obj_anim: Animation) {
     this.#animations[id_anim] = obj_anim;
   }
@@ -6201,10 +6211,10 @@ class AnimationManager {
       func_isInsideBox(x, y, 100) &&
       func_isTimeElapsed_50ms()
     ) {
-      if (1 >= this.#a.length) {
+      if (1 >= this.#instances_DebrisMan.length) {
         let n = new ParticleDebrisManager();
         n.init(x, y, v_x, v_y);
-        this.#a.push(n);
+        this.#instances_DebrisMan.push(n);
       }
       this.addBlast(x, y, 1, const_Sa_3, 1);
       objGUI_anchor.shake();
@@ -6213,15 +6223,17 @@ class AnimationManager {
   update(deltatime: number) {
     for (const i in this.#runL1)
       this.#runL1[i].update(deltatime),
-        this.#runL1[i].deleting && this.#runL1.splice(i, 1);
+        this.#runL1[i].deleting && this.#runL1.splice(parseInt(i), 1);
     for (const i in this.#runBG)
       this.#runBG[i].update(deltatime),
-        this.#runBG[i].deleting && this.#runBG.splice(i, 1);
+        this.#runBG[i].deleting && this.#runBG.splice(parseInt(i), 1);
     for (const i in this.#runL2)
       this.#runL2[i].update(deltatime),
-        this.#runL2[i].deleting && this.#runL2.splice(i, 1);
-    for (const i in this.#a)
-      this.#a[i].update(deltatime), this.#a[i].deleting && this.#a.splice(i, 1);
+        this.#runL2[i].deleting && this.#runL2.splice(parseInt(i), 1);
+    for (const i in this.#instances_DebrisMan)
+      this.#instances_DebrisMan[i].update(deltatime),
+        this.#instances_DebrisMan[i].deleting &&
+          this.#instances_DebrisMan.splice(parseInt(i), 1);
   }
   drawBehind(ctx: CanvasRenderingContext2D) {
     for (let b in this.#runBG) {
@@ -6257,14 +6269,15 @@ class AnimationManager {
     }
   }
   drawExplosions(ctx: CanvasRenderingContext2D) {
-    for (let d in this.#a) this.#a[d].draw(ctx);
+    for (let d in this.#instances_DebrisMan)
+      this.#instances_DebrisMan[d].draw(ctx);
   }
 }
 class DrawAnimation {
   #b = 0;
-  #e = 0;
+  #interval = 0;
   #f = 0;
-  frames: FrameImage[];
+  frames!: FrameImage[]; // setup()
   frameCount = 0;
   deleting = false;
   posY = 0;
@@ -6288,16 +6301,16 @@ class DrawAnimation {
   //   return b;
   // }
   setup(anim: Animation) {
-    this.#e = anim.interval;
+    this.#interval = anim.interval;
     this.frames = anim.frames;
     this.frameCount = anim.frames.length;
   }
-  // setInterval(b) {
-  //   this.#e = b;
-  // }
+  setInterval(interval: number) {
+    this.#interval = interval;
+  }
   update(deltatime: number) {
     this.deleting ||
-      (this.#f > this.#e && (this.#b++, (this.#f -= this.#e)),
+      (this.#f > this.#interval && (this.#b++, (this.#f -= this.#interval)),
       (this.#f += deltatime),
       this.#b >= this.frameCount && (this.deleting = true));
   }
@@ -6320,7 +6333,7 @@ class Animation {
   }
 }
 class ParticleU_R {
-  color = {
+  color: Record<string, string | number> = {
     h: "61",
     s: "100%",
     l: "100%",
@@ -6372,10 +6385,10 @@ class ParticleManager {
   #e = 0;
   #f: ParticleU_R[] = [];
   #d = 0;
-  #a: number;
-  #c: number;
-  #g: number;
-  #h: number;
+  #a!: number; // init()
+  #c!: number; // init()
+  #g!: number; // init()
+  #h!: number; // init()
   life = 400;
   debreeAge = 0;
   alpha = 1;
@@ -6468,7 +6481,7 @@ class ParticleManager {
             (g.color.a = l * (1 - this.debreeAge)))
           : ((l = Math.pow(1 - (h - 0.1) / 0.9, 1 + 5 * this.debreeAge)),
             (g.color.a = l.toFixed(2)));
-        g.color.a *= this.alpha;
+        g.color.a = parseFloat(g.color.a as any) * this.alpha;
         0 <= h && 0.25 > h
           ? ((l = h / 0.25),
             (g.color.h = (61 * (1 - l)).toFixed(2)),
@@ -6538,32 +6551,39 @@ class ParticleManager {
   }
 }
 class ParticleDebrisManager {
-  #e: ParticleDebris[] = [];
-  #x: number;
-  #y: number;
+  #debris_instances: ParticleDebris[] = [];
+  #x!: number; // init()
+  #y!: number; // init()
   deleting = false;
-  #b(a: number) {
+  #gen_random(a: number) {
+    // ( -a to a)
     return Math.random() * a - a / 2;
   }
   init(x: number, y: number, v_x: number, v_y: number) {
     let q, n, k, m, l, p, r;
     this.#x = x;
     this.#y = y;
+
     x = 2 + 4 * Math.random();
     y = 2 + 4 * Math.random();
     q = 2 + 4 * Math.random();
     Math.random();
-    (n = Math.PI / 4),
-      (k = this.#b(Math.PI / 2)),
-      (m = this.#b(n) + k),
-      (l = Math.cos(m)),
-      (m = Math.sin(m)),
-      (p = (2 / 3) * Math.PI + this.#b(n) + k),
-      (r = Math.cos(p)),
-      (p = Math.sin(p)),
-      (k = (4 / 3) * Math.PI + this.#b(n) + k),
-      (n = Math.cos(k)),
-      (k = Math.sin(k));
+
+    n = Math.PI / 4;
+    k = this.#gen_random(Math.PI / 2);
+
+    m = this.#gen_random(n) + k;
+    l = Math.cos(m);
+    m = Math.sin(m);
+
+    p = (2 / 3) * Math.PI + this.#gen_random(n) + k;
+    r = Math.cos(p);
+    p = Math.sin(p);
+
+    k = (4 / 3) * Math.PI + this.#gen_random(n) + k;
+    n = Math.cos(k);
+    k = Math.sin(k);
+
     this.addDebree(l * x + v_x, m * x + v_y);
     this.addDebree(r * y + v_x, p * y + v_y);
     this.addDebree(n * q + v_x, k * q + v_y);
@@ -6572,32 +6592,33 @@ class ParticleDebrisManager {
     let debris = new ParticleDebris();
     debris.init(this.#x, this.#y);
     debris.setSpeed(x, y);
-    this.#e.push(debris);
+    this.#debris_instances.push(debris);
   }
   update(deltatime: number) {
     let b = 0;
-    for (let debreeID in this.#e) {
-      let d = this.#e[debreeID];
+    for (let debreeID in this.#debris_instances) {
+      let d = this.#debris_instances[debreeID];
       d.update(deltatime);
-      d.deleting && this.#e.splice(debreeID, 1);
+      d.deleting && this.#debris_instances.splice(parseInt(debreeID), 1);
       b++;
     }
     0 == b && (this.deleting = true);
   }
   draw(ctx: CanvasRenderingContext2D) {
-    for (let debreeID in this.#e) this.#e[debreeID].draw(ctx);
+    for (let debreeID in this.#debris_instances)
+      this.#debris_instances[debreeID].draw(ctx);
   }
 }
 class ParticleDebris {
-  #v_x: number;
-  #v_y: number;
-  #f: number;
-  #d: number;
-  #a: number;
+  #v_x!: number; // setSpeed()
+  #v_y!: number; // setSpeed()
+  #f!: number; // setSpeed()
+  #d!: number; // setSpeed()
+  #a!: number; // setSpeed()
   #c = 0.08;
-  #x: number;
-  #y: number;
-  #obj_particleMan: ParticleManager;
+  #x!: number; // init()
+  #y!: number; // init()
+  #obj_particleMan!: ParticleManager; // init()
   #n = 0;
   deleting = false;
   constructor() {
@@ -6659,7 +6680,7 @@ class Missile {
   controlAngle = -90;
   frameSwitchTime = 40;
   timeToNextFrame = 0;
-  flameState = 1;
+  flameState = true;
   //lastImage;
   first_set = true;
   colorHue = 0;
@@ -6820,26 +6841,23 @@ class Missile {
   }
 }
 class ParticleTrails {
-  #x: number;
-  #y: number;
+  #x: number = 0;
+  #y: number = 0;
   tailAddJointInterval = 50;
   timeToNextJoint = 0;
-  tailJoints = [[]];
+  tailJoints: [Trail.TrailSegment[]] = [[]];
   trailTimeEffectStart = 600;
   trailTime = 600;
   trailEffectTime = 0;
   enabled = false;
   width = 1;
   fixedColor = false;
-  style;
+  style = "rgba(255, 255, 255, 0.0)";
   update(deltatime: number) {
-    let d = this.tailJoints.length - 1,
-      c,
-      g,
-      a;
+    let d = this.tailJoints.length - 1;
     if (0 >= this.timeToNextJoint && -1 < d) {
       this.timeToNextJoint = this.tailAddJointInterval;
-      this.enabled &&
+      if (this.enabled)
         this.tailJoints[d].push({
           x: this.#x,
           y: this.#y,
@@ -6849,31 +6867,34 @@ class ParticleTrails {
           fx: (600 - Math.abs(this.trailEffectTime - 600)) / 600,
           style: this.style,
         });
-      for (a = 0; a <= d; a++) {
-        c = this.tailJoints[a].length;
+      for (let i = 0; i <= d; i++) {
+        let c = this.tailJoints[i].length;
         if (0 < c) {
-          c = frametime_millis - this.tailJoints[a][0].t;
+          c = frametime_millis - this.tailJoints[i][0].t;
           c > this.trailTime &&
-            (this.tailJoints[a].splice(0, 1),
-            0 == this.tailJoints[a].length && this.tailJoints.splice(a, 1));
+            (this.tailJoints[i].splice(0, 1),
+            0 == this.tailJoints[i].length && this.tailJoints.splice(i, 1));
           break;
         }
       }
     }
-    for (
-      g = this.timeToNextJoint / 50, d = this.tailJoints.length - 1, a = 0;
-      a <= d;
-      a++
-    )
-      (c = this.tailJoints[a].length),
-        1 >= c ||
-          ((c = frametime_millis - this.tailJoints[a][0].t),
-          c > this.trailTime - this.tailAddJointInterval &&
-            ((c = this.tailJoints[a][0].origY - this.tailJoints[a][1].origY),
-            (this.tailJoints[a][0].x =
-              this.tailJoints[a][1].origX +
-              (this.tailJoints[a][0].origX - this.tailJoints[a][1].origX) * g),
-            (this.tailJoints[a][0].y = this.tailJoints[a][1].origY + c * g)));
+    let tail_remain = this.timeToNextJoint / 50;
+    d = this.tailJoints.length - 1;
+    for (let i = 0; i <= d; i++) {
+      let c = this.tailJoints[i].length;
+      if (!(1 >= c)) {
+        c = frametime_millis - this.tailJoints[i][0].t;
+        if (c > this.trailTime - this.tailAddJointInterval) {
+          c = this.tailJoints[i][0].origY - this.tailJoints[i][1].origY;
+          this.tailJoints[i][0].x =
+            this.tailJoints[i][1].origX +
+            (this.tailJoints[i][0].origX - this.tailJoints[i][1].origX) *
+              tail_remain;
+          this.tailJoints[i][0].y =
+            this.tailJoints[i][1].origY + c * tail_remain;
+        }
+      }
+    }
     this.timeToNextJoint -= deltatime;
     this.trailEffectTime =
       0 > this.trailEffectTime ? 0 : this.trailEffectTime - deltatime;
@@ -6882,7 +6903,7 @@ class ParticleTrails {
     if (bool_drawTrails)
       for (let d = this.tailJoints.length, a = 0; a < d; a++)
         for (let c = this.tailJoints[a].length, e = 0; e < c - 1; e++) {
-          ctx.strokeStyle = this.tailJoints[a][e].style;
+          ctx.strokeStyle = this.tailJoints[a][e].style!;
           let h = (e / c) * (8 + 8 * this.tailJoints[a][e].fx);
           0 == h && (h = 0.1);
           ctx.lineWidth = h * this.width;
@@ -6907,21 +6928,21 @@ class ParticleTrails {
   }
 }
 class ParticleFlags {
-  #x: number;
-  #y: number;
-  tailJoints = [[]];
+  #x: number = 0;
+  #y: number = 0;
+  tailJoints: [Trail.TrailSegment[]] = [[]];
   maxPoints = 1;
   flagDivisions = 5;
   letterMinDistance = 10;
   pointMinDistance = 10;
-  texture;
-  textureWidth;
-  textureHeight;
+  texture!: HTMLImageElement; //setTexture()
+  textureWidth!: number; //loaded
+  textureHeight!: number; //loaded
   loaded = false;
   enabled = false;
   width = 1;
-  style;
-  flagHeight;
+  style = "rgba(255, 255, 255, 0.3)";
+  flagHeight!: number; //loaded
   flipX = false;
   flipY = true;
   stringScale = 1;
@@ -6944,24 +6965,27 @@ class ParticleFlags {
     };
   }
   update(deltatime: number) {
-    deltatime = false;
-    let d = this.tailJoints[0].length;
-    if (0 == d) deltatime = true;
+    let complete = false;
+    let count = this.tailJoints[0].length;
+    if (0 == count) complete = true;
     else {
-      let a = this.tailJoints[0][d - 1],
-        c = (a = Math.sqrt(
-          Math.pow(a.x - this.#x, 2) + Math.pow(a.y - this.#y, 2),
-        ));
-      1 < d &&
-        ((c = this.tailJoints[0][d - 2]),
-        (c = Math.sqrt(
-          Math.pow(c.x - this.#x, 2) + Math.pow(c.y - this.#y, 2),
-        )));
-      a > this.pointMinDistance &&
-        c > 3 * this.pointMinDistance &&
-        (deltatime = true);
+      let tail_segment = this.tailJoints[0][count - 1];
+      let c = Math.sqrt(
+        Math.pow(tail_segment.x - this.#x, 2) +
+          Math.pow(tail_segment.y - this.#y, 2),
+      );
+      let c_old = c;
+      if (1 < count) {
+        let tail_segment = this.tailJoints[0][count - 2];
+        c = Math.sqrt(
+          Math.pow(tail_segment.x - this.#x, 2) +
+            Math.pow(tail_segment.y - this.#y, 2),
+        );
+      }
+      if (c_old > this.pointMinDistance && c > 3 * this.pointMinDistance)
+        complete = true;
     }
-    deltatime &&
+    complete &&
       (this.tailJoints[0].push({
         x: this.#x,
         y: this.#y,
@@ -6971,7 +6995,7 @@ class ParticleFlags {
         fx: 0,
         style: this.style,
       }),
-      d > this.maxPoints && this.tailJoints[0].splice(0, 1));
+      count > this.maxPoints && this.tailJoints[0].splice(0, 1));
   }
   draw(ctx: CanvasRenderingContext2D) {
     if (bool_drawTrails && this.loaded && 0 < this.tailJoints.length)
@@ -7156,41 +7180,59 @@ class ParticleFlags {
     this.tailJoints = [[]];
   }
 }
+namespace Trail {
+  export type TrailSegment = {
+    x: number;
+    y: number;
+    origX: number;
+    origY: number;
+    t: number;
+    fx: number;
+    style: string;
+  };
+}
 class ScoreAccumInfo {
-  #b: ScoreAccumInfo.HTMLCanvasElementExtended[] = [];
-  #e: number[] = [];
-  #f: number;
+  #drawable_canvas_img: ScoreAccumInfo.HTMLCanvasElementExtended[] = [];
+  #inst_create_time_list: number[] = [];
+  #last_inst_time?: number;
   update(deltatime: number) {
-    0 < this.#e.length &&
-      2e3 < frametime_millis - this.#e[0] &&
-      (this.#b.shift(), this.#e.shift());
+    0 < this.#inst_create_time_list.length &&
+      2e3 < frametime_millis - this.#inst_create_time_list[0] &&
+      (this.#drawable_canvas_img.shift(), this.#inst_create_time_list.shift());
   }
   draw(ctx: CanvasRenderingContext2D) {
     ctx.globalAlpha = 1;
-    for (let a in this.#b) {
-      let c = this.#b[a],
-        f = Math.sqrt((frametime_millis - this.#e[a]) / 2e3),
+    for (let i in this.#drawable_canvas_img) {
+      let canvas_img = this.#drawable_canvas_img[i],
+        f = Math.sqrt(
+          (frametime_millis - this.#inst_create_time_list[i]) / 2e3,
+        ),
         h = 0.8 >= f ? f / 0.8 : 1 - (f - 0.8) / 0.2;
       ctx.globalAlpha = h;
-      ctx.drawImage(c, -c.width / 2, 40 * -f - 10);
+      ctx.drawImage(canvas_img, -canvas_img.width / 2, 40 * -f - 10);
     }
     ctx.globalAlpha = 1;
   }
   addScore(diff: number) {
     let a = false,
       c;
-    this.#f && 500 > frametime_millis - this.#f && (a = true);
+    this.#last_inst_time &&
+      500 > frametime_millis - this.#last_inst_time &&
+      (a = true);
     c = new StyleStroke(13, "#FFFFFF");
     c.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
     a
-      ? (diff = this.#b[this.#b.length - 1].number + diff)
-      : (this.#f = frametime_millis);
+      ? (diff =
+          this.#drawable_canvas_img[this.#drawable_canvas_img.length - 1]
+            .number + diff)
+      : (this.#last_inst_time = frametime_millis);
     c.setValue("+" + diff);
     c = c.render() as ScoreAccumInfo.HTMLCanvasElementExtended;
     c.number = diff;
     a
-      ? (this.#b.pop(), this.#b.push(c))
-      : (this.#b.push(c), this.#e.push(+new Date()));
+      ? (this.#drawable_canvas_img.pop(), this.#drawable_canvas_img.push(c))
+      : (this.#drawable_canvas_img.push(c),
+        this.#inst_create_time_list.push(+new Date()));
   }
 }
 namespace ScoreAccumInfo {
@@ -7199,9 +7241,9 @@ namespace ScoreAccumInfo {
   };
 }
 class SFXmanager {
-  #b = false;
-  #e: Record<string, number> = {};
-  #f: SFXmanager.SoundSpriteDefinitions = {
+  #isLoaded = false;
+  #instance_tracker: Record<string, number> = {};
+  #clip_info: SFXmanager.SoundSpriteDefinitions = {
     bigsplash: [0, 1889.795918367347],
     cannonshoot: [3e3, 777.8684807256235],
     crash: [5e3, 991.7913832199545],
@@ -7235,9 +7277,9 @@ class SFXmanager {
         "sounds/out.mp3",
         "sounds/out.ac3",
       ],
-      sprite: this.#f,
+      sprite: this.#clip_info,
       onload: () => {
-        this.#b = true;
+        this.#isLoaded = true;
         callback && callback();
       },
     });
@@ -7249,11 +7291,14 @@ class SFXmanager {
     max_parallel: number,
     callback: null | ((nodeId: number) => void),
   ) {
-    if (this.#b && 0 != num_setting_muteVol && wa) {
+    if (this.#isLoaded && 0 != num_setting_muteVol && wa) {
       volume *= num_max_volume;
-      let q = this.#f[sfx_name];
-      this.#e[sfx_name] || (this.#e[sfx_name] = 0);
-      if (!(0 < max_parallel && this.#e[sfx_name] >= max_parallel)) {
+      let q = this.#clip_info[sfx_name];
+      this.#instance_tracker[sfx_name] ||
+        (this.#instance_tracker[sfx_name] = 0);
+      if (
+        !(0 < max_parallel && this.#instance_tracker[sfx_name] >= max_parallel)
+      ) {
         this.sound.play(sfx_name, (nodeId: number) => {
           let gameNode = objG_sfxManager.sound._nodeById(nodeId);
           gameNode &&
@@ -7262,9 +7307,9 @@ class SFXmanager {
           objG_sfxManager.sound.volume(volume, nodeId);
           callback && callback(nodeId);
         });
-        max_parallel != const_Q_0 && this.#e[sfx_name]++;
+        max_parallel != const_Q_0 && this.#instance_tracker[sfx_name]++;
         setTimeout(() => {
-          max_parallel != const_Q_0 && this.#e[sfx_name]--;
+          max_parallel != const_Q_0 && this.#instance_tracker[sfx_name]--;
         }, q[1]);
       }
     }
@@ -7302,52 +7347,60 @@ namespace SFXmanager {
 }
 class UI_KillStatus {
   #b: number[] = [];
-  #f = null;
-  #d = null;
-  #a = null;
-  #c = null;
-  #g = 0;
+  #s1?: StyleStroke;
+  #txt1?: HTMLCanvasElement;
+  #s2?: StyleStroke;
+  #draw_frame?: HTMLCanvasElement | FrameImage;
+  #opacity = 0;
   #h = 0;
   #e = 2e3;
   #q = false;
-  #n = 1;
-  #k = false;
+  #scale = 1;
   #m = 0;
   #l = 0;
-  #currentText2Render;
+  #txt2?: HTMLCanvasElement;
   update(deltatime: number) {
-    1 == this.#g &&
-      ((this.#h += deltatime), this.#h > this.#e && (this.#q = true));
+    if (1 == this.#opacity) {
+      this.#h += deltatime;
+      if (this.#h > this.#e) this.#q = true;
+    }
     this.#q
-      ? ((this.#g -= 0.2),
-        0 > this.#g &&
-          ((this.#g = 0),
+      ? ((this.#opacity -= 0.2),
+        0 > this.#opacity &&
+          ((this.#opacity = 0),
           this.#b.shift(),
-          0 < this.#b.length ? this.processCode(this.#b[0]) : (this.#d = null)),
-        (this.#m = -(1 - this.#g)))
-      : (1 > this.#g && ((this.#g += 0.2), 1 < this.#g && (this.#g = 1)),
-        (this.#m = 1 - (1.5 * this.#g - 0.75) / 0.75));
+          0 < this.#b.length
+            ? this.processCode(this.#b[0])
+            : (this.#txt1 = undefined)),
+        (this.#m = -(1 - this.#opacity)))
+      : (1 > this.#opacity &&
+          ((this.#opacity += 0.2), 1 < this.#opacity && (this.#opacity = 1)),
+        (this.#m = 1 - (1.5 * this.#opacity - 0.75) / 0.75));
   }
   draw(ctx: CanvasRenderingContext2D) {
-    this.#d &&
-      ((ctx.globalAlpha = this.#g),
+    if (this.#txt1) {
+      ctx.globalAlpha = this.#opacity;
       ctx.scale(
-        (this.#n + 0.2 * this.#m) * num_scale_factor,
-        (this.#n + 0.2 * this.#m) * num_scale_factor,
-      ),
-      ctx.drawImage(this.#d, -this.#d.width / 2, -this.#d.height + 120),
+        (this.#scale + 0.2 * this.#m) * num_scale_factor,
+        (this.#scale + 0.2 * this.#m) * num_scale_factor,
+      );
       ctx.drawImage(
-        this.#currentText2Render,
-        -this.#currentText2Render.width / 2,
-        110,
-      ),
-      this.#k
-        ? ((this.#c.y = 30), this.#c.draw(ctx))
-        : ctx.drawImage(
-            this.#c,
-            -this.#c.width / 2 - 5,
-            -this.#c.height - this.#d.height + 120,
-          ));
+        this.#txt1,
+        -this.#txt1.width / 2,
+        -this.#txt1.height + 120,
+      );
+      ctx.drawImage(this.#txt2!, -this.#txt2!.width / 2, 110);
+      if (this.#draw_frame!.constructor === FrameImage) {
+        this.#draw_frame.y = 30;
+        this.#draw_frame.draw(ctx);
+      } else if (this.#draw_frame!.constructor === HTMLCanvasElement) {
+        ctx.drawImage(
+          this.#draw_frame,
+          -this.#draw_frame.width / 2 - 5,
+          -this.#draw_frame.height - this.#txt1.height + 120,
+        );
+      }
+    }
   }
   replaceCode(flag_streak: number) {
     for (let c in this.#b) {
@@ -7372,81 +7425,85 @@ class UI_KillStatus {
   }
   processCode(flag_streak: number) {
     this.#q = false;
-    this.#g = this.#h = 0;
-    let e = "",
-      m = "KILL",
-      s;
-    this.#k = false;
-    8 == flag_streak
-      ? ((e = "DOUBLE"),
-        (s = "#cd9a6d"),
-        (this.#c = objG_assets.doubleKillCanvas),
-        (this.#n = 0.8))
-      : 16 == flag_streak
-        ? ((e = "TRIPLE"),
-          (s = "#95b9c9"),
-          (this.#c = objG_assets.tripleKillCanvas),
-          (this.#n = 0.9),
-          (m += "!"))
-        : 32 == flag_streak
-          ? ((e = "QUAD"),
-            (s = "#f0a400"),
-            (this.#c = objG_assets.quadKillCanvas),
-            (this.#n = 1),
-            (m += "!!"))
-          : 64 == flag_streak
-            ? ((e = "MULTI"),
-              (s = "#de0000"),
-              (this.#c = objG_assets.multiKillCanvas),
-              (this.#n = 1.1),
-              (m += "!!"))
-            : 128 == flag_streak
-              ? ((e = "NEAR"),
-                (s = "#ffe774"),
-                (this.#c = objG_assets.frames.nearmiss),
-                (this.#n = 0.8),
-                (m = "MISS"),
-                (this.#k = true))
-              : 4096 == flag_streak
-                ? ((e = "REVENGE"),
-                  (s = "#dd1824"),
-                  (this.#c = objG_assets.frames.revenge),
-                  (this.#n = 1),
-                  (m = "KILL"),
-                  (this.#k = true))
-                : 256 == flag_streak &&
-                  ((e = this.#l + " KILL STREAK!"),
-                  (s = "#a5dd11"),
-                  (this.#c = objG_assets.frames.frenzy),
-                  (this.#n = 0.8),
-                  (m = ""),
-                  (this.#k = true));
-    "" != e &&
-      ((this.#f = new StyleStroke(40, s, true, "#000000")),
-      this.#f.setValue(e),
-      this.#f.setStrokeWidth(10),
-      (this.#d = this.#f.render()),
-      (this.#a = new StyleStroke(40, s, true, "#000000")),
-      this.#a.setValue(m),
-      this.#a.setStrokeWidth(10),
-      (this.#currentText2Render = this.#a.render()));
+    this.#opacity = this.#h = 0;
+    let str_type = "",
+      str_postfix = "KILL",
+      color;
+    if (8 == flag_streak) {
+      str_type = "DOUBLE";
+      color = "#cd9a6d";
+      this.#draw_frame = objG_assets.doubleKillCanvas;
+      this.#scale = 0.8;
+    } else if (16 == flag_streak) {
+      str_type = "TRIPLE";
+      color = "#95b9c9";
+      this.#draw_frame = objG_assets.tripleKillCanvas;
+      this.#scale = 0.9;
+      str_postfix += "!";
+    } else if (32 == flag_streak) {
+      str_type = "QUAD";
+      color = "#f0a400";
+      this.#draw_frame = objG_assets.quadKillCanvas;
+      this.#scale = 1;
+      str_postfix += "!!";
+    } else if (64 == flag_streak) {
+      str_type = "MULTI";
+      color = "#de0000";
+      this.#draw_frame = objG_assets.multiKillCanvas;
+      this.#scale = 1.1;
+      str_postfix += "!!";
+    } else if (128 == flag_streak) {
+      str_type = "NEAR";
+      color = "#ffe774";
+      this.#draw_frame = objG_assets.frames.nearmiss;
+      this.#scale = 0.8;
+      str_postfix = "MISS";
+    } else if (4096 == flag_streak) {
+      str_type = "REVENGE";
+      color = "#dd1824";
+      this.#draw_frame = objG_assets.frames.revenge;
+      this.#scale = 1;
+      str_postfix = "KILL";
+    } else if (256 == flag_streak) {
+      str_type = this.#l + " KILL STREAK!";
+      color = "#a5dd11";
+      this.#draw_frame = objG_assets.frames.frenzy;
+      this.#scale = 0.8;
+      str_postfix = "";
+    }
+    if ("" != str_type) {
+      this.#s1 = new StyleStroke(40, color, true, "#000000");
+      this.#s1.setValue(str_type);
+      this.#s1.setStrokeWidth(10);
+      this.#txt1 = this.#s1.render();
+      this.#s2 = new StyleStroke(40, color, true, "#000000");
+      this.#s2.setValue(str_postfix);
+      this.#s2.setStrokeWidth(10);
+      this.#txt2 = this.#s2.render();
+    }
   }
   clearNearMiss() {
-    for (let a in this.#b)
-      if (128 == this.#b[a]) {
-        0 == a ? (this.#h = this.#e) : this.#b.splice(a, 1);
+    for (let i in this.#b)
+      if (128 == this.#b[i]) {
+        if (i == "0") {
+          this.#h = this.#e;
+        } else {
+          this.#b.splice(parseInt(i), 1);
+        }
         break;
       }
   }
   clear() {
     this.#b = [];
-    null != this.#d && (this.#q = true);
+    if (this.#txt1 != null) {
+      this.#q = true;
+    }
   }
   shouldDraw() {
-    return this.#g;
+    return this.#opacity;
   }
 }
-class Warship {
+class SpecialEntity {
   #e = 1;
   #f = 20;
   #d = 100;
@@ -7479,11 +7536,14 @@ class Warship {
   name = "";
   first_set = true;
   type = 0;
-  warshipContext = null;
-  warshipCanvas = null;
+  warshipContext?: CanvasRenderingContext2D;
+  warshipCanvas?: HTMLCanvasElement;
   fragment = 1;
   recoilTime = 0;
   cannonAngle = 0;
+  dstCannonAngle = 0;
+  origCannonAngle = 0;
+  speed = 0;
   update(deltatime: number) {
     if (this.inGame) {
       func_isInsideBox(this.x, this.y + this.floatValue, 120)
@@ -7539,7 +7599,7 @@ class Warship {
   }
   loadWarshipCanvas() {
     let a = document.createElement("canvas"),
-      b = a.getContext("2d"),
+      b = a.getContext("2d")!,
       d = objG_assets.warshipImage.height;
     a.width = objG_assets.warshipImage.width;
     a.height = d;
@@ -7550,11 +7610,11 @@ class Warship {
     if (this.inGame && this.#b)
       if (this.type == id_entity_warship && objG_assets.warshipLoaded) {
         if (
-          (objG_assets.warshipImage &&
-            !this.warshipCanvas &&
-            this.loadWarshipCanvas(),
-          this.warshipCanvas)
-        ) {
+          objG_assets.warshipImage &&
+          (!this.warshipCanvas || !this.warshipContext)
+        )
+          this.loadWarshipCanvas();
+        if (this.warshipCanvas && this.warshipContext) {
           ctx.save();
           ctx.globalAlpha = this.#a;
           ctx.translate(this.x, this.y - 4);
@@ -7636,34 +7696,36 @@ class Warship {
           ctx.restore());
   }
   drawReflection(ctx: CanvasRenderingContext2D, deltatime: number) {
-    this.inGame &&
-      this.#b &&
-      this.type == id_entity_warship &&
-      objG_assets.warshipLoaded &&
-      (ctx.save(),
-      (ctx.globalAlpha = 0.15 * this.#a),
-      ctx.translate(this.x, this.y + this.warshipCanvas.height - 4),
-      ctx.scale(1, -1),
-      ctx.drawImage(
-        this.warshipCanvas,
-        -objG_assets.warshipImage.width / 2,
-        -objG_assets.warshipImage.height / 2,
-      ),
-      ctx.restore(),
-      ctx.save(),
-      ctx.translate(
-        this.x + 85 + this.floatValue + 100 * this.angle,
-        this.y + this.warshipCanvas.height / 2 - 4,
-      ),
-      (ctx.globalAlpha = this.#e * this.#a),
-      ctx.beginPath(),
-      ctx.moveTo(-3, 1.5),
-      ctx.lineTo(0, -1.5),
-      ctx.lineTo(-300, 0),
-      (ctx.fillStyle = "rgba(255,255,255,1.0)"),
-      ctx.fill(),
-      ctx.restore(),
-      (ctx.globalAlpha = 1));
+    if (this.warshipCanvas && this.warshipContext) {
+      this.inGame &&
+        this.#b &&
+        this.type == id_entity_warship &&
+        objG_assets.warshipLoaded &&
+        (ctx.save(),
+        (ctx.globalAlpha = 0.15 * this.#a),
+        ctx.translate(this.x, this.y + this.warshipCanvas.height - 4),
+        ctx.scale(1, -1),
+        ctx.drawImage(
+          this.warshipCanvas,
+          -objG_assets.warshipImage.width / 2,
+          -objG_assets.warshipImage.height / 2,
+        ),
+        ctx.restore(),
+        ctx.save(),
+        ctx.translate(
+          this.x + 85 + this.floatValue + 100 * this.angle,
+          this.y + this.warshipCanvas.height / 2 - 4,
+        ),
+        (ctx.globalAlpha = this.#e * this.#a),
+        ctx.beginPath(),
+        ctx.moveTo(-3, 1.5),
+        ctx.lineTo(0, -1.5),
+        ctx.lineTo(-300, 0),
+        (ctx.fillStyle = "rgba(255,255,255,1.0)"),
+        ctx.fill(),
+        ctx.restore(),
+        (ctx.globalAlpha = 1));
+    }
   }
   drawInput(ctx: CanvasRenderingContext2D) {}
   drawInfo(ctx: CanvasRenderingContext2D) {
@@ -7697,21 +7759,21 @@ class Warship {
       ctx.restore();
     }
   }
-  hit(a: number) {
+  hit(id_weapon: number) {
     func_isTimeElapsed_50ms() &&
       ((this.highlightValue =
-        a == id_weapon_missile || this.type == id_entity_asteroid
+        id_weapon == id_weapon_missile || this.type == id_entity_asteroid
           ? this.highlightValue + 1
           : this.highlightValue + 0.3),
       1 < this.highlightValue && (this.highlightValue = 1));
   }
-  setPose(a, b, d) {
+  setPose(x_gu: number, y_gu: number, angle: number) {
     this.origX = this.x;
     this.origY = this.y;
     this.origAngle = this.dstAngle;
-    this.dstX = 10 * a;
-    this.dstY = 10 * b;
-    this.dstAngle = d;
+    this.dstX = 10 * x_gu;
+    this.dstY = 10 * y_gu;
+    this.dstAngle = angle;
     this.first_set
       ? ((this.origX = this.dstX),
         (this.origY = this.dstY),
@@ -7719,32 +7781,32 @@ class Warship {
         (this.y = this.dstY),
         (this.origAngle = this.dstAngle),
         (this.first_set = false))
-      : ((a = this.dstX - this.origX),
-        (b = this.dstY - this.origY),
-        (this.speed = Math.sqrt(a * a + b * b) / 3));
+      : ((x_gu = this.dstX - this.origX),
+        (y_gu = this.dstY - this.origY),
+        (this.speed = Math.sqrt(x_gu * x_gu + y_gu * y_gu) / 3));
     this.inGame || (this.inGame = true);
   }
-  setFloatValue(a) {
+  setFloatValue(float_gu: number) {
     this.origFloatValue = this.floatValue;
-    this.dstFloatValue = 10 * a;
+    this.dstFloatValue = 10 * float_gu;
     this.first_set && (this.floatValue = this.dstFloatValue);
   }
-  setType(flag_type: number) {
-    this.type = flag_type;
+  setType(entity_type: number) {
+    this.type = entity_type;
   }
-  setState(a) {
-    this.state = a;
+  setState(flag_state: number) {
+    this.state = flag_state;
   }
-  setEnergy(a) {
-    this.energy = a;
+  setEnergy(energy: number) {
+    this.energy = energy;
   }
-  setFragment(b) {
-    this.fragment = b;
-    3 != b && 1 == b && (this.#a = 0);
+  setFragment(frag: number) {
+    this.fragment = frag;
+    3 != frag && 1 == frag && (this.#a = 0);
   }
-  setCannonAngle(a) {
+  setCannonAngle(angle: number) {
     this.origCannonAngle = this.cannonAngle;
-    this.dstCannonAngle = a;
+    this.dstCannonAngle = angle;
     this.first_set && (this.cannonAngle = this.dstCannonAngle);
   }
   cannonShoot() {
@@ -7761,8 +7823,6 @@ class Warship {
     this.inGame = false;
   }
 }
-
-//window.location.href.split("/");
 
 let search_params = window.location.search;
 if ("?" == search_params.charAt(0)) {
