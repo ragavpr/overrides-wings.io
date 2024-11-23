@@ -617,7 +617,7 @@
           <button
             type="submit"
             id="muteButton"
-            onclick="toggleMute(); return false;"
+            onclick="W_toggleMute(); return false;"
             class="btn-naked"
           >
             <img id="soundImg" src="images/sound_on.png" />
@@ -651,14 +651,14 @@
               disabled
               type="submit"
               id="spectateButton"
-              onclick="setSpectate(); return false;"
+              onclick="W_setSpectate(); return false;"
               class="btn btn-info btn-primary btn-spectate btn-needs-server"
             ></button>
             <button
               disabled
               type="submit"
               id="playButton"
-              onclick="clickPlay(document.getElementById('nick').value); return false;"
+              onclick="W_clickPlay(document.getElementById('nick').value); return false;"
               class="btn btn-play btn-primary btn-needs-server"
             >
               Play
@@ -667,7 +667,7 @@
               id="btnCfg"
               type="submit"
               id="skinsButton"
-              onclick="switchSkins(); return false;"
+              onclick="W_switchSkins(); return false;"
               class="btn btn-primary btn-cfg"
             >
               <img name="jsbutton" height="15" />
@@ -699,7 +699,7 @@
                 <button
                   type="submit"
                   id="continueButton"
-                  onclick="setContinue(); return false;"
+                  onclick="W_setContinue(); return false;"
                   class="btn btn-continue btn-primary"
                 >
                   Continue
@@ -749,7 +749,7 @@
                 <button
                   type="submit"
                   id="skinsButton"
-                  onclick="setSkinColor(0); return false;"
+                  onclick="W_setSkinColor(0); return false;"
                   class="btn btn-primary btn-color btn-color1"
                 >
                   <img
@@ -762,7 +762,7 @@
                 <button
                   type="submit"
                   id="skinsButton"
-                  onclick="setSkinColor(1); return false;"
+                  onclick="W_setSkinColor(1); return false;"
                   class="btn btn-primary btn-color btn-color2"
                 >
                   <img
@@ -775,7 +775,7 @@
                 <button
                   type="submit"
                   id="skinsButton"
-                  onclick="setSkinColor(2); return false;"
+                  onclick="W_setSkinColor(2); return false;"
                   class="btn btn-primary btn-color btn-color3"
                 >
                   <img
@@ -788,7 +788,7 @@
                 <button
                   type="submit"
                   id="skinsButton"
-                  onclick="setSkinColor(3); return false;"
+                  onclick="W_setSkinColor(3); return false;"
                   class="btn btn-primary btn-color btn-color4"
                 >
                   <img
@@ -801,7 +801,7 @@
                 <button
                   type="submit"
                   id="skinsButton"
-                  onclick="setSkinColor(4); return false;"
+                  onclick="W_setSkinColor(4); return false;"
                   class="btn btn-primary btn-color btn-color5"
                 >
                   <img
@@ -814,7 +814,7 @@
                 <button
                   type="submit"
                   id="skinsButton"
-                  onclick="setSkinColor(5); return false;"
+                  onclick="W_setSkinColor(5); return false;"
                   class="btn btn-primary btn-color btn-color6"
                 >
                   <img
@@ -833,7 +833,7 @@
                 <button
                   type="submit"
                   id="skinsButton1"
-                  onclick="setDecal(0); return false;"
+                  onclick="W_setDecal(0); return false;"
                   class="btn btn-primary btn-decal btn-test btn-decal1"
                 >
                   <img
@@ -846,7 +846,7 @@
                 <button
                   type="submit"
                   id="skinsButton"
-                  onclick="setDecal(1); return false;"
+                  onclick="W_setDecal(1); return false;"
                   class="btn btn-primary btn-decal btn-test btn-decal2"
                 >
                   <img
@@ -859,7 +859,7 @@
                 <button
                   type="submit"
                   id="skinsButton"
-                  onclick="setDecal(2); return false;"
+                  onclick="W_setDecal(2); return false;"
                   class="btn btn-primary btn-decal btn-test btn-decal3"
                 >
                   <img
@@ -872,7 +872,7 @@
                 <button
                   type="submit"
                   id="skinsButton"
-                  onclick="setDecal(3); return false;"
+                  onclick="W_setDecal(3); return false;"
                   class="btn btn-primary btn-decal btn-test btn-decal4"
                 >
                   <img
@@ -885,7 +885,7 @@
                 <button
                   type="submit"
                   id="skinsButton"
-                  onclick="setDecal(4); return false;"
+                  onclick="W_setDecal(4); return false;"
                   class="btn btn-primary btn-decal btn-test btn-decal5"
                 >
                   <img
@@ -898,7 +898,7 @@
                 <button
                   type="submit"
                   id="skinsButton"
-                  onclick="setDecal(5); return false;"
+                  onclick="W_setDecal(5); return false;"
                   class="btn btn-primary btn-decal btn-test btn-decal6"
                 >
                   <img
@@ -919,7 +919,7 @@
                 ><input
                   type="checkbox"
                   id="cbox1"
-                  onclick="clickNoNames(this); return true;"
+                  onclick="W_clickNoNames(this); return true;"
                 /><span class="notbold"> No Names</span></label
               >
             </div>
@@ -988,13 +988,13 @@
       </a>
     </footer>
     <footer hidden id="copyLink" class="leftBox">
-      <a href="javascript:copyRoomLink();"
+      <a href="javascript:W_copyRoomLink();"
         ><font style="font-weight: bold; font-size: 15px"
           >Copy Room Link</font
         ></a
       >
       •
-      <a href="javascript:toggleGraphics();"
+      <a href="javascript:W_toggleGraphics();"
         ><font id="graphicsID" style="font-weight: bold; font-size: 15px"
           >Graphics: High</font
         ></a
@@ -1076,7 +1076,7 @@
       <button
         id="copyButton"
         type="submit"
-        onclick="setCopy(); return false;"
+        onclick="W_setCopy(); return false;"
         class="btn btn-copy btn-primary"
       >
         Copy

@@ -1,3 +1,5 @@
+import ads from "./lib/ads";
+import tracking from "./lib/tracking";
 import { EventManager } from "./lib/EventManager";
 import { ParticleDust } from "./lib/ParticleDust";
 type GameSheetMapping = [
@@ -9,6 +11,7 @@ type GameSheetMapping = [
   u1: number,
   u2: number,
 ]
+const canvas = $("#canvas")[0] as HTMLCanvasElement;
 let Zb,
   $b,
   bool_isHttps = "https:" == window.location.protocol,
@@ -99,10 +102,7 @@ let Zb,
   ia: number,
   na: number,
   nb: number,
-  Cb = true,
-  lc = 2,
   xa = false,
-  int_ads_refreshed = 0,
   bool_drawClouds = true,
   bool_drawWater = true,
   bool_drawExplosions = true,
@@ -141,7 +141,7 @@ let Zb,
   bool_internet_explorer =
     -1 < str_browser_user_agent.indexOf("MSIE ") ||
     -1 < str_browser_user_agent.indexOf("Trident/"),
-  timeout_ws_conn: Timer,
+  timeout_ws_conn: Timer | undefined,
   Sb = false,
   str_font_name = "Arial Black",
   id_weapon_machinegun = 1,
@@ -327,14 +327,17 @@ const func_detect_country = () => {
     "text",
   );
 };
-const Rb = () => {
+const requestAnimationFrameCallback = () => {
   frametime_millis = +new Date();
   let deltatime = 0;
-  0 < last_frametime_millis && (deltatime = frametime_millis - last_frametime_millis);
+  if(0 < last_frametime_millis) {
+    deltatime = frametime_millis - last_frametime_millis;
+  }
   last_frametime_millis = frametime_millis;
   objG_followMode.update(deltatime);
   objG_followMode.draw(deltatime);
-  window.requestAnimationFrame && window.requestAnimationFrame(Rb);
+  if(window.requestAnimationFrame)
+    window.requestAnimationFrame(requestAnimationFrameCallback);
   Lb && (Lb = false);
 };
 function func_displaySelectedColor(int_color_id: number) {
@@ -424,48 +427,6 @@ function func_displayMuteAudio() {
   window.localStorage.muteVol = num_setting_muteVol;
   ($("#soundImg")[0] as HTMLImageElement).src = b;
 }
-function func_showAds() {
-  window.mixpanel &&
-    window.mixpanel.track("Ad Impression Opportunity", {
-      domain: window.location.hostname,
-    });
-  if (null != adsense && adsense)
-    0 == int_ads_refreshed &&
-      cpmstarAPI({
-        kind: "createmodule",
-        module: "anchor78670",
-        config: {
-          kind: "anchor",
-          options: {
-            dir: 1,
-            width: "1050px",
-          },
-          request: {
-            poolid: "78670",
-            kind: "banner",
-          },
-        },
-      }),
-      window.googletag &&
-        (window.googletag.cmd.push(() => {
-          Cb &&
-            ((Cb = false),
-            setTimeout(() => {
-              Cb = true;
-            }, 6e4 * lc),
-            window.googletag &&
-              window.googletag.pubads &&
-              window.googletag.pubads().refresh &&
-              window.googletag.pubads().refresh(window.ads));
-        }),
-        int_ads_refreshed++);
-  else {
-    $("#mpu-top").show();
-    let b = $("#ldr-top");
-    b && b.show();
-    refreshSlots();
-  }
-}
 function func_wsConnDisconnect() {
   objG_wsConnection && objG_wsConnection.disconnect();
 }
@@ -490,7 +451,7 @@ function func_displayContinueCountdown() {
   }
 }
 function func_displayGameover() {
-  func_showAds();
+  ads.func_showAds();
   0 < last_game_score &&
     ($("#continueTop").show(),
     $("#continueBR").show(),
@@ -646,6 +607,202 @@ function func_rotatePoint(x: number, y: number, angle: number) {
     y: y * Math.cos(angle) + x * Math.sin(angle),
   };
 }
+
+function W_switchSkins(){
+  funcR_showBeta();
+  bool_hideCustomization
+    ? ($("#howto").show(),
+      $("#skinPanel").hide(),
+      $("#divOff").show(),
+      $("#divOn").hide())
+    : ($("#howto").hide(),
+      $("#skinPanel").show(),
+      $("#divOff").hide(),
+      $("#divOn").show());
+  bool_hideCustomization = !bool_hideCustomization;
+};
+function W_setSkinColor(id_color: number){
+  func_displaySelectedColor(id_color);
+};
+function W_setDecal(id_decal: number){
+  func_displaySelectedDecal(id_decal);
+};
+function W_clickPlay(name: string){
+  Z
+    ? func_hideOverlay()
+    : ((window.localStorage.nick = name),
+      (document.getElementsByTagName("canvas")[0].style.cursor =
+        "url(images/crosshair.png) 16 16, auto"),
+      kb++,
+      (objG_inputManager.mouseMoved = false),
+      objG_wsConnection.sendNick(name, bool_continueGame),
+      bool_continueGame &&
+        (func_displayNicknameInput(), (bool_continueGame = false)),
+      objG_eventManager.isSpaceWars()
+        ? objGUI_gameInfo.showTip(
+            "Hint: Earn points faster by destroying asteroids.",
+          )
+        : document.fullscreenElement ||
+          document.mozFullScreenElement ||
+          document.webkitFullscreenElement ||
+          document.msFullscreenElement ||
+          (2 != kb && 4 != kb && 6 != kb) ||
+          objGUI_gameInfo.showTip("Press 'F' to toggle Fullscreen"));
+};
+function W_setSpectate(){
+  xa = true;
+  document.getElementsByTagName("canvas")[0].style.cursor = "default";
+  func_hideOverlay();
+  zc++;
+  funcR_showBeta();
+  Z
+    ? (objG_wsConnection.leave(),
+      (Z = false),
+      objG_followMode.waitUntilNextFollow())
+    : objG_followMode.followTopPlayer();
+  ka = 0;
+  zc % 2 || 1 >= numG_player_count
+    ? objGUI_gameInfo.showTip("Press 'ESC' to go back")
+    : objGUI_gameInfo.showTip("Click to follow next player");
+};
+function W_setContinue(){
+  $("#topGui").show();
+  $("#roomFailed").hide();
+  func_isIframe() || (parent.location.hash = "");
+  objG_wsConnection.getServerAndConnect();
+};
+function W_toggleGraphics(){
+  bool_setting_highQuality = !bool_setting_highQuality;
+  objG_followMode.resize();
+  window.localStorage.lq = !bool_setting_highQuality;
+  func_setGraphicsQuality();
+};
+function W_copyRoomLink(){
+  $("#copyLink").hide();
+  $("#copyLinkBox").show();
+  let b = $("#roomlinkInput")[0] as HTMLInputElement;
+  b.value = "http://classic.wings.io/#" + objG_wsConnection.roomID;
+  eb = true;
+  func_isNotChrome() &&
+    (($("#copyButton")[0].childNodes[0].textContent = "Close"),
+    $("#safariTooltip").show());
+  setTimeout(() => {
+    b.setSelectionRange(0, b.value.length);
+    b.select();
+    b.focus();
+  }, 100);
+};
+function W_setCopy(){
+  let b = $("#roomlinkInput")[0] as HTMLInputElement;
+  b.value = "http://wings.io/#" + objG_wsConnection.roomID;
+  b.setSelectionRange(0, b.value.length);
+  b.select();
+  b.focus();
+  if (func_isNotChrome())
+    $("#copyLinkBox").hide(), $("#copyLink").show(), (eb = false);
+  else {
+    try {
+      document.execCommand("copy");
+    } catch (e) {}
+    func_displayCopyLink();
+  }
+};
+function W_clickNoNames(checkbox: HTMLInputElement){
+  lb = !lb;
+  checkbox.checked = lb;
+};
+function W_toggleMute(){
+  func_displayMuteAudio();
+};
+
+function W_onblur() {
+  // window.didSendLoadingTime = true;
+  timeout_ws_conn = setTimeout(func_wsConnDisconnect, 3e5);
+  wa = false;
+  num_max_volume = 0;
+  objG_sfxManager &&
+    (objG_sfxManager.sound.volume(0),
+    objG_sfxManager.sound.volume(0, mb),
+    objG_sfxManager.sound.volume(0, ia),
+    objG_sfxManager.sound.volume(0, na),
+    nb && objG_sfxManager.sound.volume(0, nb));
+};
+function W_onfocus() {
+  if(timeout_ws_conn) {
+    clearTimeout(timeout_ws_conn);
+    timeout_ws_conn = undefined
+  };
+  Lb = wa = true;
+  num_max_volume = 1 * num_setting_muteVol;
+  for (let b in objD_planes) objD_planes[b].clearTrail();
+};
+function W_connectToServer(host: string) {
+  objG_wsConnection.roomNumber = 0;
+  objG_wsConnection.remoteHost = host;
+  objG_wsConnection.connect();
+  console.log("CONNECTING NOW to " + host);
+};
+function W_disconnect() {
+  objG_wsConnection.disconnect();
+  console.log("Disconnected.");
+};
+function W_enterGame(name: string) {
+  W_clickPlay(name);
+  W_onfocus();
+};
+function W_setInput(angle: number, hover: number, isShooting: boolean) {
+  objG_inputManager.angle = angle;
+  objG_inputManager.hover = hover;
+  !Sb && isShooting
+    ? objG_wsConnection.sendShooting(isShooting)
+    : Sb && !isShooting && objG_wsConnection.sendShooting(isShooting);
+  Sb = isShooting;
+};
+function W_wasKilled(b: any) {
+  objG_inputManager.angle = Math.PI;
+  objG_inputManager.hover = 1;
+  // int_pathMobile &&
+  //   ((bool_continueGame = true),
+  //   (b = {
+  //     score: b,
+  //   }),
+  //   "undefined" != typeof messageHandlers && messageHandlers.wasKilled
+  //     ? messageHandlers.wasKilled(JSON.stringify(b))
+  //     : window.webkit.messageHandlers.wasKilled.postMessage(b));
+}
+function W_connectionClosed() {
+  console.log("Connection was closed");
+  objG_inputManager.angle = Math.PI;
+  objG_inputManager.hover = 1;
+  // int_pathMobile &&
+  //   ("undefined" != typeof messageHandlers && messageHandlers.connectionClosed
+  //     ? messageHandlers.connectionClosed(JSON.stringify({}))
+  //     : window.webkit.messageHandlers.connectionClosed.postMessage({}));
+}
+
+let x = {
+  W_wasKilled,
+  W_toggleMute,
+  W_toggleGraphics,
+  W_switchSkins,
+  W_setSpectate,
+  W_setSkinColor,
+  W_setInput,
+  W_setDecal,
+  W_setCopy,
+  W_setContinue,
+  W_onfocus,
+  W_onblur,
+  W_enterGame,
+  W_disconnect,
+  W_copyRoomLink,
+  W_connectionClosed,
+  W_connectToServer,
+  W_clickPlay,
+  W_clickNoNames,
+  default: undefined,
+}
+x.default; //To not tree-shake
 
 class StyleStroke {
   _value = "";
@@ -1253,7 +1410,7 @@ class InputManager {
                                       bool_drawSplashes,
                                   ))
                                 : 27 == ev.keyCode
-                                  ? (func_showAds(),
+                                  ? (ads.func_showAds(),
                                     (num_max_volume =
                                       0.05 * num_setting_muteVol),
                                     $("#overlay").show(),
@@ -1640,8 +1797,8 @@ class UI_GameInfo {
   #Ia;
   #H = 0;
   #ab;
-  #L;
-  #X = -1;
+  #L: StyleText;
+  #X: string | null = null;
   #U = false;
   #V = 0;
   #Q;
@@ -1654,9 +1811,9 @@ class UI_GameInfo {
   #ja = null;
   #ca;
   #fa;
-  #ia;
-  #ha;
-  #wa;
+  #ia: StyleText;
+  #ha: HTMLCanvasElement;
+  #wa: StyleText;
   #na = 0;
   #oa = 0;
   #va = null;
@@ -1841,9 +1998,9 @@ class UI_GameInfo {
               (this.#Ia = this.#Ha.render())),
             (O = 1),
             300 > this.#H
-              ? ((O = this.#H / 300), (O = Math.sqrt(O, 10)))
+              ? ((O = this.#H / 300), (O = Math.sqrt(O)))
               : 3700 < this.#H &&
-                ((O = 1 - (this.#H - 3700) / 300), (O = Math.sqrt(O, 10))),
+                ((O = 1 - (this.#H - 3700) / 300), (O = Math.sqrt(O))),
             I.drawImage(
               this.#Ia,
               canvas_width / 2 - this.#Ia.width / 2,
@@ -1861,46 +2018,47 @@ class UI_GameInfo {
   }
   DrawKing(ctx: CanvasRenderingContext2D) {
     if (this.#F && 0 < this.#F.length && 0 < Object.keys(objD_planes).length) {
-      let c = objD_planes[this.#F[0]],
-        d;
-      if (c) {
-        d = func_renameBlankPlayerNames(c.name);
+      let obj_plane = objD_planes[this.#F[0]];
+      if (obj_plane) {
+        let d = func_renameBlankPlayerNames(obj_plane.name);
         objG_player_plane &&
-          this.#I != c.id &&
-          c.id == objG_player_plane.id &&
+          this.#I != obj_plane.id &&
+          obj_plane.id == objG_player_plane.id &&
           objG_sfxManager.playSound(str_sfxid_king, 1, 1, 1, null);
-        this.#I = c.id;
-        d != this.#Fa &&
-          ((c = 25),
-          int_pathMobile && (c = 35),
-          (this.#ua = new StyleText(
-            c * num_scale_factor,
+        this.#I = obj_plane.id;
+        if(d != this.#Fa) {
+          let font_size = 25;
+          int_pathMobile && (font_size = 35);
+          this.#ua = new StyleText(
+            font_size * num_scale_factor,
             "#fe9b00",
             "#6e3800",
-          )),
-          (c = " "),
-          bool_setting_highQuality || (c = ""),
-          int_pathMobile && (c = "  "),
-          this.#ua.setValue(c + "  King: " + d),
-          this.#ua.setUsingRoundedFrame(true));
+          );
+          let spaces = " ";
+          bool_setting_highQuality || (spaces = "");
+          int_pathMobile && (spaces = "  ");
+          this.#ua.setValue(spaces + "  King: " + d);
+          this.#ua.setUsingRoundedFrame(true);
+        }
         this.#Fa = d;
         this.#E = this.#ua.render();
       }
-      this.#ua &&
-        (ctx.save(),
-        (d = 0.83 * canvas.height),
-        ctx.drawImage(this.#E, 0.5 * canvas.width - this.#E.width / 2, d),
-        (c = 20),
-        bool_setting_highQuality || (c = 13),
+      if(this.#ua) {
+        ctx.save();
+        let d = 0.83 * canvas.height;
+        ctx.drawImage(this.#E, 0.5 * canvas.width - this.#E.width / 2, d);
+        let font_size = 20;
+        bool_setting_highQuality || (font_size = 13);
         ctx.translate(
-          0.5 * canvas.width - this.#E.width / 2 + c,
+          0.5 * canvas.width - this.#E.width / 2 + font_size,
           d + this.#E.height / 2 - 2 * num_scale_factor,
-        ),
-        (d = 1),
-        int_pathMobile && (d = 1.5),
-        ctx.scale(num_scale_factor * d, num_scale_factor * d),
-        objG_assets.frames.crown.draw(ctx),
-        ctx.restore());
+        );
+        (d = 1);
+        int_pathMobile && (d = 1.5);
+        ctx.scale(num_scale_factor * d, num_scale_factor * d);
+        objG_assets.frames.crown.draw(ctx);
+        ctx.restore();
+      }
     }
   }
   DrawLaserDeployed(ctx: CanvasRenderingContext2D) {
@@ -1917,6 +2075,7 @@ class UI_GameInfo {
       this.#L.setUsingRoundedFrame(true);
       this.#ab = this.#L.render();
     }
+    if(!this.#ab) { console.warn("#ab not initialized",this.#L); return; }
     c = 0.05 * canvas.height;
     ctx.drawImage(this.#ab, 0.5 * canvas.width - this.#ab.width / 2, c);
     d = 30;
@@ -1929,32 +2088,32 @@ class UI_GameInfo {
     objG_assets.frames.laser.draw(ctx);
     ctx.restore();
   }
-  DrawRank(ctx: CanvasRenderingContext2D) {
-    0 < objG_player_plane.rank &&
-      (void 0 == rankCanvas &&
-        ((rankCanvas = document.createElement("canvas")),
-        (rankCanvas.width = 200),
-        (rankCanvas.height = 200),
-        (rankCanvasContext = rankCanvas.getContext("2d"))),
-      lastRankNumber != objG_player_plane.rank &&
-        (rankCanvasContext.clearRect(0, 0, 200, 200),
-        (rankCanvasContext.globalAlpha = 0.3),
-        (rankCanvasContext.fillStyle = "rgba(0,0,0,1.0)"),
-        func_drawRoundedRectangle(
-          rankCanvasContext,
-          0,
-          0,
-          200,
-          200,
-          30 * num_scale_factor,
-        ),
-        (this.#ca = new StyleStroke(15 * num_scale_factor, "#EEEEEE")),
-        this.#ca.setValue(objG_player_plane.rank),
-        this.#ca.setUsingRoundedFrame(false),
-        (this.#fa = this.#ca.render()),
-        (lastRankNumber = objG_player_plane.rank)),
-      ctx.drawImage(rankCanvas, canvas_width - 200, canvas_height - 200));
-  }
+  // DrawRank(ctx: CanvasRenderingContext2D) {
+  //   0 < objG_player_plane.rank &&
+  //     (void 0 == rankCanvas &&
+  //       ((rankCanvas = document.createElement("canvas")),
+  //       (rankCanvas.width = 200),
+  //       (rankCanvas.height = 200),
+  //       (rankCanvasContext = rankCanvas.getContext("2d"))),
+  //     lastRankNumber != objG_player_plane.rank &&
+  //       (rankCanvasContext.clearRect(0, 0, 200, 200),
+  //       (rankCanvasContext.globalAlpha = 0.3),
+  //       (rankCanvasContext.fillStyle = "rgba(0,0,0,1.0)"),
+  //       func_drawRoundedRectangle(
+  //         rankCanvasContext,
+  //         0,
+  //         0,
+  //         200,
+  //         200,
+  //         30 * num_scale_factor,
+  //       ),
+  //       (this.#ca = new StyleStroke(15 * num_scale_factor, "#EEEEEE")),
+  //       this.#ca.setValue(objG_player_plane.rank),
+  //       this.#ca.setUsingRoundedFrame(false),
+  //       (this.#fa = this.#ca.render()),
+  //       (lastRankNumber = objG_player_plane.rank)),
+  //     ctx.drawImage(rankCanvas, canvas_width - 200, canvas_height - 200));
+  // }
   DrawScore(ctx: CanvasRenderingContext2D) {
     if (0 < objG_player_plane.rank) {
       let c = 16 * num_scale_factor,
@@ -1990,14 +2149,15 @@ class UI_GameInfo {
             c = 2;
           0 <= c;
           c--
-        )
-          (d = 0),
+        ) {
+          let d = 0;
             0 != c
               ? ((this.#K.fillStyle = "rgba(100,49,0,1.0)"), (d = c))
-              : (this.#K.fillStyle = "rgba(255,156,0,1.0)"),
-            this.#K.fillText(objG_player_plane.rank + ". You ", e, k + d),
-            (g = this.#K.measureText(objG_player_plane.score).width),
+              : (this.#K.fillStyle = "rgba(255,156,0,1.0)");
+            this.#K.fillText(objG_player_plane.rank + ". You ", e, k + d);
+            (g = this.#K.measureText(objG_player_plane.score).width);
             this.#K.fillText(objG_player_plane.score, b - e - g, k + d);
+        }
       ctx.drawImage(this.#r, n, f + 5);
     }
   }
@@ -2082,6 +2242,7 @@ class UI_GameInfo {
     }
   }
   DrawWinnerLabel(ctx: CanvasRenderingContext2D) {
+    let renderedWinnerNameCachedText!: HTMLCanvasElement;
     !this.#ia &&
       this.#aa &&
       ((this.#ia = new StyleText(55 * num_scale_factor, "#fe6800", "#6e3800")),
@@ -2131,26 +2292,26 @@ class UI_GameInfo {
       ctx.drawImage(this.#sa, canvas.width / 2 - this.#sa.width / 2, c + 60);
     }
   }
-  DrawLastEventWinner(ctx: CanvasRenderingContext2D) {
-    null != this.#aa &&
-      this.#aa != this.#ja &&
-      ((this.#ca = new StyleStroke(15 * num_scale_factor, "#EEEEEE")),
-      this.#ca.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black"),
-      this.#ca.setValue(
-        "Last Event Winner: " + func_renameBlankPlayerNames(this.#aa) + " ",
-      ),
-      this.#ca.setUsingRoundedFrame(true),
-      (this.#ja = this.#aa),
-      (this.#fa = this.#ca.render()));
-    if (this.#fa) {
-      let c = 10 * num_scale_factor;
-      ctx.drawImage(
-        this.#fa,
-        canvas.width - this.#fa.width - c,
-        canvas.height - this.#fa.height - c,
-      );
-    }
-  }
+  // DrawLastEventWinner(ctx: CanvasRenderingContext2D) {
+  //   null != this.#aa &&
+  //     this.#aa != this.#ja &&
+  //     ((this.#ca = new StyleStroke(15 * num_scale_factor, "#EEEEEE")),
+  //     this.#ca.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black"),
+  //     this.#ca.setValue(
+  //       "Last Event Winner: " + func_renameBlankPlayerNames(this.#aa) + " ",
+  //     ),
+  //     this.#ca.setUsingRoundedFrame(true),
+  //     (this.#ja = this.#aa),
+  //     (this.#fa = this.#ca.render()));
+  //   if (this.#fa) {
+  //     let c = 10 * num_scale_factor;
+  //     ctx.drawImage(
+  //       this.#fa,
+  //       canvas.width - this.#fa.width - c,
+  //       canvas.height - this.#fa.height - c,
+  //     );
+  //   }
+  // }
   DrawCurrentWeaponIcon(ctx: CanvasRenderingContext2D, id_weapon: number) {
     this.#Vb != id_weapon && ((this.#Vb = id_weapon), (this.#Ga = 1));
     1 == this.#Ga
@@ -2574,8 +2735,8 @@ class Plane {
         ((this.#f -= deltatime),
         0 > this.#f && ((this.#f = 100), (this.#d = !this.#d)),
         (this.#num_spawn_cooldown_ms -= deltatime));
-      objG_followMode.moveLeft && (this.controlAngle += this.rotSpeed);
-      objG_followMode.moveRight && (this.controlAngle -= this.rotSpeed);
+      // objG_followMode.moveLeft && (this.controlAngle += this.rotSpeed);
+      // objG_followMode.moveRight && (this.controlAngle -= this.rotSpeed);
       360 < this.controlAngle
         ? (this.controlAngle = 0)
         : 0 > this.controlAngle && (this.controlAngle = 360);
@@ -4522,14 +4683,7 @@ class WS_Connection {
     this.#ws_conn && this.#ws_conn.close();
   }
   onSocketOpen(ev: Event) {
-    window.didSendLoadingTime ||
-      ((ev = +new Date() - window.startTime),
-      window.stats && console.log("ltct " + ev),
-      window.mixpanel.track("Load Time To Play", {
-        deltatime: ev,
-        domain: window.location.hostname,
-      }),
-      (window.didSendLoadingTime = true));
+    tracking.sendLoadingTime();
     objG_wsConnection.connectRetry = 0;
     objG_wsConnection.hasConnection = true;
     objG_wsConnection.directed = false;
@@ -4555,10 +4709,10 @@ class WS_Connection {
     $("#topGuiConnecting").hide();
     $(".btn-needs-server").removeAttr("disabled");
     $("#nick").focus();
-    1 == int_pathMobile &&
-      ("undefined" != typeof messageHandlers && messageHandlers.didConnect
-        ? messageHandlers.didConnect(JSON.stringify({}))
-        : window.webkit.messageHandlers.didConnect.postMessage({}));
+    // 1 == int_pathMobile &&
+    //   ("undefined" != typeof messageHandlers && messageHandlers.didConnect
+    //     ? messageHandlers.didConnect(JSON.stringify({}))
+    //     : window.webkit.messageHandlers.didConnect.postMessage({}));
   }
   processMessage(array_buffer: ArrayBuffer) {
     let a, c, f, h, q, n, k, m, l, y, r, s, t, x, z, Ca, ta;
@@ -4594,7 +4748,7 @@ class WS_Connection {
         tc = n;
         Kb = E / 2 / 650;
         Nb = E / 2 - 100;
-        lc = k;
+        ads.next_adTimeout_6s = k;
         Ac = m;
         yc = l;
         vc = y;
@@ -4602,11 +4756,11 @@ class WS_Connection {
         xc = d;
       } else if (161 == a || 171 == a)
         (xa = true),
-          int_pathMobile &&
-            ("undefined" != typeof messageHandlers &&
-            messageHandlers.didEnterGame
-              ? messageHandlers.didEnterGame(JSON.stringify({}))
-              : window.webkit.messageHandlers.didEnterGame.postMessage({})),
+          // int_pathMobile &&
+          //   ("undefined" != typeof messageHandlers &&
+          //   messageHandlers.didEnterGame
+          //     ? messageHandlers.didEnterGame(JSON.stringify({}))
+          //     : window.webkit.messageHandlers.didEnterGame.postMessage({})),
           (c = 1),
           (f = d.getUint32(c, true)),
           (c += 4),
@@ -4700,7 +4854,7 @@ class WS_Connection {
                       (objG_player_plane_temp = objG_player_plane),
                       (objG_player_plane = null),
                       (ka = 1),
-                      wasKilled(d),
+                      W_wasKilled(d),
                       func_displayGameoverScore(d))
                     : ((objG_player_plane = null),
                       objG_followMode.waitUntilNextFollow())))
@@ -4756,7 +4910,7 @@ class WS_Connection {
                       (objG_player_plane = null),
                       (ma = 0),
                       (ka = 1),
-                      wasKilled(d),
+                      W_wasKilled(d),
                       func_displayGameoverScore(d))
                     : ((objG_player_plane = null),
                       objG_followMode.waitUntilNextFollow())),
@@ -5008,7 +5162,7 @@ class WS_Connection {
     objG_wsConnection.sentHello = false;
     objG_wsConnection.hasConnection = false;
     objG_wsConnection.firstClientListing = true;
-    // connectionClosed();
+    W_connectionClosed();
     func_displayGameoverScore(-1);
     $("#topGui").hide();
     $("#topGuiConnecting").show();
@@ -5097,24 +5251,25 @@ class FollowMode_R {
   #h = 0;
   #q = false;
   #n = 1;
-  #k;
+  #k?: number;
   #m = 0;
   #l = 0;
   #y = false;
   #r = 1;
-  #x;
+  #x?: number;
   #pa = 0;
   #L = 0;
   #T = false;
   #Ca = 1;
-  #ta;
-  #N;
+  #ta?: number;
+  #N?: Timer;
   whiteFlash;
-  moveLeft;
-  moveRight;
-  resize: (a: any) => void;
+  resize: () => void;
   constructor(canvas: HTMLCanvasElement) {
-    this.resize = (a) => {
+    if(!canvas) {
+      throw new Error("Canvas is not valid");
+    }
+    this.resize = () => {
       this.C();
       objG_eventManager.isSpaceWars() &&
         (this.#N && clearTimeout(this.#N),
@@ -5125,7 +5280,7 @@ class FollowMode_R {
     };
     this.whiteFlash = 0;
     this.#html_canvas = canvas;
-    this.#ctx_canvas = this.#html_canvas.getContext("2d");
+    this.#ctx_canvas = this.#html_canvas.getContext("2d")!;
     this.C();
     objG_backgrounds = new Backgrounds();
     objG_animationManager = new AnimationManager();
@@ -5133,10 +5288,10 @@ class FollowMode_R {
     objG_assets = new Assets();
     objG_assets.load(() => {
       console.log("Resources loaded!");
-      1 == int_pathMobile &&
-        ("undefined" != typeof messageHandlers && messageHandlers.didLoad
-          ? messageHandlers.didLoad(JSON.stringify({}))
-          : window.webkit.messageHandlers.didLoad.postMessage({}));
+      // 1 == int_pathMobile &&
+      //   ("undefined" != typeof messageHandlers && messageHandlers.didLoad
+      //     ? messageHandlers.didLoad(JSON.stringify({}))
+      //     : window.webkit.messageHandlers.didLoad.postMessage({}));
       objGUI_gameInfo = new UI_GameInfo();
       obj_particleImpacts = new ParticleImpacts();
       objG_wsConnection.hasConnection &&
@@ -7069,7 +7224,7 @@ namespace SFXmanager {
       onload?: () => void
     }): Howl
     play(sfx_name: string, callback?: (end: number) => void): number
-    volume(volume: number, nodeId: number): number
+    volume(volume: number, nodeId?: number): number
     _nodeById(id: number): GainNode
   }
 }
@@ -7538,146 +7693,29 @@ class Warship {
 -1 == int_pathMobile && (int_pathMobile = 0);
 int_pathMobile && (xa = true);
 
-(() => {
-  let b = window.location.search;
-  "?" == b.charAt(0) && (b = b.slice(1));
-  b = b.split("&");
-  for (let e = 0; e < b.length; e++) {
-    let f = b[e].split("=");
-    obj_browserQueryParams[f[0]] = f[1];
-  }
-})();
+let search_params = window.location.search;
+if("?" == search_params.charAt(0)) {
+  search_params = search_params.slice(1);
+}
+let param = search_params.split("&");
+for (let e = 0; e < param.length; e++) {
+  let f = param[e].split("=");
+  obj_browserQueryParams[f[0]] = f[1];
+}
 
 window.stats = obj_browserQueryParams.stats ? true : false;
+
 "true" == window.localStorage.lq && (bool_setting_highQuality = false);
 
-window.mixpanel &&
-  window.mixpanel.init("208ce64093308da8075ba320f97c12fd", {
-    debug: false,
-    track_pageview: true,
-    persistence: "localStorage",
-  });
-
-void 0 == window.localStorage.wingsCCTime ||
-(void 0 != window.localStorage.wingsCC &&
-  2 != window.localStorage.wingsCC.length)
-  ? func_detect_country()
-  : 288e5 < +new Date() - window.localStorage.wingsCCTime
-    ? func_detect_country()
-    : (str_conutryCode = window.localStorage.wingsCC);
-
-document.body.onselectstart = () => {
-  return false;
-};
-window.switchSkins = () => {
-  funcR_showBeta();
-  bool_hideCustomization
-    ? ($("#howto").show(),
-      $("#skinPanel").hide(),
-      $("#divOff").show(),
-      $("#divOn").hide())
-    : ($("#howto").hide(),
-      $("#skinPanel").show(),
-      $("#divOff").hide(),
-      $("#divOn").show());
-  bool_hideCustomization = !bool_hideCustomization;
-};
-window.setSkinColor = (b) => {
-  func_displaySelectedColor(b);
-};
-window.setDecal = (b) => {
-  func_displaySelectedDecal(b);
-};
-window.clickPlay = (b) => {
-  Z
-    ? func_hideOverlay()
-    : ((window.localStorage.nick = b),
-      (document.getElementsByTagName("canvas")[0].style.cursor =
-        "url(images/crosshair.png) 16 16, auto"),
-      kb++,
-      (objG_inputManager.mouseMoved = false),
-      objG_wsConnection.sendNick(b, bool_continueGame),
-      bool_continueGame &&
-        (func_displayNicknameInput(), (bool_continueGame = false)),
-      objG_eventManager.isSpaceWars()
-        ? objGUI_gameInfo.showTip(
-            "Hint: Earn points faster by destroying asteroids.",
-          )
-        : document.fullscreenElement ||
-          document.mozFullScreenElement ||
-          document.webkitFullscreenElement ||
-          document.msFullscreenElement ||
-          (2 != kb && 4 != kb && 6 != kb) ||
-          objGUI_gameInfo.showTip("Press 'F' to toggle Fullscreen"));
-};
-window.setSpectate = (b) => {
-  xa = true;
-  document.getElementsByTagName("canvas")[0].style.cursor = "default";
-  func_hideOverlay();
-  zc++;
-  funcR_showBeta();
-  Z
-    ? (objG_wsConnection.leave(),
-      (Z = false),
-      objG_followMode.waitUntilNextFollow())
-    : objG_followMode.followTopPlayer();
-  ka = 0;
-  zc % 2 || 1 >= numG_player_count
-    ? objGUI_gameInfo.showTip("Press 'ESC' to go back")
-    : objGUI_gameInfo.showTip("Click to follow next player");
-};
-window.setContinue = () => {
-  $("#topGui").show();
-  $("#roomFailed").hide();
-  func_isIframe() || (parent.location.hash = "");
-  objG_wsConnection.getServerAndConnect();
-};
-window.toggleGraphics = () => {
-  bool_setting_highQuality = !bool_setting_highQuality;
-  objG_followMode.resize();
-  window.localStorage.lq = !bool_setting_highQuality;
-  func_setGraphicsQuality();
-};
-window.copyRoomLink = () => {
-  $("#copyLink").hide();
-  $("#copyLinkBox").show();
-  let b = $("#roomlinkInput")[0];
-  b.value = "http://classic.wings.io/#" + objG_wsConnection.roomID;
-  eb = true;
-  func_isNotChrome() &&
-    (($("#copyButton")[0].childNodes[0].data = "Close"),
-    $("#safariTooltip").show());
-  setTimeout(() => {
-    b.setSelectionRange(0, b.value.length);
-    b.select();
-    b.focus();
-  }, 100);
-};
-window.setCopy = () => {
-  let b = $("#roomlinkInput")[0];
-  b.value = "http://wings.io/#" + objG_wsConnection.roomID;
-  b.setSelectionRange(0, b.value.length);
-  b.select();
-  b.focus();
-  if (func_isNotChrome())
-    $("#copyLinkBox").hide(), $("#copyLink").show(), (eb = false);
-  else {
-    try {
-      document.execCommand("copy");
-    } catch (e) {}
-    func_displayCopyLink();
-  }
-};
-
-null != adsense && adsense && func_showAds();
-
-window.clickNoNames = (b) => {
-  lb = !lb;
-  b.checked = lb;
-};
-window.toggleMute = () => {
-  func_displayMuteAudio();
-};
+if(void 0 == window.localStorage.wingsCCTime ||
+  (void 0 != window.localStorage.wingsCC &&
+  2 != window.localStorage.wingsCC.length)) {
+  func_detect_country()
+} else if(288e5 < +new Date() - window.localStorage.wingsCCTime) {
+  func_detect_country()
+} else {
+  str_conutryCode = window.localStorage.wingsCC;
+}
 
 void 0 == num_setting_muteVol && (num_setting_muteVol = 1);
 "undefined" === typeof window.orientation ||
@@ -7690,93 +7728,38 @@ if (0 == num_setting_muteVol || bool_internet_explorer)
 
 bool_internet_explorer && $("#sndIcon").hide();
 
-window.onblur = () => {
-  window.didSendLoadingTime = true;
-  timeout_ws_conn = setTimeout(func_wsConnDisconnect, 3e5);
-  wa = false;
-  num_max_volume = 0;
-  objG_sfxManager &&
-    (objG_sfxManager.sound.volume(0),
-    objG_sfxManager.sound.volume(0, mb),
-    objG_sfxManager.sound.volume(0, ia),
-    objG_sfxManager.sound.volume(0, na),
-    nb && objG_sfxManager.sound.volume(0, nb));
-};
-window.onfocus = () => {
-  timeout_ws_conn && (clearTimeout(timeout_ws_conn), (timeout_ws_conn = null));
-  Lb = wa = true;
-  num_max_volume = 1 * num_setting_muteVol;
-  for (let b in objD_planes) objD_planes[b].clearTrail();
-};
-window.connectToServer = (b) => {
-  objG_wsConnection.roomNumber = 0;
-  objG_wsConnection.remoteHost = b;
-  objG_wsConnection.connect();
-  console.log("CONNECTING NOW to " + b);
-};
-window.disconnect = () => {
-  objG_wsConnection.disconnect();
-  console.log("Disconnected.");
-};
-window.enterGame = (b) => {
-  clickPlay(b);
-  onfocus();
-};
-window.setInput = (b, e, f) => {
-  objG_inputManager.angle = b;
-  objG_inputManager.hover = e;
-  !Sb && f
-    ? objG_wsConnection.sendShooting(f)
-    : Sb && !f && objG_wsConnection.sendShooting(f);
-  Sb = f;
-};
-window.wasKilled = (b) => {
-  objG_inputManager.angle = Math.PI;
-  objG_inputManager.hover = 1;
-  int_pathMobile &&
-    ((bool_continueGame = true),
-    (b = {
-      score: b,
-    }),
-    "undefined" != typeof messageHandlers && messageHandlers.wasKilled
-      ? messageHandlers.wasKilled(JSON.stringify(b))
-      : window.webkit.messageHandlers.wasKilled.postMessage(b));
-};
-window.connectionClosed = () => {
-  console.log("Connection was closed");
-  objG_inputManager.angle = Math.PI;
-  objG_inputManager.hover = 1;
-  int_pathMobile &&
-    ("undefined" != typeof messageHandlers && messageHandlers.connectionClosed
-      ? messageHandlers.connectionClosed(JSON.stringify({}))
-      : window.webkit.messageHandlers.connectionClosed.postMessage({}));
-};
+if (int_pathMobile) W_onblur();
+if (window.localStorage.nick && $("#nick")[0]) {
+  ($("#nick")[0] as HTMLInputElement).value = window.localStorage.nick;
+}
 
-if (int_pathMobile) window.onblur();
-window.localStorage.nick &&
-  $("#nick")[0] &&
-  ($("#nick")[0].value = window.localStorage.nick);
-
-document.oncontextmenu = () => {
+document.body.onselectstart = (ev: Event) => {
+  return false;
+};
+document.oncontextmenu = (ev: MouseEvent) => {
   return false;
 };
 int_pathMobile && (str_font_name = "Arial-BoldMT");
 
 window.onload = () => {
-  Modernizr.canvas &&
-    Modernizr.websockets &&
-    (null == objG_followMode &&
-      (window.devicePixelRatio &&
-        (int_pixel_ratio = 1 < window.devicePixelRatio ? 2 : 1),
-      (objG_eventManager = new EventManager()),
-      (objG_followMode = new FollowMode_R(document.getElementById("canvas"))),
-      window.addEventListener("resize", objG_followMode.resize, false),
-      (objG_inputManager = new InputManager()),
-      objG_inputManager.addListeners(),
-      window.requestAnimationFrame
-        ? window.requestAnimationFrame(Rb)
-        : setInterval(Rb, 1e3 / 60),
-      $("#overlay").show()),
-    objG_followMode.resize(),
-    func_setGraphicsQuality());
+  if (Modernizr.canvas && Modernizr.websockets) {
+    if(objG_followMode == null) {
+      if(window.devicePixelRatio) {
+        int_pixel_ratio = 1 < window.devicePixelRatio ? 2 : 1;
+        objG_eventManager = new EventManager();
+      }
+      objG_followMode = new FollowMode_R(canvas);
+      window.addEventListener("resize", objG_followMode.resize, false);
+      objG_inputManager = new InputManager();
+      objG_inputManager.addListeners();
+      if(window.requestAnimationFrame) {
+        window.requestAnimationFrame(requestAnimationFrameCallback);
+      } else {
+        setInterval(requestAnimationFrameCallback, 1e3 / 60);
+      }
+      $("#overlay").show();
+    }
+      objG_followMode.resize();
+      func_setGraphicsQuality();
+    }
 };
