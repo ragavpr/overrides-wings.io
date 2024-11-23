@@ -10,7 +10,7 @@ type GameSheetMapping = [
   height: number,
   u1: number,
   u2: number,
-]
+];
 const canvas = $("#canvas")[0] as HTMLCanvasElement;
 let Zb,
   $b,
@@ -329,13 +329,13 @@ const func_detect_country = () => {
 const requestAnimationFrameCallback = () => {
   frametime_millis = +new Date();
   let deltatime = 0;
-  if(0 < last_frametime_millis) {
+  if (0 < last_frametime_millis) {
     deltatime = frametime_millis - last_frametime_millis;
   }
   last_frametime_millis = frametime_millis;
   objG_followMode.update(deltatime);
   objG_followMode.draw(deltatime);
-  if(window.requestAnimationFrame)
+  if (window.requestAnimationFrame)
     window.requestAnimationFrame(requestAnimationFrameCallback);
   Lb && (Lb = false);
 };
@@ -348,7 +348,7 @@ function func_displaySelectedColor(int_color_id: number) {
     let plane_body = objG_assets.frames.plane8;
     canvas.width = plane_body.width;
     canvas.height = plane_body.height;
-    if(!ctx) throw new Error("WARN: Canvas is empty")
+    if (!ctx) throw new Error("WARN: Canvas is empty");
     ctx.translate(plane_body.width / 2, plane_body.height / 2);
     plane_body.draw(ctx);
     plane_frame.draw(ctx);
@@ -368,7 +368,11 @@ function func_displaySelectedColor(int_color_id: number) {
           "background-image: url(" + image_str + ")",
         )
       : css_style.insertRule(
-          ".btn-decal" + (i + 1) + ":before{background-image: url(" + image_str + ")}",
+          ".btn-decal" +
+            (i + 1) +
+            ":before{background-image: url(" +
+            image_str +
+            ")}",
           css_style.cssRules.length,
         );
   }
@@ -394,7 +398,8 @@ function func_setGraphicsQuality() {
   let str_quality = "Low";
   let element_quality = $("#graphicsID")[0];
   bool_setting_highQuality && (str_quality = "High");
-  element_quality && (element_quality.childNodes[0].textContent = "Graphics: " + str_quality);
+  element_quality &&
+    (element_quality.childNodes[0].textContent = "Graphics: " + str_quality);
 }
 function funcR_hc_showPf() {
   $("#pfArrow").show();
@@ -436,15 +441,22 @@ function func_hideOverlay() {
 }
 function func_displayContinueCountdown() {
   if (bool_continueGame) {
-    let seconds_since_gameover = Math.floor((frametime_millis - time_game_over) / 1e3);
+    let seconds_since_gameover = Math.floor(
+      (frametime_millis - time_game_over) / 1e3,
+    );
     0 > seconds_since_gameover && (seconds_since_gameover = 0);
     let continue_countdown = 10 - seconds_since_gameover;
-    if(0 > continue_countdown) {
-      ((bool_continueGame = false), func_displayNicknameInput())
+    if (0 > continue_countdown) {
+      (bool_continueGame = false), func_displayNicknameInput();
     } else {
-        let element_countdown = $("#countdownText")[0];
-        let text_countdown = document.createTextNode(continue_countdown.toString());
-        element_countdown.replaceChild(text_countdown, element_countdown.firstChild!),
+      let element_countdown = $("#countdownText")[0];
+      let text_countdown = document.createTextNode(
+        continue_countdown.toString(),
+      );
+      element_countdown.replaceChild(
+        text_countdown,
+        element_countdown.firstChild!,
+      ),
         setTimeout(func_displayContinueCountdown, 500);
     }
   }
@@ -537,10 +549,12 @@ function func_isTimeElapsed_50ms() {
 }
 function func_isInsideBox(x: number, y: number, dist: number) {
   let d = objGUI_anchor.getBounds();
-  return  x + dist >= d[0].x &&
-          x - dist <= d[1].x &&
-          y + dist >= d[0].y &&
-          y - dist <= d[1].y;
+  return (
+    x + dist >= d[0].x &&
+    x - dist <= d[1].x &&
+    y + dist >= d[0].y &&
+    y - dist <= d[1].y
+  );
 }
 function func_clamp(val: number, l: number, u: number) {
   return val < l ? l : val > u ? u : val;
@@ -603,7 +617,7 @@ function func_rotatePoint(x: number, y: number, angle: number) {
   };
 }
 
-function W_switchSkins(){
+function W_switchSkins() {
   funcR_showBeta();
   bool_hideCustomization
     ? ($("#howto").show(),
@@ -615,14 +629,14 @@ function W_switchSkins(){
       $("#divOff").hide(),
       $("#divOn").show());
   bool_hideCustomization = !bool_hideCustomization;
-};
-function W_setSkinColor(id_color: number){
+}
+function W_setSkinColor(id_color: number) {
   func_displaySelectedColor(id_color);
-};
-function W_setDecal(id_decal: number){
+}
+function W_setDecal(id_decal: number) {
   func_displaySelectedDecal(id_decal);
-};
-function W_clickPlay(name: string){
+}
+function W_clickPlay(name: string) {
   Z
     ? func_hideOverlay()
     : ((window.localStorage.nick = name),
@@ -643,8 +657,8 @@ function W_clickPlay(name: string){
           document.msFullscreenElement ||
           (2 != kb && 4 != kb && 6 != kb) ||
           objGUI_gameInfo.showTip("Press 'F' to toggle Fullscreen"));
-};
-function W_setSpectate(){
+}
+function W_setSpectate() {
   xa = true;
   document.getElementsByTagName("canvas")[0].style.cursor = "default";
   func_hideOverlay();
@@ -659,20 +673,20 @@ function W_setSpectate(){
   zc % 2 || 1 >= numG_player_count
     ? objGUI_gameInfo.showTip("Press 'ESC' to go back")
     : objGUI_gameInfo.showTip("Click to follow next player");
-};
-function W_setContinue(){
+}
+function W_setContinue() {
   $("#topGui").show();
   $("#roomFailed").hide();
   func_isIframe() || (parent.location.hash = "");
   objG_wsConnection.getServerAndConnect();
-};
-function W_toggleGraphics(){
+}
+function W_toggleGraphics() {
   bool_setting_highQuality = !bool_setting_highQuality;
   objG_followMode.resize();
   window.localStorage.lq = !bool_setting_highQuality;
   func_setGraphicsQuality();
-};
-function W_copyRoomLink(){
+}
+function W_copyRoomLink() {
   $("#copyLink").hide();
   $("#copyLinkBox").show();
   let b = $("#roomlinkInput")[0] as HTMLInputElement;
@@ -686,8 +700,8 @@ function W_copyRoomLink(){
     b.select();
     b.focus();
   }, 100);
-};
-function W_setCopy(){
+}
+function W_setCopy() {
   let b = $("#roomlinkInput")[0] as HTMLInputElement;
   b.value = "http://wings.io/#" + objG_wsConnection.roomID;
   b.setSelectionRange(0, b.value.length);
@@ -701,14 +715,14 @@ function W_setCopy(){
     } catch (e) {}
     func_displayCopyLink();
   }
-};
-function W_clickNoNames(checkbox: HTMLInputElement){
+}
+function W_clickNoNames(checkbox: HTMLInputElement) {
   lb = !lb;
   checkbox.checked = lb;
-};
-function W_toggleMute(){
+}
+function W_toggleMute() {
   func_displayMuteAudio();
-};
+}
 
 function W_onblur() {
   // window.didSendLoadingTime = true;
@@ -721,30 +735,30 @@ function W_onblur() {
     objG_sfxManager.sound.volume(0, ia),
     objG_sfxManager.sound.volume(0, na),
     nb && objG_sfxManager.sound.volume(0, nb));
-};
+}
 function W_onfocus() {
-  if(timeout_ws_conn) {
+  if (timeout_ws_conn) {
     clearTimeout(timeout_ws_conn);
-    timeout_ws_conn = undefined
-  };
+    timeout_ws_conn = undefined;
+  }
   Lb = wa = true;
   num_max_volume = 1 * num_setting_muteVol;
   for (let b in objD_planes) objD_planes[b].clearTrail();
-};
+}
 function W_connectToServer(host: string) {
   objG_wsConnection.roomNumber = 0;
   objG_wsConnection.remoteHost = host;
   objG_wsConnection.connect();
   console.log("CONNECTING NOW to " + host);
-};
+}
 function W_disconnect() {
   objG_wsConnection.disconnect();
   console.log("Disconnected.");
-};
+}
 function W_enterGame(name: string) {
   W_clickPlay(name);
   W_onfocus();
-};
+}
 function W_setInput(angle: number, hover: number, isShooting: boolean) {
   objG_inputManager.angle = angle;
   objG_inputManager.hover = hover;
@@ -752,7 +766,7 @@ function W_setInput(angle: number, hover: number, isShooting: boolean) {
     ? objG_wsConnection.sendShooting(isShooting)
     : Sb && !isShooting && objG_wsConnection.sendShooting(isShooting);
   Sb = isShooting;
-};
+}
 function W_wasKilled(b: any) {
   objG_inputManager.angle = Math.PI;
   objG_inputManager.hover = 1;
@@ -784,7 +798,7 @@ let x = {
   W_clickPlay,
   W_clickNoNames,
   default: undefined,
-}
+};
 x.default; //To not tree-shake
 
 class StyleStroke {
@@ -1159,7 +1173,10 @@ class Assets {
     return canvas;
   }
   generateHudIcons() {
-    let scale, center_offset, shift2Y = 20, shift2X = 160;
+    let scale,
+      center_offset,
+      shift2Y = 20,
+      shift2X = 160;
 
     let canvas2 = document.createElement("canvas");
     let canvas21 = this.generateTintedKillIcon(205, 154, 109, "#FFFFFF");
@@ -1256,7 +1273,11 @@ class Assets {
     this.onLoad = b;
     this.loadGameSpritesheet();
   }
-  loadTintImage(b: HTMLImageElement, e: (b: HTMLCanvasElement) => void, f: string) {
+  loadTintImage(
+    b: HTMLImageElement,
+    e: (b: HTMLCanvasElement) => void,
+    f: string,
+  ) {
     let d = document.createElement("canvas"),
       a = d.getContext("2d")!,
       c = b.width,
@@ -1633,8 +1654,7 @@ class ParticleImpacts {
                 (a.curPosition.y += a.direction.y * g)));
       }
     }
-    for (c = 0; c < f.length; c++)
-      this.#b.splice(this.#b.indexOf(f[c]), 1);
+    for (c = 0; c < f.length; c++) this.#b.splice(this.#b.indexOf(f[c]), 1);
     f.length = 0;
   }
   addShot(plane_id: number, x_gu: number, y_gu: number, weapon_id: number) {
@@ -1664,20 +1684,22 @@ class ParticleImpacts {
         };
         let hit_x = g.hitPosition.x - rot_x;
         let hit_y = g.hitPosition.y - rot_y;
-        if(weapon_id != id_weapon_superweapon) {
+        if (weapon_id != id_weapon_superweapon) {
           let diag = Math.sqrt(hit_x * hit_x + hit_y * hit_y);
           g.direction = {
-                x: hit_x / diag,
-                y: hit_y / diag,
-              };
+            x: hit_x / diag,
+            y: hit_y / diag,
+          };
           g.curPosition = {
-                x: rot_x,
-                y: rot_y,
-              };
+            x: rot_x,
+            y: rot_y,
+          };
           g.finish = false;
-          if(func_isInsideBox(rot_x, rot_y, 100) ||
-              func_isInsideBox(g.hitPosition.x, g.hitPosition.y, 100))
-                  this.#b.push(g);
+          if (
+            func_isInsideBox(rot_x, rot_y, 100) ||
+            func_isInsideBox(g.hitPosition.x, g.hitPosition.y, 100)
+          )
+            this.#b.push(g);
         }
         weapon_id = E / 2;
         g.hitPosition.y > weapon_id &&
@@ -1700,7 +1722,8 @@ class ParticleImpacts {
       c.posX = x;
       c.posY = y;
       objG_animationManager.runAnimationBehind(c);
-      let sfx_vol = 1 - func_calculateDistance2D(x, y, H.x, H.y) / num_sound_max_distance;
+      let sfx_vol =
+        1 - func_calculateDistance2D(x, y, H.x, H.y) / num_sound_max_distance;
       objG_sfxManager.playSound(str_sfxid_mexpl, sfx_vol, 1, const_Sa_3, null);
     }
   }
@@ -1712,7 +1735,8 @@ class ParticleImpacts {
       func_isTimeElapsed_50ms()
     ) {
       let anim_splash = objG_animationManager.createAnimation("splash"),
-        anim_splashreflex = objG_animationManager.createAnimation("splashReflex");
+        anim_splashreflex =
+          objG_animationManager.createAnimation("splashReflex");
       anim_splash.setScale(size);
       randomize && (anim_splash.scaleX *= 1.2 + 0.4 * Math.random());
       anim_splash.posX = x;
@@ -1727,7 +1751,7 @@ class ParticleImpacts {
   }
 }
 namespace ParticleImpacts {
-  export type ImpactInfo = Record<string, any>
+  export type ImpactInfo = Record<string, any>;
 }
 class UI_GameInfo {
   #scale_factor: number;
@@ -1972,8 +1996,7 @@ class UI_GameInfo {
               1.1 * this.#Ia.height * O - this.#Ia.height,
             ))
           : (this.#Ta = null));
-      bool_following_plane ||
-        this.#objUI_ActivityMessages.draw(I);
+      bool_following_plane || this.#objUI_ActivityMessages.draw(I);
       !bool_following_plane && 0 < qa && this.DrawKing(I);
       this.#ta && (this.#ta = false);
       this.#scale_factor != num_scale_factor &&
@@ -1990,7 +2013,7 @@ class UI_GameInfo {
           obj_plane.id == objG_player_plane.id &&
           objG_sfxManager.playSound(str_sfxid_king, 1, 1, 1, null);
         this.#I = obj_plane.id;
-        if(d != this.#Fa) {
+        if (d != this.#Fa) {
           let font_size = 25;
           this.#ua = new StyleText(
             font_size * num_scale_factor,
@@ -2005,7 +2028,7 @@ class UI_GameInfo {
         this.#Fa = d;
         this.#E = this.#ua.render();
       }
-      if(this.#ua) {
+      if (this.#ua) {
         ctx.save();
         let d = 0.83 * canvas.height;
         ctx.drawImage(this.#E, 0.5 * canvas.width - this.#E.width / 2, d);
@@ -2015,7 +2038,7 @@ class UI_GameInfo {
           0.5 * canvas.width - this.#E.width / 2 + font_size,
           d + this.#E.height / 2 - 2 * num_scale_factor,
         );
-        (d = 1);
+        d = 1;
         ctx.scale(num_scale_factor * d, num_scale_factor * d);
         objG_assets.frames.crown.draw(ctx);
         ctx.restore();
@@ -2035,7 +2058,10 @@ class UI_GameInfo {
       this.#L.setUsingRoundedFrame(true);
       this.#ab = this.#L.render();
     }
-    if(!this.#ab) { console.warn("#ab not initialized",this.#L); return; }
+    if (!this.#ab) {
+      console.warn("#ab not initialized", this.#L);
+      return;
+    }
     c = 0.05 * canvas.height;
     ctx.drawImage(this.#ab, 0.5 * canvas.width - this.#ab.width / 2, c);
     d = 30;
@@ -2109,12 +2135,12 @@ class UI_GameInfo {
           c--
         ) {
           let d = 0;
-            0 != c
-              ? ((this.#K.fillStyle = "rgba(100,49,0,1.0)"), (d = c))
-              : (this.#K.fillStyle = "rgba(255,156,0,1.0)");
-            this.#K.fillText(objG_player_plane.rank + ". You ", e, k + d);
-            (g = this.#K.measureText(objG_player_plane.score).width);
-            this.#K.fillText(objG_player_plane.score, b - e - g, k + d);
+          0 != c
+            ? ((this.#K.fillStyle = "rgba(100,49,0,1.0)"), (d = c))
+            : (this.#K.fillStyle = "rgba(255,156,0,1.0)");
+          this.#K.fillText(objG_player_plane.rank + ". You ", e, k + d);
+          g = this.#K.measureText(objG_player_plane.score).width;
+          this.#K.fillText(objG_player_plane.score, b - e - g, k + d);
         }
       ctx.drawImage(this.#r, n, f + 5);
     }
@@ -2393,7 +2419,14 @@ class UI_GameInfo {
     canvas.height = this.#S;
     k = h + "px 'proxima-nova-1','proxima-nova-2', " + q;
     ctx.fillStyle = "rgba(0,0,0,0.3)";
-    func_drawRoundedRectangle(ctx, 0, 0, this.#R, this.#S, 30 * num_scale_factor);
+    func_drawRoundedRectangle(
+      ctx,
+      0,
+      0,
+      this.#R,
+      this.#S,
+      30 * num_scale_factor,
+    );
     ctx.fillStyle = "rgba(204,84,0,1.0)";
     func_drawRoundedRectangleHalf(
       ctx,
@@ -2485,10 +2518,10 @@ class UI_GameInfo {
     this.#a = murderer;
   }
   showTip(tip_string: string) {
-      this.#Ta && this.clearTip();
-      this.#Ta = tip_string;
-      this.#H = 0;
-      this.#Ia = null;
+    this.#Ta && this.clearTip();
+    this.#Ta = tip_string;
+    this.#H = 0;
+    this.#Ia = null;
   }
   clearTip() {
     this.#Ta = null;
@@ -2542,11 +2575,11 @@ class UI_ActivityMessages {
     e.globalAlpha = 1;
     let d = canvas.height - 180 * num_scale_factor;
     for (let key in this.#b) {
-      let a = parseInt(key)
+      let a = parseInt(key);
       e.drawImage(
-          this.#b[a],
-          25,
-          d +
+        this.#b[a],
+        25,
+        d +
           26 * num_scale_factor +
           5 +
           14 * a * num_scale_factor +
@@ -2995,7 +3028,9 @@ class Plane {
               ((this.laserTimer = 0),
               (this.laserFrame = (this.laserFrame + 1) % 3)),
             this.#ea
-              ? objG_assets.frames["laser_collision" + this.laserFrame].draw(ctx)
+              ? objG_assets.frames["laser_collision" + this.laserFrame].draw(
+                  ctx,
+                )
               : ((f = objG_assets.frames.laserfade.width),
                 ctx.rotate(Math.PI / 2),
                 ctx.translate(f / 2, 0),
@@ -3074,7 +3109,13 @@ class Plane {
       ctx.stroke();
     }
   }
-  DrawLockCrosshair(a: CanvasRenderingContext2D, x: number, y: number, width: number, height: number) {
+  DrawLockCrosshair(
+    a: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ) {
     if (this.inGame) {
       a.lineWidth = 4;
       a.save();
@@ -3436,7 +3477,15 @@ class WaterSea {
     e = this.#h.length;
     for (f = 0; f < e; f++) this.#h[f].draw(ctx, d);
   }
-  drawWaterArea(ctx: CanvasRenderingContext2D, d: number, fill_color: string, e: number, q: number, r: number, K: number) {
+  drawWaterArea(
+    ctx: CanvasRenderingContext2D,
+    d: number,
+    fill_color: string,
+    e: number,
+    q: number,
+    r: number,
+    K: number,
+  ) {
     K = this.#a * this.#g;
     let p = E / 2 + -30;
     ctx.save();
@@ -3662,7 +3711,13 @@ class Clouds {
     }
     this.preRender();
   }
-  drawCloudShape(ctx: CanvasRenderingContext2D, c: number, b: number, d: number[], e: number) {
+  drawCloudShape(
+    ctx: CanvasRenderingContext2D,
+    c: number,
+    b: number,
+    d: number[],
+    e: number,
+  ) {
     ctx.beginPath();
     let f = d.length;
     ctx.moveTo(d[0] * e + c, d[1] * e + b);
@@ -3677,14 +3732,24 @@ class Clouds {
       );
     ctx.fill();
   }
-  drawCloud(ctx: CanvasRenderingContext2D, c: number, g: number, h: number, e: number, opacity: number, k: number, m: number) {
+  drawCloud(
+    ctx: CanvasRenderingContext2D,
+    c: number,
+    g: number,
+    h: number,
+    e: number,
+    opacity: number,
+    k: number,
+    m: number,
+  ) {
     -7e3 > c && ((c = (-c + 7e3) % 14e3), (c = 7e3 - c));
     let l = c + this.#d[h][0] * e,
       y = g + this.#d[h][1] * e,
       r = c + this.#d[h][2] * e,
       K = g + this.#d[h][3] * e,
       p = objGUI_anchor.getBounds();
-    let bl = l > p[1].x || r < p[0].x || y > p[1].y || K < p[0].y ? false : true;
+    let bl =
+      l > p[1].x || r < p[0].x || y > p[1].y || K < p[0].y ? false : true;
     bl &&
       (ctx.save(),
       (ctx.fillStyle = "rgba(190,227,249," + opacity + ")"),
@@ -3694,7 +3759,14 @@ class Clouds {
       this.drawCloudShape(ctx, c + k, g + m, this.#cloud_bezier[h], e),
       ctx.restore());
   }
-  drawPreRenderedCloud(a: CanvasRenderingContext2D, c: number, b: number, e: number, q: number, n: number) {
+  drawPreRenderedCloud(
+    a: CanvasRenderingContext2D,
+    c: number,
+    b: number,
+    e: number,
+    q: number,
+    n: number,
+  ) {
     -7e3 > c && ((c = (-c + 7e3) % 14e3), (c = 7e3 - c));
     let k = this.#d[q][0],
       m = this.#d[q][1],
@@ -3703,7 +3775,8 @@ class Clouds {
       r = c + this.#d[q][2] * n;
     q = b + this.#d[q][3] * n;
     let K = objGUI_anchor.getBounds();
-    let bl = l > K[1].x || r < K[0].x || y > K[1].y || q < K[0].y ? false : true;
+    let bl =
+      l > K[1].x || r < K[0].x || y > K[1].y || q < K[0].y ? false : true;
     bl && a.drawImage(this.#rendered[e], c + k * n, b + m * n);
   }
   update(deltatime: number) {
@@ -4106,7 +4179,8 @@ class PickupItem {
         v < s
           ? (v > s - 30 && (this.#d = (s - v) / 30),
             1 > this.alpha &&
-              ((this.alpha += deltatime / 1e3), 1 < this.alpha && (this.alpha = 1)),
+              ((this.alpha += deltatime / 1e3),
+              1 < this.alpha && (this.alpha = 1)),
             (this.#e = ((frametime_millis - this.#b) / 1e3) * Ac * 60))
           : ((this.#a += 0.1 * p),
             (this.#e += 0.1),
@@ -4563,8 +4637,7 @@ class WS_Connection {
             c = a[0];
             a = c.split("/");
             objG_wsConnection.roomNumber = 0;
-            1 < a.length &&
-              ((objG_wsConnection.roomNumber = a[1]), (c = a[0]));
+            1 < a.length && ((objG_wsConnection.roomNumber = a[1]), (c = a[0]));
             objG_wsConnection.remoteHost = c;
             objG_wsConnection.connect();
           }
@@ -5203,7 +5276,7 @@ class FollowMode_R {
   whiteFlash;
   resize: () => void;
   constructor(canvas: HTMLCanvasElement) {
-    if(!canvas) {
+    if (!canvas) {
       throw new Error("Canvas is not valid");
     }
     this.resize = () => {
@@ -5321,7 +5394,8 @@ class FollowMode_R {
             ((La = true), (str_name_superweapon_holder = null));
       e = null;
       for (b in objD_missiles)
-        objD_missiles[b].update(deltatime), objD_missiles[b].finished && (e = b);
+        objD_missiles[b].update(deltatime),
+          objD_missiles[b].finished && (e = b);
       e && delete objD_missiles[e];
       e = null;
       for (b in objD_planes)
@@ -5404,7 +5478,8 @@ class FollowMode_R {
                 (this.#html_canvas.height * deltatime) / 2)) /
             objGUI_anchor.zoom;
           deltatime = Zb - objG_player_plane.x;
-          (s = $b - objG_player_plane.y), (f = Math.sqrt(deltatime * deltatime + s * s));
+          (s = $b - objG_player_plane.y),
+            (f = Math.sqrt(deltatime * deltatime + s * s));
           deltatime /= f;
           s /= f;
           objG_inputManager.hover = 75 < f ? 0 : 1;
@@ -5505,7 +5580,8 @@ class FollowMode_R {
       if (xa) {
         for (f in objD_pickups) objD_pickups[f].draw(this.#ctx_canvas);
         obj_particleImpacts.draw(this.#ctx_canvas);
-        for (f in objD_missiles) objD_missiles[f].draw(this.#ctx_canvas, deltatime);
+        for (f in objD_missiles)
+          objD_missiles[f].draw(this.#ctx_canvas, deltatime);
         for (f in objD_planes) objD_planes[f].draw(this.#ctx_canvas, deltatime);
         for (f in objD_planes) objD_planes[f].drawInfo(this.#ctx_canvas);
         Z && objG_player_plane.drawInput(this.#ctx_canvas);
@@ -5544,7 +5620,8 @@ class FollowMode_R {
           this.#ctx_canvas.rotate(-this.#k),
           (e = 1.2),
           c
-            ? (this.#ctx_canvas.translate(0, -(-20 - 10 * deltatime)), (e = 0.9))
+            ? (this.#ctx_canvas.translate(0, -(-20 - 10 * deltatime)),
+              (e = 0.9))
             : this.#ctx_canvas.translate(0, -(-30 - 10 * deltatime)),
           (this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)"),
           this.#ctx_canvas.beginPath(),
@@ -5687,12 +5764,17 @@ class UI_Anchor {
   #zoom = this.#minZoom;
   #html_canvas;
   #ctx_canvas;
-  x
-  y
-  zoom!: number
-  minZoom!: number
-  maxZoom!: number
-  constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, x: number, y: number) {
+  x;
+  y;
+  zoom!: number;
+  minZoom!: number;
+  maxZoom!: number;
+  constructor(
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+  ) {
     this.x = x;
     this.y = y;
     this.#html_canvas = canvas;
@@ -5801,7 +5883,11 @@ class FrameImage {
   y = 0;
   x = 0;
   canvas!: HTMLCanvasElement;
-  frameWithCanvas(canvas: HTMLCanvasElement, draw_width: number, draw_height: number) {
+  frameWithCanvas(
+    canvas: HTMLCanvasElement,
+    draw_width: number,
+    draw_height: number,
+  ) {
     this.width = canvas.width;
     this.height = canvas.height;
     this.canvas = canvas;
@@ -5914,8 +6000,8 @@ class FrameImage {
       this.height,
     );
     let p = ctx.getImageData(0, 0, this.width, this.height),
-        image_raw = p.data,
-        size = image_raw.length;
+      image_raw = p.data,
+      size = image_raw.length;
     for (let t = 0; t < size; ) {
       image_raw[t] = image_raw[t++] * (1 - a) + r * a;
       image_raw[t] = image_raw[t++] * (1 - a) + g * a;
@@ -5924,10 +6010,19 @@ class FrameImage {
     }
     ctx.putImageData(p, 0, 0);
     let tinted_frame_image = new FrameImage();
-    tinted_frame_image.frameWithCanvas(canvas, this.#draw_width, this.#draw_height);
+    tinted_frame_image.frameWithCanvas(
+      canvas,
+      this.#draw_width,
+      this.#draw_height,
+    );
     return tinted_frame_image;
   }
-  generateTintImage(img_rgbk: FrameImage.ImgRGBK, r: number, g: number, b: number) {
+  generateTintImage(
+    img_rgbk: FrameImage.ImgRGBK,
+    r: number,
+    g: number,
+    b: number,
+  ) {
     let canvas = document.createElement("canvas");
     canvas.width = this.width;
     canvas.height = this.height;
@@ -5936,9 +6031,18 @@ class FrameImage {
     ctx.globalCompositeOperation = "copy";
     ctx.drawImage(img_rgbk[3], 0, 0);
     ctx.globalCompositeOperation = "lighter";
-    if(0 < r) {(ctx.globalAlpha = r / 255); ctx.drawImage(img_rgbk[0], 0, 0)}
-    if(0 < g) {(ctx.globalAlpha = g / 255); ctx.drawImage(img_rgbk[1], 0, 0)}
-    if(0 < b) {(ctx.globalAlpha = b / 255); ctx.drawImage(img_rgbk[2], 0, 0)}
+    if (0 < r) {
+      ctx.globalAlpha = r / 255;
+      ctx.drawImage(img_rgbk[0], 0, 0);
+    }
+    if (0 < g) {
+      ctx.globalAlpha = g / 255;
+      ctx.drawImage(img_rgbk[1], 0, 0);
+    }
+    if (0 < b) {
+      ctx.globalAlpha = b / 255;
+      ctx.drawImage(img_rgbk[2], 0, 0);
+    }
     let frame_image = new FrameImage();
     frame_image.frameWithCanvas(canvas, this.#draw_width, this.#draw_height);
     return frame_image;
@@ -6036,11 +6140,11 @@ class FrameImage {
 }
 namespace FrameImage {
   export type ImgRGBK = [
-      R: HTMLImageElement,
-      G: HTMLImageElement,
-      B: HTMLImageElement,
-      K: HTMLImageElement,
-  ]
+    R: HTMLImageElement,
+    G: HTMLImageElement,
+    B: HTMLImageElement,
+    K: HTMLImageElement,
+  ];
 }
 class AnimationManager {
   #animations: Record<string, Animation> = {};
@@ -6069,14 +6173,27 @@ class AnimationManager {
   runAnimationBehind(a: DrawAnimation) {
     this.#runBG.push(a);
   }
-  addBlast(x: number, y: number, size: number, max_parallel: number, strength: number) {
+  addBlast(
+    x: number,
+    y: number,
+    size: number,
+    max_parallel: number,
+    strength: number,
+  ) {
     let k = objG_animationManager.createAnimation("explosion");
     k.setScale(size);
     k.posX = x;
     k.posY = y;
     objG_animationManager.runAnimationBehind(k);
     x = 1 - func_calculateDistance2D(x, y, H.x, H.y) / num_sound_max_distance;
-    0.01 < x && objG_sfxManager.playSound(str_sfxid_mexpl2, x * strength, 1, max_parallel, null);
+    0.01 < x &&
+      objG_sfxManager.playSound(
+        str_sfxid_mexpl2,
+        x * strength,
+        1,
+        max_parallel,
+        null,
+      );
   }
   addExplosion(x: number, y: number, v_x: number, v_y: number) {
     if (
@@ -6095,11 +6212,14 @@ class AnimationManager {
   }
   update(deltatime: number) {
     for (const i in this.#runL1)
-      this.#runL1[i].update(deltatime), this.#runL1[i].deleting && this.#runL1.splice(i, 1);
+      this.#runL1[i].update(deltatime),
+        this.#runL1[i].deleting && this.#runL1.splice(i, 1);
     for (const i in this.#runBG)
-      this.#runBG[i].update(deltatime), this.#runBG[i].deleting && this.#runBG.splice(i, 1);
+      this.#runBG[i].update(deltatime),
+        this.#runBG[i].deleting && this.#runBG.splice(i, 1);
     for (const i in this.#runL2)
-      this.#runL2[i].update(deltatime), this.#runL2[i].deleting && this.#runL2.splice(i, 1);
+      this.#runL2[i].update(deltatime),
+        this.#runL2[i].deleting && this.#runL2.splice(i, 1);
     for (const i in this.#a)
       this.#a[i].update(deltatime), this.#a[i].deleting && this.#a.splice(i, 1);
   }
@@ -6513,7 +6633,8 @@ class ParticleDebris {
         ? (this.#obj_particleMan.alpha = (2500 - this.#n) / 200)
         : 2500 < this.#n && (this.deleting = true);
     this.deleting ||
-      (this.#obj_particleMan.setPosition(this.#x, this.#y), this.#obj_particleMan.updateExplosion(deltatime));
+      (this.#obj_particleMan.setPosition(this.#x, this.#y),
+      this.#obj_particleMan.updateExplosion(deltatime));
   }
   draw(ctx: CanvasRenderingContext2D) {
     this.deleting || this.#obj_particleMan.draw(ctx);
@@ -6662,19 +6783,19 @@ class Missile {
     this.origY = this.dstY;
     this.dstX = 10 * x_gu;
     this.dstY = 10 * y_gu;
-    if(this.first_set) {
-      let obj_plane = objD_planes[id_plane]
-      if(obj_plane) {
-        y_gu = 5 * Math.abs(Math.cos(obj_plane.angle + Math.PI / 2))
-        this.origX = obj_plane.x
-        this.origY = obj_plane.y + y_gu
-        this.x = obj_plane.x
-        this.y = obj_plane.y
+    if (this.first_set) {
+      let obj_plane = objD_planes[id_plane];
+      if (obj_plane) {
+        y_gu = 5 * Math.abs(Math.cos(obj_plane.angle + Math.PI / 2));
+        this.origX = obj_plane.x;
+        this.origY = obj_plane.y + y_gu;
+        this.x = obj_plane.x;
+        this.y = obj_plane.y;
       } else {
-        this.x = this.dstX
-        this.y = this.dstY
-        this.origX = this.dstX
-        this.origY = this.dstY
+        this.x = this.dstX;
+        this.y = this.dstY;
+        this.origX = this.dstX;
+        this.origY = this.dstY;
       }
       this.first_set = false;
       1 == this.type && (this.angle = Math.PI / 2);
@@ -6682,7 +6803,8 @@ class Missile {
     0 == this.type &&
       ((x_gu = this.dstX - this.origX),
       (y_gu = this.dstY - this.origY),
-      (this.angle = 0 <= x_gu ? Math.atan(y_gu / x_gu) : Math.atan(y_gu / x_gu) + Math.PI));
+      (this.angle =
+        0 <= x_gu ? Math.atan(y_gu / x_gu) : Math.atan(y_gu / x_gu) + Math.PI));
   }
   setColorHue(hue: number) {
     this.colorHue = hue;
@@ -6835,7 +6957,9 @@ class ParticleFlags {
         (c = Math.sqrt(
           Math.pow(c.x - this.#x, 2) + Math.pow(c.y - this.#y, 2),
         )));
-      a > this.pointMinDistance && c > 3 * this.pointMinDistance && (deltatime = true);
+      a > this.pointMinDistance &&
+        c > 3 * this.pointMinDistance &&
+        (deltatime = true);
     }
     deltatime &&
       (this.tailJoints[0].push({
@@ -7058,7 +7182,9 @@ class ScoreAccumInfo {
     this.#f && 500 > frametime_millis - this.#f && (a = true);
     c = new StyleStroke(13, "#FFFFFF");
     c.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
-    a ? (diff = this.#b[this.#b.length - 1].number + diff) : (this.#f = frametime_millis);
+    a
+      ? (diff = this.#b[this.#b.length - 1].number + diff)
+      : (this.#f = frametime_millis);
     c.setValue("+" + diff);
     c = c.render() as ScoreAccumInfo.HTMLCanvasElementExtended;
     c.number = diff;
@@ -7068,7 +7194,9 @@ class ScoreAccumInfo {
   }
 }
 namespace ScoreAccumInfo {
-  export type HTMLCanvasElementExtended = HTMLCanvasElement & {number: number}
+  export type HTMLCanvasElementExtended = HTMLCanvasElement & {
+    number: number;
+  };
 }
 class SFXmanager {
   #b = false;
@@ -7114,15 +7242,23 @@ class SFXmanager {
       },
     });
   }
-  playSound(sfx_name: string, volume: number, speed: number, max_parallel: number, callback: null | ((nodeId: number) => void)) {
+  playSound(
+    sfx_name: string,
+    volume: number,
+    speed: number,
+    max_parallel: number,
+    callback: null | ((nodeId: number) => void),
+  ) {
     if (this.#b && 0 != num_setting_muteVol && wa) {
       volume *= num_max_volume;
       let q = this.#f[sfx_name];
       this.#e[sfx_name] || (this.#e[sfx_name] = 0);
-      if(!(0 < max_parallel && this.#e[sfx_name] >= max_parallel)) {
+      if (!(0 < max_parallel && this.#e[sfx_name] >= max_parallel)) {
         this.sound.play(sfx_name, (nodeId: number) => {
           let gameNode = objG_sfxManager.sound._nodeById(nodeId);
-          gameNode && gameNode.bufferSource && (gameNode.bufferSource.playbackRate.value = speed);
+          gameNode &&
+            gameNode.bufferSource &&
+            (gameNode.bufferSource.playbackRate.value = speed);
           objG_sfxManager.sound.volume(volume, nodeId);
           callback && callback(nodeId);
         });
@@ -7141,23 +7277,27 @@ class SFXmanager {
   // }
 }
 namespace SFXmanager {
-  export type SoundSpriteDefinitions = Record<string | number, [start: number, end: number] | [start: number, end: number, looping: boolean]>
+  export type SoundSpriteDefinitions = Record<
+    string | number,
+    | [start: number, end: number]
+    | [start: number, end: number, looping: boolean]
+  >;
   export interface GainNode {
     bufferSource?: {
       playbackRate: {
-        value: number
-      }
-    }
+        value: number;
+      };
+    };
   }
   export interface Howl {
     constructor(options: {
-      urls: string[],
-      sprite: SoundSpriteDefinitions,
-      onload?: () => void
-    }): Howl
-    play(sfx_name: string, callback?: (end: number) => void): number
-    volume(volume: number, nodeId?: number): number
-    _nodeById(id: number): GainNode
+      urls: string[];
+      sprite: SoundSpriteDefinitions;
+      onload?: () => void;
+    }): Howl;
+    play(sfx_name: string, callback?: (end: number) => void): number;
+    volume(volume: number, nodeId?: number): number;
+    _nodeById(id: number): GainNode;
   }
 }
 class UI_KillStatus {
@@ -7176,7 +7316,8 @@ class UI_KillStatus {
   #l = 0;
   #currentText2Render;
   update(deltatime: number) {
-    1 == this.#g && ((this.#h += deltatime), this.#h > this.#e && (this.#q = true));
+    1 == this.#g &&
+      ((this.#h += deltatime), this.#h > this.#e && (this.#q = true));
     this.#q
       ? ((this.#g -= 0.2),
         0 > this.#g &&
@@ -7225,7 +7366,8 @@ class UI_KillStatus {
     256 == flag_streak && (this.#l = kills);
     let d = this.replaceCode(flag_streak);
     -1 == d
-      ? (this.#b.push(flag_streak), 1 == this.#b.length && this.processCode(flag_streak))
+      ? (this.#b.push(flag_streak),
+        1 == this.#b.length && this.processCode(flag_streak))
       : 0 == d && this.processCode(flag_streak);
   }
   processCode(flag_streak: number) {
@@ -7623,7 +7765,7 @@ class Warship {
 //window.location.href.split("/");
 
 let search_params = window.location.search;
-if("?" == search_params.charAt(0)) {
+if ("?" == search_params.charAt(0)) {
   search_params = search_params.slice(1);
 }
 let param = search_params.split("&");
@@ -7636,12 +7778,14 @@ window.stats = obj_browserQueryParams.stats ? true : false;
 
 "true" == window.localStorage.lq && (bool_setting_highQuality = false);
 
-if(void 0 == window.localStorage.wingsCCTime ||
+if (
+  void 0 == window.localStorage.wingsCCTime ||
   (void 0 != window.localStorage.wingsCC &&
-  2 != window.localStorage.wingsCC.length)) {
-  func_detect_country()
-} else if(288e5 < +new Date() - window.localStorage.wingsCCTime) {
-  func_detect_country()
+    2 != window.localStorage.wingsCC.length)
+) {
+  func_detect_country();
+} else if (288e5 < +new Date() - window.localStorage.wingsCCTime) {
+  func_detect_country();
 } else {
   str_conutryCode = window.localStorage.wingsCC;
 }
@@ -7666,8 +7810,8 @@ document.oncontextmenu = (ev: MouseEvent) => {
 
 window.onload = () => {
   if (Modernizr.canvas && Modernizr.websockets) {
-    if(objG_followMode == null) {
-      if(window.devicePixelRatio) {
+    if (objG_followMode == null) {
+      if (window.devicePixelRatio) {
         int_pixel_ratio = 1 < window.devicePixelRatio ? 2 : 1;
         objG_eventManager = new EventManager();
       }
@@ -7675,14 +7819,14 @@ window.onload = () => {
       window.addEventListener("resize", objG_followMode.resize, false);
       objG_inputManager = new InputManager();
       objG_inputManager.addListeners();
-      if(window.requestAnimationFrame) {
+      if (window.requestAnimationFrame) {
         window.requestAnimationFrame(requestAnimationFrameCallback);
       } else {
         setInterval(requestAnimationFrameCallback, 1e3 / 60);
       }
       $("#overlay").show();
     }
-      objG_followMode.resize();
-      func_setGraphicsQuality();
-    }
+    objG_followMode.resize();
+    func_setGraphicsQuality();
+  }
 };
