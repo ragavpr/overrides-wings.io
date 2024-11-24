@@ -1482,7 +1482,7 @@ class ParticleImpacts {
     let f, d, a, c, g, h, q, n, k, m, l, y, r, p;
     for (f = [], d = 0; d < this.#inst_impact_list.length; d++) {
       a = this.#inst_impact_list[d];
-      if (void 0 == objD_planes[a.id]) f.push(a);
+      if (undefined == objD_planes[a.id]) f.push(a);
       else if (a.weapon == id_weapon_railgun) {
         e.lineWidth = 2 + 5 * (1 - a.a);
         e.beginPath();
@@ -1599,7 +1599,7 @@ class ParticleImpacts {
             (m = a.curPosition.y - a.direction.y * c))
           : ((q = a.origPosition.x), (m = a.origPosition.y));
         (c = e),
-          (n = r = y = l = void 0),
+          (n = r = y = l = undefined),
           (n = q - g),
           (r = m - h),
           (p = g + 0.05 * n),
@@ -1811,10 +1811,13 @@ class UI_GameInfo {
     else if (0 < this.#warship_remote_txt_timeout)
       this.DrawWarshipDestroyedLabel(I);
     else {
-      this.#canvas_leaderboard &&
+      if (
+        this.#canvas_leaderboard &&
         0 < numG_player_count &&
-        (!bool_following_plane || bool_continueGame) &&
+        (!bool_following_plane || bool_continueGame)
+      ) {
         this.drawLeaderboard(I);
+      }
       if (objG_player_plane && !bool_following_plane) {
         I.save();
         I.scale(num_scale_factor, num_scale_factor);
@@ -1822,170 +1825,217 @@ class UI_GameInfo {
         I.translate(K.width / 2 + 6, K.height / 2 + 6);
         K.draw(I);
         this.DrawCurrentWeaponIcon(I, objG_player_plane.weapon);
-        (r = 19), (P = 0);
-        null == this.#stroke_ammo_count && (this.#stroke_ammo_count = new StyleStroke(r, "#FFFFFF"));
+        r = 19;
+        P = 0;
+        if (null == this.#stroke_ammo_count)
+          this.#stroke_ammo_count = new StyleStroke(r, "#FFFFFF");
         R = objG_eventManager.isInstagib();
-        if (this.#ammo_count != objG_player_plane.GetAmmo() || null == this.#canvasr_ammo_count) {
+        if (
+          this.#ammo_count != objG_player_plane.GetAmmo() ||
+          null == this.#canvasr_ammo_count
+        ) {
           S = "\u221e";
-          R ||
-            ((this.#ammo_count = objG_player_plane.GetAmmo()),
-            -1 < this.#ammo_count && (S = this.#ammo_count));
+          if (!R) {
+            this.#ammo_count = objG_player_plane.GetAmmo();
+            -1 < this.#ammo_count && (S = this.#ammo_count);
+          }
           this.#stroke_ammo_count.setValue(S);
           this.#canvasr_ammo_count = this.#stroke_ammo_count.render();
           this.#ammo_count_width = this.#canvasr_ammo_count.width;
         }
         I.globalAlpha = 1;
-        I.drawImage(this.#canvasr_ammo_count, 0.57 * -this.#ammo_count_width, 0.19 * K.height + r / 2 + P);
+        I.drawImage(
+          this.#canvasr_ammo_count,
+          0.57 * -this.#ammo_count_width,
+          0.19 * K.height + r / 2 + P,
+        );
         I.restore();
         this.DrawScore(I);
       }
       if (0 < this.#center_txt_last_update) {
         K = 0;
         r = +new Date() - this.#center_txt_last_update;
-        4e3 > r
-          ? (K = 3e3 > r ? 1 : 1 - (r - 3e3) / 1e3)
-          : (this.#center_txt_last_update = 0);
-        this.#style_centermsg_txt ||
-          ((P = 20),
-          (r = false),
-          this.#center_txt_msg_suffix
-            ? ((r = 40),
-              (this.#style_centermsg_suffix_txt = new StyleText(
-                r * num_scale_factor,
-                "#FF0000",
-                "#990000",
-              )),
-              this.#style_centermsg_suffix_txt.setValue(this.#center_txt_msg_suffix),
-              this.#style_centermsg_suffix_txt.setUsingFrame(true),
-              (r = true),
-              this.#style_centermsg_suffix_txt.setAddTop(25))
-            : ((this.#style_centermsg_suffix_txt = undefined), (P = 35)),
-          (this.#style_centermsg_txt = new StyleText(P * num_scale_factor, "#FF0000", "#990000")),
-          this.#style_centermsg_txt.setValue(this.#center_txt_msg),
-          this.#style_centermsg_txt.setUsingFrame(!r));
+        if (4e3 > r) {
+          K = 3e3 > r ? 1 : 1 - (r - 3e3) / 1e3;
+        } else {
+          this.#center_txt_last_update = 0;
+        }
+        if (!this.#style_centermsg_txt) {
+          P = 20;
+          r = false;
+          if (this.#center_txt_msg_suffix) {
+            r = 40;
+            this.#style_centermsg_suffix_txt = new StyleText(
+              r * num_scale_factor,
+              "#FF0000",
+              "#990000",
+            );
+            this.#style_centermsg_suffix_txt.setValue(
+              this.#center_txt_msg_suffix,
+            );
+            this.#style_centermsg_suffix_txt.setUsingFrame(true);
+            r = true;
+            this.#style_centermsg_suffix_txt.setAddTop(25);
+          } else {
+            this.#style_centermsg_suffix_txt = undefined;
+            P = 35;
+          }
+          this.#style_centermsg_txt = new StyleText(
+            P * num_scale_factor,
+            "#FF0000",
+            "#990000",
+          );
+          this.#style_centermsg_txt.setValue(this.#center_txt_msg);
+          this.#style_centermsg_txt.setUsingFrame(!r);
+        }
         P = 0.25 * canvas.height;
-        this.#center_txt_murderer
-          ? (this.#style_centermsg_txt.setColor("#00ea11"),
-            this.#style_centermsg_txt.setSecondColor("#006b08"),
-            this.#style_centermsg_suffix_txt &&
-              (this.#style_centermsg_suffix_txt.setColor("#00ea11"), this.#style_centermsg_suffix_txt.setSecondColor("#006b08")))
-          : (this.#style_centermsg_txt.setColor("#ff0608"),
-            this.#style_centermsg_txt.setSecondColor("#a20400"),
-            this.#style_centermsg_suffix_txt &&
-              (this.#style_centermsg_suffix_txt.setColor("#ff0608"), this.#style_centermsg_suffix_txt.setSecondColor("#a20400")));
-        (r = this.#style_centermsg_txt.render()), O;
-        this.#center_txt_msg_suffix && (O = this.#style_centermsg_suffix_txt.render());
+        if (this.#center_txt_murderer) {
+          this.#style_centermsg_txt.setColor("#00ea11");
+          this.#style_centermsg_txt.setSecondColor("#006b08");
+          if (this.#style_centermsg_suffix_txt) {
+            this.#style_centermsg_suffix_txt.setColor("#00ea11");
+            this.#style_centermsg_suffix_txt.setSecondColor("#006b08");
+          }
+        } else {
+          this.#style_centermsg_txt.setColor("#ff0608");
+          this.#style_centermsg_txt.setSecondColor("#a20400");
+          if (this.#style_centermsg_suffix_txt) {
+            this.#style_centermsg_suffix_txt.setColor("#ff0608");
+            this.#style_centermsg_suffix_txt.setSecondColor("#a20400");
+          }
+        }
+        r = this.#style_centermsg_txt.render();
+        if (this.#center_txt_msg_suffix) {
+          O = this.#style_centermsg_suffix_txt.render();
+        }
         I.globalAlpha = K;
-        O && I.drawImage(O, 0.5 * canvas.width - O.width / 2, P - 5);
+        if (O) I.drawImage(O, 0.5 * canvas.width - O.width / 2, P - 5);
         I.drawImage(r, 0.5 * canvas.width - r.width / 2, P);
         I.globalAlpha = 1;
       }
-      this.#warning_msg_txt &&
-        ((P = 0.6 * canvas.height),
-        (K = (this.#m / 1e3) * 10),
-        1 < K && (K = 1),
-        this.#style_warningmsg_txt ||
-          ((r = 30),
-          (this.#style_warningmsg_txt = new StyleText(
+      if (this.#warning_msg_txt) {
+        P = 0.6 * canvas.height;
+        K = (this.#m / 1e3) * 10;
+        1 < K && (K = 1);
+        if (!this.#style_warningmsg_txt) {
+          r = 30;
+          this.#style_warningmsg_txt = new StyleText(
             r * num_scale_factor,
             "#FF0000",
             "#990000",
-          ))),
-        this.#style_warningmsg_txt.setValue(this.#warning_msg_txt),
-        this.#style_warningmsg_txt.setUsingFrame(true),
-        (r = this.#style_warningmsg_txt.render()),
-        (O = 0.1 * Math.sin(this.#m / 100) * num_scale_factor),
-        I.save(),
-        I.translate(0.5 * canvas.width, P),
-        I.scale(1 + O, 1 + O),
-        I.translate(-r.width / 2, 0),
-        (I.globalAlpha = K),
-        I.drawImage(r, 0, 0),
-        I.restore());
-      this.#missle_locked_txt &&
-        ((P = 0.397 * canvas.height),
-        (K = 1),
-        this.#style_missile_locked_txt ||
-          ((r = 20),
-          (this.#style_missile_locked_txt = new StyleText(
+          );
+        }
+        this.#style_warningmsg_txt.setValue(this.#warning_msg_txt);
+        this.#style_warningmsg_txt.setUsingFrame(true);
+        r = this.#style_warningmsg_txt.render();
+        O = 0.1 * Math.sin(this.#m / 100) * num_scale_factor;
+        I.save();
+        I.translate(0.5 * canvas.width, P);
+        I.scale(1 + O, 1 + O);
+        I.translate(-r.width / 2, 0);
+        I.globalAlpha = K;
+        I.drawImage(r, 0, 0);
+        I.restore();
+      }
+      if (this.#missle_locked_txt) {
+        P = 0.397 * canvas.height;
+        K = 1;
+        if (!this.#style_missile_locked_txt) {
+          r = 20;
+          this.#style_missile_locked_txt = new StyleText(
             r * num_scale_factor,
             "#FF0000",
             "#990000",
-          ))),
-        this.#style_missile_locked_txt.setValue(this.#missle_locked_txt),
-        this.#style_missile_locked_txt.setUsingFrame(false),
-        (r = this.#style_missile_locked_txt.render()),
-        I.save(),
-        I.translate(0.5 * canvas.width, P),
-        I.scale(0.8, 0.8),
-        I.translate(-r.width / 2, 0),
-        (I.globalAlpha = K),
-        I.drawImage(r, 0, 0),
-        I.restore());
-      objG_wsConnection.hasConnection &&
-        xa &&
-        (objG_eventManager.waiting
-          ? this.DrawWarmupTime(I)
-          : objG_eventManager.isInEvent()
-            ? this.DrawEventLabel(I)
-            : La && !bool_following_plane && this.DrawLaserDeployed(I));
-      undefined == this.#warning_msg_txt &&
-        this.#objUI_killStatus.shouldDraw() &&
-        (I.save(),
-        I.translate(0.5 * canvas.width, 0.67 * canvas.height),
-        this.#objUI_killStatus.draw(I),
-        I.restore());
-      Z ||
-        bool_following_plane ||
-        ((O = "FREE MODE"),
-        0 == ka &&
-          (O = objG_player_plane
+          );
+        }
+        this.#style_missile_locked_txt.setValue(this.#missle_locked_txt);
+        this.#style_missile_locked_txt.setUsingFrame(false);
+        r = this.#style_missile_locked_txt.render();
+        I.save();
+        I.translate(0.5 * canvas.width, P);
+        I.scale(0.8, 0.8);
+        I.translate(-r.width / 2, 0);
+        I.globalAlpha = K;
+        I.drawImage(r, 0, 0);
+        I.restore();
+      }
+      if (objG_wsConnection.hasConnection && xa) {
+        if (objG_eventManager.waiting) this.DrawWarmupTime(I);
+        else if (objG_eventManager.isInEvent()) this.DrawEventLabel(I);
+        else if (La && !bool_following_plane) this.DrawLaserDeployed(I);
+      }
+      if (
+        undefined == this.#warning_msg_txt &&
+        this.#objUI_killStatus.shouldDraw()
+      ) {
+        I.save();
+        I.translate(0.5 * canvas.width, 0.67 * canvas.height);
+        this.#objUI_killStatus.draw(I);
+        I.restore();
+      }
+      if (!Z && !bool_following_plane) {
+        O = "FREE MODE";
+        if (0 == ka) {
+          O = objG_player_plane
             ? "Following " + func_renameBlankPlayerNames(objG_player_plane.name)
-            : "FOLLOW MODE"),
-        this.#style_followmode_txt ||
-          (this.#style_followmode_txt = new StyleText(
+            : "FOLLOW MODE";
+        }
+        if (!this.#style_followmode_txt) {
+          this.#style_followmode_txt = new StyleText(
             30 * num_scale_factor,
             "#ffd118",
             "#b56006",
-          )),
-        this.#style_followmode_txt.setValue(O),
-        this.#style_followmode_txt.setUsingFrame(true),
-        (r = this.#style_followmode_txt.render()),
-        (I.globalAlpha = 1),
-        (P = 0.14 * canvas.height),
-        I.drawImage(r, 0.5 * canvas.width - r.width / 2, P));
-      this.#tip_message_txt &&
-        (4e3 > this.#H
-          ? (null == this.#canvasr_tip_message &&
-              ((r = 20),
-              (this.#stroke_tip_message = new StyleStroke(
-                r * num_scale_factor,
-                "#ffd118",
-                true,
-                "#633504",
-              )),
-              this.#stroke_tip_message.setValue(this.#tip_message_txt),
-              this.#stroke_tip_message.setStrokeWidth(5),
-              this.#stroke_tip_message.setRoundedFrameOpacity(0.5),
-              this.#stroke_tip_message.setHMargin(5),
-              this.#stroke_tip_message.setUsingRoundedFrame(true),
-              (this.#canvasr_tip_message = this.#stroke_tip_message.render())),
-            (O = 1),
-            300 > this.#H
-              ? ((O = this.#H / 300), (O = Math.sqrt(O)))
-              : 3700 < this.#H &&
-                ((O = 1 - (this.#H - 3700) / 300), (O = Math.sqrt(O))),
-            I.drawImage(
-              this.#canvasr_tip_message,
-              canvas_width / 2 - this.#canvasr_tip_message.width / 2,
-              1.1 * this.#canvasr_tip_message.height * O - this.#canvasr_tip_message.height,
-            ))
-          : (this.#tip_message_txt = undefined));
-      bool_following_plane || this.#objUI_ActivityMessages.draw(I);
-      !bool_following_plane && 0 < qa && this.DrawKing(I);
-      this.#leaberboard_refresh && (this.#leaberboard_refresh = false);
-      this.#scale_factor != num_scale_factor &&
-        ((this.#style_followmode_txt = this.#style_warningmsg_txt = undefined), (this.#scale_factor = num_scale_factor));
+          );
+        }
+        this.#style_followmode_txt.setValue(O);
+        this.#style_followmode_txt.setUsingFrame(true);
+        r = this.#style_followmode_txt.render();
+        I.globalAlpha = 1;
+        P = 0.14 * canvas.height;
+        I.drawImage(r, 0.5 * canvas.width - r.width / 2, P);
+      }
+      if (this.#tip_message_txt) {
+        if (4e3 > this.#H) {
+          if (null == this.#canvasr_tip_message) {
+            r = 20;
+            this.#stroke_tip_message = new StyleStroke(
+              r * num_scale_factor,
+              "#ffd118",
+              true,
+              "#633504",
+            );
+            this.#stroke_tip_message.setValue(this.#tip_message_txt);
+            this.#stroke_tip_message.setStrokeWidth(5);
+            this.#stroke_tip_message.setRoundedFrameOpacity(0.5);
+            this.#stroke_tip_message.setHMargin(5);
+            this.#stroke_tip_message.setUsingRoundedFrame(true);
+            this.#canvasr_tip_message = this.#stroke_tip_message.render();
+          }
+          O = 1;
+          if (300 > this.#H) {
+            O = this.#H / 300;
+            O = Math.sqrt(O);
+          } else if (3700 < this.#H) {
+            O = 1 - (this.#H - 3700) / 300;
+            O = Math.sqrt(O);
+          }
+          I.drawImage(
+            this.#canvasr_tip_message,
+            canvas_width / 2 - this.#canvasr_tip_message.width / 2,
+            1.1 * this.#canvasr_tip_message.height * O -
+              this.#canvasr_tip_message.height,
+          );
+        } else {
+          this.#tip_message_txt = undefined;
+        }
+      }
+      if (!bool_following_plane) this.#objUI_ActivityMessages.draw(I);
+      if (!bool_following_plane && 0 < qa) this.DrawKing(I);
+      if (this.#leaberboard_refresh) this.#leaberboard_refresh = false;
+      if (this.#scale_factor != num_scale_factor) {
+        this.#style_followmode_txt = this.#style_warningmsg_txt = undefined;
+        this.#scale_factor = num_scale_factor;
+      }
     }
   }
   DrawKing(ctx: CanvasRenderingContext2D) {
@@ -1997,9 +2047,11 @@ class UI_GameInfo {
       let obj_plane = objD_planes[this.#list_plane_ids[0]];
       if (obj_plane) {
         let name = func_renameBlankPlayerNames(obj_plane.name);
-        objG_player_plane &&
+        if (
+          objG_player_plane &&
           this.#king_plane_id != obj_plane.id &&
-          obj_plane.id == objG_player_plane.id &&
+          obj_plane.id == objG_player_plane.id
+        )
           objG_sfxManager.playSound(str_sfxid_king, 1, 1, 1);
         this.#king_plane_id = obj_plane.id;
         if (name != this.#king_name) {
@@ -2010,7 +2062,7 @@ class UI_GameInfo {
             "#6e3800",
           );
           let spaces = " ";
-          bool_setting_highQuality || (spaces = "");
+          if (!bool_setting_highQuality) spaces = "";
           this.#style_king_txt.setValue(spaces + "  King: " + name);
           this.#style_king_txt.setUsingRoundedFrame(true);
         }
@@ -2020,9 +2072,13 @@ class UI_GameInfo {
       if (this.#style_king_txt) {
         ctx.save();
         let d = 0.83 * canvas.height;
-        ctx.drawImage(this.#canvasr_king_txt, 0.5 * canvas.width - this.#canvasr_king_txt.width / 2, d);
+        ctx.drawImage(
+          this.#canvasr_king_txt,
+          0.5 * canvas.width - this.#canvasr_king_txt.width / 2,
+          d,
+        );
         let font_size = 20;
-        bool_setting_highQuality || (font_size = 13);
+        if (!bool_setting_highQuality) font_size = 13;
         ctx.translate(
           0.5 * canvas.width - this.#canvasr_king_txt.width / 2 + font_size,
           d + this.#canvasr_king_txt.height / 2 - 2 * num_scale_factor,
@@ -2040,10 +2096,18 @@ class UI_GameInfo {
     if (str_name_superweapon_holder != this.#sw_holder_name) {
       this.#sw_holder_name = str_name_superweapon_holder;
       c = 25;
-      this.#style_swholder = new StyleText(c * num_scale_factor, "#fbc521", "#c78109");
-      str_name_superweapon_holder
-        ? this.#style_swholder.setValue("     Super Weapon: " + str_name_superweapon_holder)
-        : this.#style_swholder.setValue("     Find The Super Weapon!");
+      this.#style_swholder = new StyleText(
+        c * num_scale_factor,
+        "#fbc521",
+        "#c78109",
+      );
+      if (str_name_superweapon_holder) {
+        this.#style_swholder.setValue(
+          "     Super Weapon: " + str_name_superweapon_holder,
+        );
+      } else {
+        this.#style_swholder.setValue("     Find The Super Weapon!");
+      }
       this.#style_swholder.setUsingRoundedFrame(true);
       this.#canvasr_sw_holder = this.#style_swholder.render();
     }
@@ -2052,9 +2116,13 @@ class UI_GameInfo {
       return;
     }
     c = 0.05 * canvas.height;
-    ctx.drawImage(this.#canvasr_sw_holder, 0.5 * canvas.width - this.#canvasr_sw_holder.width / 2, c);
+    ctx.drawImage(
+      this.#canvasr_sw_holder,
+      0.5 * canvas.width - this.#canvasr_sw_holder.width / 2,
+      c,
+    );
     d = 30;
-    bool_setting_highQuality || (d = 20);
+    if (!bool_setting_highQuality) d = 20;
     ctx.translate(
       0.5 * canvas.width - this.#canvasr_sw_holder.width / 2 + d,
       c + this.#canvasr_sw_holder.height / 2,
@@ -2065,7 +2133,7 @@ class UI_GameInfo {
   }
   // DrawRank(ctx: CanvasRenderingContext2D) {
   //   0 < objG_player_plane.rank &&
-  //     (void 0 == rankCanvas &&
+  //     (undefined == rankCanvas &&
   //       ((rankCanvas = document.createElement("canvas")),
   //       (rankCanvas.width = 200),
   //       (rankCanvas.height = 200),
@@ -2100,37 +2168,50 @@ class UI_GameInfo {
         k = 10 * num_scale_factor,
         n = canvas_width - b - 5,
         f = this.#lb_height + 5 + 5;
-      void 0 == this.#canvas_leaderboard_you &&
-        ((this.#canvas_leaderboard_you = document.createElement("canvas")),
-        (this.#ctx_leaderboard_you = this.#canvas_leaderboard_you.getContext("2d")!));
-      if (-1 != objG_player_plane.score)
-        for (
-          this.#canvas_leaderboard_you.width = g,
-            this.#canvas_leaderboard_you.height = h,
-            this.#ctx_leaderboard_you.font = c + "px 'proxima-nova-1','proxima-nova-2', " + d,
-            this.#ctx_leaderboard_you.globalAlpha = 0.3,
-            this.#ctx_leaderboard_you.textBaseline = "hanging",
-            func_drawRoundedRectangle(
-              this.#ctx_leaderboard_you,
-              0,
-              0,
-              b,
-              h,
-              30 * num_scale_factor,
-            ),
-            this.#ctx_leaderboard_you.globalAlpha = 1,
-            c = 2;
-          0 <= c;
-          c--
-        ) {
+      if (undefined == this.#canvas_leaderboard_you) {
+        this.#canvas_leaderboard_you = document.createElement("canvas");
+        this.#ctx_leaderboard_you =
+          this.#canvas_leaderboard_you.getContext("2d")!;
+      }
+      if (-1 != objG_player_plane.score) {
+        this.#canvas_leaderboard_you.width = g;
+        this.#canvas_leaderboard_you.height = h;
+        this.#ctx_leaderboard_you.font =
+          c + "px 'proxima-nova-1','proxima-nova-2', " + d;
+        this.#ctx_leaderboard_you.globalAlpha = 0.3;
+        this.#ctx_leaderboard_you.textBaseline = "hanging";
+        func_drawRoundedRectangle(
+          this.#ctx_leaderboard_you,
+          0,
+          0,
+          b,
+          h,
+          30 * num_scale_factor,
+        );
+        this.#ctx_leaderboard_you.globalAlpha = 1;
+        for (c = 2; 0 <= c; c--) {
           let d = 0;
-          0 != c
-            ? ((this.#ctx_leaderboard_you.fillStyle = "rgba(100,49,0,1.0)"), (d = c))
-            : (this.#ctx_leaderboard_you.fillStyle = "rgba(255,156,0,1.0)");
-          this.#ctx_leaderboard_you.fillText(objG_player_plane.rank + ". You ", e, k + d);
-          g = this.#ctx_leaderboard_you.measureText(objG_player_plane.score).width;
-          this.#ctx_leaderboard_you.fillText(objG_player_plane.score, b - e - g, k + d);
+          if (0 != c) {
+            this.#ctx_leaderboard_you.fillStyle = "rgba(100,49,0,1.0)";
+            d = c;
+          } else {
+            this.#ctx_leaderboard_you.fillStyle = "rgba(255,156,0,1.0)";
+          }
+          this.#ctx_leaderboard_you.fillText(
+            objG_player_plane.rank + ". You ",
+            e,
+            k + d,
+          );
+          g = this.#ctx_leaderboard_you.measureText(
+            objG_player_plane.score,
+          ).width;
+          this.#ctx_leaderboard_you.fillText(
+            objG_player_plane.score,
+            b - e - g,
+            k + d,
+          );
         }
+      }
       ctx.drawImage(this.#canvas_leaderboard_you, n, f + 5);
     }
   }
@@ -2146,19 +2227,33 @@ class UI_GameInfo {
       );
       this.#style_curr_event.setValue(objG_eventManager.getEventName());
       this.#canvasr_curr_event = this.#style_curr_event.render();
-      this.#style_warmup_event = new StyleText(20 * num_scale_factor, "#fe9b00", "#6e3800");
+      this.#style_warmup_event = new StyleText(
+        20 * num_scale_factor,
+        "#fe9b00",
+        "#6e3800",
+      );
       this.#style_warmup_event.setValue("STARTS IN");
       this.#canvar_warmup_event = this.#style_warmup_event.render();
-      this.#style_warshipev_info = new StyleText(27 * num_scale_factor, "#fe9b00", "#6e3800");
+      this.#style_warshipev_info = new StyleText(
+        27 * num_scale_factor,
+        "#fe9b00",
+        "#6e3800",
+      );
       this.#style_warshipev_info.setValue(func_millisToTimeFormat(c));
       this.#canvasr_warshipev_info = this.#style_warshipev_info.render();
     }
     if (this.#canvasr_warshipev_info) {
       let c = 0.8 * canvas.height,
         d;
-      (d = this.#canvasr_curr_event.width),
-        (d = this.#canvar_warmup_event.width > d ? this.#canvar_warmup_event.width : d),
-        (d = this.#canvasr_warshipev_info.width > d ? this.#canvasr_warshipev_info.width : d);
+      d = this.#canvasr_curr_event.width;
+      d =
+        this.#canvar_warmup_event.width > d
+          ? this.#canvar_warmup_event.width
+          : d;
+      d =
+        this.#canvasr_warshipev_info.width > d
+          ? this.#canvasr_warshipev_info.width
+          : d;
       ctx.fillStyle = "#000000";
       ctx.globalAlpha = 0.3;
       func_drawRoundedRectangle(ctx, canvas.width - d - 20, c, d, 102, 20);
@@ -2180,7 +2275,7 @@ class UI_GameInfo {
     if (this.#U) {
       this.#U = false;
       let c = objG_eventManager.endTime - frametime_millis;
-      0 > Math.floor(c) && (c = 0);
+      if (0 > Math.floor(c)) c = 0;
       this.#style_curr_event = new StyleText(
         25 * num_scale_factor,
         objG_eventManager.getEventColor(),
@@ -2188,41 +2283,72 @@ class UI_GameInfo {
       );
       this.#style_curr_event.setValue(objG_eventManager.getEventName());
       this.#canvasr_curr_event = this.#style_curr_event.render();
-      this.#style_warshipev_info = new StyleText(25 * num_scale_factor, "#fe9b00", "#6e3800");
-      objG_eventManager.isWarship()
-        ? 0 < objG_eventManager.warshipsLeft
-          ? this.#style_warshipev_info.setValue("Warships Left: " + objG_eventManager.warshipsLeft)
-          : 0 == objG_eventManager.warshipsEscaped
-            ? this.#style_warshipev_info.setValue("All Warships Destroyed!")
-            : this.#style_warshipev_info.setValue(
-                objG_eventManager.warshipsDestroyed +
-                  " Destroyed, " +
-                  objG_eventManager.warshipsEscaped +
-                  " Escaped!",
-              )
-        : this.#style_warshipev_info.setValue(func_millisToTimeFormat(c));
+      this.#style_warshipev_info = new StyleText(
+        25 * num_scale_factor,
+        "#fe9b00",
+        "#6e3800",
+      );
+      if (objG_eventManager.isWarship()) {
+        if (0 < objG_eventManager.warshipsLeft) {
+          this.#style_warshipev_info.setValue(
+            "Warships Left: " + objG_eventManager.warshipsLeft,
+          );
+        } else {
+          if (0 == objG_eventManager.warshipsEscaped) {
+            this.#style_warshipev_info.setValue("All Warships Destroyed!");
+          } else {
+            this.#style_warshipev_info.setValue(
+              objG_eventManager.warshipsDestroyed +
+                " Destroyed, " +
+                objG_eventManager.warshipsEscaped +
+                " Escaped!",
+            );
+          }
+        }
+      } else {
+        this.#style_warshipev_info.setValue(func_millisToTimeFormat(c));
+      }
       this.#canvasr_warshipev_info = this.#style_warshipev_info.render();
     }
     if (this.#canvasr_warshipev_info) {
       let c = 0.04 * canvas.height,
-        d = this.#canvasr_warshipev_info.width < this.#canvasr_curr_event.width ? this.#canvasr_curr_event.width : this.#canvasr_warshipev_info.width;
+        d =
+          this.#canvasr_warshipev_info.width < this.#canvasr_curr_event.width
+            ? this.#canvasr_curr_event.width
+            : this.#canvasr_warshipev_info.width;
       ctx.fillStyle = "#000000";
       ctx.globalAlpha = 0.3;
       func_drawRoundedRectangle(ctx, canvas.width / 2 - d / 2, c, d, 69, 20);
       ctx.globalAlpha = 1;
-      ctx.drawImage(this.#canvasr_curr_event, canvas.width / 2 - this.#canvasr_curr_event.width / 2, c);
-      ctx.drawImage(this.#canvasr_warshipev_info, canvas.width / 2 - this.#canvasr_warshipev_info.width / 2, c + 30);
+      ctx.drawImage(
+        this.#canvasr_curr_event,
+        canvas.width / 2 - this.#canvasr_curr_event.width / 2,
+        c,
+      );
+      ctx.drawImage(
+        this.#canvasr_warshipev_info,
+        canvas.width / 2 - this.#canvasr_warshipev_info.width / 2,
+        c + 30,
+      );
     }
   }
   DrawWinnerLabel(ctx: CanvasRenderingContext2D) {
-    !this.#style_evt_winner &&
-      this.#evt_winner_name &&
-      ((this.#style_evt_winner = new StyleText(55 * num_scale_factor, "#fe6800", "#6e3800")),
-      this.#style_evt_winner.setValue("WINNER"),
-      (this.#canvasr_evt_winner = this.#style_evt_winner.render()),
-      (this.#style_evt_winner_name = new StyleText(45 * num_scale_factor, "#fe9b00", "#6e3800")),
-      this.#style_evt_winner_name.setValue(this.#evt_winner_name),
-      (this.#canvasr_evt_winner_name = this.#style_evt_winner_name.render()));
+    if (!this.#style_evt_winner && this.#evt_winner_name) {
+      this.#style_evt_winner = new StyleText(
+        55 * num_scale_factor,
+        "#fe6800",
+        "#6e3800",
+      );
+      this.#style_evt_winner.setValue("WINNER");
+      this.#canvasr_evt_winner = this.#style_evt_winner.render();
+      this.#style_evt_winner_name = new StyleText(
+        45 * num_scale_factor,
+        "#fe9b00",
+        "#6e3800",
+      );
+      this.#style_evt_winner_name.setValue(this.#evt_winner_name);
+      this.#canvasr_evt_winner_name = this.#style_evt_winner_name.render();
+    }
     if (this.#canvasr_evt_winner && this.#canvasr_evt_winner_name) {
       let c = 0.13 * canvas.height,
         d =
@@ -2233,7 +2359,11 @@ class UI_GameInfo {
       ctx.globalAlpha = 0.3;
       func_drawRoundedRectangle(ctx, canvas.width / 2 - d / 2, c, d, 140, 20);
       ctx.globalAlpha = 1;
-      ctx.drawImage(this.#canvasr_evt_winner, canvas.width / 2 - this.#canvasr_evt_winner.width / 2, c);
+      ctx.drawImage(
+        this.#canvasr_evt_winner,
+        canvas.width / 2 - this.#canvasr_evt_winner.width / 2,
+        c,
+      );
       ctx.drawImage(
         this.#canvasr_evt_winner_name,
         canvas.width / 2 - this.#canvasr_evt_winner_name.width / 2,
@@ -2242,26 +2372,46 @@ class UI_GameInfo {
     }
   }
   DrawWarshipDestroyedLabel(ctx: CanvasRenderingContext2D) {
-    this.#style_warship ||
-      ((this.#style_warship = new StyleText(45 * num_scale_factor, "#fe6800", "#6e3800")),
-      undefined == this.#warship_remove_txt
-        ? this.#style_warship.setValue("WARSHIP")
-        : this.#style_warship.setValue(this.#warship_remove_txt),
-      (this.#canvasr_warship = this.#style_warship.render()),
-      (this.#style_warship_rmreason = new StyleText(35 * num_scale_factor, "#fe9b00", "#6e3800")),
-      undefined == this.#warship_remove_txt
-        ? this.#style_warship_rmreason.setValue("ESCAPED!")
-        : this.#style_warship_rmreason.setValue("DESTROYED A WARSHIP!"),
-      (this.#canvasr_warship_rmreason = this.#style_warship_rmreason.render()));
+    if (!this.#style_warship) {
+      this.#style_warship = new StyleText(
+        45 * num_scale_factor,
+        "#fe6800",
+        "#6e3800",
+      );
+      if (undefined == this.#warship_remove_txt)
+        this.#style_warship.setValue("WARSHIP");
+      else this.#style_warship.setValue(this.#warship_remove_txt);
+      this.#canvasr_warship = this.#style_warship.render();
+      this.#style_warship_rmreason = new StyleText(
+        35 * num_scale_factor,
+        "#fe9b00",
+        "#6e3800",
+      );
+      if (undefined == this.#warship_remove_txt)
+        this.#style_warship_rmreason.setValue("ESCAPED!");
+      else this.#style_warship_rmreason.setValue("DESTROYED A WARSHIP!");
+      this.#canvasr_warship_rmreason = this.#style_warship_rmreason.render();
+    }
     if (this.#canvasr_warship) {
       let c = 0.13 * canvas.height,
-        d = this.#canvasr_warship.width > this.#canvasr_warship_rmreason.width ? this.#canvasr_warship.width : this.#canvasr_warship_rmreason.width;
+        d =
+          this.#canvasr_warship.width > this.#canvasr_warship_rmreason.width
+            ? this.#canvasr_warship.width
+            : this.#canvasr_warship_rmreason.width;
       ctx.fillStyle = "#000000";
       ctx.globalAlpha = 0.3;
       func_drawRoundedRectangle(ctx, canvas.width / 2 - d / 2, c, d, 114, 20);
       ctx.globalAlpha = 1;
-      ctx.drawImage(this.#canvasr_warship, canvas.width / 2 - this.#canvasr_warship.width / 2, c);
-      ctx.drawImage(this.#canvasr_warship_rmreason, canvas.width / 2 - this.#canvasr_warship_rmreason.width / 2, c + 60);
+      ctx.drawImage(
+        this.#canvasr_warship,
+        canvas.width / 2 - this.#canvasr_warship.width / 2,
+        c,
+      );
+      ctx.drawImage(
+        this.#canvasr_warship_rmreason,
+        canvas.width / 2 - this.#canvasr_warship_rmreason.width / 2,
+        c + 60,
+      );
     }
   }
   // DrawLastEventWinner(ctx: CanvasRenderingContext2D) {
@@ -2285,12 +2435,24 @@ class UI_GameInfo {
   //   }
   // }
   DrawCurrentWeaponIcon(ctx: CanvasRenderingContext2D, id_weapon: number) {
-    this.#id_weapon_current != id_weapon && ((this.#id_weapon_current = id_weapon), (this.#Ga = 1));
-    1 == this.#Ga
-      ? ((this.#ea -= 0.15),
-        0 >= this.#ea && ((this.#id_weapon_draw = this.#id_weapon_current), (this.#ea = 0), (this.#Ga = 2)))
-      : 2 == this.#Ga &&
-        ((this.#ea += 0.15), 1 <= this.#ea && ((this.#ea = 1), (this.#Ga = 0)));
+    if (this.#id_weapon_current != id_weapon) {
+      this.#id_weapon_current = id_weapon;
+      this.#Ga = 1;
+    }
+    if (1 == this.#Ga) {
+      this.#ea -= 0.15;
+      if (0 >= this.#ea) {
+        this.#id_weapon_draw = this.#id_weapon_current;
+        this.#ea = 0;
+        this.#Ga = 2;
+      }
+    } else {
+      if (2 == this.#Ga) this.#ea += 0.15;
+      if (1 <= this.#ea) {
+        this.#ea = 1;
+        this.#Ga = 0;
+      }
+    }
     let d = 0,
       b = 0,
       g = 0,
@@ -2344,19 +2506,20 @@ class UI_GameInfo {
     ctx.scale(k, k);
     ctx.translate(0, 16);
     ctx.lineWidth = 3;
-    e &&
-      (ctx.beginPath(),
-      ctx.arc(-1, -11, 34, 0, 2 * Math.PI),
-      ctx.closePath(),
-      (ctx.fillStyle = "rgba(0,0,0,0.4)"),
-      ctx.fill(),
-      ctx.beginPath(),
-      ctx.arc(-1, -17, 34, 0, 2 * Math.PI),
-      ctx.closePath(),
-      (ctx.strokeStyle = "rgba(255,255,255,1.0)"),
-      (ctx.fillStyle = "rgba(" + d + "," + b + "," + g + ",1.0)"),
-      ctx.fill(),
-      ctx.stroke());
+    if (e) {
+      ctx.beginPath();
+      ctx.arc(-1, -11, 34, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(0,0,0,0.4)";
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(-1, -17, 34, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.strokeStyle = "rgba(255,255,255,1.0)";
+      ctx.fillStyle = "rgba(" + d + "," + b + "," + g + ",1.0)";
+      ctx.fill();
+      ctx.stroke();
+    }
     ctx.translate(-1, -16);
     h.draw(ctx);
     ctx.restore();
@@ -2367,7 +2530,10 @@ class UI_GameInfo {
     this.#objUI_ActivityMessages.update(deltatime);
     this.#objUI_killStatus.update(deltatime);
     this.#V -= deltatime;
-    0 > this.#V && ((this.#V += 1e3), (this.#U = true));
+    if (0 > this.#V) {
+      this.#V += 1e3;
+      this.#U = true;
+    }
     0 < this.#na && (this.#na -= deltatime);
     0 < this.#warship_remote_txt_timeout &&
       (this.#warship_remote_txt_timeout -= deltatime);
@@ -2393,10 +2559,11 @@ class UI_GameInfo {
     10 < m && (m = 10);
     for (let i = 0; i < m; i++) {
       r = objD_planes[this.#list_plane_ids[i]];
-      r &&
-        ((this.#lb_height += item_lh + b),
-        (r = ctx.measureText(func_renameBlankPlayerNames(r.name)).width),
-        I < r && (I = r));
+      if (r) {
+        this.#lb_height += item_lh + b;
+        r = ctx.measureText(func_renameBlankPlayerNames(r.name)).width;
+        if (I < r) I = r;
+      }
     }
     this.#lb_height -= b;
     I > k && (this.#lb_scale += I - k);
@@ -2450,35 +2617,39 @@ class UI_GameInfo {
       if (obj_plane) {
         for (n = 2; 0 <= n; n--) {
           let txt_spacing = ". ";
-          (obj_plane.inGame && obj_plane.id != qa) || (txt_spacing = ".     ");
+          if (!obj_plane.inGame || obj_plane.id == qa) txt_spacing = ".     ";
           let txt_lb_name =
             i + 1 + txt_spacing + func_renameBlankPlayerNames(obj_plane.name);
           let g = 0;
-          0 != n
-            ? ((ctx.fillStyle = "rgba(100,49,0,1.0)"), (g = n))
-            : (ctx.fillStyle =
-                current_following_plane_id == obj_plane.id
-                  ? "rgba(255,156,0,1.0)"
-                  : "rgba(255,220,0,1.0)");
+          if (0 != n) {
+            ctx.fillStyle = "rgba(100,49,0,1.0)";
+            g = n;
+          } else {
+            ctx.fillStyle =
+              current_following_plane_id == obj_plane.id
+                ? "rgba(255,156,0,1.0)"
+                : "rgba(255,220,0,1.0)";
+          }
           ctx.font = item_font_style;
           ctx.measureText(txt_lb_name);
           ctx.fillText(txt_lb_name, d, e + g);
           let width_score = ctx.measureText(obj_plane.score.toString()).width;
           f = 1;
           I = 0;
-          if (obj_plane.inGame)
-            obj_plane.id == qa &&
-              (ctx.save(),
-              (y = 38),
-              9 == i && (y = 50),
+          if (obj_plane.inGame) {
+            if (obj_plane.id == qa) {
+              ctx.save();
+              y = 38;
+              9 == i && (y = 50);
               ctx.translate(
                 y * num_scale_factor * f + I,
                 e + g + 7 * num_scale_factor * f,
-              ),
-              ctx.scale(num_scale_factor * f, num_scale_factor * f),
-              objG_assets.frames.crown.draw(ctx),
-              ctx.restore());
-          else {
+              );
+              ctx.scale(num_scale_factor * f, num_scale_factor * f);
+              objG_assets.frames.crown.draw(ctx);
+              ctx.restore();
+            }
+          } else {
             ctx.save();
             y = 38;
             9 == i && (y = 50);
@@ -2501,7 +2672,11 @@ class UI_GameInfo {
     }
   }
   drawLeaderboard(ctx: CanvasRenderingContext2D) {
-    ctx.drawImage(this.#canvas_leaderboard, canvas_width - this.#lb_width - 5, 5);
+    ctx.drawImage(
+      this.#canvas_leaderboard,
+      canvas_width - this.#lb_width - 5,
+      5,
+    );
   }
   addActivityMessage(message_str: string) {
     this.#objUI_ActivityMessages.addActivityMessage(message_str);
@@ -2593,8 +2768,10 @@ class UI_ActivityMessages {
     let canvas = d.render();
     this.#rendered_canvas_list.push(canvas);
     this.#item_add_time.push(+new Date());
-    5 < this.#rendered_canvas_list.length &&
-      (this.#rendered_canvas_list.shift(), this.#item_add_time.shift());
+    if (5 < this.#rendered_canvas_list.length) {
+      this.#rendered_canvas_list.shift();
+      this.#item_add_time.shift();
+    }
     for (let max = 0, d, i = 0; i < this.#rendered_canvas_list.length; i++) {
       d = this.#rendered_canvas_list[i].width + 5 + 5;
       d > max && (max = d);
@@ -2966,42 +3143,46 @@ class Plane {
         this.#y = e = this.getCurrentFrameNum(ctx);
       }
       ctx.scale(1, this.flipLastImage * this.#l);
-      this.lastImage = this.planeImages[e - 1];
-      void 0 == this.lastImage && (this.lastImage = this.planeImages[0]);
-      this.lastImageReflex = this.planeImagesReflex[e - 1];
-      void 0 == this.lastImageReflex &&
-        (this.lastImageReflex = this.planeImagesReflex[0]);
+      this.lastImage = this.planeImages[e - 1] ?? this.planeImages[0];
+      this.lastImageReflex =
+        this.planeImagesReflex[e - 1] ?? this.planeImagesReflex[0];
       this.isInvulnerable() && this.#d && (ctx.globalAlpha = 0.3);
       this.lastImage.draw(ctx);
-      f = this.decalFrames[e - 1];
-      void 0 == f && (f = this.decalFrames[0]);
+      f = this.decalFrames[e - 1] ?? this.decalFrames[0];
       f.draw(ctx);
-      16 < this.speed
-        ? ((this.#C += 0.06), 0.9 < this.#C && (this.#C = 0.9))
-        : ((this.#C -= 0.06), 0 > this.#C && (this.#C = 0));
+      if (16 < this.speed) {
+        (this.#C += 0.06), 0.9 < this.#C && (this.#C = 0.9);
+      } else {
+        (this.#C -= 0.06), 0 > this.#C && (this.#C = 0);
+      }
       ctx.rotate(-Math.PI / 2);
       ctx.translate(0, 8);
       this.#P++;
-      1 < this.#P && (this.#P = 0);
-      0 == this.#P && ((this.#z += 1), 2 < this.#z && (this.#z = 0));
+      if (1 < this.#P) {
+        this.#P = 0;
+      }
+      if (0 == this.#P) {
+        this.#z += 1;
+        if (2 < this.#z) this.#z = 0;
+      }
       ctx.globalAlpha = this.#C;
       objG_assets.frames["turbo" + this.#z].draw(ctx);
       ctx.restore();
-      0 < this.highlightValue &&
-        !this.isInvulnerable() &&
-        ((this.highlightValue -= 0.05),
-        0 > this.highlightValue && (this.highlightValue = 0),
-        ctx.save(),
-        ctx.translate(this.x, this.y - 1),
-        ctx.scale(0.7, 0.7),
-        ctx.rotate(this.angle - Math.PI / 2),
-        (ctx.globalAlpha = this.highlightValue),
-        (e = objG_assets.whitePlaneImages["plane" + e]),
-        this.#g > 0.5 * Math.PI && this.#g < 1.5 * Math.PI
-          ? ctx.scale(1.2, -1.2)
-          : ctx.scale(1.2, 1.2),
-        e && ctx.drawImage(e, -e.width / 2, -e.height / 2),
-        ctx.restore());
+      if (0 < this.highlightValue && !this.isInvulnerable()) {
+        this.highlightValue -= 0.05;
+        0 > this.highlightValue && (this.highlightValue = 0);
+        ctx.save();
+        ctx.translate(this.x, this.y - 1);
+        ctx.scale(0.7, 0.7);
+        ctx.rotate(this.angle - Math.PI / 2);
+        ctx.globalAlpha = this.highlightValue;
+        e = objG_assets.whitePlaneImages["plane" + e];
+        if (this.#g > 0.5 * Math.PI && this.#g < 1.5 * Math.PI)
+          ctx.scale(1.2, -1.2);
+        else ctx.scale(1.2, 1.2);
+        if (e) ctx.drawImage(e, -e.width / 2, -e.height / 2);
+        ctx.restore();
+      }
       this.#obj_particleManager && this.#obj_particleManager.draw(ctx);
       if (this.weapon == id_weapon_superweapon) {
         e = false;
@@ -3009,64 +3190,78 @@ class Plane {
           (e = true);
         if (this.isShooting) {
           ctx.save();
-          (K = this.x - 10 * this.#Ga), (s = this.y - 10 * this.#D), (f = 500);
-          this.#ea && (f = Math.sqrt(K * K + s * s) - 10);
-          100 > f && (f = 100);
-          (v = objG_assets.frames.laser_opening.height),
-            (R = this.#Fa / 50),
-            (w = 1),
-            (S = 0.75 * Math.PI),
-            (K = false);
-          R > S
-            ? ((R = R < 2 * S ? R - S : S), (w = Math.sin(0.04 * this.#Fa)))
-            : (K = true);
+          K = this.x - 10 * this.#Ga;
+          s = this.y - 10 * this.#D;
+          f = 500;
+          if (this.#ea) f = Math.sqrt(K * K + s * s) - 10;
+          if (100 > f) f = 100;
+          v = objG_assets.frames.laser_opening.height;
+          R = this.#Fa / 50;
+          w = 1;
+          S = 0.75 * Math.PI;
+          K = false;
+          if (R > S) {
+            R = R < 2 * S ? R - S : S;
+            w = Math.sin(0.04 * this.#Fa);
+          } else K = true;
           ctx.translate(this.x, this.y);
           ctx.rotate(this.angle + Math.PI);
           e ? ctx.translate(2, 22) : ctx.translate(-2, 22);
-          (O = s = Math.sin(R) / Math.sin(S)), (t = true);
-          K &&
-            (R < 0.5 * Math.PI
-              ? (t = false)
-              : ((R -= 0.5 * Math.PI), (O = Math.sin(R) / Math.sin(S))));
-          t &&
-            (ctx.scale((1 + 0.2 * w) * O, 1),
-            ctx.translate(0, v / 2),
-            objG_assets.frames.laser_opening.draw(ctx),
-            (f -= v),
-            ctx.translate(0, f / 2 + v / 2 - 1),
-            ctx.scale(1, f),
-            objG_assets.frames.laser_stretch.draw(ctx),
-            ctx.scale(1, 1 / f),
-            ctx.translate(0, f / 2 - 10),
-            50 < this.laserTimer &&
-              ((this.laserTimer = 0),
-              (this.laserFrame = (this.laserFrame + 1) % 3)),
-            this.#ea
-              ? objG_assets.frames["laser_collision" + this.laserFrame].draw(
-                  ctx,
-                )
-              : ((f = objG_assets.frames.laserfade.width),
-                ctx.rotate(Math.PI / 2),
-                ctx.translate(f / 2, 0),
-                objG_assets.frames.laserfade.draw(ctx)));
+          O = s = Math.sin(R) / Math.sin(S);
+          t = true;
+          if (K) {
+            if (R < 0.5 * Math.PI) t = false;
+            else {
+              R -= 0.5 * Math.PI;
+              O = Math.sin(R) / Math.sin(S);
+            }
+          }
+          if (t) {
+            ctx.scale((1 + 0.2 * w) * O, 1);
+            ctx.translate(0, v / 2);
+            objG_assets.frames.laser_opening.draw(ctx);
+            f -= v;
+            ctx.translate(0, f / 2 + v / 2 - 1);
+            ctx.scale(1, f);
+            objG_assets.frames.laser_stretch.draw(ctx);
+            ctx.scale(1, 1 / f);
+            ctx.translate(0, f / 2 - 10);
+            if (50 < this.laserTimer) {
+              this.laserTimer = 0;
+              this.laserFrame = (this.laserFrame + 1) % 3;
+            }
+            if (this.#ea)
+              objG_assets.frames["laser_collision" + this.laserFrame].draw(ctx);
+            else {
+              f = objG_assets.frames.laserfade.width;
+              ctx.rotate(Math.PI / 2);
+              ctx.translate(f / 2, 0);
+              objG_assets.frames.laserfade.draw(ctx);
+            }
+          }
           ctx.restore();
           ctx.save();
           ctx.translate(this.x, this.y);
           ctx.rotate(this.angle + Math.PI);
-          e ? ctx.translate(2, 22) : ctx.translate(-2, 22);
-          K &&
-            (ctx.scale(s, s),
-            ctx.translate(0, 15),
-            ctx.beginPath(),
-            ctx.arc(0, 0, 15, 0, 2 * Math.PI),
-            ctx.fill());
+          if (e) ctx.translate(2, 22);
+          else ctx.translate(-2, 22);
+          if (K) {
+            ctx.scale(s, s);
+            ctx.translate(0, 15);
+            ctx.beginPath();
+            ctx.arc(0, 0, 15, 0, 2 * Math.PI);
+            ctx.fill();
+          }
           ctx.restore();
         }
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle + Math.PI);
         ctx.translate(-3, 18);
-        e && (ctx.scale(-1, 1), ctx.translate(-6, 0));
+        if (e) {
+          ctx.scale(-1, 1);
+          ctx.translate(-6, 0);
+        }
         ctx.rotate(-Math.PI / 2);
         objG_assets.frames.laserplug.draw(ctx);
         ctx.restore();
@@ -3082,11 +3277,12 @@ class Plane {
         ctx.save();
         ctx.translate(this.x, b + d - 25);
         ctx.scale(0.8, 0.8 * -this.flipLastImage * (1 + 4 * h));
-        this.#g > 0.5 * Math.PI && this.#g < 1.5 * Math.PI
-          ? ctx.rotate(1.5 * Math.PI + (this.#g - Math.PI / 2) + Math.PI)
-          : ctx.rotate(this.angle - Math.PI / 2);
+        if (this.#g > 0.5 * Math.PI && this.#g < 1.5 * Math.PI)
+          ctx.rotate(1.5 * Math.PI + (this.#g - Math.PI / 2) + Math.PI);
+        else ctx.rotate(this.angle - Math.PI / 2);
         b = 1;
-        30 > d && 15 <= d ? (b = (d - 15) / 15) : 15 > d && (b = 0);
+        if (30 > d && 15 <= d) b = (d - 15) / 15;
+        else 15 > d && (b = 0);
         ctx.globalAlpha = 0.7 * (1 - h) * b;
         this.lastImageReflex?.draw(ctx);
         ctx.restore();
@@ -3109,15 +3305,14 @@ class Plane {
       ctx.lineTo(0, -22 * b);
       ctx.fill();
       ctx.restore();
-      2 != ha &&
-        (c = objD_planes[gb]) &&
-        this.DrawLockCrosshair(ctx, c.x, c.y, this.#w, ha);
+      c = objD_planes[gb];
+      if (2 != ha && c) this.DrawLockCrosshair(ctx, c.x, c.y, this.#w, ha);
       0 < ma && this.DrawLockCrosshair(ctx, this.x, this.y, 1, 1);
       ctx.lineWidth = 1;
       ctx.beginPath();
-      objG_eventManager.isSpaceWars()
-        ? (ctx.strokeStyle = "rgba(255,255,255,0.3)")
-        : (ctx.strokeStyle = "rgba(0,0,255,0.1)");
+      if (objG_eventManager.isSpaceWars())
+        ctx.strokeStyle = "rgba(255,255,255,0.3)";
+      else ctx.strokeStyle = "rgba(0,0,255,0.1)";
       ctx.arc(this.x, this.y, 75, 0, 2 * Math.PI);
       ctx.closePath();
       ctx.stroke();
@@ -3137,9 +3332,8 @@ class Plane {
       0 == ha && (h = 1 + 2 * (1 - width));
       a.beginPath();
       let color = "hsla(43,100%," + (100 - 40 * width) + "%,1.0)";
-      1 == height
-        ? (color = "rgba(255,0,0,1.0)")
-        : a.setLineDash([12 * h, 6 * h, 12 * h, 0]);
+      if (1 == height) color = "rgba(255,0,0,1.0)";
+      else a.setLineDash([12 * h, 6 * h, 12 * h, 0]);
       a.strokeStyle = color;
       height = 30 * h;
       a.rect(x - height / 2, y - height / 2, height, height);
@@ -3160,50 +3354,48 @@ class Plane {
         ctx.shadowColor = "rgba(255, 255, 255, 0.7)";
         ctx.lineWidth = 1;
         c = 28;
-        qa == this.id && (c *= 2);
+        if (qa == this.id) c *= 2;
         d = 127.5;
-        127.5 > this.energy && 63.75 < this.energy
-          ? (d = 30)
-          : 63.75 > this.energy && (d = 0);
+        if (127.5 > this.energy && 63.75 < this.energy) d = 30;
+        else if (63.75 > this.energy) d = 0;
         ctx.fillStyle = "hsl(" + d + ", 100%, 50%)";
         ctx.fillRect(-c / 2 + 0, 20, (this.energy / 255) * c, 8);
         ctx.strokeStyle = "rgba(255,255,255,1.0)";
         ctx.strokeRect(-c / 2, 20, c, 8);
       }
-      this.#G &&
-        !lb &&
-        ((ctx.fillStyle = "rgba(255,255,255,1)"),
-        (ctx.fillStyle = "rgba(255,255,255,1.0)"),
-        (ctx.font =
-          "Bold 15px 'proxima-nova-1','proxima-nova-2', arial, sans-serif"),
-        (ctx.textBaseline = "hanging"),
-        (c = ctx.measureText(this.name).width),
-        (d = 38),
-        objG_eventManager.isInstagib() && (d = 20),
-        ctx.fillText(this.name, -c / 2, d));
+      if (this.#G && !lb) {
+        ctx.fillStyle = "rgba(255,255,255,1)";
+        ctx.fillStyle = "rgba(255,255,255,1.0)";
+        ctx.font =
+          "Bold 15px 'proxima-nova-1','proxima-nova-2', arial, sans-serif";
+        ctx.textBaseline = "hanging";
+        c = ctx.measureText(this.name).width;
+        d = 38;
+        objG_eventManager.isInstagib() && (d = 20);
+        ctx.fillText(this.name, -c / 2, d);
+      }
       ctx.restore();
       c = false;
-      qa == this.id && (c = true);
+      if (qa == this.id) c = true;
       d = false;
-      ub == this.id && (d = true);
-      if (c || 0 < this.#R || this.#O || d)
-        ctx.save(),
-          ctx.translate(this.x, this.y - 30),
-          this.#O
-            ? objG_assets.frames.pause.draw(ctx)
-            : c
-              ? objG_assets.frames.crown.draw(ctx)
-              : d
-                ? objG_assets.frames.revengeIcon.draw(ctx)
-                : objG_assets.frames.frenzyIcon.draw(ctx),
-          ctx.restore();
-      this.#obj_scoreAccumInfo &&
-        (ctx.save(),
-        (d = 0),
-        c && (d = 30),
-        ctx.translate(this.x, this.y - d),
-        this.#obj_scoreAccumInfo.draw(ctx),
-        ctx.restore());
+      if (ub == this.id) d = true;
+      if (c || 0 < this.#R || this.#O || d) {
+        ctx.save();
+        ctx.translate(this.x, this.y - 30);
+        if (this.#O) objG_assets.frames.pause.draw(ctx);
+        else if (c) objG_assets.frames.crown.draw(ctx);
+        else if (d) objG_assets.frames.revengeIcon.draw(ctx);
+        else objG_assets.frames.frenzyIcon.draw(ctx);
+        ctx.restore();
+      }
+      if (this.#obj_scoreAccumInfo) {
+        ctx.save();
+        d = 0;
+        if (c) d = 30;
+        ctx.translate(this.x, this.y - d);
+        this.#obj_scoreAccumInfo.draw(ctx);
+        ctx.restore();
+      }
     }
   }
   setPose(x_gu: number, y_gu: number, angle: number) {
@@ -3213,22 +3405,25 @@ class Plane {
     this.dstX = 10 * x_gu;
     this.dstY = 10 * y_gu;
     this.dstAngle = angle;
-    this.first_set
-      ? ((this.origX = this.dstX),
-        (this.origY = this.dstY),
-        (this.x = this.dstX),
-        (this.y = this.dstY),
-        (this.origAngle = this.dstAngle),
-        (this.first_set = false),
-        objG_wsConnection.firstClientListing ||
-          (this.#num_spawn_cooldown_ms = 1e3 * tc))
-      : ((x_gu = this.dstX - this.origX),
-        (y_gu = this.dstY - this.origY),
-        (this.speed = Math.sqrt(x_gu * x_gu + y_gu * y_gu) / 3));
-    this.inGame ||
-      ((this.inGame = true),
-      this.#obj_particleTrails && this.#obj_particleTrails.clear(),
-      this.#obj_particleFlags && this.#obj_particleFlags.clear());
+    if (this.first_set) {
+      this.origX = this.dstX;
+      this.origY = this.dstY;
+      this.x = this.dstX;
+      this.y = this.dstY;
+      this.origAngle = this.dstAngle;
+      this.first_set = false;
+      if (!objG_wsConnection.firstClientListing)
+        this.#num_spawn_cooldown_ms = 1e3 * tc;
+    } else {
+      x_gu = this.dstX - this.origX;
+      y_gu = this.dstY - this.origY;
+      this.speed = Math.sqrt(x_gu * x_gu + y_gu * y_gu) / 3;
+    }
+    if (!this.inGame) {
+      this.inGame = true;
+      this.#obj_particleTrails && this.#obj_particleTrails.clear();
+      this.#obj_particleFlags && this.#obj_particleFlags.clear();
+    }
   }
   trailEffect() {
     wa && this.#obj_particleTrails && this.#obj_particleTrails.trailEffect();
@@ -3238,11 +3433,11 @@ class Plane {
   }
   setScore(score: number) {
     let diff = score - this.score;
-    0 < diff &&
-      this == objG_player_plane &&
-      (this.#obj_scoreAccumInfo ||
-        (this.#obj_scoreAccumInfo = new ScoreAccumInfo()),
-      func_isTimeElapsed_50ms() && this.#obj_scoreAccumInfo.addScore(diff));
+    if (0 < diff && this == objG_player_plane) {
+      if (!this.#obj_scoreAccumInfo)
+        this.#obj_scoreAccumInfo = new ScoreAccumInfo();
+      if (func_isTimeElapsed_50ms()) this.#obj_scoreAccumInfo.addScore(diff);
+    }
     this.score = score;
   }
   incScore(diff: number) {
@@ -3250,11 +3445,12 @@ class Plane {
   }
   setName(name: string) {
     this.name = name;
-    if ("" == name || null == name)
-      (this.#obj_particleTrails = new ParticleTrails()),
-        (this.#obj_particleTrails.fixedColor = true),
-        (this.#obj_particleTrails.style = this.#M[id_weapon_machinegun]),
-        this.#obj_particleTrails.clear();
+    if ("" == name || null == name) {
+      this.#obj_particleTrails = new ParticleTrails();
+      this.#obj_particleTrails.fixedColor = true;
+      this.#obj_particleTrails.style = this.#M[id_weapon_machinegun];
+      this.#obj_particleTrails.clear();
+    }
   }
   setFlagInfo(uint32_flaginfo: number) {
     if (0 < uint32_flaginfo) {
@@ -3279,17 +3475,19 @@ class Plane {
   }
   setEnergy(hp: number) {
     this.energy = hp;
-    25 > hp && !this.#obj_particleManager
-      ? ((this.#obj_particleManager = new ParticleManager()),
-        this.#obj_particleManager.init(15, this.x, this.y),
-        (this.#k = 0),
-        (this.#m = 20 + 40 * Math.random()),
-        objG_player_plane == this &&
-          (objG_sfxManager.playSound(str_sfxid_crash, 0.7, 1, const_Q_0),
-          objGUI_gameInfo.clearNearMiss()))
-      : 25 <= hp &&
-        this.#obj_particleManager &&
-        ((this.#obj_particleManager = undefined), (this.#l = 1));
+    if (25 > hp && !this.#obj_particleManager) {
+      this.#obj_particleManager = new ParticleManager();
+      this.#obj_particleManager.init(15, this.x, this.y);
+      this.#k = 0;
+      this.#m = 20 + 40 * Math.random();
+      if (objG_player_plane == this) {
+        objG_sfxManager.playSound(str_sfxid_crash, 0.7, 1, const_Q_0);
+        objGUI_gameInfo.clearNearMiss();
+      }
+    } else if (25 <= hp && this.#obj_particleManager) {
+      this.#obj_particleManager = undefined;
+      this.#l = 1;
+    }
   }
   GetAmmo() {
     return 1 == this.weapon ? -1 : this.ammo;
@@ -3348,7 +3546,7 @@ class Plane {
     this.isBot = flag_1024 ? true : false;
   }
   setIsShooting(flag_2048: number) {
-    !flag_2048 && this.isShooting && (this.laserTimer = this.#Fa = 0);
+    if (!flag_2048 && this.isShooting) this.laserTimer = this.#Fa = 0;
     this.isShooting = flag_2048 ? true : false;
   }
   laserHit(a: number, c: number, b: boolean) {
@@ -3358,8 +3556,10 @@ class Plane {
   }
   prepareFollow() {}
   stopLaserSound() {
-    this.#ua &&
-      (objG_sfxManager.sound.stop(this.#ua), (this.#ua = nb = undefined));
+    if (this.#ua) {
+      objG_sfxManager.sound.stop(this.#ua);
+      this.#ua = nb = undefined;
+    }
   }
   dash() {
     this == objG_player_plane &&
@@ -3385,7 +3585,10 @@ class WaterSea {
   constructor() {
     this.#e = [];
     this.#f = [];
-    for (let a = 0; 25 > a; a++) this.#e.push(0), this.#f.push(0);
+    for (let a = 0; 25 > a; a++) {
+      this.#e.push(0);
+      this.#f.push(0);
+    }
   }
   #b(a: number, c: number) {
     0 <= a && 24 > a && (this.#f[a] += c);
@@ -3395,31 +3598,36 @@ class WaterSea {
     this.#c = (1.1 * canvas.width) / objGUI_anchor.zoom;
     this.#g = this.#c / 25;
     this.#a = Math.floor(H.x / this.#g);
-    null != this.#d &&
-      this.#d != this.#a &&
-      (0 < this.#d - this.#a
-        ? (this.#f.splice(24, 24),
-          this.#f.splice(0, 0, 0),
-          this.#e.splice(24, 24),
-          this.#e.splice(0, 0, 0))
-        : (this.#f.splice(0, 1),
-          this.#f.push(0),
-          this.#e.splice(0, 1),
-          this.#e.push(0)));
+    if (null != this.#d && this.#d != this.#a) {
+      if (0 < this.#d - this.#a) {
+        this.#f.splice(24, 24);
+        this.#f.splice(0, 0, 0);
+        this.#e.splice(24, 24);
+        this.#e.splice(0, 0, 0);
+      } else {
+        this.#f.splice(0, 1);
+        this.#f.push(0);
+        this.#e.splice(0, 1);
+        this.#e.push(0);
+      }
+    }
     this.#d = this.#a;
     for (k = 0; 25 > k; k++) this.#e[k] = 2 * this.#f[k] - this.#e[k];
     k = this.#f;
     this.#f = this.#e;
     this.#e = k;
-    (k = this.#f[0]), (m = this.#f[0]), (l = this.#f[1]);
+    k = this.#f[0];
+    m = this.#f[0];
+    l = this.#f[1];
     this.#f[0] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9));
     this.#f[0] = func_clamp(this.#f[0], -100, 100);
-    for (y = 1; 24 > y; ++y)
-      (k = m),
-        (m = l),
-        (l = this.#f[y + 1]),
-        (this.#f[y] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9))),
-        (this.#f[y] = func_clamp(this.#f[y], -100, 100));
+    for (y = 1; 24 > y; ++y) {
+      k = m;
+      m = l;
+      l = this.#f[y + 1];
+      this.#f[y] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9));
+      this.#f[y] = func_clamp(this.#f[y], -100, 100);
+    }
     k = m;
     m = l;
     this.#f[24] = 0.99 * (0.9 * m + 0.5 * (k + l) * (1 - 0.9));
@@ -3444,18 +3652,20 @@ class WaterSea {
     if (l[1].y > E / 2) {
       k = this.#h.length;
       this.#q -= deltatime;
-      0 > this.#q &&
-        ((this.#q = 125.6),
-        20 > k &&
-          ((m = new WaterSeaRipple()),
-          this.#h.push(m),
-          (l = l[1].x - l[0].x),
-          (y = 0),
-          objG_player_plane &&
-            (y = 50 * objG_player_plane.getSpeedDirectionX()),
-          (l = Math.random() * l - l / 2 + y),
-          (y = 250 * Math.random()),
-          m.setPosition(l + H.x, E / 2 + y + 30, y)));
+      if (0 > this.#q) {
+        this.#q = 125.6;
+        if (20 > k) {
+          m = new WaterSeaRipple();
+          this.#h.push(m);
+          l = l[1].x - l[0].x;
+          y = 0;
+          if (objG_player_plane)
+            y = 50 * objG_player_plane.getSpeedDirectionX();
+          l = Math.random() * l - l / 2 + y;
+          y = 250 * Math.random();
+          m.setPosition(l + H.x, E / 2 + y + 30, y);
+        }
+      }
       l = [];
       for (y = 0; y < k; y++)
         (m = this.#h[y]), m.update(deltatime), m.deleting && l.push(m);
@@ -3722,9 +3932,13 @@ class Clouds {
         m = true;
       for (let l = 0; l < e; l++) {
         let y = c[l];
-        m
-          ? (y < h && (h = y), y > n && (n = y))
-          : (y < f && (f = y), y > k && (k = y));
+        if (m) {
+          if (y < h) h = y;
+          if (y > n) n = y;
+        } else {
+          if (y < f) f = y;
+          if (y > k) k = y;
+        }
         m = !m;
       }
       this.#d.push([h, f, n, k]);
@@ -3762,7 +3976,10 @@ class Clouds {
     k: number,
     m: number,
   ) {
-    -7e3 > c && ((c = (-c + 7e3) % 14e3), (c = 7e3 - c));
+    if (-7e3 > c) {
+      c = (-c + 7e3) % 14e3;
+      c = 7e3 - c;
+    }
     let l = c + this.#d[h][0] * e,
       y = g + this.#d[h][1] * e,
       r = c + this.#d[h][2] * e,
@@ -3770,14 +3987,15 @@ class Clouds {
       p = objGUI_anchor.getBounds();
     let bl =
       l > p[1].x || r < p[0].x || y > p[1].y || K < p[0].y ? false : true;
-    bl &&
-      (ctx.save(),
-      (ctx.fillStyle = "rgba(190,227,249," + opacity + ")"),
-      this.drawCloudShape(ctx, c, g, this.#cloud_bezier[h], e),
-      ctx.clip(),
-      (ctx.fillStyle = "rgba(179,222,250," + opacity + ")"),
-      this.drawCloudShape(ctx, c + k, g + m, this.#cloud_bezier[h], e),
-      ctx.restore());
+    if (bl) {
+      ctx.save();
+      ctx.fillStyle = "rgba(190,227,249," + opacity + ")";
+      this.drawCloudShape(ctx, c, g, this.#cloud_bezier[h], e);
+      ctx.clip();
+      ctx.fillStyle = "rgba(179,222,250," + opacity + ")";
+      this.drawCloudShape(ctx, c + k, g + m, this.#cloud_bezier[h], e);
+      ctx.restore();
+    }
   }
   drawPreRenderedCloud(
     a: CanvasRenderingContext2D,
@@ -3787,7 +4005,10 @@ class Clouds {
     q: number,
     n: number,
   ) {
-    -7e3 > c && ((c = (-c + 7e3) % 14e3), (c = 7e3 - c));
+    if (-7e3 > c) {
+      c = (-c + 7e3) % 14e3;
+      c = 7e3 - c;
+    }
     let k = this.#d[q][0],
       m = this.#d[q][1],
       l = c + k * n,
@@ -3797,7 +4018,7 @@ class Clouds {
     let K = objGUI_anchor.getBounds();
     let bl =
       l > K[1].x || r < K[0].x || y > K[1].y || q < K[0].y ? false : true;
-    bl && a.drawImage(this.#rendered[e], c + k * n, b + m * n);
+    if (bl) a.drawImage(this.#rendered[e], c + k * n, b + m * n);
   }
   update(deltatime: number) {
     Xa -= 0.03 * deltatime;
@@ -3811,16 +4032,19 @@ class Clouds {
         m = 1,
         l = 3,
         y = 9;
-      0 == b % 2 && 7 != this.#cloud_positions[b][2]
-        ? ((f += 0.2 * (H.x - f)),
-          (n += 0.2 * (H.y - n)),
-          (k = 0.2),
-          (m = 0.7),
-          (l = 1),
-          (y = 3),
-          (d = 0.5),
-          (n *= Kb))
-        : 7 == this.#cloud_positions[b][2] && ((k = 0.8), (n = Nb));
+      if (0 == b % 2 && 7 != this.#cloud_positions[b][2]) {
+        f += 0.2 * (H.x - f);
+        n += 0.2 * (H.y - n);
+        k = 0.2;
+        m = 0.7;
+        l = 1;
+        y = 3;
+        d = 0.5;
+        n *= Kb;
+      } else if (7 == this.#cloud_positions[b][2]) {
+        k = 0.8;
+        n = Nb;
+      }
       this.drawCloud(
         ctx,
         f + (Xa / 4) * d,
@@ -3837,19 +4061,22 @@ class Clouds {
     let count = this.#cloud_positions.length,
       b = Xa,
       d = Kb;
-    xa || ((d = 0.6), (b = 200));
+    if (!xa) {
+      d = 0.6;
+      b = 200;
+    }
     for (let f = 0; f < count; f++) {
       let n = 2,
         k = this.#cloud_positions[f][0],
         m = this.#cloud_positions[f][1],
         l = 1;
-      0 == f % 2 && 7 != this.#cloud_positions[f][2]
-        ? ((k += 0.2 * (H.x - k)),
-          (m += 0.2 * (H.y - m)),
-          (n = 0.5),
-          (m *= d),
-          (l = 0.7))
-        : 7 == this.#cloud_positions[f][2] && (m = Nb);
+      if (0 == f % 2 && 7 != this.#cloud_positions[f][2]) {
+        k += 0.2 * (H.x - k);
+        m += 0.2 * (H.y - m);
+        n = 0.5;
+        m *= d;
+        l = 0.7;
+      } else if (7 == this.#cloud_positions[f][2]) m = Nb;
       this.drawPreRenderedCloud(
         ctx,
         k + (b / 4) * n,
@@ -3872,9 +4099,12 @@ class Clouds {
         l = (c = 1),
         y = 3,
         r = 9;
-      0 == i % 2 && 7 != this.#cloud_positions[i][2]
-        ? ((c = 0.2), (l = 0.7), (y = 1), (r = 3))
-        : 7 == this.#cloud_positions[i][2] && (c = 0.8);
+      if (0 == i % 2 && 7 != this.#cloud_positions[i][2]) {
+        c = 0.2;
+        l = 0.7;
+        y = 1;
+        r = 3;
+      } else if (7 == this.#cloud_positions[i][2]) c = 0.8;
       l = this.#cloud_positions[i][3] * l;
       let K = -this.#d[h][0] * l,
         p = -this.#d[h][1] * l;
@@ -3979,34 +4209,39 @@ class Backgrounds {
   // }
   drawGradient(ctx: CanvasRenderingContext2D) {
     let c, b, d, f, m;
-    (c =
+    c =
       (canvas.width / 2 +
         (objGUI_anchor.x * objGUI_anchor.zoom - canvas.width / 2)) /
-      objGUI_anchor.zoom),
-      (b =
-        (canvas.height / 2 +
-          (objGUI_anchor.y * objGUI_anchor.zoom - canvas.height / 2)) /
-        objGUI_anchor.zoom),
-      (d = 0.75 * E);
+      objGUI_anchor.zoom;
+    b =
+      (canvas.height / 2 +
+        (objGUI_anchor.y * objGUI_anchor.zoom - canvas.height / 2)) /
+      objGUI_anchor.zoom;
+    d = 0.75 * E;
     objG_eventManager.isSpaceWars() && (d = E);
-    (d = ctx.createLinearGradient(0, -d, 0, d)), (f = 39), (m = 161);
-    objG_eventManager.isSpaceWars() && ((f = 0), (m = 55));
+    d = ctx.createLinearGradient(0, -d, 0, d);
+    f = 39;
+    m = 161;
+    if (objG_eventManager.isSpaceWars()) {
+      f = 0;
+      m = 55;
+    }
     if (0 < this.#e) {
       let l = this.#e / 2500;
       1 < l && (l = 1);
       f += (255 - f) * l;
       m += (255 - m) * l;
     }
-    objG_eventManager.isSpaceWars()
-      ? (d.addColorStop(0, "rgba(" + Math.floor(f) + ",0,0,1.0)"),
-        d.addColorStop(0.3, "rgba(" + Math.floor(m) + ",0,55,1.0)"),
-        d.addColorStop(0.5, "rgba(" + Math.floor(m) + ",0,75,1.0)"),
-        d.addColorStop(0.7, "rgba(" + Math.floor(m) + ",0,55,1.0)"),
-        d.addColorStop(1, "rgba(" + Math.floor(f) + ",0,0,1.0)"))
-      : bool_drawGradient
-        ? (d.addColorStop(0, "rgba(" + Math.floor(f) + ",145,202,1.0)"),
-          d.addColorStop(1, "rgba(" + Math.floor(m) + ",231,252,1.0)"))
-        : (d = "#62bae2");
+    if (objG_eventManager.isSpaceWars()) {
+      d.addColorStop(0, "rgba(" + Math.floor(f) + ",0,0,1.0)");
+      d.addColorStop(0.3, "rgba(" + Math.floor(m) + ",0,55,1.0)");
+      d.addColorStop(0.5, "rgba(" + Math.floor(m) + ",0,75,1.0)");
+      d.addColorStop(0.7, "rgba(" + Math.floor(m) + ",0,55,1.0)");
+      d.addColorStop(1, "rgba(" + Math.floor(f) + ",0,0,1.0)");
+    } else if (bool_drawGradient) {
+      d.addColorStop(0, "rgba(" + Math.floor(f) + ",145,202,1.0)");
+      d.addColorStop(1, "rgba(" + Math.floor(m) + ",231,252,1.0)");
+    } else d = "#62bae2";
     ctx.fillStyle = d;
     ctx.fillRect(
       c - canvas.width / 2 / objGUI_anchor.zoom,
@@ -4039,40 +4274,64 @@ class Backgrounds {
       p;
     if (0 < c) {
       p = $_sub - c;
-      p < d && ((f = Math.min(1 - p / d, 1)), (f *= 0.2));
-    } else (p = $_sub + c), p < d && ((l = Math.min(1 - p / d, 1)), (l *= 0.2));
-    objG_eventManager.isSpaceWars() &&
-      ((d = 200),
-      0 > b
-        ? ((p = E / 2),
-          (p += b),
-          p < d && ((y = Math.min(1 - p / d, 1)), (y *= 0.2)))
-        : ((p = E / 2),
-          (p -= b),
-          p < d && ((r = Math.min(1 - p / d, 1)), (r *= 0.2))));
-    0 < c
-      ? ((d = f), (d = y > d ? y : d), (f = d = r > d ? r : d))
-      : ((d = l), (d = y > d ? y : d), (l = d = r > d ? r : d));
+      if (p < d) {
+        f = Math.min(1 - p / d, 1);
+        f *= 0.2;
+      }
+    } else {
+      p = $_sub + c;
+      if (p < d) {
+        l = Math.min(1 - p / d, 1);
+        l *= 0.2;
+      }
+    }
+    if (objG_eventManager.isSpaceWars()) {
+      d = 200;
+      if (0 > b) {
+        p = E / 2;
+        p += b;
+        p < d && ((y = Math.min(1 - p / d, 1)), (y *= 0.2));
+      } else {
+        p = E / 2;
+        p -= b;
+        p < d && ((r = Math.min(1 - p / d, 1)), (r *= 0.2));
+      }
+    }
+    if (0 < c) {
+      d = f;
+      d = y > d ? y : d;
+      f = d = r > d ? r : d;
+    } else {
+      d = l;
+      d = y > d ? y : d;
+      l = d = r > d ? r : d;
+    }
     r = y = d;
-    0 < f
-      ? ((ctx.fillStyle = "rgba(200,0,0," + f + ")"),
-        ctx.fillRect($_sub, -e / 2, 2500, e))
-      : ((ctx.fillStyle = "rgba(200,0,0," + l + ")"),
-        ctx.fillRect(-$_sub - 2500, -e / 2, 2500, e));
-    objG_eventManager.isSpaceWars() &&
-      (0 > b
-        ? ((ctx.fillStyle = "rgba(200,0,0," + y + ")"),
-          ctx.fillRect(-$_sub, -E / 2 - 2500, 2 * $_sub, 2500))
-        : ((ctx.fillStyle = "rgba(200,0,0," + r + ")"),
-          ctx.fillRect(-$_sub, E / 2, 2 * $_sub, 2500)));
-    objG_eventManager.isSpaceWars() ||
-      ((ctx.fillStyle = "rgba(255,255,255,0.10)"),
+    if (0 < f) {
+      ctx.fillStyle = "rgba(200,0,0," + f + ")";
+      ctx.fillRect($_sub, -e / 2, 2500, e);
+    } else {
+      ctx.fillStyle = "rgba(200,0,0," + l + ")";
+      ctx.fillRect(-$_sub - 2500, -e / 2, 2500, e);
+    }
+    if (objG_eventManager.isSpaceWars()) {
+      if (0 > b) {
+        ctx.fillStyle = "rgba(200,0,0," + y + ")";
+        ctx.fillRect(-$_sub, -E / 2 - 2500, 2 * $_sub, 2500);
+      } else {
+        ctx.fillStyle = "rgba(200,0,0," + r + ")";
+        ctx.fillRect(-$_sub, E / 2, 2 * $_sub, 2500);
+      }
+    }
+    if (!objG_eventManager.isSpaceWars()) {
+      ctx.fillStyle = "rgba(255,255,255,0.10)";
       ctx.fillRect(
         c - canvas.width / 2 / objGUI_anchor.zoom,
         -E / 2 - 1,
         canvas.width / objGUI_anchor.zoom,
         6,
-      ));
+      );
+    }
   }
   draw(ctx: CanvasRenderingContext2D) {
     if (bool_drawSun && !objG_eventManager.isSpaceWars()) {
@@ -4090,8 +4349,7 @@ class Backgrounds {
       ctx.arc(c, b, 70, 0, 2 * Math.PI);
       ctx.fill();
     }
-    bool_drawClouds &&
-      !objG_eventManager.isSpaceWars() &&
+    if (bool_drawClouds && !objG_eventManager.isSpaceWars())
       this.#obj_clouds.drawPreRenderedClouds(ctx);
   }
   update(deltatime: number) {
@@ -4103,15 +4361,18 @@ class Backgrounds {
         null != objG_player_plane)
       ) {
         let b = objG_player_plane.x < -$_sub || objG_player_plane.x > $_sub;
-        objG_eventManager.isSpaceWars() &&
-          (b |= objG_player_plane.y > E / 2 || objG_player_plane.y < -E / 2);
-        b
-          ? (0 == this.#e &&
-              (objG_sfxManager.playSound(str_sfxid_warn, 1, 1, 1),
-              objGUI_gameInfo.showWarningMessage("YOU ABANDONED THE FIGHT!")),
-            (this.#e += deltatime))
-          : (0 < this.#e && objGUI_gameInfo.clearWarningMessage(),
-            (this.#e = 0));
+        if (objG_eventManager.isSpaceWars())
+          b |= objG_player_plane.y > E / 2 || objG_player_plane.y < -E / 2;
+        if (b) {
+          if (0 == this.#e) {
+            objG_sfxManager.playSound(str_sfxid_warn, 1, 1, 1);
+            objGUI_gameInfo.showWarningMessage("YOU ABANDONED THE FIGHT!");
+          }
+          this.#e += deltatime;
+        } else {
+          0 < this.#e && objGUI_gameInfo.clearWarningMessage();
+          this.#e = 0;
+        }
       }
   }
 }
@@ -4194,98 +4455,112 @@ class PickupItem {
       plane;
     if (64 != this.type) {
       if (!objG_eventManager.isSpaceWars()) {
-        (s = E / 2 - 20), (v = this.y + this.#e);
+        s = E / 2 - 20;
+        v = this.y + this.#e;
         this.#l += deltatime / 400;
-        v < s
-          ? (v > s - 30 && (this.#d = (s - v) / 30),
-            1 > this.alpha &&
-              ((this.alpha += deltatime / 1e3),
-              1 < this.alpha && (this.alpha = 1)),
-            (this.#e = ((frametime_millis - this.#b) / 1e3) * Ac * 60))
-          : ((this.#a += 0.1 * p),
-            (this.#e += 0.1),
-            (this.#k -= 0.008),
-            0 > this.#k && (this.#k = 0),
-            (this.#m = Math.sqrt(this.#k)));
+        if (v < s) {
+          if (v > s - 30) this.#d = (s - v) / 30;
+          if (1 > this.alpha) {
+            this.alpha += deltatime / 1e3;
+            if (1 < this.alpha) this.alpha = 1;
+          }
+          this.#e = ((frametime_millis - this.#b) / 1e3) * Ac * 60;
+        } else {
+          this.#a += 0.1 * p;
+          this.#e += 0.1;
+          this.#k -= 0.008;
+          if (0 > this.#k) this.#k = 0;
+          this.#m = Math.sqrt(this.#k);
+        }
       }
-      this.fadingOut &&
-        (this.#inSpace ||
-        objG_eventManager.isSpaceWars() ||
-        objG_eventManager.isInstagib()
-          ? delete objD_pickups[this.id]
-          : ((this.#e += 0.25),
-            (this.alpha -= deltatime / 1e3),
-            0 >= this.alpha && delete objD_pickups[this.id]));
+      if (this.fadingOut) {
+        if (
+          !this.#inSpace &&
+          !objG_eventManager.isSpaceWars() &&
+          !objG_eventManager.isInstagib()
+        )
+          delete objD_pickups[this.id];
+        else {
+          this.#e += 0.25;
+          this.alpha -= deltatime / 1e3;
+          if (0 >= this.alpha) delete objD_pickups[this.id];
+        }
+      }
     }
-    this.grabbing &&
-      ((plane = objD_planes[this.#c])
-        ? ((s = Math.pow(this.#g, 2)),
-          (this.x = this.#x + (plane.x - this.#x) * s),
-          (this.y = this.#y + (plane.y - this.#y) * s),
-          (this.#n = 1 - s),
-          (this.#g += 0.07 * p),
-          1 < this.#g && delete objD_pickups[this.id])
-        : delete objD_pickups[this.id]);
+    if (this.grabbing) {
+      plane = objD_planes[this.#c];
+      if (plane) {
+        s = Math.pow(this.#g, 2);
+        this.x = this.#x + (plane.x - this.#x) * s;
+        this.y = this.#y + (plane.y - this.#y) * s;
+        this.#n = 1 - s;
+        this.#g += 0.07 * p;
+        1 < this.#g && delete objD_pickups[this.id];
+      } else delete objD_pickups[this.id];
+    }
   }
   drawItem(ctx: CanvasRenderingContext2D, img: FrameImage) {
     let g;
-    if (64 == this.type)
-      ctx.save(),
-        ctx.beginPath(),
-        (this.sinScaleX += 0.1),
-        (this.sinScaleY += 0.12),
-        ctx.translate(this.x, this.y + this.#e),
-        ctx.scale(
-          (1 + Math.sin(this.sinScaleX) / 6) * this.#n * 1.3,
-          (1 + Math.sin(this.sinScaleY) / 6) * this.#n * 1.3,
-        ),
-        img.draw(ctx);
-    else if (this.#inSpace || objG_eventManager.isSpaceWars())
-      objG_player_plane &&
+    if (64 == this.type) {
+      ctx.save();
+      ctx.beginPath();
+      this.sinScaleX += 0.1;
+      this.sinScaleY += 0.12;
+      ctx.translate(this.x, this.y + this.#e);
+      ctx.scale(
+        (1 + Math.sin(this.sinScaleX) / 6) * this.#n * 1.3,
+        (1 + Math.sin(this.sinScaleY) / 6) * this.#n * 1.3,
+      );
+      img.draw(ctx);
+    } else if (this.#inSpace || objG_eventManager.isSpaceWars()) {
+      if (
+        objG_player_plane &&
         objG_eventManager.isSpaceWars() &&
-        objG_player_plane.id == qa &&
-        (g = 0.3),
-        ctx.save(),
-        ctx.beginPath(),
-        (this.sinScaleX += 0.1),
-        (this.sinScaleY += 0.12),
-        ctx.translate(this.x, this.y),
-        ctx.scale(
-          (1 + Math.sin(this.sinScaleX) / 6) * this.#n * 1.3,
-          (1 + Math.sin(this.sinScaleY) / 6) * this.#n * 1.3,
-        ),
-        ctx.scale(2, 2),
-        (ctx.globalAlpha = g),
-        objG_assets.frames.wing.draw(ctx),
-        ctx.scale(0.5, 0.5),
-        img.draw(ctx);
-    else {
+        objG_player_plane.id == qa
+      )
+        g = 0.3;
+      ctx.save();
+      ctx.beginPath();
+      this.sinScaleX += 0.1;
+      this.sinScaleY += 0.12;
+      ctx.translate(this.x, this.y);
+      ctx.scale(
+        (1 + Math.sin(this.sinScaleX) / 6) * this.#n * 1.3,
+        (1 + Math.sin(this.sinScaleY) / 6) * this.#n * 1.3,
+      );
+      ctx.scale(2, 2);
+      ctx.globalAlpha = g;
+      objG_assets.frames.wing.draw(ctx);
+      ctx.scale(0.5, 0.5);
+      img.draw(ctx);
+    } else {
       g = 1;
-      !objG_player_plane ||
-        objG_player_plane.weapon != id_weapon_superweapon ||
-        (this.type != id_weapon_trishoot &&
-          this.type != id_weapon_missile &&
-          this.type != id_weapon_railgun &&
-          this.type != id_weapon_punch &&
-          this.type != id_weapon_bombs) ||
-        (g = 0.3);
+      if (
+        objG_player_plane &&
+        objG_player_plane.weapon == id_weapon_superweapon &&
+        (this.type == id_weapon_trishoot ||
+          this.type == id_weapon_missile ||
+          this.type == id_weapon_railgun ||
+          this.type == id_weapon_punch ||
+          this.type == id_weapon_bombs)
+      )
+        g = 0.3;
       let h = objG_assets.frames.parachute;
       h.y = -h.height / 2 + 100 * (1 - this.#m);
       ctx.save();
-      this.grabbing
-        ? ctx.translate(this.x, this.y)
-        : ctx.translate(this.x, this.y + this.#e);
+      if (this.grabbing) ctx.translate(this.x, this.y);
+      else ctx.translate(this.x, this.y + this.#e);
       ctx.rotate(0.2 * Math.sin(this.#l + this.#f) * this.#d);
       ctx.scale(1 * this.#n, 1 * this.#n);
       ctx.translate(0, 10);
       ctx.globalAlpha = this.alpha * g * 1;
       ctx.save();
-      0 < this.#a && (ctx.globalAlpha = this.#m * g * 1);
+      if (0 < this.#a) ctx.globalAlpha = this.#m * g * 1;
       ctx.scale(1 * (1 + (1 - this.#m)), 1 * this.#m);
       h.draw(ctx);
       ctx.restore();
       g = 0;
-      this.type == id_weapon_superweapon && (g = 8);
+      if (this.type == id_weapon_superweapon) g = 8;
       ctx.translate(0, 4 * Math.sin(this.#a) + g + 10);
       img.draw(ctx);
       ctx.globalAlpha = 1;
@@ -4296,24 +4571,24 @@ class PickupItem {
     if (bool_drawItems) {
       let c = 40,
         type;
-      32 == this.type
-        ? (type = objG_assets.frames.health)
-        : this.type == id_weapon_trishoot
-          ? (type = objG_assets.frames.trishoot)
-          : this.type == id_weapon_railgun
-            ? (type = objG_assets.frames.railgun)
-            : this.type == id_weapon_missile
-              ? (type = objG_assets.frames.missile)
-              : this.type == id_weapon_punch
-                ? (type = objG_assets.frames.melee)
-                : this.type == id_weapon_bombs
-                  ? (type = objG_assets.frames.bombdrop)
-                  : this.type == id_weapon_superweapon
-                    ? (type = objG_assets.frames.laser)
-                    : 64 == this.type &&
-                      ((c = 10), (type = objG_assets.frames.wing));
+
+      if (32 == this.type) type = objG_assets.frames.health;
+      else if (this.type == id_weapon_trishoot)
+        type = objG_assets.frames.trishoot;
+      else if (this.type == id_weapon_railgun)
+        type = objG_assets.frames.railgun;
+      else if (this.type == id_weapon_missile)
+        type = objG_assets.frames.missile;
+      else if (this.type == id_weapon_punch) type = objG_assets.frames.melee;
+      else if (this.type == id_weapon_bombs) type = objG_assets.frames.bombdrop;
+      else if (this.type == id_weapon_superweapon)
+        type = objG_assets.frames.laser;
+      else if (64 == this.type) {
+        c = 10;
+        type = objG_assets.frames.wing;
+      }
       let d = this.y;
-      this.grabbing || (d += this.#e);
+      if (!this.grabbing) d += this.#e;
       if (!this.grabbing) {
         if (!func_isInsideBox(this.x, d, c)) return;
       } else if (!func_isInsideBox(this.x, this.y, c)) return;
@@ -4332,12 +4607,14 @@ class PickupItem {
     delete objD_pickups[this.id];
     this.id = "g" + this.id;
     objD_pickups[this.id] = this;
-    objG_player_plane &&
+    if (
+      objG_player_plane &&
       this.#c == objG_player_plane.id &&
-      !objG_eventManager.isInstagib() &&
-      (64 == this.type
-        ? objG_player_plane.incScore(vc)
-        : objG_player_plane.incScore(wc));
+      !objG_eventManager.isInstagib()
+    ) {
+      if (64 == this.type) objG_player_plane.incScore(vc);
+      else objG_player_plane.incScore(wc);
+    }
   }
   setPosition(x_gu: number, y_gu: number) {
     this.x = this.#x = 10 * x_gu;
@@ -5279,12 +5556,13 @@ class FollowMode_R {
     }
     this.resize = () => {
       this.C();
-      objG_eventManager.isSpaceWars() &&
-        (this.#N && clearTimeout(this.#N),
-        (this.#N = setTimeout(this.respawnParticles, 200)));
+      if (objG_eventManager.isSpaceWars()) {
+        this.#N && clearTimeout(this.#N);
+        this.#N = setTimeout(this.respawnParticles, 200);
+      }
     };
     let e = () => {
-      Z && objG_wsConnection.hasConnection && objG_wsConnection.sendInput();
+      if (Z && objG_wsConnection.hasConnection) objG_wsConnection.sendInput();
     };
     this.whiteFlash = 0;
     this.#html_canvas = canvas;
@@ -5298,8 +5576,7 @@ class FollowMode_R {
       console.log("Resources loaded!");
       objGUI_gameInfo = new UI_GameInfo();
       obj_particleImpacts = new ParticleImpacts();
-      objG_wsConnection.hasConnection &&
-        !objG_wsConnection.sentHello &&
+      if (objG_wsConnection.hasConnection && !objG_wsConnection.sentHello)
         objG_wsConnection.hello();
       setInterval(e, 40);
       func_displaySelectedDecal(Math.floor(5 * Math.random()) + 1);
@@ -5324,12 +5601,16 @@ class FollowMode_R {
     for (let id in objD_planes)
       if (objD_planes[id].inGame) {
         let c = objD_planes[id].score;
-        a < c && ((a = c), (b = id));
+        if (a < c) {
+          a = c;
+          b = id;
+        }
       }
-    b &&
-      ((objG_player_plane = objD_planes[b]),
-      objG_player_plane.prepareFollow(),
-      (Oa = current_following_plane_id = b));
+    if (b) {
+      objG_player_plane = objD_planes[b];
+      objG_player_plane.prepareFollow();
+      Oa = current_following_plane_id = b;
+    }
   }
   PlayerFollowing(a: boolean) {
     this.#c = 0;
@@ -5377,61 +5658,70 @@ class FollowMode_R {
   update(deltatime: number) {
     let b, e, f, s, t, w, D, C, E, Q, I, N, Y, ba;
     if (objG_assets.loaded) {
-      objG_player_plane &&
-        !objG_player_plane.inGame &&
-        0 == ka &&
-        ((objG_player_plane = undefined), (current_following_plane_id = 0));
-      objGUI_gameInfo && objGUI_gameInfo.update(deltatime);
-      mb && objG_sfxManager.sound.volume(num_max_volume, mb);
+      if (objG_player_plane && !objG_player_plane.inGame && 0 == ka) {
+        objG_player_plane = undefined;
+        current_following_plane_id = 0;
+      }
+      if (objGUI_gameInfo) objGUI_gameInfo.update(deltatime);
+      if (mb) objG_sfxManager.sound.volume(num_max_volume, mb);
       La = false;
-      for (b in objD_pickups)
-        objD_pickups[b].update(deltatime),
+      for (b in objD_pickups) {
+        objD_pickups[b].update(deltatime);
+        if (
           objD_pickups[b] &&
-            !La &&
-            objD_pickups[b].type == id_weapon_superweapon &&
-            ((La = true), (str_name_superweapon_holder = undefined));
+          !La &&
+          objD_pickups[b].type == id_weapon_superweapon
+        ) {
+          La = true;
+          str_name_superweapon_holder = undefined;
+        }
+      }
       e = null;
-      for (b in objD_missiles)
-        objD_missiles[b].update(deltatime),
-          objD_missiles[b].finished && (e = b);
-      e && delete objD_missiles[e];
+      for (b in objD_missiles) {
+        objD_missiles[b].update(deltatime);
+        if (objD_missiles[b].finished) e = b;
+      }
+      if (e) delete objD_missiles[e];
       e = null;
       for (b in objD_planes)
-        objD_planes[b].updateBool != objG_wsConnection.lastUpdateBool
-          ? (objD_planes[b] == objG_player_plane &&
-              (current_following_plane_id = 0),
-            delete objD_planes[b])
-          : (!La &&
-              objD_planes[b].weapon == id_weapon_superweapon &&
-              objD_planes[b].inGame &&
-              ((La = true),
+        if (objD_planes[b].updateBool != objG_wsConnection.lastUpdateBool) {
+          if (objD_planes[b] == objG_player_plane)
+            current_following_plane_id = 0;
+          delete objD_planes[b];
+        } else {
+          if (
+            !La &&
+            objD_planes[b].weapon == id_weapon_superweapon &&
+            objD_planes[b].inGame
+          ) {
+            (La = true),
               (str_name_superweapon_holder = func_renameBlankPlayerNames(
                 objD_planes[b].name,
-              ))),
-            sc == b && objD_planes[b].inGame && (e = objD_planes[b]),
-            objG_eventManager.railSwitch
-              ? (objD_planes[b].setWeapon(id_weapon_railgun),
-                (objD_planes[b].ammo = -1))
-              : objG_eventManager.machinegunSwitch &&
-                (objD_planes[b].setWeapon(id_weapon_machinegun),
-                (objD_planes[b].ammo = -1)),
-            objD_planes[b].update(deltatime));
+              ));
+          }
+          if (sc == b && objD_planes[b].inGame) e = objD_planes[b];
+          if (objG_eventManager.railSwitch) {
+            objD_planes[b].setWeapon(id_weapon_railgun);
+            objD_planes[b].ammo = -1;
+          } else if (objG_eventManager.machinegunSwitch) {
+            objD_planes[b].setWeapon(id_weapon_machinegun);
+            objD_planes[b].ammo = -1;
+          }
+          objD_planes[b].update(deltatime);
+        }
       for (b in objD_specialEntities) objD_specialEntities[b].update(deltatime);
-      objG_eventManager.railSwitch && (objG_eventManager.railSwitch = false);
-      objG_eventManager.machinegunSwitch &&
-        (objG_eventManager.machinegunSwitch = false);
+      if (objG_eventManager.railSwitch) objG_eventManager.railSwitch = false;
+      if (objG_eventManager.machinegunSwitch)
+        objG_eventManager.machinegunSwitch = false;
       objGUI_anchor.update(deltatime);
-      if (
-        !Z &&
-        0 == ka &&
-        null == objG_player_plane &&
-        ((this.#c -= deltatime), 0 >= this.#c)
-      )
+      this.#c -= deltatime;
+      if (!Z && 0 == ka && null == objG_player_plane && 0 >= this.#c)
         for (b in objD_planes) {
-          objD_planes[b].inGame &&
-            ((objG_player_plane = objD_planes[b]),
-            objG_player_plane.prepareFollow(),
-            (current_following_plane_id = b));
+          if (objD_planes[b].inGame) {
+            objG_player_plane = objD_planes[b];
+            objG_player_plane.prepareFollow();
+            current_following_plane_id = b;
+          }
           break;
         }
       if (objG_eventManager.isSpaceWars()) {
@@ -5441,8 +5731,10 @@ class FollowMode_R {
             objGUI_anchor.zoom,
           );
           f = list_particleDust[i];
-          0.1 < Math.abs(ca.x) + Math.abs(ca.y) &&
-            ((f.x -= (f.z - 1) * ca.x * 0.5), (f.y -= (f.z - 1) * ca.y * 0.5));
+          if (0.1 < Math.abs(ca.x) + Math.abs(ca.y)) {
+            f.x -= (f.z - 1) * ca.x * 0.5;
+            f.y -= (f.z - 1) * ca.y * 0.5;
+          }
         }
         ca.x = 0;
         ca.y = 0;
@@ -5476,88 +5768,119 @@ class FollowMode_R {
                 (this.#html_canvas.height * deltatime) / 2)) /
             objGUI_anchor.zoom;
           deltatime = Zb - objG_player_plane.x;
-          (s = $b - objG_player_plane.y),
-            (f = Math.sqrt(deltatime * deltatime + s * s));
+          s = $b - objG_player_plane.y;
+          f = Math.sqrt(deltatime * deltatime + s * s);
           deltatime /= f;
           s /= f;
           objG_inputManager.hover = 75 < f ? 0 : 1;
           t = f = 0;
-          wa && ((f = deltatime), (t = -s));
-          0 != f &&
-            ((deltatime = Math.atan(t / f)),
-            0 > f && (deltatime = Math.PI + deltatime),
-            (deltatime += Math.PI / 2),
-            (objG_inputManager.angle = deltatime));
-        } else
-          (objG_inputManager.hover = 1), (objG_inputManager.angle = Math.PI);
+          if (wa) {
+            f = deltatime;
+            t = -s;
+          }
+          if (0 != f) {
+            deltatime = Math.atan(t / f);
+            0 > f && (deltatime = Math.PI + deltatime);
+            deltatime += Math.PI / 2;
+            objG_inputManager.angle = deltatime;
+          }
+        } else {
+          objG_inputManager.hover = 1;
+          objG_inputManager.angle = Math.PI;
+        }
       t = objGUI_anchor.getBounds();
       deltatime = t[1].x;
       f = t[0].x;
       s = t[0].y;
       t = t[1].y;
       if (e && !func_isInsideBox(e.x, e.y, 30)) {
-        (w = H.x - e.x), (D = H.y - e.y), (C = Math.sqrt(w * w + D * D));
+        w = H.x - e.x;
+        D = H.y - e.y;
+        C = Math.sqrt(w * w + D * D);
         this.#n = 1;
-        1300 < C && ((this.#n = 1300 / C), 0.4 > this.#n && (this.#n = 0.4));
+        if (1300 < C) {
+          this.#n = 1300 / C;
+          if (0.4 > this.#n) this.#n = 0.4;
+        }
         D /= w;
         C = H.y - D * H.x;
         this.#h = 0 > w ? D * deltatime + C : D * f + C;
-        this.#h < s ? (this.#h = s) : this.#h > t && (this.#h = t);
+        if (this.#h < s) this.#h = s;
+        else if (this.#h > t) this.#h = t;
         this.#g = (this.#h - C) / D;
-        1 < D ? (D = 1) : -1 > D && (D = -1);
+        if (1 < D) D = 1;
+        else if (-1 > D) D = -1;
         this.#k = Math.acos(D);
-        0 > w && (this.#k += Math.PI);
+        if (0 > w) this.#k += Math.PI;
         this.#q = true;
       } else this.#q = false;
       w = false;
-      (ub = objG_player_plane
-        ? plane_last_killed_by[objG_player_plane.id]
-        : 0) &&
-        0 < ub &&
-        ((E = objD_planes[ub]), E == e && (w = true));
-      !E || func_isInsideBox(E.x, E.y, 30) || w
-        ? (this.#y = false)
-        : ((w = H.x - E.x),
-          (D = H.y - E.y),
-          (E = Math.sqrt(w * w + D * D)),
-          (this.#r = 1),
-          1300 < E && ((this.#r = 1300 / E), 0.4 > this.#r && (this.#r = 0.4)),
-          (D /= w),
-          (C = H.y - D * H.x),
-          (this.#l = 0 > w ? D * deltatime + C : D * f + C),
-          this.#l < s ? (this.#l = s) : this.#l > t && (this.#l = t),
-          (this.#m = (this.#l - C) / D),
-          1 < D ? (D = 1) : -1 > D && (D = -1),
-          (this.#x = Math.acos(D)),
-          0 > w && (this.#x += Math.PI),
-          (this.#y = true));
+      ub = objG_player_plane ? plane_last_killed_by[objG_player_plane.id] : 0;
+      if (ub && 0 < ub) {
+        E = objD_planes[ub];
+        if (E == e) w = true;
+      }
+      if (!E || func_isInsideBox(E.x, E.y, 30) || w) this.#y = false;
+      else {
+        w = H.x - E.x;
+        D = H.y - E.y;
+        E = Math.sqrt(w * w + D * D);
+        this.#r = 1;
+        if (1300 < E) {
+          this.#r = 1300 / E;
+          if (0.4 > this.#r) this.#r = 0.4;
+        }
+        D /= w;
+        C = H.y - D * H.x;
+        this.#l = 0 > w ? D * deltatime + C : D * f + C;
+        if (this.#l < s) this.#l = s;
+        else if (this.#l > t) this.#l = t;
+        this.#m = (this.#l - C) / D;
+        if (1 < D) D = 1;
+        else if (-1 > D) D = -1;
+        this.#x = Math.acos(D);
+        if (0 > w) this.#x += Math.PI;
+        this.#y = true;
+      }
       if (objG_eventManager.isWarship()) {
         E = 99999;
         (e = 0), Q, I, N, Y;
-        for (b in objD_specialEntities)
-          if (
-            ((C = objD_specialEntities[b]),
-            C.state == const_Ic_0 && C.x > -$_sub && C.x < $_sub)
-          ) {
-            (w = H.x - C.x), (D = H.y - C.y), (ba = Math.sqrt(w * w + D * D));
-            ba < E &&
-              ((Q = C.x), (I = C.y), (E = ba), (e = b), (N = w), (Y = D));
+        for (b in objD_specialEntities) {
+          C = objD_specialEntities[b];
+          if (C.state == const_Ic_0 && C.x > -$_sub && C.x < $_sub) {
+            w = H.x - C.x;
+            D = H.y - C.y;
+            ba = Math.sqrt(w * w + D * D);
+            if (ba < E) {
+              Q = C.x;
+              I = C.y;
+              E = ba;
+              e = b;
+              N = w;
+              Y = D;
+            }
           }
-        0 < e
-          ? func_isInsideBox(Q, I, 120)
-            ? (this.#T = false)
-            : (1300 < E &&
-                ((this.#Ca = 900 / E), 0.3 > this.#Ca && (this.#Ca = 0.3)),
-              (D = Y / N),
-              (C = H.y - D * H.x),
-              (this.#L = 0 > N ? D * deltatime + C : D * f + C),
-              this.#L < s ? (this.#L = s) : this.#L > t && (this.#L = t),
-              (this.#pa = (this.#L - C) / D),
-              1 < D ? (D = 1) : -1 > D && (D = -1),
-              (this.#ta = Math.acos(D)),
-              0 > N && (this.#ta += Math.PI),
-              (this.#T = true))
-          : (this.#T = false);
+        }
+        if (0 < e) {
+          if (func_isInsideBox(Q, I, 120)) this.#T = false;
+          else {
+            if (1300 < E) {
+              this.#Ca = 900 / E;
+              if (0.3 > this.#Ca) this.#Ca = 0.3;
+            }
+            D = Y / N;
+            C = H.y - D * H.x;
+            this.#L = 0 > N ? D * deltatime + C : D * f + C;
+            if (this.#L < s) this.#L = s;
+            else if (this.#L > t) this.#L = t;
+            this.#pa = (this.#L - C) / D;
+            if (1 < D) D = 1;
+            else if (-1 > D) D = -1;
+            this.#ta = Math.acos(D);
+            if (0 > N) this.#ta += Math.PI;
+            this.#T = true;
+          }
+        } else this.#T = false;
       }
     }
   }
@@ -5603,91 +5926,95 @@ class FollowMode_R {
         for (f in objD_specialEntities)
           objD_specialEntities[f].drawInfo(this.#ctx_canvas);
         objG_backgrounds.drawLimits(this.#ctx_canvas);
-        this.#q &&
-          ((deltatime = 1),
-          (c = 0 < qa),
-          this.#ctx_canvas.save(),
-          this.#ctx_canvas.translate(this.#g, this.#h),
-          this.#ctx_canvas.scale(this.#n, this.#n),
-          c &&
-            (this.#ctx_canvas.save(),
-            (e = func_rotatePoint(0, 50, -this.#k)),
-            this.#ctx_canvas.translate(e.x, e.y),
-            objG_assets.frames.crown.draw(this.#ctx_canvas),
-            this.#ctx_canvas.restore()),
-          this.#ctx_canvas.rotate(-this.#k),
-          (e = 1.2),
-          c
-            ? (this.#ctx_canvas.translate(0, -(-20 - 10 * deltatime)),
-              (e = 0.9))
-            : this.#ctx_canvas.translate(0, -(-30 - 10 * deltatime)),
-          (this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)"),
-          this.#ctx_canvas.beginPath(),
-          this.#ctx_canvas.moveTo(-8 * deltatime * e, 0),
-          this.#ctx_canvas.lineTo(8 * deltatime * e, 0),
-          this.#ctx_canvas.lineTo(0, -20 * deltatime * e),
-          this.#ctx_canvas.fill(),
-          this.#ctx_canvas.restore());
-        this.#y &&
-          ((deltatime = 1),
-          this.#ctx_canvas.save(),
-          this.#ctx_canvas.translate(this.#m, this.#l),
-          this.#ctx_canvas.scale(this.#r, this.#r),
-          this.#ctx_canvas.save(),
-          (e = func_rotatePoint(0, 50, -this.#x)),
-          this.#ctx_canvas.translate(e.x, e.y),
-          objG_assets.frames.revengeIcon.draw(this.#ctx_canvas),
-          this.#ctx_canvas.restore(),
-          this.#ctx_canvas.rotate(-this.#x),
-          this.#ctx_canvas.translate(0, -(-20 - 10 * deltatime)),
-          (e = 0.9),
-          (this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)"),
-          this.#ctx_canvas.beginPath(),
-          this.#ctx_canvas.moveTo(-8 * deltatime * e, 0),
-          this.#ctx_canvas.lineTo(8 * deltatime * e, 0),
-          this.#ctx_canvas.lineTo(0, -20 * deltatime * e),
-          this.#ctx_canvas.fill(),
-          this.#ctx_canvas.restore());
-        this.#T &&
-          objG_assets.warshipIcon &&
-          ((deltatime = 1),
-          this.#ctx_canvas.save(),
-          this.#ctx_canvas.translate(this.#pa, this.#L),
-          this.#ctx_canvas.scale(this.#Ca, this.#Ca),
-          this.#ctx_canvas.save(),
-          (e = func_rotatePoint(0, 80, -this.#ta)),
-          this.#ctx_canvas.translate(e.x, e.y),
+        if (this.#q) {
+          deltatime = 1;
+          c = 0 < qa;
+          this.#ctx_canvas.save();
+          this.#ctx_canvas.translate(this.#g, this.#h);
+          this.#ctx_canvas.scale(this.#n, this.#n);
+          if (c) {
+            this.#ctx_canvas.save();
+            e = func_rotatePoint(0, 50, -this.#k);
+            this.#ctx_canvas.translate(e.x, e.y);
+            objG_assets.frames.crown.draw(this.#ctx_canvas);
+            this.#ctx_canvas.restore();
+          }
+          this.#ctx_canvas.rotate(-this.#k);
+          e = 1.2;
+          if (c) {
+            this.#ctx_canvas.translate(0, -(-20 - 10 * deltatime));
+            e = 0.9;
+          } else this.#ctx_canvas.translate(0, -(-30 - 10 * deltatime));
+          this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)";
+          this.#ctx_canvas.beginPath();
+          this.#ctx_canvas.moveTo(-8 * deltatime * e, 0);
+          this.#ctx_canvas.lineTo(8 * deltatime * e, 0);
+          this.#ctx_canvas.lineTo(0, -20 * deltatime * e);
+          this.#ctx_canvas.fill();
+          this.#ctx_canvas.restore();
+        }
+        if (this.#y) {
+          deltatime = 1;
+          this.#ctx_canvas.save();
+          this.#ctx_canvas.translate(this.#m, this.#l);
+          this.#ctx_canvas.scale(this.#r, this.#r);
+          this.#ctx_canvas.save();
+          e = func_rotatePoint(0, 50, -this.#x);
+          this.#ctx_canvas.translate(e.x, e.y);
+          objG_assets.frames.revengeIcon.draw(this.#ctx_canvas);
+          this.#ctx_canvas.restore();
+          this.#ctx_canvas.rotate(-this.#x);
+          this.#ctx_canvas.translate(0, -(-20 - 10 * deltatime));
+          e = 0.9;
+          this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)";
+          this.#ctx_canvas.beginPath();
+          this.#ctx_canvas.moveTo(-8 * deltatime * e, 0);
+          this.#ctx_canvas.lineTo(8 * deltatime * e, 0);
+          this.#ctx_canvas.lineTo(0, -20 * deltatime * e);
+          this.#ctx_canvas.fill();
+          this.#ctx_canvas.restore();
+        }
+        if (this.#T && objG_assets.warshipIcon) {
+          deltatime = 1;
+          this.#ctx_canvas.save();
+          this.#ctx_canvas.translate(this.#pa, this.#L);
+          this.#ctx_canvas.scale(this.#Ca, this.#Ca);
+          this.#ctx_canvas.save();
+          e = func_rotatePoint(0, 80, -this.#ta);
+          this.#ctx_canvas.translate(e.x, e.y);
           this.#ctx_canvas.drawImage(
             objG_assets.warshipIcon,
             -objG_assets.warshipIcon.width / 2,
             -objG_assets.warshipIcon.height / 2,
-          ),
-          this.#ctx_canvas.restore(),
-          this.#ctx_canvas.rotate(-this.#ta),
-          (e = 0.9),
-          this.#ctx_canvas.translate(0, -(-20 - 10 * deltatime)),
-          (this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)"),
-          this.#ctx_canvas.beginPath(),
-          this.#ctx_canvas.moveTo(-8 * deltatime * e, 0),
-          this.#ctx_canvas.lineTo(8 * deltatime * e, 0),
-          this.#ctx_canvas.lineTo(0, -20 * deltatime * e),
-          this.#ctx_canvas.fill(),
-          this.#ctx_canvas.restore());
+          );
+          this.#ctx_canvas.restore();
+          this.#ctx_canvas.rotate(-this.#ta);
+          e = 0.9;
+          this.#ctx_canvas.translate(0, -(-20 - 10 * deltatime));
+          this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)";
+          this.#ctx_canvas.beginPath();
+          this.#ctx_canvas.moveTo(-8 * deltatime * e, 0);
+          this.#ctx_canvas.lineTo(8 * deltatime * e, 0);
+          this.#ctx_canvas.lineTo(0, -20 * deltatime * e);
+          this.#ctx_canvas.fill();
+          this.#ctx_canvas.restore();
+        }
       }
       objGUI_anchor.startUILayer();
       bool_drawUI && objGUI_gameInfo.draw(this.#ctx_canvas);
-      0 < this.whiteFlash &&
-        (this.#ctx_canvas.save(),
-        (this.#ctx_canvas.globalAlpha = this.whiteFlash),
-        (this.#ctx_canvas.fillStyle = "#FFFFFF"),
+      if (0 < this.whiteFlash) {
+        this.#ctx_canvas.save();
+        this.#ctx_canvas.globalAlpha = this.whiteFlash;
+        this.#ctx_canvas.fillStyle = "#FFFFFF";
         this.#ctx_canvas.fillRect(
           0,
           0,
           this.#html_canvas.width,
           this.#html_canvas.height,
-        ),
-        this.#ctx_canvas.restore(),
-        (this.whiteFlash -= 0.015));
+        );
+        this.#ctx_canvas.restore();
+        this.whiteFlash -= 0.015;
+      }
     }
   }
   gameCleanup() {
@@ -5714,9 +6041,9 @@ class FollowMode_R {
     this.#html_canvas.height = window.innerHeight / a;
     canvas_width = this.#html_canvas.width;
     canvas_height = this.#html_canvas.height;
-    (b = canvas_height * a),
-      (c = -50 + 50 * a + "%"),
-      (a = "translate(" + c + "," + c + ") scale(" + a + ")");
+    b = canvas_height * a;
+    c = -50 + 50 * a + "%";
+    a = "translate(" + c + "," + c + ") scale(" + a + ")";
     $("#canvas").css({
       transform: a,
     });
@@ -5730,24 +6057,25 @@ class FollowMode_R {
       0.92 * Math.max(canvas_height / 1016, canvas_width / 1500);
     num_scale_factor *= window.devicePixelRatio / int_pixel_ratio;
     b = Math.min(1, b / 1016);
-    0 < 640 * b &&
-      ((b = "translate(-50%,0%) scale(" + b + ")"),
+    if (0 < 640 * b) {
+      b = "translate(-50%,0%) scale(" + b + ")";
       $("#mainDialog").css({
         transform: b,
-      }),
+      });
       $("#mainDialog").css({
         "-ms-transform": b,
-      }),
+      });
       $("#mainDialog").css({
         "-webkit-transform": b,
-      }),
+      });
       $("#mainDialog").css({
         top: "25%",
-      }));
+      });
+    }
   }
   respawnParticles() {
     list_particleDust = [];
-    for (let a = 0; 150 > a; a++) list_particleDust.push(new ParticleDust());
+    for (let i = 0; 150 > i; i++) list_particleDust.push(new ParticleDust());
   }
 }
 class UI_Anchor {
@@ -5787,37 +6115,41 @@ class UI_Anchor {
     this.#ctx_canvas.translate(d + this.#n, f + this.#k);
     this.#ctx_canvas.scale(c, c);
   }
-  applyShake(a) {
+  applyShake(deltatime: number) {
     if (xa)
       if (0 < this.#c) {
         let b = this.#g,
           d;
-        250 > this.#c && (b = (this.#c / 1e3 / 0.5) * this.#g);
+        if (250 > this.#c) b = (this.#c / 1e3 / 0.5) * this.#g;
         this.#h += 1;
         this.#q += 1.1;
-        (d = Math.sin(this.#h) * (b / 4)), (b = Math.cos(this.#q) * b);
+        d = Math.sin(this.#h) * (b / 4);
+        b = Math.cos(this.#q) * b;
         this.#n = d;
         this.#k = b;
-        this.#c -= a;
+        this.#c -= deltatime;
       } else this.#k = this.#n = 0;
   }
-  update(b) {
+  update(deltatime: number) {
     let c = this.maxZoom + (this.minZoom - this.maxZoom);
-    xa || (this.y = 470);
-    Z || 1 != ka || bool_following_plane
-      ? ((this.zoom = (1 / (window.devicePixelRatio / int_pixel_ratio)) * 1.2),
-        (this.zoom *= num_scale_factor),
-        null != objG_player_plane &&
-          ((ca.x = objG_player_plane.x - this.x),
-          (ca.y = objG_player_plane.y - this.y),
-          (this.x = objG_player_plane.x),
-          (this.y = objG_player_plane.y)))
-      : ((c =
-          (1 / (window.devicePixelRatio / int_pixel_ratio)) *
-          0.7 *
-          num_scale_factor),
-        (this.zoom += (c - this.zoom) / 10));
-    this.applyShake(b);
+    if (!xa) this.y = 470;
+    if (Z || 1 != ka || bool_following_plane) {
+      this.zoom = (1 / (window.devicePixelRatio / int_pixel_ratio)) * 1.2;
+      this.zoom *= num_scale_factor;
+      if (null != objG_player_plane) {
+        ca.x = objG_player_plane.x - this.x;
+        ca.y = objG_player_plane.y - this.y;
+        this.x = objG_player_plane.x;
+        this.y = objG_player_plane.y;
+      }
+    } else {
+      c =
+        (1 / (window.devicePixelRatio / int_pixel_ratio)) *
+        0.7 *
+        num_scale_factor;
+      this.zoom += (c - this.zoom) / 10;
+    }
+    this.applyShake(deltatime);
   }
   setPosition(x: number, y: number) {
     ca.x = x - this.x;
@@ -5826,7 +6158,10 @@ class UI_Anchor {
     this.y = y;
   }
   shake() {
-    xa && ((this.#c = 500), (this.#g = 7));
+    if (xa) {
+      this.#c = 500;
+      this.#g = 7;
+    }
   }
   getBounds() {
     return [
@@ -6108,29 +6443,30 @@ class FrameImage {
     f.width = this.width;
     f.height = this.height;
     f.getContext("2d");
-    this.#image
-      ? d.drawImage(
-          this.#image,
-          this.#x,
-          this.#y,
-          this.width,
-          this.height,
-          0,
-          0,
-          this.width,
-          this.height,
-        )
-      : d.drawImage(
-          this.canvas,
-          0,
-          0,
-          this.width,
-          this.height,
-          0,
-          0,
-          this.width,
-          this.height,
-        );
+    if (this.#image)
+      d.drawImage(
+        this.#image,
+        this.#x,
+        this.#y,
+        this.width,
+        this.height,
+        0,
+        0,
+        this.width,
+        this.height,
+      );
+    else
+      d.drawImage(
+        this.canvas,
+        0,
+        0,
+        this.width,
+        this.height,
+        0,
+        0,
+        this.width,
+        this.height,
+      );
     d.globalAlpha = 1;
     d.drawImage(f, 0, 0);
     return c;
@@ -6184,7 +6520,7 @@ class AnimationManager {
     k.posY = y;
     objG_animationManager.runAnimationBehind(k);
     x = 1 - func_calculateDistance2D(x, y, H.x, H.y) / num_sound_max_distance;
-    0.01 < x &&
+    if (0.01 < x)
       objG_sfxManager.playSound(
         str_sfxid_mexpl2,
         x * strength,
@@ -6208,19 +6544,23 @@ class AnimationManager {
     }
   }
   update(deltatime: number) {
-    for (const i in this.#runL1)
-      this.#runL1[i].update(deltatime),
-        this.#runL1[i].deleting && this.#runL1.splice(parseInt(i), 1);
-    for (const i in this.#runBG)
-      this.#runBG[i].update(deltatime),
-        this.#runBG[i].deleting && this.#runBG.splice(parseInt(i), 1);
-    for (const i in this.#runL2)
-      this.#runL2[i].update(deltatime),
-        this.#runL2[i].deleting && this.#runL2.splice(parseInt(i), 1);
-    for (const i in this.#instances_DebrisMan)
-      this.#instances_DebrisMan[i].update(deltatime),
-        this.#instances_DebrisMan[i].deleting &&
-          this.#instances_DebrisMan.splice(parseInt(i), 1);
+    for (const i in this.#runL1) {
+      this.#runL1[i].update(deltatime);
+      if (this.#runL1[i].deleting) this.#runL1.splice(parseInt(i), 1);
+    }
+    for (const i in this.#runBG) {
+      this.#runBG[i].update(deltatime);
+      if (this.#runBG[i].deleting) this.#runBG.splice(parseInt(i), 1);
+    }
+    for (const i in this.#runL2) {
+      this.#runL2[i].update(deltatime);
+      if (this.#runL2[i].deleting) this.#runL2.splice(parseInt(i), 1);
+    }
+    for (const i in this.#instances_DebrisMan) {
+      this.#instances_DebrisMan[i].update(deltatime);
+      if (this.#instances_DebrisMan[i].deleting)
+        this.#instances_DebrisMan.splice(parseInt(i), 1);
+    }
   }
   drawBehind(ctx: CanvasRenderingContext2D) {
     for (let b in this.#runBG) {
@@ -6296,16 +6636,20 @@ class DrawAnimation {
     this.#interval = interval;
   }
   update(deltatime: number) {
-    this.deleting ||
-      (this.#f > this.#interval && (this.#b++, (this.#f -= this.#interval)),
-      (this.#f += deltatime),
-      this.#b >= this.frameCount && (this.deleting = true));
+    if (!this.deleting) {
+      if (this.#f > this.#interval) {
+        this.#b++;
+        this.#f -= this.#interval;
+      }
+      this.#f += deltatime;
+      if (this.#b >= this.frameCount) this.deleting = true;
+    }
   }
   setScale(scale: number) {
     this.scaleY = this.scaleX = scale;
   }
   draw(ctx: CanvasRenderingContext2D) {
-    1 > this.alpha && (ctx.globalAlpha = this.alpha);
+    if (1 > this.alpha) ctx.globalAlpha = this.alpha;
     this.frames[this.#b].draw(ctx);
   }
 }
@@ -6410,13 +6754,17 @@ class ParticleManager {
     let e, g, h, l;
     for (e = 0; e < this.#d; e++) {
       g = this.#f[e];
-      g.time >= this.life &&
-        (g.active || ((g.active = true), (g.time %= this.life)),
-        this.resetParticle(g));
+      if (g.time >= this.life) {
+        if (!g.active) {
+          g.active = true;
+          g.time %= this.life;
+        }
+        this.resetParticle(g);
+      }
       g.time += deltatime;
       if (g.active) {
         h = g.time / this.life;
-        1 < h && (h = 1);
+        if (1 < h) h = 1;
         g.pos.x += 1 * g.speed.x;
         g.pos.y += 1 * g.speed.y;
         if (0 <= h && 0.1 > h) {
@@ -6424,20 +6772,22 @@ class ParticleManager {
           g.scale = 0.2;
         } else g.scale = 0.2 + (h - 0.1);
         g.rotation += g.rotationSpeed;
-        0 <= h && 0.1 > h
-          ? ((l = h / 0.1), 0.8 < l && (l = 0.8), (g.color.a = l))
-          : (g.color.a = 0.9 - (h - 0.1));
-        0 <= h && 0.25 > h
-          ? ((l = h / 0.25),
-            (g.color.h = 61 * (1 - l)),
-            (g.color.s = "100%"),
-            (g.color.l = "50%"))
-          : 0.25 <= h &&
-            0.3 >= h &&
-            ((l = (h - 0.25) / (0.3 - 0.25)),
-            (g.color.h = 0),
-            (g.color.s = 100 * (1 - l) + "%"),
-            (g.color.l = 100 * (0.4 + 0.1 * (1 - l)) + "%"));
+        if (0 <= h && 0.1 > h) {
+          l = h / 0.1;
+          if (0.8 < l) l = 0.8;
+          g.color.a = l;
+        } else g.color.a = 0.9 - (h - 0.1);
+        if (0 <= h && 0.25 > h) {
+          l = h / 0.25;
+          g.color.h = 61 * (1 - l);
+          g.color.s = "100%";
+          g.color.l = "50%";
+        } else if (0.25 <= h && 0.3 >= h) {
+          l = (h - 0.25) / (0.3 - 0.25);
+          g.color.h = 0;
+          g.color.s = 100 * (1 - l) + "%";
+          g.color.l = 100 * (0.4 + 0.1 * (1 - l)) + "%";
+        }
         g.speed.x += 1 * this.#a;
         g.speed.y += 1 * this.#c;
       }
@@ -6448,9 +6798,13 @@ class ParticleManager {
     let e, g, h, l;
     for (e = 0; e < this.#d; e++) {
       g = this.#f[e];
-      g.time >= this.life &&
-        (g.active || ((g.active = true), (g.time %= this.life)),
-        this.resetParticle(g));
+      if (g.time >= this.life) {
+        if (!g.active) {
+          g.active = true;
+          g.time %= this.life;
+        }
+        this.resetParticle(g);
+      }
       g.time += deltatime;
       if (g.active) {
         h = g.time / this.life;
@@ -6462,26 +6816,28 @@ class ParticleManager {
           g.scale = 0.25;
         } else g.scale = 0.25 + (h - 0.1);
         g.rotation += g.rotationSpeed;
-        0 <= h && 0.1 > h
-          ? ((l = h / 0.1),
-            0.8 < l && (l = 0.8),
-            (g.color.a = l * (1 - this.debreeAge)))
-          : ((l = Math.pow(1 - (h - 0.1) / 0.9, 1 + 5 * this.debreeAge)),
-            (g.color.a = l.toFixed(2)));
+        if (0 <= h && 0.1 > h) {
+          l = h / 0.1;
+          if (0.8 < l) l = 0.8;
+          g.color.a = l * (1 - this.debreeAge);
+        } else {
+          l = Math.pow(1 - (h - 0.1) / 0.9, 1 + 5 * this.debreeAge);
+          g.color.a = l.toFixed(2);
+        }
         g.color.a = parseFloat(g.color.a as any) * this.alpha;
-        0 <= h && 0.25 > h
-          ? ((l = h / 0.25),
-            (g.color.h = (61 * (1 - l)).toFixed(2)),
-            (h = 100 * (1 - this.debreeAge)),
-            (g.color.s = h.toFixed(2) + "%"),
-            (g.color.l = "50%"))
-          : 0.25 <= h &&
-            0.4 >= h &&
-            ((l = (h - 0.25) / (0.4 - 0.25)),
-            (g.color.h = 0),
-            (h = 100 * (1 - l) * (1 - this.debreeAge)),
-            (g.color.s = h.toFixed(2) + "%"),
-            (g.color.l = (100 * (0.4 + 0.1 * (1 - l))).toFixed(2) + "%"));
+        if (0 <= h && 0.25 > h) {
+          l = h / 0.25;
+          g.color.h = (61 * (1 - l)).toFixed(2);
+          h = 100 * (1 - this.debreeAge);
+          g.color.s = h.toFixed(2) + "%";
+          g.color.l = "50%";
+        } else if (0.25 <= h && 0.4 >= h) {
+          l = (h - 0.25) / (0.4 - 0.25);
+          g.color.h = 0;
+          h = 100 * (1 - l) * (1 - this.debreeAge);
+          g.color.s = h.toFixed(2) + "%";
+          g.color.l = (100 * (0.4 + 0.1 * (1 - l))).toFixed(2) + "%";
+        }
         g.speed.x += 1 * this.#a;
         g.speed.y += 1 * this.#c;
       }
@@ -6492,13 +6848,17 @@ class ParticleManager {
     let e, g, h, l;
     for (e = 0; e < this.#d; e++) {
       g = this.#f[e];
-      g.time >= this.life &&
-        (g.active || ((g.active = true), (g.time %= this.life)),
-        this.resetParticle(g));
+      if (g.time >= this.life) {
+        if (!g.active) {
+          g.active = true;
+          g.time %= this.life;
+        }
+        this.resetParticle(g);
+      }
       g.time += deltatime;
       if (g.active) {
         h = g.time / this.life;
-        1 < h && (h = 1);
+        if (1 < h) h = 1;
         g.pos.x += 1 * g.speed.x;
         g.pos.y += 1 * g.speed.y;
         if (0 <= h && 0.1 > h) {
@@ -6506,18 +6866,23 @@ class ParticleManager {
           g.scale = 0.2;
         } else g.scale = 0.2 + 0.1 * (h - 0.1);
         g.rotation += g.rotationSpeed;
-        0 <= h && 0.1 > h
-          ? ((l = h / 0.1), 0.8 < l && (l = 0.8), (g.color.a = l))
-          : (g.color.a = 0.9 - (h - 0.1));
-        0 <= h && 0.25 > h
-          ? ((g.color.h = 57), (g.color.s = "21%"), (g.color.l = "50%"))
-          : 0.25 <= h &&
-            ((l = (h - 0.25) / 0.75),
-            (g.color.h = 57),
-            (g.color.s = "21%"),
-            (h = 50 - 50 * l),
-            10 > h && (h = 10),
-            (g.color.l = h + "%"));
+        if (0 <= h && 0.1 > h) {
+          l = h / 0.1;
+          if (0.8 < l) l = 0.8;
+          g.color.a = l;
+        } else g.color.a = 0.9 - (h - 0.1);
+        if (0 <= h && 0.25 > h) {
+          g.color.h = 57;
+          g.color.s = "21%";
+          g.color.l = "50%";
+        } else if (0.25 <= h) {
+          l = (h - 0.25) / 0.75;
+          g.color.h = 57;
+          g.color.s = "21%";
+          h = 50 - 50 * l;
+          if (10 > h) h = 10;
+          g.color.l = h + "%";
+        }
         g.speed.x += 1 * this.#a;
         g.speed.y += 1 * this.#c;
       }
@@ -6533,7 +6898,7 @@ class ParticleManager {
   draw(ctx: CanvasRenderingContext2D) {
     for (let i = this.#d - 1; 0 <= i; i--) {
       let particle = this.#f[i];
-      particle.active && particle.draw(ctx);
+      if (particle.active) particle.draw(ctx);
     }
   }
 }
@@ -6586,7 +6951,7 @@ class ParticleDebrisManager {
     for (let debreeID in this.#debris_instances) {
       let d = this.#debris_instances[debreeID];
       d.update(deltatime);
-      d.deleting && this.#debris_instances.splice(parseInt(debreeID), 1);
+      if (d.deleting) this.#debris_instances.splice(parseInt(debreeID), 1);
       b++;
     }
     0 == b && (this.deleting = true);
@@ -6609,7 +6974,7 @@ class ParticleDebris {
   #n = 0;
   deleting = false;
   constructor() {
-    objG_eventManager.isSpaceWars() && (this.#c = 0);
+    if (objG_eventManager.isSpaceWars()) this.#c = 0;
   }
   init(x: number, y: number) {
     this.#x = x;
@@ -6631,21 +6996,22 @@ class ParticleDebris {
     this.#v_x *= 0.975;
     this.#v_y *= 0.975;
     this.#c *= 0.975;
-    Math.abs(this.#v_x) < Math.abs(this.#d) && (this.#v_x = this.#d);
-    Math.abs(this.#v_y) < Math.abs(this.#a) && (this.#v_y = this.#a);
-    3 < this.#f && (this.#f = 3);
+    if (Math.abs(this.#v_x) < Math.abs(this.#d)) this.#v_x = this.#d;
+    if (Math.abs(this.#v_y) < Math.abs(this.#a)) this.#v_y = this.#a;
+    if (3 < this.#f) this.#f = 3;
     this.#n += deltatime;
-    500 < this.#n && 2300 >= this.#n
-      ? (this.#obj_particleMan.debreeAge = (this.#n - 500) / 2300)
-      : 2300 < this.#n && 2500 >= this.#n
-        ? (this.#obj_particleMan.alpha = (2500 - this.#n) / 200)
-        : 2500 < this.#n && (this.deleting = true);
-    this.deleting ||
-      (this.#obj_particleMan.setPosition(this.#x, this.#y),
-      this.#obj_particleMan.updateExplosion(deltatime));
+    if (500 < this.#n && 2300 >= this.#n)
+      this.#obj_particleMan.debreeAge = (this.#n - 500) / 2300;
+    else if (2300 < this.#n && 2500 >= this.#n)
+      this.#obj_particleMan.alpha = (2500 - this.#n) / 200;
+    else if (2500 < this.#n) this.deleting = true;
+    if (!this.deleting) {
+      this.#obj_particleMan.setPosition(this.#x, this.#y);
+      this.#obj_particleMan.updateExplosion(deltatime);
+    }
   }
   draw(ctx: CanvasRenderingContext2D) {
-    this.deleting || this.#obj_particleMan.draw(ctx);
+    if (!this.deleting) this.#obj_particleMan.draw(ctx);
   }
 }
 class Missile {
@@ -6689,24 +7055,25 @@ class Missile {
       ),
       c = this.y - this.prevY,
       g;
-    0 == this.x - this.prevX &&
-      0 == c &&
-      (this.#f++, 50 < this.#f && (this.finished = true));
+    if (0 == this.x - this.prevX && 0 == c) {
+      this.#f++;
+      if (50 < this.#f) this.finished = true;
+    }
     this.prevX = this.x;
     this.prevY = this.y;
     this.x = a * (this.dstX - this.origX) + this.origX;
     this.y = a * (this.dstY - this.origY) + this.origY;
     this.#obj_particleTrails.setPosition(this.x, this.y);
     this.#obj_particleTrails.update(deltatime);
-    if (1 == this.type) objG_eventManager.isSpaceWars() && (this.angle += 0.2);
+    if (1 == this.type && objG_eventManager.isSpaceWars()) this.angle += 0.2;
     else if (2 != this.type) {
       a = E / 2;
       c = a - 100;
       if (this.y > c && this.y < a && 0 >= this.#e) {
         this.#e = 5;
-        (g = Math.random() / 2),
-          (c = (0.2 + (0.5 - ((a - this.y) / (a - c)) * 0.5)) * (0.95 + g)),
-          (g = 20 * Math.sin(this.angle));
+        g = Math.random() / 2;
+        c = (0.2 + (0.5 - ((a - this.y) / (a - c)) * 0.5)) * (0.95 + g);
+        g = 20 * Math.sin(this.angle);
         obj_particleImpacts.addSplash(
           this.x - g,
           a + 5 * Math.random(),
@@ -6720,52 +7087,57 @@ class Missile {
   draw(ctx: CanvasRenderingContext2D, deltatime: number) {
     let c = 1;
     this.timeToNextFrame -= deltatime;
-    0 >= this.timeToNextFrame &&
-      ((this.flameState = !this.flameState),
-      (this.timeToNextFrame = this.frameSwitchTime));
+    if (0 >= this.timeToNextFrame) {
+      this.flameState = !this.flameState;
+      this.timeToNextFrame = this.frameSwitchTime;
+    }
     let e = 0.7;
     this.flameState && (e = 1);
-    0 == this.type &&
-      ((this.#obj_particleTrails.width = 1.5 * e),
-      (this.#obj_particleTrails.style = "rgba(247, 189, 57, 1.0)"),
-      this.#obj_particleTrails.draw(ctx),
-      (this.#obj_particleTrails.width = 0.4 * e),
-      (this.#obj_particleTrails.style = "rgba(232, 247, 59, 1.0)"),
-      this.#obj_particleTrails.draw(ctx),
-      ctx.save(),
-      ctx.translate(this.x, this.y),
-      this.flameState ? ctx.scale(0.7, 0.7) : ctx.scale(0.9, 0.9),
-      ctx.rotate(this.angle),
-      ctx.translate(-27, 0),
-      objG_assets.frames.throttleFlame.draw(ctx),
-      ctx.restore());
+    if (0 == this.type) {
+      this.#obj_particleTrails.width = 1.5 * e;
+      this.#obj_particleTrails.style = "rgba(247, 189, 57, 1.0)";
+      this.#obj_particleTrails.draw(ctx);
+      this.#obj_particleTrails.width = 0.4 * e;
+      this.#obj_particleTrails.style = "rgba(232, 247, 59, 1.0)";
+      this.#obj_particleTrails.draw(ctx);
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      this.flameState ? ctx.scale(0.7, 0.7) : ctx.scale(0.9, 0.9);
+      ctx.rotate(this.angle);
+      ctx.translate(-27, 0);
+      objG_assets.frames.throttleFlame.draw(ctx);
+      ctx.restore();
+    }
     ctx.save();
     ctx.translate(this.x, this.y);
-    2 != this.type
-      ? (1 == this.type && (c = 1.4),
-        ctx.scale(c, c),
+    if (2 != this.type) {
+      1 == this.type && (c = 1.4);
+      ctx.scale(c, c);
+      if (
         1 == this.type &&
-          objG_assets.blinkImage &&
-          objG_eventManager.isSpaceWars() &&
-          (ctx.scale(2, 2),
-          ctx.drawImage(
-            objG_assets.blinkImage,
-            -objG_assets.blinkImage.width / 2,
-            -objG_assets.blinkImage.height / 2,
-          ),
-          ctx.scale(0.5, 0.5)),
-        ctx.rotate(this.angle),
-        0 == this.type
-          ? objG_assets.frames.missile_attack.draw(ctx)
-          : objG_assets.frames.bomb.draw(ctx))
-      : (ctx.beginPath(),
-        (ctx.fillStyle = "#FF0000"),
-        ctx.arc(0, 0, 6, 0, 2 * Math.PI),
-        ctx.fill(),
-        ctx.beginPath(),
-        (ctx.fillStyle = "#FFFFFF"),
-        ctx.arc(0, 0, 4, 0, 2 * Math.PI),
-        ctx.fill());
+        objG_assets.blinkImage &&
+        objG_eventManager.isSpaceWars()
+      ) {
+        ctx.scale(2, 2);
+        ctx.drawImage(
+          objG_assets.blinkImage,
+          -objG_assets.blinkImage.width / 2,
+          -objG_assets.blinkImage.height / 2,
+        );
+        ctx.scale(0.5, 0.5);
+      }
+      ctx.rotate(this.angle);
+      if (0 == this.type) objG_assets.frames.missile_attack.draw(ctx);
+      else objG_assets.frames.bomb.draw(ctx);
+    } else {
+      ctx.beginPath(), (ctx.fillStyle = "#FF0000");
+      ctx.arc(0, 0, 6, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.fillStyle = "#FFFFFF";
+      ctx.arc(0, 0, 4, 0, 2 * Math.PI);
+      ctx.fill();
+    }
     ctx.restore();
   }
   drawReflection(ctx: CanvasRenderingContext2D, deltatime: number) {
@@ -6808,11 +7180,12 @@ class Missile {
       this.first_set = false;
       1 == this.type && (this.angle = Math.PI / 2);
     }
-    0 == this.type &&
-      ((x_gu = this.dstX - this.origX),
-      (y_gu = this.dstY - this.origY),
-      (this.angle =
-        0 <= x_gu ? Math.atan(y_gu / x_gu) : Math.atan(y_gu / x_gu) + Math.PI));
+    if (0 == this.type) {
+      x_gu = this.dstX - this.origX;
+      y_gu = this.dstY - this.origY;
+      this.angle =
+        0 <= x_gu ? Math.atan(y_gu / x_gu) : Math.atan(y_gu / x_gu) + Math.PI;
+    }
   }
   setColorHue(hue: number) {
     this.colorHue = hue;
@@ -6858,9 +7231,10 @@ class ParticleTrails {
         let c = this.tailJoints[i].length;
         if (0 < c) {
           c = frametime_millis - this.tailJoints[i][0].t;
-          c > this.trailTime &&
-            (this.tailJoints[i].splice(0, 1),
-            0 == this.tailJoints[i].length && this.tailJoints.splice(i, 1));
+          if (c > this.trailTime) {
+            this.tailJoints[i].splice(0, 1);
+            0 == this.tailJoints[i].length && this.tailJoints.splice(i, 1);
+          }
           break;
         }
       }
@@ -6972,8 +7346,8 @@ class ParticleFlags {
       if (c_old > this.pointMinDistance && c > 3 * this.pointMinDistance)
         complete = true;
     }
-    complete &&
-      (this.tailJoints[0].push({
+    if (complete) {
+      this.tailJoints[0].push({
         x: this.#x,
         y: this.#y,
         origX: this.#x,
@@ -6981,32 +7355,32 @@ class ParticleFlags {
         t: frametime_millis,
         fx: 0,
         style: this.style,
-      }),
-      count > this.maxPoints && this.tailJoints[0].splice(0, 1));
+      });
+      if (count > this.maxPoints) this.tailJoints[0].splice(0, 1);
+    }
   }
   draw(ctx: CanvasRenderingContext2D) {
-    if (bool_drawTrails && this.loaded && 0 < this.tailJoints.length)
-      for (
-        let d,
-          a,
-          c = this.letterMinDistance,
-          g = true,
-          h = 0,
-          q = 0,
-          n,
-          k,
-          m,
-          l,
-          p,
-          r,
-          s = this.tailJoints[0].length - 2;
-        0 <= s;
-        s--
-      ) {
+    if (bool_drawTrails && this.loaded && 0 < this.tailJoints.length) {
+      let d,
+        a,
+        c = this.letterMinDistance,
+        g = true,
+        h = 0,
+        q = 0,
+        n,
+        k,
+        m,
+        l,
+        p,
+        r;
+      for (s = this.tailJoints[0].length - 2; 0 <= s; s--) {
         let t = this.tailJoints[0][s].x,
           w = this.tailJoints[0][s].y,
           u;
-        g && ((d = this.#x), (a = this.#y));
+        if (g) {
+          d = this.#x;
+          a = this.#y;
+        }
         let v = t - d,
           x = w - a,
           A,
@@ -7015,9 +7389,12 @@ class ParticleFlags {
           B,
           E;
         u = Math.sqrt(Math.pow(v, 2) + Math.pow(x, 2));
-        0 == u
-          ? console.log("OOPS! Division by ZERO! " + s + " : " + v + ":::" + x)
-          : ((A = v / u), (C = x / u));
+        if (0 == u)
+          console.log("OOPS! Division by ZERO! " + s + " : " + v + ":::" + x);
+        else {
+          A = v / u;
+          C = x / u;
+        }
         v = false;
         if (0 < u - c) {
           z = d + A * c;
@@ -7033,16 +7410,26 @@ class ParticleFlags {
               k = -k * d;
               n *= d;
               u = z + k;
-              (v = B + n), (x = z - k), (E = B - n);
+              v = B + n;
+              x = z - k;
+              E = B - n;
               d = this.textureWidth;
               a = this.textureHeight;
               let F, G, H, J;
-              this.flipY && 0 < A ? ((F = 0), (G = a)) : ((F = a), (G = 0));
-              this.flipX && 0 < A
-                ? ((H = (q / this.flagDivisions) * d),
-                  (J = ((q + 1) / this.flagDivisions) * d))
-                : ((H = d * (1 - q / this.flagDivisions)),
-                  (J = d * (1 - (q + 1) / this.flagDivisions)));
+              if (this.flipY && 0 < A) {
+                F = 0;
+                G = a;
+              } else {
+                F = a;
+                G = 0;
+              }
+              if (this.flipX && 0 < A) {
+                H = (q / this.flagDivisions) * d;
+                J = ((q + 1) / this.flagDivisions) * d;
+              } else {
+                H = d * (1 - q / this.flagDivisions);
+                J = d * (1 - (q + 1) / this.flagDivisions);
+              }
               d = ctx;
               a = this.texture;
               m = [
@@ -7126,36 +7513,45 @@ class ParticleFlags {
             l = B + n;
             p = z - k;
             r = B - n;
-          } else
-            (d = this.flagHeight),
-              (n = z - this.#x),
-              (k = B - this.#y),
-              (n /= this.letterMinDistance),
-              (k /= this.letterMinDistance),
-              (k = -k * d),
-              (n *= d),
-              (m = z + k),
-              (l = B + n),
-              (p = z - k),
-              (r = B - n),
-              (ctx.strokeStyle = "rgba(255, 255, 255, 0.3)"),
-              (ctx.lineWidth = 2),
-              ctx.beginPath(),
-              ctx.lineTo(this.#x, this.#y),
-              ctx.lineTo(z + k * this.stringScale, B + n * this.stringScale),
-              ctx.stroke(),
-              ctx.beginPath(),
-              ctx.lineTo(this.#x, this.#y),
-              ctx.lineTo(z - k * this.stringScale, B - n * this.stringScale),
-              ctx.stroke();
+          } else {
+            d = this.flagHeight;
+            n = z - this.#x;
+            k = B - this.#y;
+            n /= this.letterMinDistance;
+            k /= this.letterMinDistance;
+            k = -k * d;
+            n *= d;
+            m = z + k;
+            l = B + n;
+            p = z - k;
+            r = B - n;
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.lineTo(this.#x, this.#y);
+            ctx.lineTo(z + k * this.stringScale, B + n * this.stringScale);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.lineTo(this.#x, this.#y);
+            ctx.lineTo(z - k * this.stringScale, B - n * this.stringScale);
+            ctx.stroke();
+          }
           n = z;
           k = B;
           h++;
           v = true;
         } else c -= u;
-        v ? ((d = z), (a = B), s++) : ((d = t), (a = w));
-        g && (g = false);
+        if (v) {
+          d = z;
+          a = B;
+          s++;
+        } else {
+          d = t;
+          a = w;
+        }
+        if (g) g = false;
       }
+    }
   }
   setPosition(x: number, y: number) {
     this.#x = x;
@@ -7183,9 +7579,13 @@ class ScoreAccumInfo {
   #inst_create_time_list: number[] = [];
   #last_inst_time?: number;
   update(deltatime: number) {
-    0 < this.#inst_create_time_list.length &&
-      2e3 < frametime_millis - this.#inst_create_time_list[0] &&
-      (this.#drawable_canvas_img.shift(), this.#inst_create_time_list.shift());
+    if (
+      0 < this.#inst_create_time_list.length &&
+      2e3 < frametime_millis - this.#inst_create_time_list[0]
+    ) {
+      this.#drawable_canvas_img.shift();
+      this.#inst_create_time_list.shift();
+    }
   }
   draw(ctx: CanvasRenderingContext2D) {
     ctx.globalAlpha = 1;
@@ -7203,23 +7603,25 @@ class ScoreAccumInfo {
   addScore(diff: number) {
     let a = false,
       c;
-    this.#last_inst_time &&
-      500 > frametime_millis - this.#last_inst_time &&
-      (a = true);
+    if (this.#last_inst_time && 500 > frametime_millis - this.#last_inst_time)
+      a = true;
     c = new StyleStroke(13, "#FFFFFF");
     c.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
-    a
-      ? (diff =
-          this.#drawable_canvas_img[this.#drawable_canvas_img.length - 1]
-            .number + diff)
-      : (this.#last_inst_time = frametime_millis);
+    if (a) {
+      diff =
+        this.#drawable_canvas_img[this.#drawable_canvas_img.length - 1].number +
+        diff;
+    } else this.#last_inst_time = frametime_millis;
     c.setValue("+" + diff);
     c = c.render() as ScoreAccumInfo.HTMLCanvasElementExtended;
     c.number = diff;
-    a
-      ? (this.#drawable_canvas_img.pop(), this.#drawable_canvas_img.push(c))
-      : (this.#drawable_canvas_img.push(c),
-        this.#inst_create_time_list.push(+new Date()));
+    if (a) {
+      this.#drawable_canvas_img.pop();
+      this.#drawable_canvas_img.push(c);
+    } else {
+      this.#drawable_canvas_img.push(c);
+      this.#inst_create_time_list.push(+new Date());
+    }
   }
 }
 namespace ScoreAccumInfo {
@@ -7281,22 +7683,21 @@ class SFXmanager {
     if (this.#isLoaded && 0 != num_setting_muteVol && wa) {
       volume *= num_max_volume;
       let q = this.#clip_info[sfx_name];
-      this.#instance_tracker[sfx_name] ||
-        (this.#instance_tracker[sfx_name] = 0);
+      if (!this.#instance_tracker[sfx_name])
+        this.#instance_tracker[sfx_name] = 0;
       if (
         !(0 < max_parallel && this.#instance_tracker[sfx_name] >= max_parallel)
       ) {
         this.sound.play(sfx_name, (nodeId: number) => {
           let gameNode = objG_sfxManager.sound._nodeById(nodeId);
-          gameNode &&
-            gameNode.bufferSource &&
-            (gameNode.bufferSource.playbackRate.value = speed);
+          if (gameNode?.bufferSource)
+            gameNode.bufferSource.playbackRate.value = speed;
           objG_sfxManager.sound.volume(volume, nodeId);
-          callback && callback(nodeId);
+          callback?.(nodeId);
         });
-        max_parallel != const_Q_0 && this.#instance_tracker[sfx_name]++;
+        if (max_parallel != const_Q_0) this.#instance_tracker[sfx_name]++;
         setTimeout(() => {
-          max_parallel != const_Q_0 && this.#instance_tracker[sfx_name]--;
+          if (max_parallel != const_Q_0) this.#instance_tracker[sfx_name]--;
         }, q[1]);
       }
     }
@@ -7330,7 +7731,7 @@ namespace SFXmanager {
     play(sfx_name: string, callback?: (end: number) => void): number;
     stop(id: number): number;
     volume(volume: number, nodeId?: number): number;
-    _nodeById(id: number): GainNode;
+    _nodeById(id: number): GainNode | undefined;
   }
 }
 class UI_KillStatus {
@@ -7352,18 +7753,22 @@ class UI_KillStatus {
       this.#h += deltatime;
       if (this.#h > this.#e) this.#q = true;
     }
-    this.#q
-      ? ((this.#opacity -= 0.2),
-        0 > this.#opacity &&
-          ((this.#opacity = 0),
-          this.#b.shift(),
-          0 < this.#b.length
-            ? this.processCode(this.#b[0])
-            : (this.#txt1 = undefined)),
-        (this.#m = -(1 - this.#opacity)))
-      : (1 > this.#opacity &&
-          ((this.#opacity += 0.2), 1 < this.#opacity && (this.#opacity = 1)),
-        (this.#m = 1 - (1.5 * this.#opacity - 0.75) / 0.75));
+    if (this.#q) {
+      this.#opacity -= 0.2;
+      if (0 > this.#opacity) {
+        this.#opacity = 0;
+        this.#b.shift();
+        if (0 < this.#b.length) this.processCode(this.#b[0]);
+        else this.#txt1 = undefined;
+      }
+      this.#m = -(1 - this.#opacity);
+    } else {
+      if (1 > this.#opacity) {
+        this.#opacity += 0.2;
+        if (1 < this.#opacity) this.#opacity = 1;
+      }
+      this.#m = 1 - (1.5 * this.#opacity - 0.75) / 0.75;
+    }
   }
   draw(ctx: CanvasRenderingContext2D) {
     if (this.#txt1) {
@@ -7404,12 +7809,12 @@ class UI_KillStatus {
     return -1;
   }
   push(flag_streak: number, kills: number) {
-    256 == flag_streak && (this.#l = kills);
+    if (256 == flag_streak) this.#l = kills;
     let d = this.replaceCode(flag_streak);
-    -1 == d
-      ? (this.#b.push(flag_streak),
-        1 == this.#b.length && this.processCode(flag_streak))
-      : 0 == d && this.processCode(flag_streak);
+    if (-1 == d) {
+      this.#b.push(flag_streak);
+      if (1 == this.#b.length) this.processCode(flag_streak);
+    } else if (0 == d) this.processCode(flag_streak);
   }
   processCode(flag_streak: number) {
     this.#q = false;
@@ -7534,9 +7939,9 @@ class SpecialEntity {
   speed = 0;
   update(deltatime: number) {
     if (this.inGame) {
-      func_isInsideBox(this.x, this.y + this.floatValue, 120)
-        ? this.#b || (this.#b = true)
-        : (this.#b = false);
+      if (func_isInsideBox(this.x, this.y + this.floatValue, 120)) {
+        if (!this.#b) this.#b = true;
+      } else this.#b = false;
       let g = func_clamp(
         (frametime_millis - this.lastUpdate) / num_global_physics_step_ms,
         0,
@@ -7554,34 +7959,39 @@ class SpecialEntity {
       this.angle = g * (this.dstAngle - this.origAngle) + this.origAngle;
       this.cannonAngle =
         g * (this.dstCannonAngle - this.origCannonAngle) + this.origCannonAngle;
-      0 < this.highlightValue &&
-        ((this.highlightValue -= 0.06),
-        0 > this.highlightValue && (this.highlightValue = 0));
-      this.type == id_entity_warship &&
-        1 == this.state &&
-        0 < this.#f &&
-        ((this.#e -= 0.02),
-        0 > this.#e && (this.#e = 0),
-        (this.#d -= deltatime),
-        0 > this.#d &&
-          ((this.#d = 150),
-          (this.#f -= 1),
-          (g =
+      if (0 < this.highlightValue) {
+        this.highlightValue -= 0.06;
+        if (0 > this.highlightValue) this.highlightValue = 0;
+      }
+      if (this.type == id_entity_warship && 1 == this.state && 0 < this.#f) {
+        this.#e -= 0.02;
+        if (0 > this.#e) this.#e = 0;
+        this.#d -= deltatime;
+        if (0 > this.#d) {
+          this.#d = 150;
+          this.#f -= 1;
+          g =
             Math.random() * objG_assets.warshipImage.width -
-            objG_assets.warshipImage.width / 2),
-          (h =
+            objG_assets.warshipImage.width / 2;
+          h =
             (Math.random() * objG_assets.warshipImage.height) / 2 -
-            objG_assets.warshipImage.height / 4),
+            objG_assets.warshipImage.height / 4;
           objG_animationManager.addBlast(
             this.x + g,
             this.y + h + q,
             0.5,
             const_Q_0,
             2,
-          )));
-      2 == this.state
-        ? ((this.#a -= 0.01), 0 > this.#a && (this.#a = 0))
-        : ((this.#a += 0.01), 1 < this.#a && (this.#a = 1));
+          );
+        }
+      }
+      if (2 == this.state) {
+        this.#a -= 0.01;
+        if (0 > this.#a) this.#a = 0;
+      } else {
+        this.#a += 0.01;
+        if (1 < this.#a) this.#a = 1;
+      }
       this.recoilTime = 0 < this.recoilTime ? this.recoilTime - deltatime : 0;
     }
   }
@@ -7646,12 +8056,13 @@ class SpecialEntity {
             -this.warshipCanvas.height / 2,
           );
           this.warshipContext.drawImage(objG_assets.warshipImage, 0, 0);
-          0 < this.highlightValue &&
-            ((this.warshipContext.globalAlpha = 0.8 * this.highlightValue),
-            this.warshipContext.drawImage(objG_assets.whiteWarshipImage, 0, 0),
-            (this.warshipContext.globalAlpha = 1));
+          if (0 < this.highlightValue) {
+            this.warshipContext.globalAlpha = 0.8 * this.highlightValue;
+            this.warshipContext.drawImage(objG_assets.whiteWarshipImage, 0, 0);
+            this.warshipContext.globalAlpha = 1;
+          }
           this.warshipContext.restore();
-          1 == this.state && (ctx.globalAlpha = 0.8);
+          if (1 == this.state) ctx.globalAlpha = 0.8;
           ctx.drawImage(
             this.warshipCanvas,
             -objG_assets.warshipImage.width / 2,
@@ -7659,60 +8070,63 @@ class SpecialEntity {
           );
           ctx.restore();
         }
-      } else
-        this.type == id_entity_asteroid &&
-          objG_assets.asteroidImage &&
-          (ctx.save(),
-          (ctx.globalAlpha = this.#a),
-          ctx.translate(this.x, this.y),
-          ctx.rotate(-this.angle),
-          (this.#d = (3 - this.fragment + 1) / 3),
-          ctx.scale(this.#d, this.#d),
+      } else if (this.type == id_entity_asteroid && objG_assets.asteroidImage) {
+        ctx.save();
+        ctx.globalAlpha = this.#a;
+        ctx.translate(this.x, this.y);
+        ctx.rotate(-this.angle);
+        this.#d = (3 - this.fragment + 1) / 3;
+        ctx.scale(this.#d, this.#d);
+        ctx.drawImage(
+          objG_assets.asteroidImage,
+          -objG_assets.asteroidImage.width / 2,
+          -objG_assets.asteroidImage.height / 2,
+        );
+        if (0 < this.highlightValue) {
+          ctx.globalAlpha = 0.8 * this.highlightValue;
           ctx.drawImage(
-            objG_assets.asteroidImage,
+            objG_assets.whiteAsteroidImage,
             -objG_assets.asteroidImage.width / 2,
             -objG_assets.asteroidImage.height / 2,
-          ),
-          0 < this.highlightValue &&
-            ((ctx.globalAlpha = 0.8 * this.highlightValue),
-            ctx.drawImage(
-              objG_assets.whiteAsteroidImage,
-              -objG_assets.asteroidImage.width / 2,
-              -objG_assets.asteroidImage.height / 2,
-            ),
-            (ctx.globalAlpha = 1)),
-          ctx.restore());
+          );
+          ctx.globalAlpha = 1;
+        }
+        ctx.restore();
+      }
   }
   drawReflection(ctx: CanvasRenderingContext2D, deltatime: number) {
     if (this.warshipCanvas && this.warshipContext) {
-      this.inGame &&
+      if (
+        this.inGame &&
         this.#b &&
         this.type == id_entity_warship &&
-        objG_assets.warshipLoaded &&
-        (ctx.save(),
-        (ctx.globalAlpha = 0.15 * this.#a),
-        ctx.translate(this.x, this.y + this.warshipCanvas.height - 4),
-        ctx.scale(1, -1),
+        objG_assets.warshipLoaded
+      ) {
+        ctx.save();
+        ctx.globalAlpha = 0.15 * this.#a;
+        ctx.translate(this.x, this.y + this.warshipCanvas.height - 4);
+        ctx.scale(1, -1);
         ctx.drawImage(
           this.warshipCanvas,
           -objG_assets.warshipImage.width / 2,
           -objG_assets.warshipImage.height / 2,
-        ),
-        ctx.restore(),
-        ctx.save(),
+        );
+        ctx.restore();
+        ctx.save();
         ctx.translate(
           this.x + 85 + this.floatValue + 100 * this.angle,
           this.y + this.warshipCanvas.height / 2 - 4,
-        ),
-        (ctx.globalAlpha = this.#e * this.#a),
-        ctx.beginPath(),
-        ctx.moveTo(-3, 1.5),
-        ctx.lineTo(0, -1.5),
-        ctx.lineTo(-300, 0),
-        (ctx.fillStyle = "rgba(255,255,255,1.0)"),
-        ctx.fill(),
-        ctx.restore(),
-        (ctx.globalAlpha = 1));
+        );
+        ctx.globalAlpha = this.#e * this.#a;
+        ctx.beginPath();
+        ctx.moveTo(-3, 1.5);
+        ctx.lineTo(0, -1.5);
+        ctx.lineTo(-300, 0);
+        ctx.fillStyle = "rgba(255,255,255,1.0)";
+        ctx.fill();
+        ctx.restore();
+        ctx.globalAlpha = 1;
+      }
     }
   }
   drawInput(ctx: CanvasRenderingContext2D) {}
@@ -7733,13 +8147,16 @@ class SpecialEntity {
       ctx.lineWidth = 1;
       let d = 28,
         e;
-      this.type == id_entity_asteroid
-        ? ((e = 50 / this.fragment), (d *= 3 / this.fragment))
-        : ((e = 55), (d *= 5));
+      if (this.type == id_entity_asteroid) {
+        e = 50 / this.fragment;
+        d *= 3 / this.fragment;
+      } else {
+        e = 55;
+        d *= 5;
+      }
       let f = 512;
-      32767.5 > this.energy && 16383.75 < this.energy
-        ? (f = 30)
-        : 16383.75 > this.energy && (f = 0);
+      if (32767.5 > this.energy && 16383.75 < this.energy) f = 30;
+      else if (16383.75 > this.energy) f = 0;
       ctx.fillStyle = "hsl(" + f + ", 100%, 50%)";
       ctx.fillRect(-d / 2 + 0, e + 0, (this.energy / 65535) * d, 8);
       ctx.strokeStyle = "rgba(255,255,255,1.0)";
@@ -7748,12 +8165,13 @@ class SpecialEntity {
     }
   }
   hit(id_weapon: number) {
-    func_isTimeElapsed_50ms() &&
-      ((this.highlightValue =
+    if (func_isTimeElapsed_50ms()) {
+      this.highlightValue =
         id_weapon == id_weapon_missile || this.type == id_entity_asteroid
           ? this.highlightValue + 1
-          : this.highlightValue + 0.3),
-      1 < this.highlightValue && (this.highlightValue = 1));
+          : this.highlightValue + 0.3;
+      if (1 < this.highlightValue) this.highlightValue = 1;
+    }
   }
   setPose(x_gu: number, y_gu: number, angle: number) {
     this.origX = this.x;
@@ -7762,22 +8180,24 @@ class SpecialEntity {
     this.dstX = 10 * x_gu;
     this.dstY = 10 * y_gu;
     this.dstAngle = angle;
-    this.first_set
-      ? ((this.origX = this.dstX),
-        (this.origY = this.dstY),
-        (this.x = this.dstX),
-        (this.y = this.dstY),
-        (this.origAngle = this.dstAngle),
-        (this.first_set = false))
-      : ((x_gu = this.dstX - this.origX),
-        (y_gu = this.dstY - this.origY),
-        (this.speed = Math.sqrt(x_gu * x_gu + y_gu * y_gu) / 3));
-    this.inGame || (this.inGame = true);
+    if (this.first_set) {
+      this.origX = this.dstX;
+      this.origY = this.dstY;
+      this.x = this.dstX;
+      this.y = this.dstY;
+      this.origAngle = this.dstAngle;
+      this.first_set = false;
+    } else {
+      x_gu = this.dstX - this.origX;
+      y_gu = this.dstY - this.origY;
+      this.speed = Math.sqrt(x_gu * x_gu + y_gu * y_gu) / 3;
+    }
+    if (!this.inGame) this.inGame = true;
   }
   setFloatValue(float_gu: number) {
     this.origFloatValue = this.floatValue;
     this.dstFloatValue = 10 * float_gu;
-    this.first_set && (this.floatValue = this.dstFloatValue);
+    if (this.first_set) this.floatValue = this.dstFloatValue;
   }
   setType(entity_type: number) {
     this.type = entity_type;
@@ -7795,7 +8215,7 @@ class SpecialEntity {
   setCannonAngle(angle: number) {
     this.origCannonAngle = this.cannonAngle;
     this.dstCannonAngle = angle;
-    this.first_set && (this.cannonAngle = this.dstCannonAngle);
+    if (this.first_set) this.cannonAngle = this.dstCannonAngle;
   }
   cannonShoot() {
     this.recoilTime = 200;
@@ -7824,11 +8244,11 @@ for (let e = 0; e < param.length; e++) {
 
 window.stats = obj_browserQueryParams.stats ? true : false;
 
-"true" == window.localStorage.lq && (bool_setting_highQuality = false);
+if ("true" == window.localStorage.lq) bool_setting_highQuality = false;
 
 if (
-  void 0 == window.localStorage.wingsCCTime ||
-  (void 0 != window.localStorage.wingsCC &&
+  undefined == window.localStorage.wingsCCTime ||
+  (undefined != window.localStorage.wingsCC &&
     2 != window.localStorage.wingsCC.length)
 ) {
   func_detect_country();
@@ -7838,10 +8258,12 @@ if (
   str_conutryCode = window.localStorage.wingsCC;
 }
 
-void 0 == num_setting_muteVol && (num_setting_muteVol = 1);
+num_setting_muteVol ??= 1;
 
-if (0 == num_setting_muteVol || bool_internet_explorer)
-  (num_setting_muteVol = 1), func_displayMuteAudio();
+if (0 == num_setting_muteVol || bool_internet_explorer) {
+  num_setting_muteVol = 1;
+  func_displayMuteAudio();
+}
 
 bool_internet_explorer && $("#sndIcon").hide();
 
