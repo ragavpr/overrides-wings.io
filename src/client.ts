@@ -4630,57 +4630,75 @@ class WS_Connection {
     uint8_message_type: number,
     bool_something: boolean,
   ) {
-    (169 != uint8_message_type &&
-      172 != uint8_message_type &&
-      162 != uint8_message_type &&
-      178 != uint8_message_type) ||
-      bool_something ||
-      (listG_plane_ids = []);
+    if (
+      (169 == uint8_message_type ||
+        172 == uint8_message_type ||
+        162 == uint8_message_type ||
+        178 == uint8_message_type) &&
+      !bool_something
+    )
+      listG_plane_ids = [];
     let e, h, f, n, k, m, l, y, r, p, s, u, w, t, x, z, C, P, R, S, O, G, ea;
-    (e = false), (h = 1), (f = 1), (n = 0);
-    bool_something ||
-      (objG_wsConnection.lastUpdateBool = !objG_wsConnection.lastUpdateBool);
+    e = false;
+    h = 1;
+    f = 1;
+    n = 0;
+    if (!bool_something)
+      objG_wsConnection.lastUpdateBool = !objG_wsConnection.lastUpdateBool;
     for (;;) {
       n++;
-      (k = dataview_message.getUint32(h, true)), (h = h + 4);
+      k = dataview_message.getUint32(h, true);
+      h = h + 4;
       if (0 == k) {
         bool_something = dataview_message;
         f = uint8_message_type;
         n = bool_something.getUint8(h);
         h += 1;
         for (k = 0; k < n; k++) {
-          (m = bool_something.getUint32(h, true)), (h = h + 4);
-          if (163 == f || 162 == f || 169 == f)
-            (l = bool_something.getUint8(h)), (h = h + 1);
-          (y = bool_something.getFloat32(h, true)),
-            (h = h + 4),
-            (r = -bool_something.getFloat32(h, true)),
-            (h = h + 4),
-            (p = bool_something.getUint32(h, true)),
-            (h = h + 4),
-            (s = objD_missiles[m]);
+          m = bool_something.getUint32(h, true);
+          h = h + 4;
+          if (163 == f || 162 == f || 169 == f) {
+            l = bool_something.getUint8(h);
+            h = h + 1;
+          }
+          y = bool_something.getFloat32(h, true);
+          h = h + 4;
+          r = -bool_something.getFloat32(h, true);
+          h = h + 4;
+          p = bool_something.getUint32(h, true);
+          h = h + 4;
+          s = objD_missiles[m];
           if (null == s) {
             s = new Missile();
             objD_missiles[m] = s;
-            (163 != f && 162 != f && 169 != f) || s.setType(l);
-            (m = objD_planes[p]), (u = false);
-            m || ((u = true), (m = objD_specialEntities[p]));
+            if (163 == f || 162 == f || 169 == f) s.setType(l);
+            m = objD_planes[p];
+            u = false;
+            if (!m) {
+              u = true;
+              m = objD_specialEntities[p];
+            }
             if (m) {
-              (w = const_Q_0), (t = 1);
-              u
-                ? ((w = const_Sa_3),
-                  (u = func_calculateDistance2D(m.x, m.y, H.x, H.y)),
-                  (t = 1 - u / num_sound_max_distance),
-                  0.01 < t &&
-                    objG_sfxManager.playSound(str_sfxid_cannonshoot, t, 1, w),
-                  m.cannonShoot())
-                : ((objG_player_plane && p == objG_player_plane.id) ||
-                    ((w = const_Sa_3),
-                    (u = func_calculateDistance2D(m.x, m.y, H.x, H.y)),
-                    (t = 1 - u / num_sound_max_distance)),
-                  0.01 < t &&
-                    objG_sfxManager.playSound(str_sfxid_mlaunch, t, 1, w),
-                  m.ammo--);
+              w = const_Q_0;
+              t = 1;
+              if (u) {
+                w = const_Sa_3;
+                u = func_calculateDistance2D(m.x, m.y, H.x, H.y);
+                t = 1 - u / num_sound_max_distance;
+                if (0.01 < t)
+                  objG_sfxManager.playSound(str_sfxid_cannonshoot, t, 1, w);
+                m.cannonShoot();
+              } else {
+                if (p != objG_player_plane?.id) {
+                  w = const_Sa_3;
+                  u = func_calculateDistance2D(m.x, m.y, H.x, H.y);
+                  t = 1 - u / num_sound_max_distance;
+                }
+                if (0.01 < t) {
+                  objG_sfxManager.playSound(str_sfxid_mlaunch, t, 1, w);
+                  m.ammo--;
+                }
+              }
             }
           }
           s.lastUpdate = frametime_millis;
@@ -4699,13 +4717,15 @@ class WS_Connection {
             l += 4;
             if (0 == bool_something) break;
             h = objD_specialEntities[bool_something];
-            if (178 == uint8_message_type || 162 == uint8_message_type)
-              (f = dataview_message.getUint8(l)),
-                (l += 1),
-                null == h &&
-                  ((h = new SpecialEntity()),
-                  (objD_specialEntities[bool_something] = h),
-                  h.setType(f));
+            if (178 == uint8_message_type || 162 == uint8_message_type) {
+              f = dataview_message.getUint8(l);
+              l += 1;
+              if (null == h) {
+                h = new SpecialEntity();
+                objD_specialEntities[bool_something] = h;
+                h.setType(f);
+              }
+            }
             h.id = bool_something;
             h.lastUpdate = frametime_millis;
             bool_something = dataview_message.getFloat32(l, true);
@@ -4718,75 +4738,94 @@ class WS_Connection {
             l += 2;
             y = dataview_message.getUint8(l);
             l += 1;
-            h.type == id_entity_warship
-              ? ((r = -dataview_message.getFloat32(l, true)),
-                (l += 4),
-                (p = dataview_message.getFloat32(l, true)),
-                (l += 4),
-                h.setCannonAngle(p),
-                h.setFloatValue(r))
-              : h.type != id_entity_asteroid ||
-                (162 != uint8_message_type && 178 != uint8_message_type) ||
-                ((r = dataview_message.getUint8(l)),
-                (l += 1),
-                h.setFragment(r));
+            if (h.type == id_entity_warship) {
+              r = -dataview_message.getFloat32(l, true);
+              l += 4;
+              p = dataview_message.getFloat32(l, true);
+              l += 4;
+              h.setCannonAngle(p);
+              h.setFloatValue(r);
+            } else if (
+              h.type == id_entity_asteroid &&
+              (162 == uint8_message_type || 178 == uint8_message_type)
+            ) {
+              (r = dataview_message.getUint8(l)), (l += 1), h.setFragment(r);
+            }
             h.setState(y);
             h.setPose(bool_something, f, n);
             h.setEnergy(k);
           }
         break;
       }
-      (x = dataview_message.getUint16(h, true)),
-        (h = h + 2),
-        (y = x & 1),
-        (r = x & 2),
-        (z = x & 4),
-        (p = x & 1024),
-        (s = x & 2048);
-      1 != n ||
-        (163 != uint8_message_type && 179 != uint8_message_type) ||
-        (qa = x & 512 ? k : 0);
-      y &&
-        ((m = dataview_message.getFloat32(h, true)),
-        (h += 4),
-        (w = -dataview_message.getFloat32(h, true)),
-        (h += 4),
-        (u = dataview_message.getFloat32(h, true)),
-        (h += 4),
-        (t = dataview_message.getUint8(h)),
-        (h += 1));
-      (C = objD_planes[k]), (P = x & 256);
-      if (C && (P && C.setFrenzy(), C.setPaused(z), objG_player_plane == C)) {
-        (z = x & 8), (R = x & 16), (S = x & 32), (O = x & 128), (G = x & 4096);
-        x & 64
-          ? objGUI_gameInfo.addBonus(64, 0)
-          : S
-            ? objGUI_gameInfo.addBonus(32, 0)
-            : R
-              ? objGUI_gameInfo.addBonus(16, 0)
-              : z && objGUI_gameInfo.addBonus(8, 0);
-        G &&
-          (objGUI_gameInfo.addBonus(4096, 0), (plane_last_killed_by[C.id] = 0));
-        O && objGUI_gameInfo.addBonus(128, 0);
-        P && objGUI_gameInfo.addBonus(256, C.getKills());
+      x = dataview_message.getUint16(h, true);
+      h = h + 2;
+      y = x & 1;
+      r = x & 2;
+      z = x & 4;
+      p = x & 1024;
+      s = x & 2048;
+      if (1 == n && (163 == uint8_message_type || 179 == uint8_message_type))
+        qa = x & 512 ? k : 0;
+      if (y) {
+        m = dataview_message.getFloat32(h, true);
+        h += 4;
+        w = -dataview_message.getFloat32(h, true);
+        h += 4;
+        u = dataview_message.getFloat32(h, true);
+        h += 4;
+        t = dataview_message.getUint8(h);
+        h += 1;
       }
-      ea;
+      C = objD_planes[k];
+      P = x & 256;
+      if (C && P) {
+        C.setFrenzy();
+        C.setPaused(z);
+      }
+      if (objG_player_plane == C) {
+        z = x & 8;
+        R = x & 16;
+        S = x & 32;
+        O = x & 128;
+        G = x & 4096;
+        if (x & 64) objGUI_gameInfo.addBonus(64, 0);
+        else if (S) objGUI_gameInfo.addBonus(32, 0);
+        else if (R) objGUI_gameInfo.addBonus(16, 0);
+        else if (z) objGUI_gameInfo.addBonus(8, 0);
+        if (G) {
+          objGUI_gameInfo.addBonus(4096, 0);
+          plane_last_killed_by[C.id] = 0;
+        }
+        if (O) objGUI_gameInfo.addBonus(128, 0);
+        if (P) objGUI_gameInfo.addBonus(256, C.getKills());
+      }
       if (
         162 == uint8_message_type ||
         178 == uint8_message_type ||
         169 == uint8_message_type ||
         172 == uint8_message_type
-      )
-        (ea = dataview_message.getUint32(h, true)), (h += 4);
-      if ((162 != uint8_message_type && 178 != uint8_message_type) || !y)
-        (162 != uint8_message_type && 178 != uint8_message_type) ||
-          y ||
-          null != C ||
-          ((C = new Plane()), (objD_planes[k] = C), (C.inGame = false));
-      else {
-        162 == uint8_message_type
-          ? ((x = dataview_message.getUint16(h, true)), (h += 2))
-          : ((x = dataview_message.getUint8(h)), (h += 1));
+      ) {
+        ea = dataview_message.getUint32(h, true);
+        h += 4;
+      }
+      if ((162 != uint8_message_type && 178 != uint8_message_type) || !y) {
+        if (
+          (162 == uint8_message_type || 178 == uint8_message_type) &&
+          !y &&
+          null == C
+        ) {
+          C = new Plane();
+          objD_planes[k] = C;
+          C.inGame = false;
+        }
+      } else {
+        if (162 == uint8_message_type) {
+          x = dataview_message.getUint16(h, true);
+          h += 2;
+        } else {
+          x = dataview_message.getUint8(h);
+          h += 1;
+        }
         P = dataview_message.getUint16(h, true);
         h += 2;
         z = dataview_message.getUint8(h);
@@ -4801,8 +4840,11 @@ class WS_Connection {
           if (0 == G) break;
           O += String.fromCharCode(G);
         }
-        null == C && ((C = new Plane()), (objD_planes[k] = C));
-        -1 != O.indexOf("\ufdfd") && (O = "<Unnamed>");
+        if (null == C) {
+          C = new Plane();
+          objD_planes[k] = C;
+        }
+        if (-1 != O.indexOf("\ufdfd")) O = "<Unnamed>";
         C.setColorID(z);
         C.setDecalID(R);
         C.setName(O);
@@ -4810,35 +4852,40 @@ class WS_Connection {
         C.setWeapon(x);
         C.ammo = P;
       }
-      if (null == C)
+      if (null == C) {
         console.log(
           "ERROR: Receiving data for a player (" +
             k +
             ") that does not exist, ignoring!",
         );
-      else if (
-        ((C.id = k),
-        (C.lastUpdate = frametime_millis),
-        (C.updateBool = objG_wsConnection.lastUpdateBool),
-        y &&
-          (C.setPose(m, w, u),
-          (C.energy = t),
-          C.setEnergy(t),
-          (C.hover = r),
-          C.setIsBot(p),
-          C.setIsShooting(s)),
-        169 == uint8_message_type ||
+      } else {
+        C.id = k;
+        C.lastUpdate = frametime_millis;
+        C.updateBool = objG_wsConnection.lastUpdateBool;
+        if (y) {
+          C.setPose(m, w, u);
+          C.energy = t;
+          C.setEnergy(t);
+          C.hover = r;
+          C.setIsBot(p);
+          C.setIsShooting(s);
+        }
+        if (
+          169 == uint8_message_type ||
           172 == uint8_message_type ||
           162 == uint8_message_type ||
-          178 == uint8_message_type)
-      )
-        C.setScore(ea),
-          bool_something ||
-            (1 == f && (sc = k),
-            listG_plane_ids.push(k),
-            (e = true),
-            C.setRank(f),
-            f++);
+          178 == uint8_message_type
+        ) {
+          C.setScore(ea);
+          if (!bool_something) {
+            if (1 == f) sc = k;
+            listG_plane_ids.push(k);
+            e = true;
+            C.setRank(f);
+            f++;
+          }
+        }
+      }
     }
     e && objGUI_gameInfo.refreshLeaderboard(listG_plane_ids);
   }
@@ -4847,35 +4894,39 @@ class WS_Connection {
     uint8_message_type: number,
   ) {
     let c, e, f, q, n, k;
-    (c = 1),
-      (e = dataview_message.getUint16(c, true)),
-      (c = c + 2),
-      (f = dataview_message.getUint32(c, true)),
-      (c = c + 4),
-      q;
-    168 == uint8_message_type
-      ? ((q = dataview_message.getUint8(c)), (c += 1))
-      : ((q = dataview_message.getUint16(c, true)), (c += 2));
+    c = 1;
+    e = dataview_message.getUint16(c, true);
+    c = c + 2;
+    f = dataview_message.getUint32(c, true);
+    c = c + 4;
+    q;
+    if (168 == uint8_message_type) {
+      q = dataview_message.getUint8(c);
+      c += 1;
+    } else {
+      q = dataview_message.getUint16(c, true);
+      c += 2;
+    }
     if (0 < f) {
-      (n = 1), (k = str_sfxid_weapgrab);
-      32 > q || 128 == q || 256 == q
-        ? ((c = dataview_message.getUint16(c, true)),
-          objD_planes[f].setWeapon(q),
-          (objD_planes[f].ammo = c))
-        : 64 == q
-          ? (objD_planes[f].trailEffect(),
-            (k = str_sfxid_winggrab),
-            null != this.lastGrabbedWingTime &&
-              ((q = frametime_millis - this.lastGrabbedWingTime),
-              1e3 > q
-                ? objG_wsConnection.wingsInARow++
-                : (objG_wsConnection.wingsInARow = 0),
-              (n = 1 + 0.05 * objG_wsConnection.wingsInARow),
-              1.5 < n && (n = 1.5)),
-            (this.lastGrabbedWingTime = frametime_millis))
-          : 32 == q && (k = str_sfxid_hgrab);
-      objG_player_plane &&
-        f == objG_player_plane.id &&
+      n = 1;
+      k = str_sfxid_weapgrab;
+      if (32 > q || 128 == q || 256 == q) {
+        c = dataview_message.getUint16(c, true);
+        objD_planes[f].setWeapon(q);
+        objD_planes[f].ammo = c;
+      } else if (64 == q) {
+        objD_planes[f].trailEffect();
+        k = str_sfxid_winggrab;
+        if (null != this.lastGrabbedWingTime) {
+          q = frametime_millis - this.lastGrabbedWingTime;
+          if (1e3 > q) objG_wsConnection.wingsInARow++;
+          else objG_wsConnection.wingsInARow = 0;
+          n = 1 + 0.05 * objG_wsConnection.wingsInARow;
+          if (1.5 < n) n = 1.5;
+        }
+        this.lastGrabbedWingTime = frametime_millis;
+      } else if (32 == q) k = str_sfxid_hgrab;
+      if (objG_player_plane && f == objG_player_plane.id)
         objG_sfxManager.playSound(k, 1, n, const_Q_0);
       objD_pickups[e].playerGrab(f);
     } else objD_pickups[e].fadeOut();
@@ -4893,8 +4944,8 @@ class WS_Connection {
   roomID = 0;
   getServerAndConnect() {
     let b, c, a;
-    (b = null), (b = ""), a;
-    func_isIframe() || (a = parent.location.hash);
+    b = "";
+    if (!func_isIframe()) a = parent.location.hash;
     if (a) {
       b = a;
       b = b.substring(1, b.length);
@@ -4908,11 +4959,11 @@ class WS_Connection {
       return;
     }
     a = str_conutryCode;
-    obj_browserQueryParams.cc && (a = obj_browserQueryParams.cc);
+    if (obj_browserQueryParams.cc) a = obj_browserQueryParams.cc;
     if (!a) setTimeout(objG_wsConnection.getServerAndConnect, 200);
     else {
       c = "";
-      bool_isHttps && (c = "s");
+      if (bool_isHttps) c = "s";
       $.ajax({
         url: "http" + c + "://master.wings.io/",
         type: "POST",
@@ -4970,14 +5021,14 @@ class WS_Connection {
           ".wings.io:" +
           port;
         console.log("isSecure RoomNumber: " + objG_wsConnection.roomNumber);
-      } else
-        0 < objG_wsConnection.roomNumber &&
-          ((b =
-            "ws:" +
-            b.split(":")[1] +
-            ":" +
-            (Math.floor(objG_wsConnection.roomNumber) + 8079)),
-          console.log("New full host: " + b));
+      } else if (0 < objG_wsConnection.roomNumber) {
+        b =
+          "ws:" +
+          b.split(":")[1] +
+          ":" +
+          (Math.floor(objG_wsConnection.roomNumber) + 8079);
+        console.log("New full host: " + b);
+      }
       try {
         this.#ws_conn = new WebSocket(b);
       } catch (c) {
@@ -4997,7 +5048,7 @@ class WS_Connection {
       objG_wsConnection.directed = false;
     }
     objG_wsConnection.roomID = 0;
-    this.#ws_conn && this.#ws_conn.close();
+    this.#ws_conn?.close();
   }
   onSocketOpen(ev: Event) {
     tracking.sendLoadingTime();
@@ -5454,7 +5505,7 @@ class WS_Connection {
     $("#copyLink").fadeOut(300);
     $(".btn-needs-server").attr("disabled", "disabled");
     let b = this.connectRetry;
-    5 < b && (b = 5);
+    if(5 < b) (b = 5);
     setTimeout(this.getServerAndConnect, 1e3 + 1e3 * b);
     objG_wsConnection.connectRetry++;
   }
