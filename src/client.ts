@@ -115,7 +115,7 @@ let Zb,
   objG_animationManager: AnimationManager,
   objG_assets: Assets,
   objG_wsConnection: WS_Connection,
-  objD_pickups: Record<number, PickupItem> = {},
+  objD_pickups: Record<number | string, PickupItem> = {},
   objD_planes: Record<number, Plane> = {},
   objD_specialEntities: Record<number, SpecialEntity> = {},
   objD_missiles: Record<number, Missile> = {},
@@ -1736,7 +1736,7 @@ namespace ParticleImpacts {
 }
 class UI_GameInfo {
   #scale_factor?: number;
-  #center_txt_msg?: string;
+  #center_txt_msg = "";
   #center_txt_msg_suffix?: string;
   #center_txt_last_update = 0;
   #center_txt_murderer = true;
@@ -1749,18 +1749,18 @@ class UI_GameInfo {
   #m = 0;
   #missle_locked_txt?: string;
   #style_missile_locked_txt?: StyleText;
-  #canvas_leaderboard_you?: HTMLCanvasElement;
-  #ctx_leaderboard_you?: CanvasRenderingContext2D;
+  #canvas_leaderboard_you!: HTMLCanvasElement;
+  #ctx_leaderboard_you!: CanvasRenderingContext2D;
   #stroke_ammo_count?: StyleStroke;
   #canvasr_ammo_count?: HTMLCanvasElement;
-  #ammo_count_width?: number;
+  #ammo_count_width = 0;
   #ammo_count = -1;
   #leaberboard_refresh = false;
   #list_plane_ids: number[] = [];
   #canvas_leaderboard?: HTMLCanvasElement;
-  #lb_scale?: number;
-  #lb_width?: number;
-  #lb_height?: number;
+  #lb_scale!: number;
+  #lb_width!: number;
+  #lb_height!: number;
   #id_weapon_draw?: number;
   #id_weapon_current?: number;
   #ea = 1;
@@ -1783,8 +1783,8 @@ class UI_GameInfo {
   #style_curr_event?: StyleText;
   #style_warmup_event?: StyleText;
   #canvasr_warshipev_info?: HTMLCanvasElement;
-  #canvasr_curr_event?: HTMLCanvasElement;
-  #canvar_warmup_event?: HTMLCanvasElement;
+  #canvasr_curr_event!: HTMLCanvasElement;
+  #canvar_warmup_event!: HTMLCanvasElement;
   #evt_winner_name?: string;
   // #ja = null;
   // #ca;
@@ -1799,9 +1799,9 @@ class UI_GameInfo {
   #style_warship?: StyleText;
   #canvasr_warship?: HTMLCanvasElement;
   #style_warship_rmreason?: StyleText;
-  #canvasr_warship_rmreason?: HTMLCanvasElement;
+  #canvasr_warship_rmreason!: HTMLCanvasElement;
   draw(I: CanvasRenderingContext2D) {
-    let r, K, P, O, R, S;
+    let r, K, P, O, R;
     if (this.#leaberboard_refresh) {
       this.#canvas_leaderboard = document.createElement("canvas");
       r = this.#canvas_leaderboard.getContext("2d")!;
@@ -1834,12 +1834,12 @@ class UI_GameInfo {
           this.#ammo_count != objG_player_plane.GetAmmo() ||
           null == this.#canvasr_ammo_count
         ) {
-          S = "\u221e";
+          let S: string | number = "\u221e";
           if (!R) {
             this.#ammo_count = objG_player_plane.GetAmmo();
             -1 < this.#ammo_count && (S = this.#ammo_count);
           }
-          this.#stroke_ammo_count.setValue(S);
+          this.#stroke_ammo_count.setValue(S.toString());
           this.#canvasr_ammo_count = this.#stroke_ammo_count.render();
           this.#ammo_count_width = this.#canvasr_ammo_count.width;
         }
@@ -1906,7 +1906,7 @@ class UI_GameInfo {
         }
         r = this.#style_centermsg_txt.render();
         if (this.#center_txt_msg_suffix) {
-          O = this.#style_centermsg_suffix_txt.render();
+          O = this.#style_centermsg_suffix_txt!.render();
         }
         I.globalAlpha = K;
         if (O) I.drawImage(O, 0.5 * canvas.width - O.width / 2, P - 5);
@@ -2054,22 +2054,22 @@ class UI_GameInfo {
         )
           objG_sfxManager.playSound(str_sfxid_king, 1, 1, 1);
         this.#king_plane_id = obj_plane.id;
+        let font_size = 25;
+        let spaces = " ";
+        if (!bool_setting_highQuality) spaces = "";
+        this.#style_king_txt ??= new StyleText(
+          font_size * num_scale_factor,
+          "#fe9b00",
+          "#6e3800",
+        );
+        this.#style_king_txt.setUsingRoundedFrame(true);
         if (name != this.#king_name) {
-          let font_size = 25;
-          this.#style_king_txt = new StyleText(
-            font_size * num_scale_factor,
-            "#fe9b00",
-            "#6e3800",
-          );
-          let spaces = " ";
-          if (!bool_setting_highQuality) spaces = "";
           this.#style_king_txt.setValue(spaces + "  King: " + name);
-          this.#style_king_txt.setUsingRoundedFrame(true);
         }
         this.#king_name = name;
         this.#canvasr_king_txt = this.#style_king_txt.render();
       }
-      if (this.#style_king_txt) {
+      if (this.#style_king_txt && this.#canvasr_king_txt) {
         ctx.save();
         let d = 0.83 * canvas.height;
         ctx.drawImage(
@@ -2203,10 +2203,10 @@ class UI_GameInfo {
             k + d,
           );
           g = this.#ctx_leaderboard_you.measureText(
-            objG_player_plane.score,
+            objG_player_plane.score.toString(),
           ).width;
           this.#ctx_leaderboard_you.fillText(
-            objG_player_plane.score,
+            objG_player_plane.score.toString(),
             b - e - g,
             k + d,
           );
@@ -2566,7 +2566,7 @@ class UI_GameInfo {
       }
     }
     this.#lb_height -= b;
-    I > k && (this.#lb_scale += I - k);
+    if (I > k) this.#lb_scale += I - k;
     this.#lb_width = this.#lb_scale * num_scale_factor;
     this.#lb_height += d;
     this.#lb_height += n;
@@ -2673,7 +2673,7 @@ class UI_GameInfo {
   }
   drawLeaderboard(ctx: CanvasRenderingContext2D) {
     ctx.drawImage(
-      this.#canvas_leaderboard,
+      this.#canvas_leaderboard!,
       canvas_width - this.#lb_width - 5,
       5,
     );
@@ -2888,7 +2888,7 @@ class Plane {
           this.#pa = true;
         }
       } else this.#pa = false;
-      g = this.weapon == id_weapon_superweapon && this.isShooting;
+      let g2 = this.weapon == id_weapon_superweapon && this.isShooting;
       if (0 < this.#num_spawn_cooldown_ms) {
         this.#f -= deltatime;
         if (0 > this.#f) {
@@ -2923,44 +2923,44 @@ class Plane {
         }
       }
       this.#obj_particleFlags && this.#obj_particleFlags.setPosition(k, m);
-      k =
+      let k2 =
         !this.hover &&
         !this.#obj_particleManager &&
         !this.isInvulnerable() &&
-        !g;
-      if (k) {
+        !g2;
+      if (k2) {
         if (false == this.hadHover) {
           this.hadHover = true;
           this.#obj_particleTrails.push();
         }
       } else this.hadHover = false;
       if (this.#obj_particleTrails) {
-        this.#obj_particleTrails.enabled = !!k;
+        this.#obj_particleTrails.enabled = !!k2;
         this.#obj_particleTrails.update(deltatime);
       }
       if (this.#obj_particleFlags) {
-        this.#obj_particleFlags.enabled = !!k;
+        this.#obj_particleFlags.enabled = !!k2;
         this.#obj_particleFlags.update(deltatime);
       }
-      k = E / 2;
-      m = k - 150;
-      if (this.y > m && this.y < k && 0 >= this.#h) {
+      let k3 = E / 2;
+      let m2 = k3 - 150;
+      if (this.y > m2 && this.y < k3 && 0 >= this.#h) {
         this.#h = 5;
         l = Math.random() / 2;
-        m = (0.5 + (0.5 - ((k - this.y) / (k - m)) * 0.5)) * (0.95 + l);
+        m2 = (0.5 + (0.5 - ((k3 - this.y) / (k3 - m2)) * 0.5)) * (0.95 + l);
         l = 20 * Math.sin(this.angle);
         obj_particleImpacts.addSplash(
           this.x - l,
-          k + 5 * Math.random(),
-          m,
+          k3 + 5 * Math.random(),
+          m2,
           true,
         );
       }
       this.#h -= deltatime;
       if (this.#obj_particleManager) {
-        k = this.x + 12 * Math.sin(-this.angle);
-        m = this.y + 12 * Math.cos(-this.angle);
-        this.#obj_particleManager.setPosition(k, m);
+        let k2 = this.x + 12 * Math.sin(-this.angle);
+        let m = this.y + 12 * Math.cos(-this.angle);
+        this.#obj_particleManager.setPosition(k2, m);
         this.#obj_particleManager.update(deltatime);
       }
       if (objG_player_plane == this) {
@@ -3016,12 +3016,12 @@ class Plane {
             },
           );
         }
-        k = (E / 2 - this.y) / 1e3;
-        if (1 < k) k = 1;
+        let k2 = (E / 2 - this.y) / 1e3;
+        if (1 < k2) k2 = 1;
         if (ia) {
-          m = objG_sfxManager.sound._nodeById(ia);
+          let m = objG_sfxManager.sound._nodeById(ia);
           objG_sfxManager.sound.volume(0.5 * num_max_volume, ia);
-          if (0.01 > k && !objG_eventManager.isSpaceWars()) {
+          if (0.01 > k2 && !objG_eventManager.isSpaceWars()) {
             if (m && m.bufferSource) m.bufferSource.playbackRate.value = 0.1;
           } else {
             l = this.speed / 30;
@@ -3032,28 +3032,28 @@ class Plane {
           }
         }
         if (na) {
-          m = 0;
-          if (0.2 > k && 0.01 < k && !objG_eventManager.isSpaceWars())
-            m = 1.7 * (0.2 - k);
-          objG_sfxManager.sound.volume(m * num_max_volume, na);
+          m2 = 0;
+          if (0.2 > k2 && 0.01 < k2 && !objG_eventManager.isSpaceWars())
+            m2 = 1.7 * (0.2 - k2);
+          objG_sfxManager.sound.volume(m2 * num_max_volume, na);
         }
       }
-      if (g) {
-        k = func_calculateDistance2D(this.x, this.y, H.x, H.y);
-        g = 1 - k / 3e3;
-        if (1 < g) g = 1;
-        if (0.1 > g) g = 0;
+      if (g2) {
+        let k2 = func_calculateDistance2D(this.x, this.y, H.x, H.y);
+        let g2 = 1 - k2 / 3e3;
+        if (1 < g2) g2 = 1;
+        if (0.1 > g2) g2 = 0;
         if (0 == this.#Fa) {
           objG_sfxManager.playSound(
             str_sfxid_lasershot,
-            0.2 * g,
+            0.2 * g2,
             0.5,
             const_Q_0,
           );
           if (!this.#ua)
             objG_sfxManager.playSound(
               str_sfxid_laserloop,
-              0.2 * g,
+              0.2 * g2,
               1,
               const_Q_0,
               (a) => {
@@ -3061,7 +3061,7 @@ class Plane {
               },
             );
         } else if (this.#ua)
-          objG_sfxManager.sound.volume(0.2 * g * num_max_volume, this.#ua);
+          objG_sfxManager.sound.volume(0.2 * g2 * num_max_volume, this.#ua);
         this.laserTimer += deltatime;
         this.#Fa += deltatime;
       } else this.stopLaserSound();
@@ -3304,8 +3304,9 @@ class Plane {
       ctx.lineTo(0, -22 * b);
       ctx.fill();
       ctx.restore();
-      c = objD_planes[gb];
-      if (2 != ha && c) this.DrawLockCrosshair(ctx, c.x, c.y, this.#w, ha);
+      let obj_plane = objD_planes[gb];
+      if (2 != ha && obj_plane)
+        this.DrawLockCrosshair(ctx, obj_plane.x, obj_plane.y, this.#w, ha);
       0 < ma && this.DrawLockCrosshair(ctx, this.x, this.y, 1, 1);
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -4361,7 +4362,7 @@ class Backgrounds {
       ) {
         let b = objG_player_plane.x < -$_sub || objG_player_plane.x > $_sub;
         if (objG_eventManager.isSpaceWars())
-          b |= objG_player_plane.y > E / 2 || objG_player_plane.y < -E / 2;
+          b = b || objG_player_plane.y > E / 2 || objG_player_plane.y < -E / 2;
         if (b) {
           if (0 == this.#e) {
             objG_sfxManager.playSound(str_sfxid_warn, 1, 1, 1);
@@ -4435,7 +4436,7 @@ class PickupItem {
   #l = 0;
   #inSpace = false;
 
-  id!: number; // set
+  id!: number | string; // set
   y!: number; // setPosition()
   x!: number; // setPosition()
   radius = 1.5;
@@ -4499,7 +4500,7 @@ class PickupItem {
     }
   }
   drawItem(ctx: CanvasRenderingContext2D, img: FrameImage) {
-    let g;
+    let g = 1;
     if (64 == this.type) {
       ctx.save();
       ctx.beginPath();
@@ -5504,9 +5505,10 @@ class WS_Connection {
         f = d.getUint32(c, true);
         c += 4;
         if (0 < f) {
-          if ((a = objD_planes[f]))
-            {a = func_renameBlankPlayerNames(a.name);
-              objGUI_gameInfo.setWarshipRemoved(a)}
+          if ((a = objD_planes[f])) {
+            a = func_renameBlankPlayerNames(a.name);
+            objGUI_gameInfo.setWarshipRemoved(a);
+          }
         } else objGUI_gameInfo.setWarshipRemoved();
         a = d.getUint8(c);
         c += 1;
@@ -5620,17 +5622,17 @@ class FollowMode_R {
   #h = 0;
   #q = false;
   #n = 1;
-  #k?: number;
+  #k!: number;
   #m = 0;
   #l = 0;
   #y = false;
   #r = 1;
-  #x?: number;
+  #x!: number;
   #pa = 0;
   #L = 0;
   #T = false;
   #Ca = 1;
-  #ta?: number;
+  #ta!: number;
   #N?: Timer;
   whiteFlash;
   resize: () => void;
@@ -5680,33 +5682,35 @@ class FollowMode_R {
   }
 
   followTopPlayer() {
-    let a = -1,
-      b = 0;
+    let max_score = -1;
+    let max_score_plane_id = 0;
     for (let id in objD_planes)
       if (objD_planes[id].inGame) {
-        let c = objD_planes[id].score;
-        if (a < c) {
-          a = c;
-          b = id;
+        let score = objD_planes[id].score;
+        if (max_score < score) {
+          max_score = score;
+          max_score_plane_id = parseInt(id);
         }
       }
-    if (b) {
-      objG_player_plane = objD_planes[b];
+    if (max_score_plane_id) {
+      objG_player_plane = objD_planes[max_score_plane_id];
       objG_player_plane.prepareFollow();
-      Oa = current_following_plane_id = b;
+      Oa = current_following_plane_id = max_score_plane_id;
     }
   }
-  PlayerFollowing(a: boolean) {
+  PlayerFollowing(isFollowing: boolean) {
     this.#c = 0;
     let b, d, e;
-    if (0 == listG_plane_ids.length)
-      (current_following_plane_id = 0), (objG_player_plane = undefined);
-    else {
+    if (0 == listG_plane_ids.length) {
+      current_following_plane_id = 0;
+      objG_player_plane = undefined;
+    } else {
       b = false;
       0 == Oa && (b = true);
       if (!b) {
-        (b = false), d;
-        for (d in listG_plane_ids) {
+        b = false;
+        for (const ds in listG_plane_ids) {
+          d = parseInt(ds);
           if (b) {
             e = objD_planes[listG_plane_ids[d]];
             if (!e.inGame) continue;
@@ -5717,7 +5721,7 @@ class FollowMode_R {
             return;
           }
           if (listG_plane_ids[d] == Oa)
-            if (a) b = true;
+            if (isFollowing) b = true;
             else {
               d--;
               0 > d && (d = listG_plane_ids.length - 1);
@@ -5730,17 +5734,17 @@ class FollowMode_R {
             }
         }
       }
-      current_following_plane_id = a = listG_plane_ids[0];
-      objG_player_plane = objD_planes[a];
+      current_following_plane_id = listG_plane_ids[0];
+      objG_player_plane = objD_planes[current_following_plane_id];
       objG_player_plane.prepareFollow();
-      Oa = a;
+      Oa = current_following_plane_id;
     }
   }
   waitUntilNextFollow() {
     this.#c = 3e3;
   }
   update(deltatime: number) {
-    let b, e, f, s, t, w, D, C, E, Q, I, N, Y, ba;
+    let b, f, s, t, w, D, E, ba;
     if (objG_assets.loaded) {
       if (objG_player_plane && !objG_player_plane.inGame && 0 == ka) {
         objG_player_plane = undefined;
@@ -5760,28 +5764,29 @@ class FollowMode_R {
           str_name_superweapon_holder = undefined;
         }
       }
-      e = null;
+      let missile_index: number | undefined;
       for (b in objD_missiles) {
         objD_missiles[b].update(deltatime);
-        if (objD_missiles[b].finished) e = b;
+        if (objD_missiles[b].finished) missile_index = parseInt(b);
       }
-      if (e) delete objD_missiles[e];
-      e = null;
-      for (b in objD_planes)
+      if (missile_index) delete objD_missiles[missile_index];
+      let e: Plane | undefined;
+      for (const bs in objD_planes) {
+        let b = parseInt(bs);
         if (objD_planes[b].updateBool != objG_wsConnection.lastUpdateBool) {
           if (objD_planes[b] == objG_player_plane)
             current_following_plane_id = 0;
           delete objD_planes[b];
         } else {
           if (
-            !La &&
-            objD_planes[b].weapon == id_weapon_superweapon &&
-            objD_planes[b].inGame
+              !La &&
+              objD_planes[b].weapon == id_weapon_superweapon &&
+              objD_planes[b].inGame
           ) {
             (La = true),
-              (str_name_superweapon_holder = func_renameBlankPlayerNames(
-                objD_planes[b].name,
-              ));
+                (str_name_superweapon_holder = func_renameBlankPlayerNames(
+                    objD_planes[b].name,
+                ));
           }
           if (sc == b && objD_planes[b].inGame) e = objD_planes[b];
           if (objG_eventManager.railSwitch) {
@@ -5793,6 +5798,7 @@ class FollowMode_R {
           }
           objD_planes[b].update(deltatime);
         }
+      }
       for (b in objD_specialEntities) objD_specialEntities[b].update(deltatime);
       if (objG_eventManager.railSwitch) objG_eventManager.railSwitch = false;
       if (objG_eventManager.machinegunSwitch)
@@ -5804,7 +5810,7 @@ class FollowMode_R {
           if (objD_planes[b].inGame) {
             objG_player_plane = objD_planes[b];
             objG_player_plane.prepareFollow();
-            current_following_plane_id = b;
+            current_following_plane_id = parseInt(b);
           }
           break;
         }
@@ -5812,7 +5818,7 @@ class FollowMode_R {
         for (let i in list_particleDust) {
           list_particleDust[i].update(
             objGUI_anchor.getBounds(),
-            objGUI_anchor.zoom,
+            //objGUI_anchor.zoom,
           );
           f = list_particleDust[i];
           if (0.1 < Math.abs(ca.x) + Math.abs(ca.y)) {
@@ -5880,14 +5886,14 @@ class FollowMode_R {
       if (e && !func_isInsideBox(e.x, e.y, 30)) {
         w = H.x - e.x;
         D = H.y - e.y;
-        C = Math.sqrt(w * w + D * D);
+        let hyp = Math.sqrt(w * w + D * D);
         this.#n = 1;
-        if (1300 < C) {
-          this.#n = 1300 / C;
+        if (1300 < hyp) {
+          this.#n = 1300 / hyp;
           if (0.4 > this.#n) this.#n = 0.4;
         }
         D /= w;
-        C = H.y - D * H.x;
+        let C = H.y - D * H.x;
         this.#h = 0 > w ? D * deltatime + C : D * f + C;
         if (this.#h < s) this.#h = s;
         else if (this.#h > t) this.#h = t;
@@ -5915,7 +5921,7 @@ class FollowMode_R {
           if (0.4 > this.#r) this.#r = 0.4;
         }
         D /= w;
-        C = H.y - D * H.x;
+        let C = H.y - D * H.x;
         this.#l = 0 > w ? D * deltatime + C : D * f + C;
         if (this.#l < s) this.#l = s;
         else if (this.#l > t) this.#l = t;
@@ -5928,16 +5934,17 @@ class FollowMode_R {
       }
       if (objG_eventManager.isWarship()) {
         E = 99999;
-        (e = 0), Q, I, N, Y;
-        for (b in objD_specialEntities) {
-          C = objD_specialEntities[b];
+        let e = 0, lX = 0, lY = 0, N = 1, Y = 1;
+        for (const bs in objD_specialEntities) {
+          let b = parseInt(bs);
+          let C = objD_specialEntities[b];
           if (C.state == const_Ic_0 && C.x > -$_sub && C.x < $_sub) {
             w = H.x - C.x;
             D = H.y - C.y;
             ba = Math.sqrt(w * w + D * D);
             if (ba < E) {
-              Q = C.x;
-              I = C.y;
+              lX = C.x;
+              lY = C.y;
               E = ba;
               e = b;
               N = w;
@@ -5946,14 +5953,14 @@ class FollowMode_R {
           }
         }
         if (0 < e) {
-          if (func_isInsideBox(Q, I, 120)) this.#T = false;
+          if (func_isInsideBox(lX, lY, 120)) this.#T = false;
           else {
             if (1300 < E) {
               this.#Ca = 900 / E;
               if (0.3 > this.#Ca) this.#Ca = 0.3;
             }
             D = Y / N;
-            C = H.y - D * H.x;
+            let C = H.y - D * H.x;
             this.#L = 0 > N ? D * deltatime + C : D * f + C;
             if (this.#L < s) this.#L = s;
             else if (this.#L > t) this.#L = t;
@@ -5989,7 +5996,7 @@ class FollowMode_R {
           objD_missiles[f].draw(this.#ctx_canvas, deltatime);
         for (f in objD_planes) objD_planes[f].draw(this.#ctx_canvas, deltatime);
         for (f in objD_planes) objD_planes[f].drawInfo(this.#ctx_canvas);
-        Z && objG_player_plane.drawInput(this.#ctx_canvas);
+        Z && objG_player_plane?.drawInput(this.#ctx_canvas);
         for (f in objD_specialEntities)
           objD_specialEntities[f].draw(this.#ctx_canvas);
         objG_animationManager.drawExplosions(this.#ctx_canvas);
@@ -6012,19 +6019,19 @@ class FollowMode_R {
         objG_backgrounds.drawLimits(this.#ctx_canvas);
         if (this.#q) {
           deltatime = 1;
-          c = 0 < qa;
+          let c = 0 < qa;
           this.#ctx_canvas.save();
           this.#ctx_canvas.translate(this.#g, this.#h);
           this.#ctx_canvas.scale(this.#n, this.#n);
           if (c) {
             this.#ctx_canvas.save();
-            e = func_rotatePoint(0, 50, -this.#k);
+            let e = func_rotatePoint(0, 50, -this.#k);
             this.#ctx_canvas.translate(e.x, e.y);
             objG_assets.frames.crown.draw(this.#ctx_canvas);
             this.#ctx_canvas.restore();
           }
           this.#ctx_canvas.rotate(-this.#k);
-          e = 1.2;
+          let e = 1.2;
           if (c) {
             this.#ctx_canvas.translate(0, -(-20 - 10 * deltatime));
             e = 0.9;
@@ -6043,13 +6050,13 @@ class FollowMode_R {
           this.#ctx_canvas.translate(this.#m, this.#l);
           this.#ctx_canvas.scale(this.#r, this.#r);
           this.#ctx_canvas.save();
-          e = func_rotatePoint(0, 50, -this.#x);
-          this.#ctx_canvas.translate(e.x, e.y);
+          let pt = func_rotatePoint(0, 50, -this.#x);
+          this.#ctx_canvas.translate(pt.x, pt.y);
           objG_assets.frames.revengeIcon.draw(this.#ctx_canvas);
           this.#ctx_canvas.restore();
           this.#ctx_canvas.rotate(-this.#x);
           this.#ctx_canvas.translate(0, -(-20 - 10 * deltatime));
-          e = 0.9;
+          let e = 0.9;
           this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)";
           this.#ctx_canvas.beginPath();
           this.#ctx_canvas.moveTo(-8 * deltatime * e, 0);
@@ -6064,8 +6071,8 @@ class FollowMode_R {
           this.#ctx_canvas.translate(this.#pa, this.#L);
           this.#ctx_canvas.scale(this.#Ca, this.#Ca);
           this.#ctx_canvas.save();
-          e = func_rotatePoint(0, 80, -this.#ta);
-          this.#ctx_canvas.translate(e.x, e.y);
+          let pt = func_rotatePoint(0, 80, -this.#ta);
+          this.#ctx_canvas.translate(pt.x, pt.y);
           this.#ctx_canvas.drawImage(
             objG_assets.warshipIcon,
             -objG_assets.warshipIcon.width / 2,
@@ -6073,7 +6080,7 @@ class FollowMode_R {
           );
           this.#ctx_canvas.restore();
           this.#ctx_canvas.rotate(-this.#ta);
-          e = 0.9;
+          let e = 0.9;
           this.#ctx_canvas.translate(0, -(-20 - 10 * deltatime));
           this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)";
           this.#ctx_canvas.beginPath();
@@ -6117,17 +6124,17 @@ class FollowMode_R {
     objD_specialEntities = {};
   }
   C() {
-    let a = 2,
+    let scale_factor = 2,
       b,
       c;
-    bool_setting_highQuality && (a = 1);
-    this.#html_canvas.width = window.innerWidth / a;
-    this.#html_canvas.height = window.innerHeight / a;
+    bool_setting_highQuality && (scale_factor = 1);
+    this.#html_canvas.width = window.innerWidth / scale_factor;
+    this.#html_canvas.height = window.innerHeight / scale_factor;
     canvas_width = this.#html_canvas.width;
     canvas_height = this.#html_canvas.height;
-    b = canvas_height * a;
-    c = -50 + 50 * a + "%";
-    a = "translate(" + c + "," + c + ") scale(" + a + ")";
+    b = canvas_height * scale_factor;
+    c = -50 + 50 * scale_factor + "%";
+    let a = "translate(" + c + "," + c + ") scale(" + scale_factor + ")";
     $("#canvas").css({
       transform: a,
     });
@@ -6164,7 +6171,7 @@ class FollowMode_R {
 }
 class UI_Anchor {
   #c = 0;
-  #g: number;
+  #g!: number;
   #h = 0;
   #q = 0;
   #n = 0;
@@ -7445,19 +7452,19 @@ class ParticleFlags {
   }
   draw(ctx: CanvasRenderingContext2D) {
     if (bool_drawTrails && this.loaded && 0 < this.tailJoints.length) {
-      let d,
-        a,
+      let d = 0,
+        a = 0,
         c = this.letterMinDistance,
         g = true,
         h = 0,
         q = 0,
-        n,
-        k,
-        m,
-        l,
-        p,
-        r;
-      for (s = this.tailJoints[0].length - 2; 0 <= s; s--) {
+        n = 0,
+        k = 0,
+        m = 0,
+        l = 0,
+        p = 0,
+        r = 0;
+      for (let s = this.tailJoints[0].length - 2; 0 <= s; s--) {
         let t = this.tailJoints[0][s].x,
           w = this.tailJoints[0][s].y,
           u;
@@ -7465,58 +7472,58 @@ class ParticleFlags {
           d = this.#x;
           a = this.#y;
         }
-        let v = t - d,
+        let vp = t - d,
           x = w - a,
-          A,
-          C,
-          z,
-          B,
-          E;
-        u = Math.sqrt(Math.pow(v, 2) + Math.pow(x, 2));
+          A = 0,
+          C = 0,
+          z = 0,
+          B = 0,
+          E = 0;
+        u = Math.sqrt(Math.pow(vp, 2) + Math.pow(x, 2));
         if (0 == u)
-          console.log("OOPS! Division by ZERO! " + s + " : " + v + ":::" + x);
+          console.log("OOPS! Division by ZERO! " + s + " : " + vp + ":::" + x);
         else {
-          A = v / u;
+          A = vp / u;
           C = x / u;
         }
-        v = false;
+        let bool_cond = false;
         if (0 < u - c) {
           z = d + A * c;
           B = a + C * c;
           c = this.letterMinDistance;
           if (0 < h) {
             if (q < this.flagDivisions) {
-              d = this.flagHeight;
+              let flag_height = this.flagHeight;
               n = z - n;
               k = B - k;
               n /= this.letterMinDistance;
               k /= this.letterMinDistance;
-              k = -k * d;
-              n *= d;
+              k = -k * flag_height;
+              n *= flag_height;
               u = z + k;
-              v = B + n;
+              let v = B + n;
               x = z - k;
               E = B - n;
-              d = this.textureWidth;
-              a = this.textureHeight;
+              let tex_width = this.textureWidth;
+              let tex_height = this.textureHeight;
               let F, G, H, J;
               if (this.flipY && 0 < A) {
                 F = 0;
-                G = a;
+                G = tex_height;
               } else {
-                F = a;
+                F = tex_height;
                 G = 0;
               }
               if (this.flipX && 0 < A) {
-                H = (q / this.flagDivisions) * d;
-                J = ((q + 1) / this.flagDivisions) * d;
+                H = (q / this.flagDivisions) * tex_width;
+                J = ((q + 1) / this.flagDivisions) * tex_width;
               } else {
-                H = d * (1 - q / this.flagDivisions);
-                J = d * (1 - (q + 1) / this.flagDivisions);
+                H = tex_width * (1 - q / this.flagDivisions);
+                J = tex_width * (1 - (q + 1) / this.flagDivisions);
               }
-              d = ctx;
-              a = this.texture;
-              m = [
+              let ctx_r = ctx;
+              let tex_r = this.texture;
+              let list_vertices = [
                 {
                   x: p,
                   y: r,
@@ -7542,33 +7549,33 @@ class ParticleFlags {
                   v: F,
                 },
               ];
-              l = [
+              let list_triangles = [
                 [0, 1, 2],
                 [2, 3, 0],
               ];
               for (p = 0; 2 > p; p++) {
-                let D = l[p];
-                r = m[D[0]].x;
-                u = m[D[1]].x;
-                v = m[D[2]].x;
-                x = m[D[0]].y;
-                E = m[D[1]].y;
-                F = m[D[2]].y;
-                G = m[D[0]].u;
-                H = m[D[1]].u;
-                J = m[D[2]].u;
-                let L = m[D[0]].v,
-                  M = m[D[1]].v;
-                D = m[D[2]].v;
-                d.save();
-                d.beginPath();
-                d.moveTo(r, x);
-                d.lineTo(u, E);
-                d.lineTo(v, F);
-                d.closePath();
-                d.clip();
+                let triangle = list_triangles[p];
+                r = list_vertices[triangle[0]].x;
+                u = list_vertices[triangle[1]].x;
+                v = list_vertices[triangle[2]].x;
+                x = list_vertices[triangle[0]].y;
+                E = list_vertices[triangle[1]].y;
+                F = list_vertices[triangle[2]].y;
+                G = list_vertices[triangle[0]].u;
+                H = list_vertices[triangle[1]].u;
+                J = list_vertices[triangle[2]].u;
+                let L = list_vertices[triangle[0]].v;
+                let M = list_vertices[triangle[1]].v;
+                let D = list_vertices[triangle[2]].v;
+                ctx_r.save();
+                ctx_r.beginPath();
+                ctx_r.moveTo(r, x);
+                ctx_r.lineTo(u, E);
+                ctx_r.lineTo(v, F);
+                ctx_r.closePath();
+                ctx_r.clip();
                 let N = G * M + L * J + H * D - M * J - L * H - G * D;
-                d.transform(
+                ctx_r.transform(
                   (r * M + L * v + u * D - M * v - L * u - r * D) / N,
                   (x * M + L * F + E * D - M * F - L * E - x * D) / N,
                   (G * u + r * J + H * v - u * J - r * H - G * v) / N,
@@ -7588,8 +7595,8 @@ class ParticleFlags {
                     G * E * D) /
                     N,
                 );
-                d.drawImage(a, 0, 0);
-                d.restore();
+                ctx_r.drawImage(tex_r, 0, 0);
+                ctx_r.restore();
               }
               q++;
             } else break;
@@ -7623,9 +7630,9 @@ class ParticleFlags {
           n = z;
           k = B;
           h++;
-          v = true;
+          bool_cond = true;
         } else c -= u;
-        if (v) {
+        if (bool_cond) {
           d = z;
           a = B;
           s++;

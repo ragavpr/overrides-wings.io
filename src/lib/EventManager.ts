@@ -10,22 +10,25 @@ export class EventManager {
   warshipsDestroyed = 0;
   setType(event_type: EventManager.eventType) {
     this.type = event_type;
-    this.isSpaceWars()
-      ? ($("#pfText").css({
-          "-webkit-filter": "brightness(100%)",
-        }),
-        $("#pfArrow").css({
-          "-webkit-filter": "brightness(100%)",
-        }))
-      : ($("#pfText").css({
-          "-webkit-filter": "brightness(0%)",
-        }),
-        $("#pfArrow").css({
-          "-webkit-filter": "brightness(0%)",
-        }));
-    this.isWarship() &&
-      ((this.warshipsLeft = 3),
-      (this.warshipsEscaped = this.warshipsDestroyed = 0));
+    if (this.isSpaceWars()) {
+      $("#pfText").css({
+        "-webkit-filter": "brightness(100%)",
+      });
+      $("#pfArrow").css({
+        "-webkit-filter": "brightness(100%)",
+      });
+    } else {
+      $("#pfText").css({
+        "-webkit-filter": "brightness(0%)",
+      });
+      $("#pfArrow").css({
+        "-webkit-filter": "brightness(0%)",
+      });
+    }
+    if (this.isWarship()) {
+      this.warshipsLeft = 3;
+      this.warshipsEscaped = this.warshipsDestroyed = 0;
+    }
   }
   isInEvent() {
     return this.type != this.eventType.EVENT_NONE && !this.waiting;
@@ -40,13 +43,15 @@ export class EventManager {
     return this.type == this.eventType.EVENT_WARSHIP && !this.waiting;
   }
   getEventName() {
-    return this.type == this.eventType.EVENT_INSTAGIB
-      ? "SUDDEN DEATH"
-      : this.type == this.eventType.EVENT_SPACEWARS
-        ? "SPACE WARS"
-        : this.type == this.eventType.EVENT_WARSHIP
-          ? "WARSHIP ATTACK"
-          : "NEW EVENT";
+    if (this.type == this.eventType.EVENT_INSTAGIB) {
+      return "SUDDEN DEATH";
+    } else if (this.type == this.eventType.EVENT_SPACEWARS) {
+      return "SPACE WARS";
+    } else if (this.type == this.eventType.EVENT_WARSHIP) {
+      return "WARSHIP ATTACK";
+    } else {
+      return "NEW EVENT";
+    }
   }
   getEventColor() {
     return this.type == this.eventType.EVENT_SPACEWARS ? "#FF3300" : "#fe6800";
