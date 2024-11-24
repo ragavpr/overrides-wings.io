@@ -3292,8 +3292,7 @@ class Plane {
   drawInput(ctx: CanvasRenderingContext2D) {
     if (this.inGame) {
       let c = -objG_inputManager.angle + Math.PI;
-      let b;
-      objG_inputManager.hover && (b = 0.3);
+      let b = objG_inputManager.hover ? 0.3 : 1;
       ctx.save();
       ctx.translate(this.x, this.y);
       ctx.rotate(c);
@@ -4689,7 +4688,7 @@ class WS_Connection {
                   objG_sfxManager.playSound(str_sfxid_cannonshoot, t, 1, w);
                 m.cannonShoot();
               } else {
-                if (p != objG_player_plane?.id) {
+                if (!(objG_player_plane && p == objG_player_plane.id)) {
                   w = const_Sa_3;
                   u = func_calculateDistance2D(m.x, m.y, H.x, H.y);
                   t = 1 - u / num_sound_max_distance;
@@ -4749,7 +4748,9 @@ class WS_Connection {
               h.type == id_entity_asteroid &&
               (162 == uint8_message_type || 178 == uint8_message_type)
             ) {
-              (r = dataview_message.getUint8(l)), (l += 1), h.setFragment(r);
+              r = dataview_message.getUint8(l);
+              l += 1;
+              h.setFragment(r);
             }
             h.setState(y);
             h.setPose(bool_something, f, n);
@@ -4812,7 +4813,7 @@ class WS_Connection {
         if (
           (162 == uint8_message_type || 178 == uint8_message_type) &&
           !y &&
-          null == C
+          !C
         ) {
           C = new Plane();
           objD_planes[k] = C;
@@ -5083,26 +5084,26 @@ class WS_Connection {
     a = d.getUint8(0);
     if (0 != a)
       if (160 == a) {
-        (c = 1),
-          (a = -d.getUint32(c, true)),
-          (c = c + 4),
-          (f = d.getFloat32(c, true)),
-          (c = c + 4),
-          (h = d.getFloat32(c, true)),
-          (c = c + 4),
-          (q = d.getFloat32(c, true)),
-          (c = c + 4),
-          (n = d.getFloat32(c, true)),
-          (c = c + 4),
-          (k = d.getFloat32(c, true)),
-          (c = c + 4),
-          (m = d.getFloat32(c, true)),
-          (c = c + 4),
-          (l = d.getFloat32(c, true)),
-          (c = c + 4),
-          (y = d.getFloat32(c, true)),
-          (c = c + 4),
-          (r = d.getFloat32(c, true));
+        c = 1;
+        a = -d.getUint32(c, true);
+        c = c + 4;
+        f = d.getFloat32(c, true);
+        c = c + 4;
+        h = d.getFloat32(c, true);
+        c = c + 4;
+        q = d.getFloat32(c, true);
+        c = c + 4;
+        n = d.getFloat32(c, true);
+        c = c + 4;
+        k = d.getFloat32(c, true);
+        c = c + 4;
+        m = d.getFloat32(c, true);
+        c = c + 4;
+        l = d.getFloat32(c, true);
+        c = c + 4;
+        y = d.getFloat32(c, true);
+        c = c + 4;
+        r = d.getFloat32(c, true);
         d = d.getFloat32(c + 4, true);
         Xa = a;
         $_sub = 10 * f;
@@ -5117,192 +5118,206 @@ class WS_Connection {
         vc = y;
         wc = r;
         xc = d;
-      } else if (161 == a || 171 == a)
-        (xa = true),
-          (c = 1),
-          (f = d.getUint32(c, true)),
-          (c += 4),
-          (h = d.getFloat32(c, true)),
-          (c += 4),
-          (q = -d.getFloat32(c, true)),
-          (c += 4),
-          (n = d.getFloat32(c, true)),
-          (c += 4),
-          (k = d.getUint8(c)),
-          (c += 1),
-          (m = d.getUint8(c)),
-          (c += 1),
-          (d = d.getUint32(c, true)),
-          (objG_player_plane = new Plane()),
-          (objG_player_plane.id = f),
-          objG_player_plane.setColorID(k),
-          objG_player_plane.setDecalID(m),
-          objG_player_plane.setName(myName),
-          objG_player_plane.setFlagInfo(d),
-          objG_player_plane.setPose(h, q, n),
-          (objG_player_plane.updateBool = objG_wsConnection.lastUpdateBool),
-          (objD_planes[f] = objG_player_plane),
-          (current_following_plane_id = f),
-          (Z = true),
-          func_hideOverlay(),
-          func_setPlayerCount(),
-          161 == a && (plane_last_killed_by[f] = 0);
-      else if (162 == a || 178 == a)
-        this.func_process_msg_extra(d, a, false),
-          (this.firstClientListing = false),
+      } else if (161 == a || 171 == a) {
+        xa = true;
+        c = 1;
+        f = d.getUint32(c, true);
+        c += 4;
+        h = d.getFloat32(c, true);
+        c += 4;
+        q = -d.getFloat32(c, true);
+        c += 4;
+        n = d.getFloat32(c, true);
+        c += 4;
+        k = d.getUint8(c);
+        c += 1;
+        m = d.getUint8(c);
+        c += 1;
+        d = d.getUint32(c, true);
+        objG_player_plane = new Plane();
+        objG_player_plane.id = f;
+        objG_player_plane.setColorID(k);
+        objG_player_plane.setDecalID(m);
+        objG_player_plane.setName(myName);
+        objG_player_plane.setFlagInfo(d);
+        objG_player_plane.setPose(h, q, n);
+        objG_player_plane.updateBool = objG_wsConnection.lastUpdateBool;
+        objD_planes[f] = objG_player_plane;
+        current_following_plane_id = f;
+        Z = true;
+        func_hideOverlay();
+        func_setPlayerCount();
+        if (161 == a) plane_last_killed_by[f] = 0;
+      } else if (162 == a || 178 == a) {
+        this.func_process_msg_extra(d, a, false);
+        this.firstClientListing = false;
+        func_setPlayerCount();
+      } else if (169 == a || 172 == a) {
+        this.func_process_msg_extra(d, a, false);
+        func_setPlayerCount();
+      } else if (163 == a || 179 == a) {
+        this.func_process_msg_extra(d, a, false);
+      } else if (164 == a || 180 == a) {
+        if (164 == a) this.func_process_msg_extra(d, 162, true);
+        else {
+          this.func_process_msg_extra(d, 178, true);
           func_setPlayerCount();
-      else if (169 == a || 172 == a)
-        this.func_process_msg_extra(d, a, false), func_setPlayerCount();
-      else if (163 == a || 179 == a) this.func_process_msg_extra(d, a, false);
-      else if (164 == a || 180 == a)
-        164 == a
-          ? this.func_process_msg_extra(d, 162, true)
-          : this.func_process_msg_extra(d, 178, true),
-          func_setPlayerCount();
-      else if (165 == a) {
+        }
+      } else if (165 == a) {
         q = 1;
         a = d.getUint32(q, true);
         q += 4;
-        if ((c = objD_planes[a]))
-          (f = d.getUint32(q, true)),
-            (q += 4),
-            (h = d.getUint8(q)),
-            (d = d.getUint32(q + 1, true)),
-            (q = objG_player_plane),
-            !q && objG_player_plane_temp && (q = objG_player_plane_temp),
-            q &&
-              f == q.id &&
-              ((n = func_renameBlankPlayerNames(objD_planes[a].name)),
-              objGUI_gameInfo.addMessage("You killed", true, n),
-              objG_eventManager.isInstagib() ||
-                (a == qa ? q.incScore(yc) : q.incScore(xc))),
-            0 < f
-              ? ((f = objD_planes[f])
-                  ? (objGUI_gameInfo.addActivityMessage(
-                      func_renameBlankPlayerNames(c.name) +
-                        " was Killed by " +
-                        func_renameBlankPlayerNames(f.name),
-                    ),
-                    f.incKills(),
-                    (plane_last_killed_by[c.id] = f.id))
-                  : objGUI_gameInfo.addActivityMessage(
-                      func_renameBlankPlayerNames(c.name) + " was Killed",
-                    ),
-                objG_animationManager.addExplosion(
-                  c.dstX,
-                  c.dstY,
-                  c.getSpeedDirectionX(),
-                  c.getSpeedDirectionY(),
-                ),
-                objG_player_plane &&
-                  objG_player_plane.id == a &&
-                  (f
-                    ? objGUI_gameInfo.addMessage(
-                        "Killed by",
-                        false,
-                        func_renameBlankPlayerNames(f.name),
-                      )
-                    : objGUI_gameInfo.addMessage("You were killed", false),
-                  Z
-                    ? ((Z = false),
-                      (objG_player_plane_temp = objG_player_plane),
-                      (objG_player_plane = undefined),
-                      (ka = 1),
-                      W_wasKilled(d),
-                      func_displayGameoverScore(d))
-                    : ((objG_player_plane = undefined),
-                      objG_followMode.waitUntilNextFollow())))
-              : ((plane_last_killed_by[c.id] = 0),
-                objG_player_plane &&
-                  objG_player_plane.id == a &&
-                  (5 == h
-                    ? objGUI_gameInfo.addMessage("You left!", false)
-                    : 4 == h
-                      ? objGUI_gameInfo.addMessage("Abandoned!", false)
-                      : 1 == h
-                        ? objGUI_gameInfo.addMessage("Crashed!", false)
-                        : 6 == h
-                          ? objGUI_gameInfo.addMessage("Exploded!", false)
-                          : 7 == h
-                            ? objGUI_gameInfo.addMessage("KAMIKAZE!!", false)
-                            : 8 == h
-                              ? objGUI_gameInfo.addMessage(
-                                  "You were killed by a Warship!",
-                                  false,
-                                )
-                              : 3 == h
-                                ? (objGUI_gameInfo.addMessage("Splash!", false),
-                                  objG_sfxManager.playSound(
-                                    str_sfxid_bigsplash,
-                                    0.7,
-                                    1,
-                                    const_Q_0,
-                                  ),
-                                  obj_particleImpacts.addSplash(
-                                    objG_player_plane.x,
-                                    E / 2 + 10,
-                                    2,
-                                    false,
-                                  ))
-                                : objGUI_gameInfo.addMessage(
-                                    "You were killed!",
-                                    false,
-                                  ),
-                  Z
-                    ? ((Z = false),
-                      (objG_player_plane = undefined),
-                      (ma = 0),
-                      (ka = 1),
-                      W_wasKilled(d),
-                      func_displayGameoverScore(d))
-                    : ((objG_player_plane = undefined),
-                      objG_followMode.waitUntilNextFollow())),
-                5 == h
-                  ? objGUI_gameInfo.addActivityMessage(
-                      func_renameBlankPlayerNames(c.name) + " left",
-                    )
-                  : 4 == h &&
-                    objGUI_gameInfo.addActivityMessage(
-                      func_renameBlankPlayerNames(c.name) + " abandoned",
-                    ),
-                objG_animationManager.addExplosion(
-                  c.dstX,
-                  c.dstY,
-                  0.5 * c.getSpeedDirectionX(),
-                  0.5 * c.getSpeedDirectionY(),
-                )),
-            null == c
-              ? console.log(
-                  "ERROR: Trying to remove a player that didnt exist!",
-                )
-              : objD_planes[a].cleanup();
-        else if ((d = objD_specialEntities[a]))
-          d.type == id_entity_asteroid &&
-            objG_eventManager.isSpaceWars() &&
-            (objG_animationManager.addExplosion(d.x, d.y, 0, 0),
-            3 != d.fragment &&
-              ((d =
+        if ((c = objD_planes[a])) {
+          f = d.getUint32(q, true);
+          q += 4;
+          h = d.getUint8(q);
+          d = d.getUint32(q + 1, true);
+          q = objG_player_plane;
+          if (!q && objG_player_plane_temp) q = objG_player_plane_temp;
+          if (q && f == q.id) {
+            n = func_renameBlankPlayerNames(objD_planes[a].name);
+            objGUI_gameInfo.addMessage("You killed", true, n);
+            if (!objG_eventManager.isInstagib()) {
+              if (a == qa) q.incScore(yc);
+              else q.incScore(xc);
+            }
+          }
+          if (0 < f) {
+            f = objD_planes[f];
+            if (f) {
+              objGUI_gameInfo.addActivityMessage(
+                func_renameBlankPlayerNames(c.name) +
+                  " was Killed by " +
+                  func_renameBlankPlayerNames(f.name),
+              );
+              f.incKills();
+              plane_last_killed_by[c.id] = f.id;
+            } else
+              objGUI_gameInfo.addActivityMessage(
+                func_renameBlankPlayerNames(c.name) + " was Killed",
+              );
+            objG_animationManager.addExplosion(
+              c.dstX,
+              c.dstY,
+              c.getSpeedDirectionX(),
+              c.getSpeedDirectionY(),
+            );
+            if (objG_player_plane && objG_player_plane.id == a) {
+              if (f)
+                objGUI_gameInfo.addMessage(
+                  "Killed by",
+                  false,
+                  func_renameBlankPlayerNames(f.name),
+                );
+              else objGUI_gameInfo.addMessage("You were killed", false);
+              if (Z) {
+                Z = false;
+                objG_player_plane_temp = objG_player_plane;
+                objG_player_plane = undefined;
+                ka = 1;
+                W_wasKilled(d);
+                func_displayGameoverScore(d);
+              } else {
+                objG_player_plane = undefined;
+                objG_followMode.waitUntilNextFollow();
+              }
+            }
+          } else {
+            plane_last_killed_by[c.id] = 0;
+            if (objG_player_plane && objG_player_plane.id == a) {
+              if (5 == h) objGUI_gameInfo.addMessage("You left!", false);
+              else if (4 == h) objGUI_gameInfo.addMessage("Abandoned!", false);
+              else if (1 == h) objGUI_gameInfo.addMessage("Crashed!", false);
+              else if (6 == h) objGUI_gameInfo.addMessage("Exploded!", false);
+              else if (7 == h) objGUI_gameInfo.addMessage("KAMIKAZE!!", false);
+              else if (8 == h)
+                objGUI_gameInfo.addMessage(
+                  "You were killed by a Warship!",
+                  false,
+                );
+              else if (3 == h) {
+                objGUI_gameInfo.addMessage("Splash!", false);
+                objG_sfxManager.playSound(
+                  str_sfxid_bigsplash,
+                  0.7,
+                  1,
+                  const_Q_0,
+                );
+                obj_particleImpacts.addSplash(
+                  objG_player_plane.x,
+                  E / 2 + 10,
+                  2,
+                  false,
+                );
+              } else {
+                objGUI_gameInfo.addMessage("You were killed!", false);
+              }
+              if (Z) {
+                Z = false;
+                objG_player_plane = undefined;
+                ma = 0;
+                ka = 1;
+                W_wasKilled(d);
+                func_displayGameoverScore(d);
+              } else {
+                objG_player_plane = undefined;
+                objG_followMode.waitUntilNextFollow();
+              }
+            }
+            if (5 == h)
+              objGUI_gameInfo.addActivityMessage(
+                func_renameBlankPlayerNames(c.name) + " left",
+              );
+            else if (4 == h)
+              objGUI_gameInfo.addActivityMessage(
+                func_renameBlankPlayerNames(c.name) + " abandoned",
+              );
+            objG_animationManager.addExplosion(
+              c.dstX,
+              c.dstY,
+              0.5 * c.getSpeedDirectionX(),
+              0.5 * c.getSpeedDirectionY(),
+            );
+          }
+          if (null == c)
+            console.log("ERROR: Trying to remove a player that didnt exist!");
+          else objD_planes[a].cleanup();
+        } else if ((d = objD_specialEntities[a])) {
+          if (d.type == id_entity_asteroid && objG_eventManager.isSpaceWars()) {
+            objG_animationManager.addExplosion(d.x, d.y, 0, 0);
+            if (3 != d.fragment) {
+              d =
                 1 -
                 func_calculateDistance2D(d.x, d.y, H.x, H.y) /
-                  num_sound_max_distance),
-              0.01 < d &&
+                  num_sound_max_distance;
+              if (0.01 < d)
                 objG_sfxManager.playSound(
                   str_sfxid_mexpl2,
                   d,
                   0.4,
                   const_Sa_3,
                   null,
-                ))),
-            objD_specialEntities[a].cleanup(),
-            delete objD_specialEntities[a];
+                );
+            }
+          }
+          objD_specialEntities[a].cleanup();
+          delete objD_specialEntities[a];
+        }
         func_setPlayerCount();
-      } else if (166 == a || 176 == a)
-        for (c = 1, f = d.getUint16(c, true), c += 2, h = 0; h < f; h++) {
+      } else if (166 == a || 176 == a) {
+        c = 1;
+        f = d.getUint16(c, true);
+        c += 2;
+        for (h = 0; h < f; h++) {
           n = d.getUint32(c, true);
           c += 4;
-          176 == a
-            ? ((q = d.getUint16(c, true)), (c += 2))
-            : ((q = d.getUint8(c)), (c += 1));
+          if (176 == a) {
+            q = d.getUint16(c, true);
+            c += 2;
+          } else {
+            q = d.getUint8(c);
+            c += 1;
+          }
           m = 1;
           l = str_sfxid_empty;
           switch (q) {
@@ -5314,31 +5329,32 @@ class WS_Connection {
                 : str_sfxid_shot;
               break;
             case id_weapon_trishoot:
-              objG_eventManager.isSpaceWars()
-                ? ((m = 0.7), (l = str_sfxid_laser))
-                : (l = str_sfxid_trishot);
+              if (objG_eventManager.isSpaceWars()) {
+                m = 0.7;
+                l = str_sfxid_laser;
+              } else l = str_sfxid_trishot;
               break;
             case id_weapon_railgun:
-              objG_eventManager.isSpaceWars()
-                ? ((l = str_sfxid_laser), (m = 1.3))
-                : (l = str_sfxid_rail);
+              if (objG_eventManager.isSpaceWars()) {
+                l = str_sfxid_laser;
+                m = 1.3;
+              } else l = str_sfxid_rail;
           }
           k = objD_planes[n];
-          !k &&
-            0 < n &&
-            (y = objD_specialEntities[n]) &&
-            console.log("specialEntity did shoot: " + y.id);
+          if (!k && 0 < n) {
+            y = objD_specialEntities[n];
+            if (y) console.log("specialEntity did shoot: " + y.id);
+          }
           y = const_Q_0;
           r = 1;
-          (objG_player_plane && n == objG_player_plane.id) ||
-            !k ||
-            ((y = const_Sa_3),
-            (r =
+          if (!(objG_player_plane && n == objG_player_plane.id) && k) {
+            y = const_Sa_3;
+            r =
               1 -
               func_calculateDistance2D(k.x, k.y, H.x, H.y) /
-                num_sound_max_distance));
-          0.01 < r &&
-            l != str_sfxid_empty &&
+                num_sound_max_distance;
+          }
+          if (0.01 < r && l != str_sfxid_empty)
             objG_sfxManager.playSound(l, r, m, y);
           m = d.getUint16(c, true);
           c += 2;
@@ -5346,58 +5362,71 @@ class WS_Connection {
           l = d.getUint8(c);
           c += 1;
           for (y = 0; y < l; y++) {
-            (r = d.getFloat32(c, true)),
-              (c = c + 4),
-              (s = -d.getFloat32(c, true)),
-              (c = c + 4),
-              (t = 0),
-              (t = false);
+            r = d.getFloat32(c, true);
+            c = c + 4;
+            s = -d.getFloat32(c, true);
+            c = c + 4;
+            t = 0;
+            t = false;
             if (q != id_weapon_missile && q != id_weapon_bombs)
               obj_particleImpacts.addShot(n, r, s, q);
             else {
-              (t = d.getUint32(c, true)), (c = c + 4), (x = objD_missiles[t]);
+              t = d.getUint32(c, true);
+              c = c + 4;
+              x = objD_missiles[t];
               x && delete objD_missiles[t];
               t = true;
             }
             for (x = false; ; ) {
-              (z = d.getUint32(c, true)), (c = c + 4);
+              z = d.getUint32(c, true);
+              c = c + 4;
               if (0 == z) break;
-              (Ca = objD_planes[z]), (ta = false);
-              Ca || ((Ca = objD_specialEntities[z]) && (ta = true));
-              z == qa || ta || (t = false);
-              Ca &&
-                (Ca.hit(q),
-                k &&
-                  q == id_weapon_superweapon &&
-                  ((x = true), k.laserHit(r, s, true)),
-                objG_player_plane &&
-                  (objG_player_plane.id == z
-                    ? objG_sfxManager.playSound(str_sfxid_phit, 1, 1, const_Q_0)
-                    : n == objG_player_plane.id &&
-                      objG_sfxManager.playSound(
-                        str_sfxid_phit,
-                        1,
-                        2,
-                        const_Q_0,
-                      )));
+              Ca = objD_planes[z];
+              ta = false;
+              if (!Ca) {
+                Ca = objD_specialEntities[z];
+                if (Ca) ta = true;
+              }
+              if (z != qa && !ta) t = false;
+              if (Ca) {
+                Ca.hit(q);
+                if (k && q == id_weapon_superweapon) {
+                  x = true;
+                  k.laserHit(r, s, true);
+                }
+                if (objG_player_plane) {
+                  if (objG_player_plane.id == z)
+                    objG_sfxManager.playSound(str_sfxid_phit, 1, 1, const_Q_0);
+                  else if (n == objG_player_plane.id)
+                    objG_sfxManager.playSound(str_sfxid_phit, 1, 2, const_Q_0);
+                }
+              }
             }
-            k && !x && k.laserHit(r, s, false);
-            t && obj_particleImpacts.addMissileImpact(r, s);
+            if (k && !x) k.laserHit(r, s, false);
+            if (t) obj_particleImpacts.addMissileImpact(r, s);
           }
-          0 < n &&
+          if (
+            0 < n &&
             (n = objD_planes[n]) &&
             q != id_weapon_missile &&
-            q != id_weapon_bombs &&
-            ((n.ammo = m), n.setWeapon(q));
+            q != id_weapon_bombs
+          ) {
+            n.ammo = m;
+            n.setWeapon(q);
+          }
         }
-      else if (167 == a || 174 == a)
+      } else if (167 == a || 174 == a) {
         for (c = 1; ; ) {
           f = d.getUint16(c, true);
           if (0 == f) break;
           c += 2;
-          174 == a
-            ? ((h = d.getUint16(c, true)), (c += 2))
-            : ((h = d.getUint8(c)), (c += 1));
+          if (174 == a) {
+            h = d.getUint16(c, true);
+            c += 2;
+          } else {
+            h = d.getUint8(c);
+            c += 1;
+          }
           q = d.getFloat32(c, true);
           c += 4;
           n = -d.getFloat32(c, true);
@@ -5408,72 +5437,76 @@ class WS_Connection {
           k.setPosition(q, n);
           k.type = h;
         }
-      else if (168 == a || 173 == a) this.func_process_msg_grab(d, a);
-      else if (170 == a)
-        (a = 1),
-          (c = d.getUint8(a)),
-          3 == c
-            ? ma++
-            : 4 == c
-              ? ma--
-              : ((gb = 2 != c ? d.getUint32(a + 1, true) : 0),
-                (hb = 0),
-                (ha = c));
-      else if (16 == a)
-        (c = d.getUint8(1)),
-          (a = d.getUint32(2, true)),
-          (objG_eventManager.type = c),
-          (objG_eventManager.waiting = true),
-          (objG_eventManager.endTime = +new Date() + 1e3 * a);
-      else if (17 == a)
-        (objG_eventManager.type = objG_eventManager.eventType.EVENT_NONE),
-          (objG_eventManager.waiting = false),
-          (objG_eventManager.endTime = 0);
-      else if (18 == a || 19 == a)
-        (c = 1),
-          (f = d.getUint8(c)),
-          c++,
-          (a = d.getUint32(c, true)),
-          (c += 4),
-          (objG_eventManager.waiting = false),
-          objG_eventManager.setType(f),
-          objG_eventManager.type == objG_eventManager.eventType.EVENT_WARSHIP &&
-            ((h = d.getUint8(c)),
-            c++,
-            (f = d.getUint8(c)),
-            c++,
-            (d = d.getUint8(c)),
-            objG_eventManager.setWarshipInfo(h, f, d)),
-          (objG_followMode.whiteFlash = 1),
-          (objG_eventManager.endTime = +new Date() + 1e3 * a),
-          objG_eventManager.isInstagib()
-            ? (objG_eventManager.railSwitch = true)
-            : objG_eventManager.isWarship()
-              ? objG_assets.loadWarshipEvent()
-              : objG_eventManager.isSpaceWars() &&
-                objG_assets.loadAsteroidEvent();
-      else if (20 == a) {
-        objG_eventManager.type != objG_eventManager.eventType.EVENT_WARSHIP &&
-          (objG_followMode.whiteFlash = 1);
+      } else if (168 == a || 173 == a) {
+        this.func_process_msg_grab(d, a);
+      } else if (170 == a) {
+        a = 1;
+        c = d.getUint8(a);
+        if (3 == c) ma++;
+        else if (4 == c) ma--;
+        else {
+          gb = 2 != c ? d.getUint32(a + 1, true) : 0;
+          hb = 0;
+          ha = c;
+        }
+      } else if (16 == a) {
+        c = d.getUint8(1);
+        a = d.getUint32(2, true);
+        objG_eventManager.type = c;
+        objG_eventManager.waiting = true;
+        objG_eventManager.endTime = +new Date() + 1e3 * a;
+      } else if (17 == a) {
+        objG_eventManager.type = objG_eventManager.eventType.EVENT_NONE;
+        objG_eventManager.waiting = false;
+        objG_eventManager.endTime = 0;
+      } else if (18 == a || 19 == a) {
+        c = 1;
+        f = d.getUint8(c);
+        c++;
+        a = d.getUint32(c, true);
+        c += 4;
+        objG_eventManager.waiting = false;
+        objG_eventManager.setType(f);
+        if (
+          objG_eventManager.type == objG_eventManager.eventType.EVENT_WARSHIP
+        ) {
+          h = d.getUint8(c);
+          c++;
+          f = d.getUint8(c);
+          c++;
+          d = d.getUint8(c);
+          objG_eventManager.setWarshipInfo(h, f, d);
+        }
+        objG_followMode.whiteFlash = 1;
+        objG_eventManager.endTime = +new Date() + 1e3 * a;
+        if (objG_eventManager.isInstagib()) objG_eventManager.railSwitch = true;
+        else if (objG_eventManager.isWarship()) objG_assets.loadWarshipEvent();
+        else if (objG_eventManager.isSpaceWars())
+          objG_assets.loadAsteroidEvent();
+      } else if (20 == a) {
+        if (objG_eventManager.type != objG_eventManager.eventType.EVENT_WARSHIP)
+          objG_followMode.whiteFlash = 1;
         objG_eventManager.waiting = false;
         if (objG_eventManager.isInstagib() || objG_eventManager.isSpaceWars())
           objG_eventManager.machinegunSwitch = true;
         objG_eventManager.setType(objG_eventManager.eventType.EVENT_NONE);
-      } else if (22 == a)
-        (objG_eventManager.waiting = false),
-          objG_eventManager.type != objG_eventManager.eventType.EVENT_NONE &&
-            (objG_eventManager.type !=
-              objG_eventManager.eventType.EVENT_WARSHIP &&
-              (objG_followMode.whiteFlash = 1),
-            objG_eventManager.setType(objG_eventManager.eventType.EVENT_NONE));
-      else if (23 == a) {
+      } else if (22 == a) {
+        objG_eventManager.waiting = false;
+        if (objG_eventManager.type != objG_eventManager.eventType.EVENT_NONE) {
+          if (
+            objG_eventManager.type != objG_eventManager.eventType.EVENT_WARSHIP
+          )
+            objG_followMode.whiteFlash = 1;
+          objG_eventManager.setType(objG_eventManager.eventType.EVENT_NONE);
+        }
+      } else if (23 == a) {
         c = 1;
         f = d.getUint32(c, true);
         c += 4;
         if (0 < f) {
           if ((a = objD_planes[f]))
-            (a = func_renameBlankPlayerNames(a.name)),
-              objGUI_gameInfo.setWarshipRemoved(a);
+            {a = func_renameBlankPlayerNames(a.name);
+              objGUI_gameInfo.setWarshipRemoved(a)}
         } else objGUI_gameInfo.setWarshipRemoved();
         a = d.getUint8(c);
         c += 1;
@@ -5505,7 +5538,7 @@ class WS_Connection {
     $("#copyLink").fadeOut(300);
     $(".btn-needs-server").attr("disabled", "disabled");
     let b = this.connectRetry;
-    if(5 < b) (b = 5);
+    if (5 < b) b = 5;
     setTimeout(this.getServerAndConnect, 1e3 + 1e3 * b);
     objG_wsConnection.connectRetry++;
   }
