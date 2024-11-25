@@ -7,7 +7,7 @@
   2. Do not remove tracking.
 - Keep modifications that gives unfair advantage over other players private for now.
 
-## Set-up Testing Environment
+## Set-up Dev Environment
 
 1. Create a folder to store local file overrides for chrome.
 
@@ -27,6 +27,16 @@ git clone https://github.com/ragavpr/overrides-wings.io.git wings.io
 code wings.io
 ```
 
+Optionally, use below VScode settings to enable display of Types inline for TypeScript files
+
+```
+  "typescript.inlayHints.parameterNames.enabled": "all",
+  "typescript.inlayHints.variableTypes.enabled": true,
+  "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
+  "typescript.inlayHints.parameterTypes.enabled": true,
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+```
+
 ### Recommendations after setting-up
 
 - Fork this project and add a new remote pointing to your fork, use SSH if possible
@@ -41,9 +51,9 @@ git remote add forkrepo [[your-github-repo-url]]
 git push -u forkrepo [[branch-name]]
 ```
 
-## Building minified version
+## Building version
 
-Use bun to build the project
+Use bun to build the project, refresh the browser to use the newly built file.
 
 ### To build `client.js`
 
@@ -52,11 +62,3 @@ Use bun to build the project
 ```
 bun build src/client.ts --outfile build/client.js --target browser
 ```
-
-#### For release
-
-```
-bun build src/client.ts --minify --outfile build/client.js --target browser
-```
-
-(Errors must be ignored for now)
