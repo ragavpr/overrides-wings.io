@@ -14,40 +14,6 @@ type GameSheetMapping = [
 const canvas = $("#canvas")[0] as HTMLCanvasElement;
 let Zb,
   $b,
-  bool_isHttps = "https:" == window.location.protocol,
-  num_global_physics_step_ms = (1e3 / 30) * 3,
-  list_decal_colors = [
-    {
-      r: 255,
-      g: 0,
-      b: 0,
-    },
-    {
-      r: 255,
-      g: 119,
-      b: 0,
-    },
-    {
-      r: 255,
-      g: 202,
-      b: 0,
-    },
-    {
-      r: 174,
-      g: 231,
-      b: 24,
-    },
-    {
-      r: 0,
-      g: 119,
-      b: 255,
-    },
-    {
-      r: 236,
-      g: 19,
-      b: 213,
-    },
-  ],
   ha = 2,
   gb = 0,
   time_since_boost_pickup = 0,
@@ -56,7 +22,6 @@ let Zb,
   qc = 0,
   rc = 0,
   H: { x: number; y: number },
-  ca = { x: 0, y: 0 },
   canvas_width: number,
   canvas_height: number,
   cloud_sprange_start_Y = 1,
@@ -129,19 +94,55 @@ let Zb,
   obj_particleImpacts: ParticleImpacts,
   objG_backgrounds: Backgrounds,
   objG_sfxManager: SFXmanager,
-  plane_last_killed_by: Record<number, number> = {},
   ub = 0,
   objG_eventManager: EventManager,
   list_particleDust: ParticleDust[],
-  obj_browserQueryParams: Record<string, string> = {},
   eb = false,
   str_conutryCode: string | null = null,
+  timeout_ws_conn: Timer | undefined,
+  Sb = false,
+  myName: string;
+const bool_isHttps = "https:" == window.location.protocol,
+  num_global_physics_step_ms = (1e3 / 30) * 3,
+  list_decal_colors = [
+    {
+      r: 255,
+      g: 0,
+      b: 0,
+    },
+    {
+      r: 255,
+      g: 119,
+      b: 0,
+    },
+    {
+      r: 255,
+      g: 202,
+      b: 0,
+    },
+    {
+      r: 174,
+      g: 231,
+      b: 24,
+    },
+    {
+      r: 0,
+      g: 119,
+      b: 255,
+    },
+    {
+      r: 236,
+      g: 19,
+      b: 213,
+    },
+  ],
+  ca = { x: 0, y: 0 },
+  plane_last_killed_by: Record<number, number> = {},
+  obj_browserQueryParams: Record<string, string> = {},
   str_browser_user_agent = window.navigator.userAgent,
   bool_internet_explorer =
     -1 < str_browser_user_agent.indexOf("MSIE ") ||
     -1 < str_browser_user_agent.indexOf("Trident/"),
-  timeout_ws_conn: Timer | undefined,
-  Sb = false,
   str_font_name = "Arial Black",
   id_weapon_machinegun = 1,
   id_weapon_trishoot = 2,
@@ -181,7 +182,6 @@ let Zb,
   id_entity_warship = 1,
   id_entity_asteroid = 2,
   const_Ic_0 = 0,
-  myName: string,
   gameSheetInfo: GameSheetMapping[] = [
     ["bomb", 522, 34, 11, 8, 0.545, 0.5],
     ["bombdrop", 887, 196, 23, 23, 0.5, 0.5],
@@ -315,7 +315,7 @@ let Zb,
   ];
 const func_detect_country = () => {
   let temp_http_s = "";
-  bool_isHttps && (temp_http_s = "s");
+  if (bool_isHttps) temp_http_s = "s";
   $.get(
     "http" + temp_http_s + "://ip2l.wings.io/cc",
     (b) => {
@@ -337,44 +337,45 @@ const requestAnimationFrameCallback = () => {
   objG_followMode.draw(deltatime);
   if (window.requestAnimationFrame)
     window.requestAnimationFrame(requestAnimationFrameCallback);
-  Lb && (Lb = false);
+  if (Lb) Lb = false;
 };
 function func_displaySelectedColor(int_color_id: number) {
   intG_color_id = int_color_id;
   for (let i = 0; 5 >= i; i++) {
-    let plane_frame = objG_assets.planes[i][int_color_id][7];
-    let canvas = document.createElement("canvas");
-    let ctx = canvas.getContext("2d")!;
-    let plane_body = objG_assets.frames.plane8;
+    const plane_frame = objG_assets.planes[i][int_color_id][7];
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d")!;
+    const plane_body = objG_assets.frames.plane8;
     canvas.width = plane_body.width;
     canvas.height = plane_body.height;
     if (!ctx) throw new Error("WARN: Canvas is empty");
     ctx.translate(plane_body.width / 2, plane_body.height / 2);
     plane_body.draw(ctx);
     plane_frame.draw(ctx);
-    let image_str = canvas.toDataURL("image/png");
+    const image_str = canvas.toDataURL("image/png");
     let css_style!: CSSStyleSheet;
-    let styles_len = document.styleSheets.length;
+    const styles_len = document.styleSheets.length;
     for (let j = 0; j < styles_len; j++) {
-      let h: CSSStyleSheet = document.styleSheets[j];
+      const h: CSSStyleSheet = document.styleSheets[j];
       if (null == h.href) {
         css_style = h;
         break;
       }
     }
-    css_style.addRule
-      ? css_style.addRule(
-          ".btn-decal" + (i + 1) + ":before",
-          "background-image: url(" + image_str + ")",
-        )
-      : css_style.insertRule(
-          ".btn-decal" +
-            (i + 1) +
-            ":before{background-image: url(" +
-            image_str +
-            ")}",
-          css_style.cssRules.length,
-        );
+    if (css_style.addRule)
+      css_style.addRule(
+        ".btn-decal" + (i + 1) + ":before",
+        "background-image: url(" + image_str + ")",
+      );
+    else
+      css_style.insertRule(
+        ".btn-decal" +
+          (i + 1) +
+          ":before{background-image: url(" +
+          image_str +
+          ")}",
+        css_style.cssRules.length,
+      );
   }
   for (let i = 0; 5 >= i; i++) $("#check" + i).hide();
   $("#check" + int_color_id).show();
@@ -390,16 +391,16 @@ function funcR_showBeta() {
   func_displayNicknameInput();
 }
 function func_isNotChrome() {
-  let is_UA_Chrome = -1 < navigator.userAgent.indexOf("Chrome");
-  let is_UA_Safari = -1 < navigator.userAgent.indexOf("Safari");
+  const is_UA_Chrome = -1 < navigator.userAgent.indexOf("Chrome");
+  const is_UA_Safari = -1 < navigator.userAgent.indexOf("Safari");
   return !(is_UA_Safari && is_UA_Chrome);
 }
 function func_setGraphicsQuality() {
   let str_quality = "Low";
-  let element_quality = $("#graphicsID")[0];
-  bool_setting_highQuality && (str_quality = "High");
-  element_quality &&
-    (element_quality.childNodes[0].textContent = "Graphics: " + str_quality);
+  const element_quality = $("#graphicsID")[0];
+  if (bool_setting_highQuality) str_quality = "High";
+  if (element_quality)
+    element_quality.childNodes[0].textContent = "Graphics: " + str_quality;
 }
 function funcR_hc_showPf() {
   $("#pfArrow").show();
@@ -422,17 +423,17 @@ function func_displayCopyLink() {
 }
 function func_displayMuteAudio() {
   let b = "images/sound_off.png";
-  1 == num_setting_muteVol
-    ? (num_max_volume = num_setting_muteVol = 0)
-    : 0 == num_setting_muteVol &&
-      ((num_setting_muteVol = 1),
-      (num_max_volume = 0.05),
-      (b = "images/sound_on.png"));
+  if (1 == num_setting_muteVol) num_max_volume = num_setting_muteVol = 0;
+  else if (0 == num_setting_muteVol) {
+    num_setting_muteVol = 1;
+    num_max_volume = 0.05;
+    b = "images/sound_on.png";
+  }
   window.localStorage.muteVol = num_setting_muteVol;
   ($("#soundImg")[0] as HTMLImageElement).src = b;
 }
 function func_wsConnDisconnect() {
-  objG_wsConnection && objG_wsConnection.disconnect();
+  if (objG_wsConnection) objG_wsConnection.disconnect();
 }
 function func_hideOverlay() {
   num_max_volume = 1 * num_setting_muteVol;
@@ -444,51 +445,56 @@ function func_displayContinueCountdown() {
     let seconds_since_gameover = Math.floor(
       (frametime_millis - time_game_over) / 1e3,
     );
-    0 > seconds_since_gameover && (seconds_since_gameover = 0);
-    let continue_countdown = 10 - seconds_since_gameover;
+
+    if (0 > seconds_since_gameover) seconds_since_gameover = 0;
+    const continue_countdown = 10 - seconds_since_gameover;
     if (0 > continue_countdown) {
-      (bool_continueGame = false), func_displayNicknameInput();
+      bool_continueGame = false;
+      func_displayNicknameInput();
     } else {
-      let element_countdown = $("#countdownText")[0];
-      let text_countdown = document.createTextNode(
+      const element_countdown = $("#countdownText")[0];
+      const text_countdown = document.createTextNode(
         continue_countdown.toString(),
       );
       element_countdown.replaceChild(
         text_countdown,
         element_countdown.firstChild!,
-      ),
-        setTimeout(func_displayContinueCountdown, 500);
+      );
+      setTimeout(func_displayContinueCountdown, 500);
     }
   }
 }
 function func_displayGameover() {
   ads.func_showAds();
-  0 < last_game_score &&
-    ($("#continueTop").show(),
-    $("#continueBR").show(),
-    $("#continue").show(),
-    $("#nickInput").hide(),
-    $("#skinPanel").hide(),
-    $("#howto").hide(),
-    (bool_continueGame = true),
-    (time_game_over = +new Date()),
-    func_displayContinueCountdown());
+  if (0 < last_game_score) {
+    $("#continueTop").show();
+    $("#continueBR").show();
+    $("#continue").show();
+    $("#nickInput").hide();
+    $("#skinPanel").hide();
+    $("#howto").hide();
+    bool_continueGame = true;
+    time_game_over = +new Date();
+    func_displayContinueCountdown();
+  }
   $("#overlay").fadeIn(500);
   num_max_volume = 0.05 * num_setting_muteVol;
   objGUI_gameInfo.clearBonusDisplay();
 }
 function func_displayGameoverScore(int_score: number) {
   bool_following_plane = true;
-  Z || ((ka = 1), (objG_player_plane = undefined));
+  if (!Z) {
+    ka = 1;
+    objG_player_plane = undefined;
+  }
   funcR_hc_showPf();
   if (0 <= int_score) {
     bool_continueGame = true;
     $("#beta").hide();
-    let e = $("#curScore")[0],
-      f;
-    f = objG_eventManager.isInstagib()
-      ? document.createTextNode("Kills: " + int_score)
-      : document.createTextNode("Current Score: " + int_score);
+    const e = $("#curScore")[0],
+      f = objG_eventManager.isInstagib()
+        ? document.createTextNode("Kills: " + int_score)
+        : document.createTextNode("Current Score: " + int_score);
     e.replaceChild(f, e.firstChild!);
   }
   last_game_score = int_score;
@@ -519,14 +525,14 @@ function func_isIframe() {
 }
 function func_padZerosPrefix(num_val: number) {
   let padding = "";
-  10 > num_val && (padding = "0");
+  if (10 > num_val) padding = "0";
   return padding + Math.floor(num_val);
 }
 function func_millisToTimeFormat(total_millis: number) {
-  let total_seconds = Math.floor(total_millis / 1e3);
+  const total_seconds = Math.floor(total_millis / 1e3);
   let minutes = Math.floor(total_seconds / 60);
-  let seconds = total_seconds - 60 * minutes;
-  let hours = Math.floor(minutes / 60);
+  const seconds = total_seconds - 60 * minutes;
+  const hours = Math.floor(minutes / 60);
   minutes -= 60 * hours;
   return 0 == hours
     ? func_padZerosPrefix(minutes) + ":" + func_padZerosPrefix(seconds)
@@ -548,7 +554,7 @@ function func_isTimeElapsed_50ms() {
   return 50 > +new Date() - frametime_millis;
 }
 function func_isInsideBox(x: number, y: number, dist: number) {
-  let d = objGUI_anchor.getBounds();
+  const d = objGUI_anchor.getBounds();
   return (
     x + dist >= d[0].x &&
     x - dist <= d[1].x &&
@@ -560,7 +566,7 @@ function func_clamp(val: number, l: number, u: number) {
   return val < l ? l : val > u ? u : val;
 }
 function func_renameBlankPlayerNames(str_name: string) {
-  "" == str_name && (str_name = "<Unnamed>");
+  if ("" == str_name) str_name = "<Unnamed>";
   return str_name;
 }
 function func_drawRoundedRectangle(
@@ -619,15 +625,17 @@ function func_rotatePoint(x: number, y: number, angle: number) {
 
 function W_switchSkins() {
   funcR_showBeta();
-  bool_hideCustomization
-    ? ($("#howto").show(),
-      $("#skinPanel").hide(),
-      $("#divOff").show(),
-      $("#divOn").hide())
-    : ($("#howto").hide(),
-      $("#skinPanel").show(),
-      $("#divOff").hide(),
-      $("#divOn").show());
+  if (bool_hideCustomization) {
+    $("#howto").show();
+    $("#skinPanel").hide();
+    $("#divOff").show();
+    $("#divOn").hide();
+  } else {
+    $("#howto").hide();
+    $("#skinPanel").show();
+    $("#divOff").hide();
+    $("#divOn").show();
+  }
   bool_hideCustomization = !bool_hideCustomization;
 }
 function W_setSkinColor(id_color: number) {
@@ -637,23 +645,25 @@ function W_setDecal(id_decal: number) {
   func_displaySelectedDecal(id_decal);
 }
 function W_clickPlay(name: string) {
-  Z
-    ? func_hideOverlay()
-    : ((window.localStorage.nick = name),
-      (document.getElementsByTagName("canvas")[0].style.cursor =
-        "url(images/crosshair.png) 16 16, auto"),
-      kb++,
-      (objG_inputManager.mouseMoved = false),
-      objG_wsConnection.sendNick(name, bool_continueGame),
-      bool_continueGame &&
-        (func_displayNicknameInput(), (bool_continueGame = false)),
-      objG_eventManager.isSpaceWars()
-        ? objGUI_gameInfo.showTip(
-            "Hint: Earn points faster by destroying asteroids.",
-          )
-        : document.fullscreenElement ||
-          (2 != kb && 4 != kb && 6 != kb) ||
-          objGUI_gameInfo.showTip("Press 'F' to toggle Fullscreen"));
+  if (Z) func_hideOverlay();
+  else {
+    window.localStorage.nick = name;
+    document.getElementsByTagName("canvas")[0].style.cursor =
+      "url(images/crosshair.png) 16 16, auto";
+    kb++;
+    objG_inputManager.mouseMoved = false;
+    objG_wsConnection.sendNick(name, bool_continueGame);
+    if (bool_continueGame) {
+      func_displayNicknameInput();
+      bool_continueGame = false;
+    }
+    if (objG_eventManager.isSpaceWars())
+      objGUI_gameInfo.showTip(
+        "Hint: Earn points faster by destroying asteroids.",
+      );
+    else if (!document.fullscreenElement && (2 == kb || 4 == kb || 6 == kb))
+      objGUI_gameInfo.showTip("Press 'F' to toggle Fullscreen");
+  }
 }
 function W_setSpectate() {
   xa = true;
@@ -661,20 +671,20 @@ function W_setSpectate() {
   func_hideOverlay();
   zc++;
   funcR_showBeta();
-  Z
-    ? (objG_wsConnection.leave(),
-      (Z = false),
-      objG_followMode.waitUntilNextFollow())
-    : objG_followMode.followTopPlayer();
+  if (Z) {
+    objG_wsConnection.leave();
+    Z = false;
+    objG_followMode.waitUntilNextFollow();
+  } else objG_followMode.followTopPlayer();
   ka = 0;
-  zc % 2 || 1 >= numG_player_count
-    ? objGUI_gameInfo.showTip("Press 'ESC' to go back")
-    : objGUI_gameInfo.showTip("Click to follow next player");
+  if (zc % 2 || 1 >= numG_player_count)
+    objGUI_gameInfo.showTip("Press 'ESC' to go back");
+  else objGUI_gameInfo.showTip("Click to follow next player");
 }
 function W_setContinue() {
   $("#topGui").show();
   $("#roomFailed").hide();
-  func_isIframe() || (parent.location.hash = "");
+  if (!func_isIframe()) parent.location.hash = "";
   objG_wsConnection.getServerAndConnect();
 }
 function W_toggleGraphics() {
@@ -686,12 +696,13 @@ function W_toggleGraphics() {
 function W_copyRoomLink() {
   $("#copyLink").hide();
   $("#copyLinkBox").show();
-  let b = $("#roomlinkInput")[0] as HTMLInputElement;
+  const b = $("#roomlinkInput")[0] as HTMLInputElement;
   b.value = "http://classic.wings.io/#" + objG_wsConnection.roomID;
   eb = true;
-  func_isNotChrome() &&
-    (($("#copyButton")[0].childNodes[0].textContent = "Close"),
-    $("#safariTooltip").show());
+  if (func_isNotChrome()) {
+    $("#copyButton")[0].childNodes[0].textContent = "Close";
+    $("#safariTooltip").show();
+  }
   setTimeout(() => {
     b.setSelectionRange(0, b.value.length);
     b.select();
@@ -699,14 +710,16 @@ function W_copyRoomLink() {
   }, 100);
 }
 function W_setCopy() {
-  let b = $("#roomlinkInput")[0] as HTMLInputElement;
+  const b = $("#roomlinkInput")[0] as HTMLInputElement;
   b.value = "http://wings.io/#" + objG_wsConnection.roomID;
   b.setSelectionRange(0, b.value.length);
   b.select();
   b.focus();
-  if (func_isNotChrome())
-    $("#copyLinkBox").hide(), $("#copyLink").show(), (eb = false);
-  else {
+  if (func_isNotChrome()) {
+    $("#copyLinkBox").hide();
+    $("#copyLink").show();
+    eb = false;
+  } else {
     try {
       document.execCommand("copy");
     } catch (e) {}
@@ -726,12 +739,13 @@ function W_onblur() {
   timeout_ws_conn = setTimeout(func_wsConnDisconnect, 3e5);
   wa = false;
   num_max_volume = 0;
-  objG_sfxManager &&
-    (objG_sfxManager.sound.volume(0),
-    objG_sfxManager.sound.volume(0, mb),
-    objG_sfxManager.sound.volume(0, ia),
-    objG_sfxManager.sound.volume(0, na),
-    nb && objG_sfxManager.sound.volume(0, nb));
+  if (objG_sfxManager) {
+    objG_sfxManager.sound.volume(0);
+    objG_sfxManager.sound.volume(0, mb);
+    objG_sfxManager.sound.volume(0, ia);
+    objG_sfxManager.sound.volume(0, na);
+    if (nb) objG_sfxManager.sound.volume(0, nb);
+  }
 }
 function W_onfocus() {
   if (timeout_ws_conn) {
@@ -740,7 +754,7 @@ function W_onfocus() {
   }
   Lb = wa = true;
   num_max_volume = 1 * num_setting_muteVol;
-  for (let b in objD_planes) objD_planes[b].clearTrail();
+  for (const b in objD_planes) objD_planes[b].clearTrail();
 }
 function W_connectToServer(host: string) {
   objG_wsConnection.roomNumber = 0;
@@ -759,12 +773,11 @@ function W_enterGame(name: string) {
 function W_setInput(angle: number, hover: number, isShooting: boolean) {
   objG_inputManager.angle = angle;
   objG_inputManager.hover = hover;
-  !Sb && isShooting
-    ? objG_wsConnection.sendShooting(isShooting)
-    : Sb && !isShooting && objG_wsConnection.sendShooting(isShooting);
+  if (!Sb && isShooting) objG_wsConnection.sendShooting(isShooting);
+  else if (Sb && !isShooting) objG_wsConnection.sendShooting(isShooting);
   Sb = isShooting;
 }
-function W_wasKilled(b: any) {
+function W_wasKilled(b) {
   objG_inputManager.angle = Math.PI;
   objG_inputManager.hover = 1;
 }
@@ -774,7 +787,7 @@ function W_connectionClosed() {
   objG_inputManager.hover = 1;
 }
 
-let x = {
+const x = {
   W_wasKilled,
   W_toggleMute,
   W_toggleGraphics,
@@ -820,52 +833,82 @@ class StyleStroke {
     is_stroke_enabled = false,
     stroke_color?: string,
   ) {
-    size && (this._size = size);
-    color && (this._color = color);
+    if (size) this._size = size;
+    if (color) this._color = color;
     this._stroke = is_stroke_enabled;
-    stroke_color && (this._strokeColor = stroke_color);
+    if (stroke_color) this._strokeColor = stroke_color;
   }
   setFont(b: string) {
-    this._font != b && ((this._font = b), (this._dirty = true));
+    if (this._font != b) {
+      this._font = b;
+      this._dirty = true;
+    }
   }
   setSize(b: number) {
-    this._size != b && ((this._size = b), (this._dirty = true));
+    if (this._size != b) {
+      this._size = b;
+      this._dirty = true;
+    }
   }
   setScale(scale: number) {
-    this._scale != scale && ((this._scale = scale), (this._dirty = true));
+    if (this._scale != scale) {
+      this._scale = scale;
+      this._dirty = true;
+    }
   }
   setColor(color: string) {
-    this._color != color && ((this._color = color), (this._dirty = true));
+    if (this._color != color) {
+      this._color = color;
+      this._dirty = true;
+    }
   }
   setStroke(stroke: boolean) {
-    this._stroke != stroke && ((this._stroke = stroke), (this._dirty = true));
+    if (this._stroke != stroke) {
+      this._stroke = stroke;
+      this._dirty = true;
+    }
   }
   setStrokeWidth(stroke_width: number) {
-    this._strokeWidth != stroke_width &&
-      ((this._strokeWidth = stroke_width), (this._dirty = true));
+    if (this._strokeWidth != stroke_width) {
+      this._strokeWidth = stroke_width;
+      this._dirty = true;
+    }
   }
   setStrokeColor(stroke_color: string) {
-    this._strokeColor != stroke_color &&
-      ((this._strokeColor = stroke_color), (this._dirty = true));
+    if (this._strokeColor != stroke_color) {
+      this._strokeColor = stroke_color;
+      this._dirty = true;
+    }
   }
   setValue(value: string) {
-    value != this._value && ((this._value = value), (this._dirty = true));
+    if (value != this._value) {
+      this._value = value;
+      this._dirty = true;
+    }
   }
   setHMargin(h_margin: number) {
-    h_margin != this._hmargin &&
-      ((this._hmargin = h_margin), (this._dirty = true));
+    if (h_margin != this._hmargin) {
+      this._hmargin = h_margin;
+      this._dirty = true;
+    }
   }
   setVMargin(v_margin: number) {
-    v_margin != this._vmargin &&
-      ((this._vmargin = v_margin), (this._dirty = true));
+    if (v_margin != this._vmargin) {
+      this._vmargin = v_margin;
+      this._dirty = true;
+    }
   }
   setUsingRoundedFrame(using_rounded_frame: boolean) {
-    using_rounded_frame != this._usingRoundedFrame &&
-      ((this._usingRoundedFrame = using_rounded_frame), (this._dirty = true));
+    if (using_rounded_frame != this._usingRoundedFrame) {
+      this._usingRoundedFrame = using_rounded_frame;
+      this._dirty = true;
+    }
   }
   setRoundedFrameOpacity(rounded_frame_opacity: number) {
-    rounded_frame_opacity != this._frameOpacity &&
-      ((this._frameOpacity = rounded_frame_opacity), (this._dirty = true));
+    if (rounded_frame_opacity != this._frameOpacity) {
+      this._frameOpacity = rounded_frame_opacity;
+      this._dirty = true;
+    }
   }
   render() {
     if (!this._canvas) {
@@ -874,19 +917,19 @@ class StyleStroke {
     }
     if (this._dirty) {
       this._dirty = false;
-      let _canvas = this._canvas,
+      const _canvas = this._canvas,
         _ctx = this._ctx!,
         _value = this._value,
         _scale = this._scale,
         _size = this._size,
         bold_font = "Bold " + _size + this._font;
       _ctx.font = bold_font;
-      let text_width = _ctx.measureText(_value).width,
-        _hmargin = this._hmargin,
-        _vmargin = 2;
-      -1 < this._vmargin && (_vmargin = this._vmargin);
+      const text_width = _ctx.measureText(_value).width,
+        _hmargin = this._hmargin;
+      let _vmargin = 2;
+      if (-1 < this._vmargin) _vmargin = this._vmargin;
       let n = 0;
-      this._stroke && (n = this._strokeWidth);
+      if (this._stroke) n = this._strokeWidth;
       _canvas.width = (text_width + 2 * _hmargin + n) * _scale;
       _canvas.height = (_size + 2 * _vmargin + n) * _scale;
       _ctx.font = bold_font;
@@ -895,9 +938,9 @@ class StyleStroke {
       _ctx.lineJoin = "round";
       _ctx.lineWidth = this._strokeWidth;
       _ctx.strokeStyle = this._strokeColor;
-      this._usingRoundedFrame &&
-        ((_ctx.fillStyle = "#000000"),
-        (_ctx.globalAlpha = this._frameOpacity),
+      if (this._usingRoundedFrame) {
+        _ctx.fillStyle = "#000000";
+        _ctx.globalAlpha = this._frameOpacity;
         func_drawRoundedRectangle(
           _ctx,
           0,
@@ -905,10 +948,11 @@ class StyleStroke {
           _canvas.width,
           _canvas.height,
           10,
-        ),
-        (_ctx.globalAlpha = 1));
+        );
+        _ctx.globalAlpha = 1;
+      }
       _ctx.fillStyle = this._color;
-      this._stroke &&
+      if (this._stroke)
         _ctx.strokeText(_value, _hmargin + 2, _size + _vmargin / 2);
       _ctx.fillText(_value, _hmargin + 2, _size + _vmargin / 2);
     }
@@ -933,39 +977,63 @@ class StyleText {
   _d = 5;
   _addTop = 0;
   constructor(size?: number, color?: string, second_color?: string) {
-    size && (this._size = size);
-    color && (this._color = color);
-    second_color && (this._secondColor = second_color);
+    if (size) this._size = size;
+    if (color) this._color = color;
+    if (second_color) this._secondColor = second_color;
   }
   setAddTop(add_top: number) {
-    add_top != this._addTop && ((this._addTop = add_top), (this._dirty = true));
+    if (add_top != this._addTop) {
+      this._addTop = add_top;
+      this._dirty = true;
+    }
   }
   setFont(font: string) {
-    this._font != font && ((this._font = font), (this._dirty = true));
+    if (this._font != font) {
+      this._font = font;
+      this._dirty = true;
+    }
   }
   setSize(size: number) {
-    this._size != size && ((this._size = size), (this._dirty = true));
+    if (this._size != size) {
+      this._size = size;
+      this._dirty = true;
+    }
   }
   setScale(scale: number) {
-    this._scale != scale && ((this._scale = scale), (this._dirty = true));
+    if (this._scale != scale) {
+      this._scale = scale;
+      this._dirty = true;
+    }
   }
   setColor(color: string) {
-    this._color != color && ((this._color = color), (this._dirty = true));
+    if (this._color != color) {
+      this._color = color;
+      this._dirty = true;
+    }
   }
   setSecondColor(second_color: string) {
-    this._secondColor != second_color &&
-      ((this._secondColor = second_color), (this._dirty = true));
+    if (this._secondColor != second_color) {
+      this._secondColor = second_color;
+      this._dirty = true;
+    }
   }
   setValue(value: string) {
-    value != this._value && ((this._value = value), (this._dirty = true));
+    if (value != this._value) {
+      this._value = value;
+      this._dirty = true;
+    }
   }
   setUsingRoundedFrame(using_rounded_frame: boolean) {
-    using_rounded_frame != this._usingRoundedFrame &&
-      ((this._usingRoundedFrame = using_rounded_frame), (this._dirty = true));
+    if (using_rounded_frame != this._usingRoundedFrame) {
+      this._usingRoundedFrame = using_rounded_frame;
+      this._dirty = true;
+    }
   }
   setUsingFrame(using_frame: boolean) {
-    using_frame != this._usingFrame &&
-      ((this._usingFrame = using_frame), (this._dirty = true));
+    if (using_frame != this._usingFrame) {
+      this._usingFrame = using_frame;
+      this._dirty = true;
+    }
   }
   calcAngVector(angle: number) {
     this._angX = Math.sin(angle) * this._d;
@@ -978,14 +1046,14 @@ class StyleText {
     }
     if (this._dirty) {
       this._dirty = false;
-      let _canvas = this._canvas,
+      const _canvas = this._canvas,
         _ctx = this._ctx!,
         _value = this._value,
-        _scale = this._scale,
         _size = this._size,
         bold_text = "Bold " + _size + this._font;
+      let _scale = this._scale;
       _ctx.font = bold_text;
-      let text_width = _ctx.measureText(_value).width,
+      const text_width = _ctx.measureText(_value).width,
         _vmargin = Math.floor(0.2 * _size);
       _canvas.width = (text_width + 6 + 10 + 2 * this._d) * _scale;
       _canvas.height =
@@ -993,25 +1061,26 @@ class StyleText {
         _scale;
       _ctx.font = bold_text;
       _ctx.scale(_scale, _scale);
-      this._usingFrame &&
-        ((_ctx.globalAlpha = 1),
-        (_ctx.fillStyle = "#000000"),
-        _ctx.moveTo(this._angX, this._angY + 15 * num_scale_factor),
+      if (this._usingFrame) {
+        _ctx.globalAlpha = 1;
+        _ctx.fillStyle = "#000000";
+        _ctx.moveTo(this._angX, this._angY + 15 * num_scale_factor);
         _ctx.lineTo(
           _canvas.width + this._angX - 4 * num_scale_factor,
           this._angY + 7 * num_scale_factor,
-        ),
+        );
         _ctx.lineTo(
           _canvas.width + this._angX - 15 * num_scale_factor,
           _canvas.height + this._angY - 9 * num_scale_factor,
-        ),
+        );
         _ctx.lineTo(
           this._angX + 5 * num_scale_factor,
           _canvas.height + this._angY - 17 * num_scale_factor,
-        ),
-        _ctx.fill());
-      this._usingRoundedFrame &&
-        ((_ctx.globalAlpha = 0.3),
+        );
+        _ctx.fill();
+      }
+      if (this._usingRoundedFrame) {
+        _ctx.globalAlpha = 0.3;
         func_drawRoundedRectangle(
           _ctx,
           0,
@@ -1019,16 +1088,18 @@ class StyleText {
           _canvas.width,
           _canvas.height,
           40,
-        ),
-        (_ctx.globalAlpha = 1));
-      for (let _extrude = this._extrude; 0 <= _extrude; _extrude--)
-        (_scale = _extrude),
-          (_ctx.fillStyle = 0 == _extrude ? this._color : this._secondColor),
-          _ctx.fillText(
-            _value,
-            8 + this._d,
-            _size - _vmargin / 2 + _scale + this._d + this._addTop,
-          );
+        );
+        _ctx.globalAlpha = 1;
+      }
+      for (let _extrude = this._extrude; 0 <= _extrude; _extrude--) {
+        _scale = _extrude;
+        _ctx.fillStyle = 0 == _extrude ? this._color : this._secondColor;
+        _ctx.fillText(
+          _value,
+          8 + this._d,
+          _size - _vmargin / 2 + _scale + this._d + this._addTop,
+        );
+      }
     }
     return this._canvas;
   }
@@ -1071,14 +1142,15 @@ class Assets {
   }
   loadGameSpritesheetFrames() {
     for (let b = gameSheetInfo.length, e = 0; e < b; e++) {
-      let gamesheet_mapping = gameSheetInfo[e],
+      const gamesheet_mapping = gameSheetInfo[e],
         obj_frameImage = new FrameImage();
       obj_frameImage.setFrameInfo(gamesheet_mapping, this.gameSheet);
       this.frames[gamesheet_mapping[0]] = obj_frameImage;
     }
-    for (let e = 1, b; 8 >= e; e++)
-      (b = this.frames["plane" + e].renderTintedFrame("#FFFFFF").canvas),
-        (this.whitePlaneImages["plane" + e] = b);
+    for (let e = 1, b; 8 >= e; e++) {
+      b = this.frames["plane" + e].renderTintedFrame("#FFFFFF").canvas;
+      this.whitePlaneImages["plane" + e] = b;
+    }
     for (let e = 0; 5 >= e; e++) this.planes[e] = [];
     this.loadPlaneImages();
     for (let e = 0; 5 >= e; e++) {
@@ -1091,10 +1163,10 @@ class Assets {
     }
   }
   loadPlaneImages() {
-    let f = [],
+    const f = [],
       d = [];
     for (let a = 1; 8 >= a; a++) {
-      let c = this.frames["plane" + a];
+      const c = this.frames["plane" + a];
       f.push(c);
       d.push(c.renderTintedFrame("rgba(0,100,255,1.0)"));
     }
@@ -1102,10 +1174,9 @@ class Assets {
     this.planeFramesReflex = d;
   }
   loadPlaneDecal(b: number, e: number) {
-    let d: FrameImage[] = [];
+    const d: FrameImage[] = [];
     for (let f = list_decal_colors[e], a = 1; 8 >= a; a++) {
-      let c;
-      c = this.frames["decal" + b + "_" + a].generateTintImage2(
+      const c = this.frames["decal" + b + "_" + a].generateTintImage2(
         f.r,
         f.g,
         f.b,
@@ -1116,18 +1187,19 @@ class Assets {
     this.planes[b][e] = d;
   }
   loadAnimations() {
-    let obj_animation = new Animation(),
+    const obj_animation1 = new Animation(),
       obj_animation2 = new Animation();
-    for (let f = 0; 13 > f; f++)
-      obj_animation.addFrame(this.frames["s" + f]),
-        obj_animation2.addFrame(
-          this.frames["s" + f].renderTintedFrame("#2b9bf5"),
-        );
-    obj_animation.setInterval(1e3 / 30);
-    objG_animationManager.addAnimationInfo("splash", obj_animation);
+    for (let f = 0; 13 > f; f++) {
+      obj_animation1.addFrame(this.frames["s" + f]);
+      obj_animation2.addFrame(
+        this.frames["s" + f].renderTintedFrame("#2b9bf5"),
+      );
+    }
+    obj_animation1.setInterval(1e3 / 30);
+    objG_animationManager.addAnimationInfo("splash", obj_animation1);
     obj_animation2.setInterval(1e3 / 30);
     objG_animationManager.addAnimationInfo("splashReflex", obj_animation2);
-    obj_animation = new Animation();
+    const obj_animation = new Animation();
     obj_animation.addFrame(this.frames.e0);
     obj_animation.addFrame(this.frames.e0);
     obj_animation.addFrame(this.frames.e2);
@@ -1155,45 +1227,49 @@ class Assets {
     objG_animationManager.addAnimationInfo("explosion", obj_animation);
   }
   generateTintedKillIcon(r: number, g: number, b: number, color: string) {
-    let img_iconkill = objG_assets.frames.iconkill;
-    let frameIconR = objG_assets.frames.killR;
-    let img_rgbk = img_iconkill.generateRGBKs();
-    let img_iconkill_tinted = img_iconkill.generateTintImage(img_rgbk, r, g, b);
-    let canvas = document.createElement("canvas");
+    const img_iconkill = objG_assets.frames.iconkill;
+    const frameIconR = objG_assets.frames.killR;
+    const img_rgbk = img_iconkill.generateRGBKs();
+    const img_iconkill_tinted = img_iconkill.generateTintImage(
+      img_rgbk,
+      r,
+      g,
+      b,
+    );
+    const canvas = document.createElement("canvas");
     canvas.width = img_iconkill_tinted.width;
     canvas.height = img_iconkill_tinted.height;
-    let ctx = canvas.getContext("2d")!;
+    const ctx = canvas.getContext("2d")!;
     ctx.drawImage(img_iconkill_tinted.canvas, 0, 0);
-    let img_killR_tinted = frameIconR.renderTintedFrame(color);
+    const img_killR_tinted = frameIconR.renderTintedFrame(color);
     img_killR_tinted.x = img_iconkill.width / 2;
     img_killR_tinted.y = img_iconkill.height / 2;
     img_killR_tinted.draw(ctx);
     return canvas;
   }
   generateHudIcons() {
-    let scale,
-      center_offset,
-      shift2Y = 20,
+    let scale, center_offset;
+    const shift2Y = 20,
       shift2X = 160;
 
-    let canvas2 = document.createElement("canvas");
-    let canvas21 = this.generateTintedKillIcon(205, 154, 109, "#FFFFFF");
-    let canvas22 = this.generateTintedKillIcon(172, 121, 76, "#BBBBBB");
-    let ctx2 = canvas2.getContext("2d")!;
-    let ctx21 = canvas21.getContext("2d")!;
-    let ctx22 = canvas22.getContext("2d")!;
+    const canvas2 = document.createElement("canvas");
+    const canvas21 = this.generateTintedKillIcon(205, 154, 109, "#FFFFFF");
+    const canvas22 = this.generateTintedKillIcon(172, 121, 76, "#BBBBBB");
+    const ctx2 = canvas2.getContext("2d")!;
+    const ctx21 = canvas21.getContext("2d")!;
+    const ctx22 = canvas22.getContext("2d")!;
     canvas2.width = canvas21.width;
     canvas2.height = canvas21.height + 30;
     ctx2.drawImage(ctx22.canvas, 0, 0);
     ctx2.drawImage(ctx21.canvas, 0, 30);
     this.doubleKillCanvas = canvas2;
 
-    let canvas3 = document.createElement("canvas");
-    let canvas31 = this.generateTintedKillIcon(167, 176, 185, "#FFFFFF");
-    let canvas32 = this.generateTintedKillIcon(129, 138, 148, "#BBBBBB");
-    let ctx3 = canvas3.getContext("2d")!;
-    let ctx31 = canvas31.getContext("2d")!;
-    let ctx32 = canvas32.getContext("2d")!;
+    const canvas3 = document.createElement("canvas");
+    const canvas31 = this.generateTintedKillIcon(167, 176, 185, "#FFFFFF");
+    const canvas32 = this.generateTintedKillIcon(129, 138, 148, "#BBBBBB");
+    const ctx3 = canvas3.getContext("2d")!;
+    const ctx31 = canvas31.getContext("2d")!;
+    const ctx32 = canvas32.getContext("2d")!;
     canvas3.width = canvas31.width + 70;
     canvas3.height = canvas31.height + 10;
     scale = 0.9;
@@ -1208,14 +1284,14 @@ class Assets {
     ctx3.drawImage(ctx31.canvas, center_offset, 10);
     this.tripleKillCanvas = canvas3;
 
-    let canvas4 = document.createElement("canvas");
-    let canvas41 = this.generateTintedKillIcon(240, 164, 0, "#FFFFFF");
-    let canvas42 = this.generateTintedKillIcon(200, 124, 0, "#ddaf63");
-    let canvas43 = this.generateTintedKillIcon(158, 98, 0, "#b25c5c");
-    let ctx4 = canvas4.getContext("2d")!;
-    let ctx41 = canvas41.getContext("2d")!;
-    let ctx42 = canvas42.getContext("2d")!;
-    let ctx43 = canvas43.getContext("2d")!;
+    const canvas4 = document.createElement("canvas");
+    const canvas41 = this.generateTintedKillIcon(240, 164, 0, "#FFFFFF");
+    const canvas42 = this.generateTintedKillIcon(200, 124, 0, "#ddaf63");
+    const canvas43 = this.generateTintedKillIcon(158, 98, 0, "#b25c5c");
+    const ctx4 = canvas4.getContext("2d")!;
+    const ctx41 = canvas41.getContext("2d")!;
+    const ctx42 = canvas42.getContext("2d")!;
+    const ctx43 = canvas43.getContext("2d")!;
     canvas4.width = canvas41.width + shift2X;
     canvas4.height = canvas41.height + 1.5 * shift2Y;
     scale = 0.95;
@@ -1236,14 +1312,14 @@ class Assets {
     ctx4.drawImage(ctx41.canvas, center_offset, 1.5 * shift2Y);
     this.quadKillCanvas = canvas4;
 
-    let canvas5 = document.createElement("canvas");
-    let canvas51 = this.generateTintedKillIcon(222, 0, 0, "#FFFFFF");
-    let canvas52 = this.generateTintedKillIcon(172, 0, 0, "#d68080");
-    let canvas53 = this.generateTintedKillIcon(133, 0, 0, "#b25c5c");
-    let ctx5 = canvas5.getContext("2d")!;
-    let ctx51 = canvas51.getContext("2d")!;
-    let ctx52 = canvas52.getContext("2d")!;
-    let ctx53 = canvas53.getContext("2d")!;
+    const canvas5 = document.createElement("canvas");
+    const canvas51 = this.generateTintedKillIcon(222, 0, 0, "#FFFFFF");
+    const canvas52 = this.generateTintedKillIcon(172, 0, 0, "#d68080");
+    const canvas53 = this.generateTintedKillIcon(133, 0, 0, "#b25c5c");
+    const ctx5 = canvas5.getContext("2d")!;
+    const ctx51 = canvas51.getContext("2d")!;
+    const ctx52 = canvas52.getContext("2d")!;
+    const ctx53 = canvas53.getContext("2d")!;
     canvas5.width = canvas51.width + shift2X;
     canvas5.height = canvas51.height + 1.5 * shift2Y;
     center_offset = canvas5.width / 2 - (canvas51.width / 2) * 0.65;
@@ -1276,16 +1352,16 @@ class Assets {
     e: (b: HTMLCanvasElement) => void,
     f: string,
   ) {
-    let d = document.createElement("canvas"),
+    const d = document.createElement("canvas"),
       a = d.getContext("2d")!,
       c = b.width,
       g = b.height;
     d.width = c;
     d.height = g;
-    let h = document.createElement("canvas");
+    const h = document.createElement("canvas");
     h.width = c;
     h.height = g;
-    let ctx = h.getContext("2d")!;
+    const ctx = h.getContext("2d")!;
     ctx.fillStyle = f;
     ctx.fillRect(0, 0, h.width, h.height);
     ctx.globalCompositeOperation = "destination-atop";
@@ -1295,13 +1371,13 @@ class Assets {
     e(d);
   }
   verifyWarshipLoaded() {
-    3 == this.warshipTextureLoadCount && (this.warshipLoaded = true);
+    if (3 == this.warshipTextureLoadCount) this.warshipLoaded = true;
   }
   loadWarshipEvent() {
-    this.warshipLoaded ||
-      ((this.warshipImage = new Image()),
-      (this.warshipImage.src = "images/events/battleship.png"),
-      (this.warshipImage.onload = () => {
+    if (!this.warshipLoaded) {
+      this.warshipImage = new Image();
+      this.warshipImage.src = "images/events/battleship.png";
+      this.warshipImage.onload = () => {
         objG_assets.warshipLoaded = true;
         objG_assets.loadTintImage(
           objG_assets.warshipImage,
@@ -1312,25 +1388,26 @@ class Assets {
           },
           "#FFFFFF",
         );
-      }),
-      (this.cannonImage = new Image()),
-      (this.cannonImage.src = "images/events/shipcannon.png"),
-      (this.cannonImage.onload = () => {
+      };
+      this.cannonImage = new Image();
+      this.cannonImage.src = "images/events/shipcannon.png";
+      this.cannonImage.onload = () => {
         objG_assets.warshipTextureLoadCount++;
         objG_assets.verifyWarshipLoaded();
-      }),
-      (this.warshipIcon = new Image()),
-      (this.warshipIcon.src = "images/events/warshipIcon.png"),
-      (this.warshipIcon.onload = () => {
+      };
+      this.warshipIcon = new Image();
+      this.warshipIcon.src = "images/events/warshipIcon.png";
+      this.warshipIcon.onload = () => {
         objG_assets.warshipTextureLoadCount++;
         objG_assets.verifyWarshipLoaded();
-      }));
+      };
+    }
   }
   loadAsteroidEvent() {
-    this.asteroidLoaded ||
-      ((this.asteroidImage = new Image()),
-      (this.asteroidImage.src = "images/events/asteroid.png"),
-      (this.asteroidImage.onload = () => {
+    if (!this.asteroidLoaded) {
+      this.asteroidImage = new Image();
+      this.asteroidImage.src = "images/events/asteroid.png";
+      this.asteroidImage.onload = () => {
         objG_assets.asteroidLoaded = true;
         objG_assets.loadTintImage(
           objG_assets.asteroidImage,
@@ -1339,9 +1416,10 @@ class Assets {
           },
           "#FF3333",
         );
-      }),
-      (this.blinkImage = new Image()),
-      (this.blinkImage.src = "images/events/blink.png"));
+      };
+      this.blinkImage = new Image();
+      this.blinkImage.src = "images/events/blink.png";
+    }
   }
 }
 class InputManager {
@@ -1357,97 +1435,97 @@ class InputManager {
       f = 0,
       d = 0;
     const keydown = (ev: KeyboardEvent) => {
-      67 == ev.keyCode && bool_following_plane && eb
-        ? setTimeout(() => {
-            func_displayCopyLink();
-          }, 10)
-        : bool_following_plane ||
-          (32 == ev.keyCode
-            ? Z && objG_wsConnection.sendShooting(true)
-            : 188 != ev.keyCode &&
-              49 != ev.keyCode &&
-              (222 == ev.keyCode
-                ? (bool_drawUI = !bool_drawUI)
-                : 51 == ev.keyCode
-                  ? ((bool_drawGradient = !bool_drawGradient),
-                    console.log("Toggled Gradient to " + bool_drawGradient))
-                  : 52 == ev.keyCode
-                    ? ((bool_drawClouds = !bool_drawClouds),
-                      console.log("Toggled drawClouds to " + bool_drawClouds))
-                    : 53 == ev.keyCode
-                      ? ((bool_drawWater = !bool_drawWater),
-                        console.log("Toggled drawWater to " + bool_drawWater))
-                      : 54 == ev.keyCode
-                        ? ((bool_drawExplosions = !bool_drawExplosions),
-                          console.log(
-                            "Toggled drawExplosions to " + bool_drawExplosions,
-                          ))
-                        : 55 == ev.keyCode
-                          ? ((bool_drawSun = !bool_drawSun),
-                            console.log("Toggled drawSun to " + bool_drawSun))
-                          : 56 == ev.keyCode
-                            ? ((bool_drawItems = !bool_drawItems),
-                              console.log(
-                                "Toggled drawItems to " + bool_drawItems,
-                              ))
-                            : 57 == ev.keyCode
-                              ? ((bool_drawTrails = !bool_drawTrails),
-                                console.log(
-                                  "Toggled drawTrails to " + bool_drawTrails,
-                                ))
-                              : 48 == ev.keyCode
-                                ? ((bool_drawSplashes = !bool_drawSplashes),
-                                  console.log(
-                                    "Toggled drawSplashes to " +
-                                      bool_drawSplashes,
-                                  ))
-                                : 27 == ev.keyCode
-                                  ? (ads.func_showAds(),
-                                    (num_max_volume =
-                                      0.05 * num_setting_muteVol),
-                                    $("#overlay").show(),
-                                    funcR_hc_showPf(),
-                                    (bool_following_plane = true),
-                                    Z ||
-                                      ((ka = 1),
-                                      (objG_player_plane = undefined)))
-                                  : 70 == ev.keyCode &&
-                                    (document.fullscreenElement
-                                      ? document.exitFullscreen &&
-                                        document.exitFullscreen()
-                                      : document.documentElement
-                                          .requestFullscreen &&
-                                        document.documentElement.requestFullscreen()),
-              objGUI_gameInfo.clearTip()));
+      if (67 == ev.keyCode && bool_following_plane && eb)
+        setTimeout(() => {
+          func_displayCopyLink();
+        }, 10);
+      else if (!bool_following_plane) {
+        if (32 == ev.keyCode) {
+          if (Z) objG_wsConnection.sendShooting(true);
+        } else if (188 != ev.keyCode && 49 != ev.keyCode) {
+          if (222 == ev.keyCode) bool_drawUI = !bool_drawUI;
+          else if (51 == ev.keyCode) {
+            bool_drawGradient = !bool_drawGradient;
+            console.log("Toggled Gradient to " + bool_drawGradient);
+          } else if (52 == ev.keyCode) {
+            bool_drawClouds = !bool_drawClouds;
+            console.log("Toggled drawClouds to " + bool_drawClouds);
+          } else if (53 == ev.keyCode) {
+            bool_drawWater = !bool_drawWater;
+            console.log("Toggled drawWater to " + bool_drawWater);
+          } else if (54 == ev.keyCode) {
+            bool_drawExplosions = !bool_drawExplosions;
+            console.log("Toggled drawExplosions to " + bool_drawExplosions);
+          } else if (55 == ev.keyCode) {
+            bool_drawSun = !bool_drawSun;
+            console.log("Toggled drawSun to " + bool_drawSun);
+          } else if (56 == ev.keyCode) {
+            bool_drawItems = !bool_drawItems;
+            console.log("Toggled drawItems to " + bool_drawItems);
+          } else if (57 == ev.keyCode) {
+            bool_drawTrails = !bool_drawTrails;
+            console.log("Toggled drawTrails to " + bool_drawTrails);
+          } else if (48 == ev.keyCode) {
+            bool_drawSplashes = !bool_drawSplashes;
+            console.log("Toggled drawSplashes to " + bool_drawSplashes);
+          } else if (27 == ev.keyCode) {
+            ads.func_showAds();
+            num_max_volume = 0.05 * num_setting_muteVol;
+            $("#overlay").show();
+            funcR_hc_showPf();
+            bool_following_plane = true;
+            if (!Z) {
+              ka = 1;
+              objG_player_plane = undefined;
+            }
+          } else if (70 == ev.keyCode) {
+            if (document.fullscreenElement) {
+              if (document.exitFullscreen) document.exitFullscreen();
+            } else {
+              if (document.documentElement.requestFullscreen)
+                document.documentElement.requestFullscreen();
+            }
+            objGUI_gameInfo.clearTip();
+          }
+        }
+      }
     };
     const keyup = (ev: KeyboardEvent) => {
-      bool_following_plane ||
-        32 != ev.keyCode ||
-        (Z
-          ? objG_wsConnection.sendShooting(false)
-          : (1 == ka
-              ? ((ka = 0), objG_followMode.followTopPlayer())
-              : ((ka = 1), (objG_player_plane = undefined)),
-            objG_eventManager.isSpaceWars() &&
-              setTimeout(objG_followMode.respawnParticles, 500)));
+      if (!bool_following_plane && 32 == ev.keyCode) {
+        if (Z) objG_wsConnection.sendShooting(false);
+        else {
+          if (1 == ka) {
+            ka = 0;
+            objG_followMode.followTopPlayer();
+          } else {
+            ka = 1;
+            objG_player_plane = undefined;
+          }
+          if (objG_eventManager.isSpaceWars())
+            setTimeout(objG_followMode.respawnParticles, 500);
+        }
+      }
     };
     const mousedown = (ev: MouseEvent) => {
-      bool_following_plane ||
-        (Z
-          ? 0 == ev.button && objG_wsConnection.sendShooting(true)
-          : 0 == ka
-            ? 0 == ev.button
-              ? objG_followMode.PlayerFollowing(true)
-              : 2 == ev.button && objG_followMode.PlayerFollowing(false)
-            : ((bool_isLeftMousePressed = true),
-              (f = ev.clientX),
-              (d = ev.clientY)));
+      if (!bool_following_plane) {
+        if (Z) {
+          if (0 == ev.button) objG_wsConnection.sendShooting(true);
+        } else if (0 == ka) {
+          if (0 == ev.button) objG_followMode.PlayerFollowing(true);
+          else if (2 == ev.button) objG_followMode.PlayerFollowing(false);
+        } else {
+          bool_isLeftMousePressed = true;
+          f = ev.clientX;
+          d = ev.clientY;
+        }
+      }
     };
     const mouseup = (ev: MouseEvent) => {
-      bool_following_plane ||
-        (Z
-          ? 0 == ev.button && objG_wsConnection.sendShooting(false)
-          : (bool_isLeftMousePressed = false));
+      if (!bool_following_plane) {
+        if (Z) {
+          if (0 == ev.button) objG_wsConnection.sendShooting(false);
+        } else bool_isLeftMousePressed = false;
+      }
     };
     const mousemove = (ev: MouseEvent) => {
       if (
@@ -1457,13 +1535,13 @@ class InputManager {
         (rc = ev.clientY),
         bool_isLeftMousePressed)
       ) {
-        let c = ev.clientY - d,
-          g = objGUI_anchor.x - (ev.clientX - f),
+        const c = ev.clientY - d;
+        let g = objGUI_anchor.x - (ev.clientX - f),
           h = objGUI_anchor.y - c;
-        h < -room_height / 2
-          ? (h = -room_height / 2)
-          : h > room_height / 2 && (h = room_height / 2);
-        g < -Gborder_X ? (g = -Gborder_X) : g > Gborder_X && (g = Gborder_X);
+        if (h < -room_height / 2) h = -room_height / 2;
+        else if (h > room_height / 2) h = room_height / 2;
+        if (g < -Gborder_X) g = -Gborder_X;
+        else if (g > Gborder_X) g = Gborder_X;
         objGUI_anchor.setPosition(g, h);
         f = ev.clientX;
         d = ev.clientY;
@@ -1488,18 +1566,22 @@ class ParticleImpacts {
       else if (a.weapon == id_weapon_railgun) {
         e.lineWidth = 2 + 5 * (1 - a.a);
         e.beginPath();
-        (c = Math.floor(255 * a.a)),
-          (g = e.createLinearGradient(
-            a.hitPosition.x,
-            a.hitPosition.y,
-            a.origPosition.x,
-            a.origPosition.y,
-          ));
-        0 > a.a && (a.a = 0);
+        c = Math.floor(255 * a.a);
+        g = e.createLinearGradient(
+          a.hitPosition.x,
+          a.hitPosition.y,
+          a.origPosition.x,
+          a.origPosition.y,
+        );
+        if (0 > a.a) a.a = 0;
         h = 255;
-        1 == a.special
-          ? ((h = 0), (c = Math.floor(0.4 * c)))
-          : 2 == a.special && ((h = 200), (c = Math.floor(0.1 * c)));
+        if (1 == a.special) {
+          h = 0;
+          c = Math.floor(0.4 * c);
+        } else if (2 == a.special) {
+          h = 200;
+          c = Math.floor(0.1 * c);
+        }
         g.addColorStop(0, "rgba(255," + h + "," + c + "," + a.a + ")");
         g.addColorStop(a.a, "rgba(255," + h + "," + c + "," + a.a + ")");
         g.addColorStop(1, "rgba(255," + h + "," + c + ",0.0)");
@@ -1507,87 +1589,96 @@ class ParticleImpacts {
         e.moveTo(a.origPosition.x, a.origPosition.y);
         e.lineTo(a.hitPosition.x, a.hitPosition.y);
         e.stroke();
-        (g = (a.hitPosition.x - a.origPosition.x) / 100),
-          (h = (a.hitPosition.y - a.origPosition.y) / 100),
-          (q = a.angle),
-          (n = a.origPosition.x),
-          (k = a.origPosition.y),
-          (m = 0);
+        g = (a.hitPosition.x - a.origPosition.x) / 100;
+        h = (a.hitPosition.y - a.origPosition.y) / 100;
+        q = a.angle;
+        n = a.origPosition.x;
+        k = a.origPosition.y;
+        m = 0;
         e.beginPath();
         e.lineWidth = 2 == a.special ? 10 : 4;
         l = 5;
-        a.special && (l = 8);
+        if (a.special) l = 8;
         for (c = 0; 100 > c; c++) {
-          (m = m + Math.PI / 4),
-            (n = Math.sin(m - 4 * a.a) * (6 + (1 - a.a) * l)),
-            (y = n * Math.cos(q)),
-            (r = n * Math.sin(q)),
-            (n = a.origPosition.x + g * c),
-            (k = a.origPosition.y + h * c);
-          0 == c ? e.moveTo(n + y, k + r) : e.lineTo(n + y, k + r);
+          m = m + Math.PI / 4;
+          n = Math.sin(m - 4 * a.a) * (6 + (1 - a.a) * l);
+          y = n * Math.cos(q);
+          r = n * Math.sin(q);
+          n = a.origPosition.x + g * c;
+          k = a.origPosition.y + h * c;
+          if (0 == c) e.moveTo(n + y, k + r);
+          else e.lineTo(n + y, k + r);
         }
         e.stroke();
         a.a -= 0.04;
-        0 > a.a && f.push(a);
-      } else if (objG_eventManager.isSpaceWars())
-        (c = 45),
-          a.isKing && (c = 90),
-          (g = a.curPosition.x),
-          (h = a.curPosition.y),
-          (q = a.curPosition.x - a.origPosition.x),
-          (m = a.curPosition.y - a.origPosition.y),
-          (q = Math.sqrt(q * q + m * m)),
-          q > c
-            ? ((q = a.curPosition.x - a.direction.x * c),
-              (m = a.curPosition.y - a.direction.y * c))
-            : ((q = a.origPosition.x), (m = a.origPosition.y)),
-          a.isKing
-            ? ((e.shadowColor = "green"),
-              (e.lineWidth = 9),
-              (e.strokeStyle = "rgba(50,255,50,0.7)"),
-              e.beginPath(),
-              e.moveTo(g, h),
-              e.lineTo(q, m),
-              e.stroke(),
-              (e.lineWidth = 4),
-              (e.strokeStyle = "rgba(150,255,150,1.0)"))
-            : a.weapon != id_weapon_trishoot
-              ? ((e.shadowColor = "red"),
-                (e.lineWidth = 7),
-                (e.strokeStyle = "rgba(255,50,50,1.0)"),
-                e.beginPath(),
-                e.moveTo(g, h),
-                e.lineTo(q, m),
-                e.stroke(),
-                (e.lineWidth = 3),
-                (e.strokeStyle = "rgba(255,150,150,1.0)"))
-              : ((e.shadowColor = "red"),
-                (e.lineWidth = 7),
-                (e.strokeStyle = "rgba(255,126,39,1.0)"),
-                e.beginPath(),
-                e.moveTo(g, h),
-                e.lineTo(q, m),
-                e.stroke(),
-                (e.lineWidth = 3),
-                (e.strokeStyle = "rgba(255,255,255,1.0)")),
-          e.beginPath(),
-          e.moveTo(g, h),
-          e.lineTo(q, m),
-          e.stroke(),
-          a.finish
-            ? f.push(a)
-            : ((c = a.curPosition.x - a.hitPosition.x),
-              (g = a.curPosition.y - a.hitPosition.y),
-              (c = Math.sqrt(c * c + g * g)),
-              (a.a -= 0.05),
-              (g = 70 + 10 * Math.random()),
-              c < g
-                ? ((a.finish = true),
-                  (a.curPosition.x = a.hitPosition.x),
-                  (a.curPosition.y = a.hitPosition.y))
-                : ((a.curPosition.x += a.direction.x * g),
-                  (a.curPosition.y += a.direction.y * g)));
-      else {
+        if (0 > a.a) f.push(a);
+      } else if (objG_eventManager.isSpaceWars()) {
+        c = 45;
+        if (a.isKing) c = 90;
+        g = a.curPosition.x;
+        h = a.curPosition.y;
+        q = a.curPosition.x - a.origPosition.x;
+        m = a.curPosition.y - a.origPosition.y;
+        q = Math.sqrt(q * q + m * m);
+        if (q > c) {
+          q = a.curPosition.x - a.direction.x * c;
+          m = a.curPosition.y - a.direction.y * c;
+        } else {
+          q = a.origPosition.x;
+          m = a.origPosition.y;
+        }
+        if (a.isKing) {
+          e.shadowColor = "green";
+          e.lineWidth = 9;
+          e.strokeStyle = "rgba(50,255,50,0.7)";
+          e.beginPath();
+          e.moveTo(g, h);
+          e.lineTo(q, m);
+          e.stroke();
+          e.lineWidth = 4;
+          e.strokeStyle = "rgba(150,255,150,1.0)";
+        } else if (a.weapon != id_weapon_trishoot) {
+          e.shadowColor = "red";
+          e.lineWidth = 7;
+          e.strokeStyle = "rgba(255,50,50,1.0)";
+          e.beginPath();
+          e.moveTo(g, h);
+          e.lineTo(q, m);
+          e.stroke();
+          e.lineWidth = 3;
+          e.strokeStyle = "rgba(255,150,150,1.0)";
+        } else {
+          e.shadowColor = "red";
+          e.lineWidth = 7;
+          e.strokeStyle = "rgba(255,126,39,1.0)";
+          e.beginPath();
+          e.moveTo(g, h);
+          e.lineTo(q, m);
+          e.stroke();
+          e.lineWidth = 3;
+          e.strokeStyle = "rgba(255,255,255,1.0)";
+        }
+        e.beginPath();
+        e.moveTo(g, h);
+        e.lineTo(q, m);
+        e.stroke();
+        if (a.finish) f.push(a);
+        else {
+          c = a.curPosition.x - a.hitPosition.x;
+          g = a.curPosition.y - a.hitPosition.y;
+          c = Math.sqrt(c * c + g * g);
+          a.a -= 0.05;
+          g = 70 + 10 * Math.random();
+          if (c < g) {
+            a.finish = true;
+            a.curPosition.x = a.hitPosition.x;
+            a.curPosition.y = a.hitPosition.y;
+          } else {
+            a.curPosition.x += a.direction.x * g;
+            a.curPosition.y += a.direction.y * g;
+          }
+        }
+      } else {
         e.lineWidth = 3;
         e.beginPath();
         c = 140;
@@ -1596,44 +1687,50 @@ class ParticleImpacts {
         q = a.curPosition.x - a.origPosition.x;
         m = a.curPosition.y - a.origPosition.y;
         q = Math.sqrt(q * q + m * m);
-        q > c
-          ? ((q = a.curPosition.x - a.direction.x * c),
-            (m = a.curPosition.y - a.direction.y * c))
-          : ((q = a.origPosition.x), (m = a.origPosition.y));
-        (c = e),
-          (n = r = y = l = undefined),
-          (n = q - g),
-          (r = m - h),
-          (p = g + 0.05 * n),
-          (k = h + 0.05 * r),
-          (l = Math.sqrt(n * n + r * r)),
-          (n = n / l),
-          (r = r / l),
-          (n = 3 * n),
-          (r = 3 * r),
-          (l = p + -r),
-          (y = k + n),
-          (r = p - -r),
-          (n = k - n);
+        if (q > c) {
+          q = a.curPosition.x - a.direction.x * c;
+          m = a.curPosition.y - a.direction.y * c;
+        } else {
+          q = a.origPosition.x;
+          m = a.origPosition.y;
+        }
+        c = e;
+        n = r = y = l = undefined;
+        n = q - g;
+        r = m - h;
+        p = g + 0.05 * n;
+        k = h + 0.05 * r;
+        l = Math.sqrt(n * n + r * r);
+        n = n / l;
+        r = r / l;
+        n = 3 * n;
+        r = 3 * r;
+        l = p + -r;
+        y = k + n;
+        r = p - -r;
+        n = k - n;
         c.moveTo(g, h);
         c.lineTo(l, y);
         c.lineTo(q, m);
         c.lineTo(r, n);
         e.fillStyle = "rgba(255,255,255," + a.a + ")";
         e.fill();
-        a.finish
-          ? f.push(a)
-          : ((c = a.curPosition.x - a.hitPosition.x),
-            (g = a.curPosition.y - a.hitPosition.y),
-            (c = Math.sqrt(c * c + g * g)),
-            (a.a -= 0.05),
-            (g = 100),
-            c < g
-              ? ((a.finish = true),
-                (a.curPosition.x = a.hitPosition.x),
-                (a.curPosition.y = a.hitPosition.y))
-              : ((a.curPosition.x += a.direction.x * g),
-                (a.curPosition.y += a.direction.y * g)));
+        if (a.finish) f.push(a);
+        else {
+          c = a.curPosition.x - a.hitPosition.x;
+          g = a.curPosition.y - a.hitPosition.y;
+          c = Math.sqrt(c * c + g * g);
+          a.a -= 0.05;
+          g = 100;
+          if (c < g) {
+            a.finish = true;
+            a.curPosition.x = a.hitPosition.x;
+            a.curPosition.y = a.hitPosition.y;
+          } else {
+            a.curPosition.x += a.direction.x * g;
+            a.curPosition.y += a.direction.y * g;
+          }
+        }
       }
     }
     for (c = 0; c < f.length; c++)
@@ -1642,9 +1739,9 @@ class ParticleImpacts {
   }
   addShot(plane_id: number, x_gu: number, y_gu: number, weapon_id: number) {
     if (func_isTimeElapsed_50ms() && xa) {
-      let c = objD_planes[plane_id];
+      const c = objD_planes[plane_id];
       if (c) {
-        let g: ParticleImpacts.ImpactInfo = {};
+        const g: ParticleImpacts.ImpactInfo = {};
         g.id = plane_id;
         g.angle = c.angle;
         g.isKing = qa == plane_id;
@@ -1653,22 +1750,21 @@ class ParticleImpacts {
           y: 10 * y_gu,
         };
         g.special = 0;
-        objG_eventManager.isInstagib()
-          ? (g.special = 1)
-          : objG_eventManager.isSpaceWars() && (g.special = 2);
+        if (objG_eventManager.isInstagib()) g.special = 1;
+        else if (objG_eventManager.isSpaceWars()) g.special = 2;
         g.a = 1;
         g.weapon = weapon_id;
-        let rot_point = func_rotatePoint(0, -10, c.angle);
+        const rot_point = func_rotatePoint(0, -10, c.angle);
         let rot_x = c.x + rot_point.x;
-        let rot_y = c.y + rot_point.y;
+        const rot_y = c.y + rot_point.y;
         g.origPosition = {
           x: rot_x,
           y: rot_y,
         };
-        let hit_x = g.hitPosition.x - rot_x;
-        let hit_y = g.hitPosition.y - rot_y;
+        const hit_x = g.hitPosition.x - rot_x;
+        const hit_y = g.hitPosition.y - rot_y;
         if (weapon_id != id_weapon_superweapon) {
-          let diag = Math.sqrt(hit_x * hit_x + hit_y * hit_y);
+          const diag = Math.sqrt(hit_x * hit_x + hit_y * hit_y);
           g.direction = {
             x: hit_x / diag,
             y: hit_y / diag,
@@ -1685,27 +1781,28 @@ class ParticleImpacts {
             this.#inst_impact_list.push(g);
         }
         weapon_id = room_height / 2;
-        g.hitPosition.y > weapon_id &&
-          ((rot_x = hit_y / hit_x),
+        if (g.hitPosition.y > weapon_id) {
+          rot_x = hit_y / hit_x;
           obj_particleImpacts.addSplash(
             (weapon_id - (g.hitPosition.y - rot_x * g.hitPosition.x)) / rot_x,
             weapon_id + 6,
             1,
             false,
-          ));
+          );
+        }
       }
     }
   }
   addMissileImpact(x_gu: number, y_gu: number) {
-    let x = 10 * x_gu;
-    let y = 10 * y_gu;
+    const x = 10 * x_gu;
+    const y = 10 * y_gu;
     if (func_isInsideBox(x, y, 100) && func_isTimeElapsed_50ms()) {
-      let c = objG_animationManager.createAnimation("explosion");
+      const c = objG_animationManager.createAnimation("explosion");
       c.setScale(1);
       c.posX = x;
       c.posY = y;
       objG_animationManager.runAnimationBehind(c);
-      let sfx_vol =
+      const sfx_vol =
         1 - func_calculateDistance2D(x, y, H.x, H.y) / num_sound_max_distance;
       objG_sfxManager.playSound(str_sfxid_mexpl, sfx_vol, 1, const_Sa_3);
     }
@@ -1717,11 +1814,11 @@ class ParticleImpacts {
       func_isInsideBox(x, y, 100) &&
       func_isTimeElapsed_50ms()
     ) {
-      let anim_splash = objG_animationManager.createAnimation("splash"),
+      const anim_splash = objG_animationManager.createAnimation("splash"),
         anim_splashreflex =
           objG_animationManager.createAnimation("splashReflex");
       anim_splash.setScale(size);
-      randomize && (anim_splash.scaleX *= 1.2 + 0.4 * Math.random());
+      if (randomize) anim_splash.scaleX *= 1.2 + 0.4 * Math.random();
       anim_splash.posX = x;
       anim_splash.posY = y - (61 * anim_splash.scaleY) / 2;
       objG_animationManager.runAnimation(anim_splash);
@@ -1839,7 +1936,7 @@ class UI_GameInfo {
           let S: string | number = "\u221e";
           if (!R) {
             this.#ammo_count = objG_player_plane.GetAmmo();
-            -1 < this.#ammo_count && (S = this.#ammo_count);
+            if (-1 < this.#ammo_count) S = this.#ammo_count;
           }
           this.#stroke_ammo_count.setValue(S.toString());
           this.#canvasr_ammo_count = this.#stroke_ammo_count.render();
@@ -1918,7 +2015,7 @@ class UI_GameInfo {
       if (this.#warning_msg_txt) {
         P = 0.6 * canvas.height;
         K = (this.#m / 1e3) * 10;
-        1 < K && (K = 1);
+        if (1 < K) K = 1;
         if (!this.#style_warningmsg_txt) {
           r = 30;
           this.#style_warningmsg_txt = new StyleText(
@@ -2046,9 +2143,9 @@ class UI_GameInfo {
       0 < this.#list_plane_ids.length &&
       0 < Object.keys(objD_planes).length
     ) {
-      let obj_plane = objD_planes[this.#list_plane_ids[0]];
+      const obj_plane = objD_planes[this.#list_plane_ids[0]];
       if (obj_plane) {
-        let name = func_renameBlankPlayerNames(obj_plane.name);
+        const name = func_renameBlankPlayerNames(obj_plane.name);
         if (
           objG_player_plane &&
           this.#king_plane_id != obj_plane.id &&
@@ -2056,7 +2153,7 @@ class UI_GameInfo {
         )
           objG_sfxManager.playSound(str_sfxid_king, 1, 1, 1);
         this.#king_plane_id = obj_plane.id;
-        let font_size = 25;
+        const font_size = 25;
         let spaces = " ";
         if (!bool_setting_highQuality) spaces = "";
         this.#style_king_txt ??= new StyleText(
@@ -2161,11 +2258,11 @@ class UI_GameInfo {
   // }
   DrawScore(ctx: CanvasRenderingContext2D) {
     if (objG_player_plane && 0 < objG_player_plane.rank) {
-      let c = 16 * num_scale_factor,
-        d = "Arial Black";
-      let b = this.#lb_scale * num_scale_factor,
-        g = b,
-        h = 30 * num_scale_factor,
+      let c = 16 * num_scale_factor;
+      const d = "Arial Black",
+        b = this.#lb_scale * num_scale_factor;
+      let g = b;
+      const h = 30 * num_scale_factor,
         e = 5 * num_scale_factor,
         k = 10 * num_scale_factor,
         n = canvas_width - b - 5,
@@ -2220,7 +2317,7 @@ class UI_GameInfo {
   DrawWarmupTime(ctx: CanvasRenderingContext2D) {
     if (this.#U) {
       this.#U = false;
-      let c = objG_eventManager.endTime - frametime_millis;
+      const c = objG_eventManager.endTime - frametime_millis;
       if (0 > Math.floor(c)) return;
       this.#style_curr_event = new StyleText(
         23 * num_scale_factor,
@@ -2245,8 +2342,8 @@ class UI_GameInfo {
       this.#canvasr_warshipev_info = this.#style_warshipev_info.render();
     }
     if (this.#canvasr_warshipev_info) {
-      let c = 0.8 * canvas.height,
-        d;
+      const c = 0.8 * canvas.height;
+      let d;
       d = this.#canvasr_curr_event.width;
       d =
         this.#canvar_warmup_event.width > d
@@ -2313,7 +2410,7 @@ class UI_GameInfo {
       this.#canvasr_warshipev_info = this.#style_warshipev_info.render();
     }
     if (this.#canvasr_warshipev_info) {
-      let c = 0.04 * canvas.height,
+      const c = 0.04 * canvas.height,
         d =
           this.#canvasr_warshipev_info.width < this.#canvasr_curr_event.width
             ? this.#canvasr_curr_event.width
@@ -2352,7 +2449,7 @@ class UI_GameInfo {
       this.#canvasr_evt_winner_name = this.#style_evt_winner_name.render();
     }
     if (this.#canvasr_evt_winner && this.#canvasr_evt_winner_name) {
-      let c = 0.13 * canvas.height,
+      const c = 0.13 * canvas.height,
         d =
           this.#canvasr_evt_winner.width > this.#canvasr_evt_winner_name.width
             ? this.#canvasr_evt_winner.width
@@ -2395,7 +2492,7 @@ class UI_GameInfo {
       this.#canvasr_warship_rmreason = this.#style_warship_rmreason.render();
     }
     if (this.#canvasr_warship) {
-      let c = 0.13 * canvas.height,
+      const c = 0.13 * canvas.height,
         d =
           this.#canvasr_warship.width > this.#canvasr_warship_rmreason.width
             ? this.#canvasr_warship.width
@@ -2503,7 +2600,7 @@ class UI_GameInfo {
         return;
     }
     ctx.save();
-    let k = Math.sqrt(this.#ea);
+    const k = Math.sqrt(this.#ea);
     ctx.translate(0, -16);
     ctx.scale(k, k);
     ctx.translate(0, 16);
@@ -2536,29 +2633,29 @@ class UI_GameInfo {
       this.#V += 1e3;
       this.#U = true;
     }
-    0 < this.#na && (this.#na -= deltatime);
-    0 < this.#warship_remote_txt_timeout &&
-      (this.#warship_remote_txt_timeout -= deltatime);
+    if (0 < this.#na) this.#na -= deltatime;
+    if (0 < this.#warship_remote_txt_timeout)
+      this.#warship_remote_txt_timeout -= deltatime;
   }
   renderLeaderboard(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
     this.#lb_scale = 270;
     this.#lb_height = 0;
-    let d = 5 * num_scale_factor;
-    let b = 10 * num_scale_factor;
-    let head_lh = 23 * num_scale_factor;
-    let item_lh = 18 * num_scale_factor;
+    const d = 5 * num_scale_factor;
+    const b = 10 * num_scale_factor;
+    const head_lh = 23 * num_scale_factor;
+    const item_lh = 18 * num_scale_factor;
     let e;
-    let k = 60 * num_scale_factor;
+    const k = 60 * num_scale_factor;
     let n = 5 * num_scale_factor;
     let f = 32;
-    let font = "Arial Black";
+    const font = "Arial Black";
     let I = 0;
     let r;
     let y;
     let m;
     e = this.#lb_height += d + head_lh + d;
     m = this.#list_plane_ids.length;
-    10 < m && (m = 10);
+    if (10 < m) m = 10;
     for (let i = 0; i < m; i++) {
       r = objD_planes[this.#list_plane_ids[i]];
       if (r) {
@@ -2574,7 +2671,7 @@ class UI_GameInfo {
     this.#lb_height += n;
     canvas.width = this.#lb_width;
     canvas.height = this.#lb_height;
-    let item_font_style =
+    const item_font_style =
       item_lh + "px 'proxima-nova-1','proxima-nova-2', " + font;
     ctx.fillStyle = "rgba(0,0,0,0.3)";
     func_drawRoundedRectangle(
@@ -2604,10 +2701,10 @@ class UI_GameInfo {
       30 * num_scale_factor,
     );
     let txt = "LEADERBOARD";
-    objG_eventManager.isInstagib() && (txt = "KILLS");
+    if (objG_eventManager.isInstagib()) txt = "KILLS";
     ctx.font = head_lh + "px 'proxima-nova-1','proxima-nova-2', " + font;
     ctx.textBaseline = "hanging";
-    let width_name = ctx.measureText(txt).width;
+    const width_name = ctx.measureText(txt).width;
     ctx.fillStyle = "rgba(255,255,0,0.5)";
     ctx.fillText(txt, this.#lb_width / 2 - width_name / 2, d + 1);
     ctx.fillStyle = "rgba(178,32,0,1.0)";
@@ -2615,12 +2712,12 @@ class UI_GameInfo {
     ctx.font = item_font_style;
     e += n;
     for (let i = 0; i < m; i++) {
-      let obj_plane = objD_planes[this.#list_plane_ids[i]];
+      const obj_plane = objD_planes[this.#list_plane_ids[i]];
       if (obj_plane) {
         for (n = 2; 0 <= n; n--) {
           let txt_spacing = ". ";
           if (!obj_plane.inGame || obj_plane.id == qa) txt_spacing = ".     ";
-          let txt_lb_name =
+          const txt_lb_name =
             i + 1 + txt_spacing + func_renameBlankPlayerNames(obj_plane.name);
           let g = 0;
           if (0 != n) {
@@ -2635,14 +2732,14 @@ class UI_GameInfo {
           ctx.font = item_font_style;
           ctx.measureText(txt_lb_name);
           ctx.fillText(txt_lb_name, d, e + g);
-          let width_score = ctx.measureText(obj_plane.score.toString()).width;
+          const width_score = ctx.measureText(obj_plane.score.toString()).width;
           f = 1;
           I = 0;
           if (obj_plane.inGame) {
             if (obj_plane.id == qa) {
               ctx.save();
               y = 38;
-              9 == i && (y = 50);
+              if (9 == i) y = 50;
               ctx.translate(
                 y * num_scale_factor * f + I,
                 e + g + 7 * num_scale_factor * f,
@@ -2654,7 +2751,7 @@ class UI_GameInfo {
           } else {
             ctx.save();
             y = 38;
-            9 == i && (y = 50);
+            if (9 == i) y = 50;
             ctx.translate(
               y * num_scale_factor * f + I,
               e + g + 7 * num_scale_factor * f,
@@ -2691,7 +2788,7 @@ class UI_GameInfo {
     this.#center_txt_murderer = murderer;
   }
   showTip(tip_string: string) {
-    this.#tip_message_txt && this.clearTip();
+    if (this.#tip_message_txt) this.clearTip();
     this.#tip_message_txt = tip_string;
     this.#H = 0;
     this.#canvasr_tip_message = undefined;
@@ -2700,7 +2797,7 @@ class UI_GameInfo {
     this.#tip_message_txt = undefined;
   }
   showTargetLockedMessage() {
-    this.#missle_locked_txt || (this.#missle_locked_txt = "[ LOCKED ]");
+    if (!this.#missle_locked_txt) this.#missle_locked_txt = "[ LOCKED ]";
   }
   clearTargetLockedMessage() {
     this.#missle_locked_txt = undefined;
@@ -2728,7 +2825,10 @@ class UI_GameInfo {
   setLastWinner(winner_name: string, c: number) {
     this.#evt_winner_name = func_renameBlankPlayerNames(winner_name);
     console.log("Last Event Winner: " + winner_name);
-    c && ((this.#style_evt_winner = undefined), (this.#na = 6e3));
+    if (c) {
+      this.#style_evt_winner = undefined;
+      this.#na = 6e3;
+    }
   }
   setWarshipRemoved(warship_remove_txt?: string) {
     this.#warship_remove_txt = warship_remove_txt;
@@ -2740,15 +2840,19 @@ class UI_ActivityMessages {
   #rendered_canvas_list: HTMLCanvasElement[] = [];
   #item_add_time: number[] = [];
   update(deltatime: number) {
-    0 < this.#item_add_time.length &&
-      15e3 < frametime_millis - this.#item_add_time[0] &&
-      (this.#rendered_canvas_list.shift(), this.#item_add_time.shift());
+    if (
+      0 < this.#item_add_time.length &&
+      15e3 < frametime_millis - this.#item_add_time[0]
+    ) {
+      this.#rendered_canvas_list.shift();
+      this.#item_add_time.shift();
+    }
   }
   draw(e: CanvasRenderingContext2D) {
     e.globalAlpha = 1;
-    let d = canvas.height - 180 * num_scale_factor;
-    for (let key in this.#rendered_canvas_list) {
-      let a = parseInt(key);
+    const d = canvas.height - 180 * num_scale_factor;
+    for (const key in this.#rendered_canvas_list) {
+      const a = parseInt(key);
       e.drawImage(
         this.#rendered_canvas_list[a],
         25,
@@ -2761,13 +2865,13 @@ class UI_ActivityMessages {
     }
   }
   addActivityMessage(message_str: string) {
-    let d = new StyleStroke(14 * num_scale_factor, "#EEEEEE");
+    const d = new StyleStroke(14 * num_scale_factor, "#EEEEEE");
     d.setFont("px 'proxima-nova-1','proxima-nova-2', Arial Black");
     d.setValue("\u2022 " + message_str);
     d.setUsingRoundedFrame(true);
     d.setHMargin(10);
     d.setVMargin(4);
-    let canvas = d.render();
+    const canvas = d.render();
     this.#rendered_canvas_list.push(canvas);
     this.#item_add_time.push(+new Date());
     if (5 < this.#rendered_canvas_list.length) {
@@ -2776,7 +2880,7 @@ class UI_ActivityMessages {
     }
     for (let max = 0, d, i = 0; i < this.#rendered_canvas_list.length; i++) {
       d = this.#rendered_canvas_list[i].width + 5 + 5;
-      d > max && (max = d);
+      if (d > max) max = d;
     }
   }
 }
@@ -2882,7 +2986,7 @@ class Plane {
     if (this.inGame) {
       let g = 400,
         l;
-      this.#ea && this.weapon == id_weapon_superweapon && (g = 800);
+      if (this.#ea && this.weapon == id_weapon_superweapon) g = 800;
       if (func_isInsideBox(this.x, this.y, g)) {
         if (!this.#pa) {
           if (this.#obj_particleTrails) this.#obj_particleTrails.clear();
@@ -2890,7 +2994,7 @@ class Plane {
           this.#pa = true;
         }
       } else this.#pa = false;
-      let g2 = this.weapon == id_weapon_superweapon && this.isShooting;
+      const g2 = this.weapon == id_weapon_superweapon && this.isShooting;
       if (0 < this.#num_spawn_cooldown_ms) {
         this.#f -= deltatime;
         if (0 > this.#f) {
@@ -2924,8 +3028,8 @@ class Plane {
             this.#obj_particleTrails.style = "#00FF00";
         }
       }
-      this.#obj_particleFlags && this.#obj_particleFlags.setPosition(k, m);
-      let k2 =
+      if (this.#obj_particleFlags) this.#obj_particleFlags.setPosition(k, m);
+      const k2 =
         !this.hover &&
         !this.#obj_particleManager &&
         !this.isInvulnerable() &&
@@ -2944,7 +3048,7 @@ class Plane {
         this.#obj_particleFlags.enabled = !!k2;
         this.#obj_particleFlags.update(deltatime);
       }
-      let k3 = room_height / 2;
+      const k3 = room_height / 2;
       let m2 = k3 - 150;
       if (this.y > m2 && this.y < k3 && 0 >= this.#h) {
         this.#h = 5;
@@ -2960,8 +3064,8 @@ class Plane {
       }
       this.#h -= deltatime;
       if (this.#obj_particleManager) {
-        let k2 = this.x + 12 * Math.sin(-this.angle);
-        let m = this.y + 12 * Math.cos(-this.angle);
+        const k2 = this.x + 12 * Math.sin(-this.angle);
+        const m = this.y + 12 * Math.cos(-this.angle);
         this.#obj_particleManager.setPosition(k2, m);
         this.#obj_particleManager.update(deltatime);
       }
@@ -3022,7 +3126,7 @@ class Plane {
         let k2 = (room_height / 2 - this.y) / 1e3;
         if (1 < k2) k2 = 1;
         if (ia) {
-          let m = objG_sfxManager.sound._nodeById(ia);
+          const m = objG_sfxManager.sound._nodeById(ia);
           objG_sfxManager.sound.volume(0.5 * num_max_volume, ia);
           if (0.01 > k2 && !objG_eventManager.isSpaceWars()) {
             if (m && m.bufferSource) m.bufferSource.playbackRate.value = 0.1;
@@ -3042,7 +3146,7 @@ class Plane {
         }
       }
       if (g2) {
-        let k2 = func_calculateDistance2D(this.x, this.y, H.x, H.y);
+        const k2 = func_calculateDistance2D(this.x, this.y, H.x, H.y);
         let g2 = 1 - k2 / 3e3;
         if (1 < g2) g2 = 1;
         if (0.1 > g2) g2 = 0;
@@ -3087,8 +3191,8 @@ class Plane {
   draw(ctx: CanvasRenderingContext2D, deltatime: number) {
     if (this.inGame && this.#pa) {
       let e, f, K, s, v, R, w, S, O, t;
-      this.#obj_particleTrails && this.#obj_particleTrails.draw(ctx);
-      this.#obj_particleFlags && this.#obj_particleFlags.draw(ctx);
+      if (this.#obj_particleTrails) this.#obj_particleTrails.draw(ctx);
+      if (this.#obj_particleFlags) this.#obj_particleFlags.draw(ctx);
       if (!this.#obj_particleManager) {
         ctx.save();
         ctx.translate(this.x, this.y);
@@ -3098,21 +3202,20 @@ class Plane {
           this.timeToNextFrame = this.frameSwitchTime;
         }
         if (this.hover) {
-          objG_eventManager.isSpaceWars()
-            ? ctx.scale(0.5, 0.5)
-            : ctx.scale(0.8, 0.8);
+          if (objG_eventManager.isSpaceWars()) ctx.scale(0.5, 0.5);
+          else ctx.scale(0.8, 0.8);
         }
-        this.flameState && ctx.scale(0.88, 0.88);
+        if (this.flameState) ctx.scale(0.88, 0.88);
         ctx.rotate(this.angle - Math.PI / 2);
         ctx.translate(-23, 0);
-        this.isInvulnerable() && this.#d && (ctx.globalAlpha = 0.3);
+        if (this.isInvulnerable() && this.#d) ctx.globalAlpha = 0.3;
         objG_assets.frames.throttleFlame.draw(ctx);
         ctx.restore();
       }
       this.#g =
         Math.abs((this.angle - Math.PI / 2) % (2 * Math.PI)) +
         (2 * Math.PI) / 28 / 2;
-      0 < this.angle - Math.PI / 2 && (this.#g = 2 * Math.PI - this.#g);
+      if (0 < this.angle - Math.PI / 2) this.#g = 2 * Math.PI - this.#g;
       this.flipLastImage =
         this.#g > 0.5 * Math.PI && this.#g < 1.5 * Math.PI ? -1 : 1;
       if (0 < this.#q) {
@@ -3122,9 +3225,8 @@ class Plane {
         ctx.rotate((this.angle - Math.PI / 2) * this.flipLastImage);
         ctx.translate(-15, -4);
         e = 1;
-        60 > this.#q
-          ? (e = this.#q / 60)
-          : 240 < this.#q && (e = (300 - this.#q) / 60);
+        if (60 > this.#q) e = this.#q / 60;
+        else if (240 < this.#q) e = (300 - this.#q) / 60;
         ctx.globalAlpha = e;
         objG_assets.frames.punch.draw(ctx);
         ctx.restore();
@@ -3149,14 +3251,14 @@ class Plane {
       this.lastImage = this.planeImages[e - 1] ?? this.planeImages[0];
       this.lastImageReflex =
         this.planeImagesReflex[e - 1] ?? this.planeImagesReflex[0];
-      this.isInvulnerable() && this.#d && (ctx.globalAlpha = 0.3);
+      if (this.isInvulnerable() && this.#d) ctx.globalAlpha = 0.3;
       this.lastImage.draw(ctx);
       f = this.decalFrames[e - 1] ?? this.decalFrames[0];
       f.draw(ctx);
       if (16 < this.speed) {
-        (this.#C += 0.06), 0.9 < this.#C && (this.#C = 0.9);
+        if (((this.#C += 0.06), 0.9 < this.#C)) this.#C = 0.9;
       } else {
-        (this.#C -= 0.06), 0 > this.#C && (this.#C = 0);
+        if (((this.#C -= 0.06), 0 > this.#C)) this.#C = 0;
       }
       ctx.rotate(-Math.PI / 2);
       ctx.translate(0, 8);
@@ -3173,7 +3275,7 @@ class Plane {
       ctx.restore();
       if (0 < this.highlightValue && !this.isInvulnerable()) {
         this.highlightValue -= 0.05;
-        0 > this.highlightValue && (this.highlightValue = 0);
+        if (0 > this.highlightValue) this.highlightValue = 0;
         ctx.save();
         ctx.translate(this.x, this.y - 1);
         ctx.scale(0.7, 0.7);
@@ -3186,11 +3288,11 @@ class Plane {
         if (e) ctx.drawImage(e, -e.width / 2, -e.height / 2);
         ctx.restore();
       }
-      this.#obj_particleManager && this.#obj_particleManager.draw(ctx);
+      if (this.#obj_particleManager) this.#obj_particleManager.draw(ctx);
       if (this.weapon == id_weapon_superweapon) {
         e = false;
-        (this.#g > 0.5 * Math.PI && this.#g < 0.5 * Math.PI + Math.PI) ||
-          (e = true);
+        if (!(this.#g > 0.5 * Math.PI && this.#g < 0.5 * Math.PI + Math.PI))
+          e = true;
         if (this.isShooting) {
           ctx.save();
           K = this.x - 10 * this.#Ga;
@@ -3209,7 +3311,8 @@ class Plane {
           } else K = true;
           ctx.translate(this.x, this.y);
           ctx.rotate(this.angle + Math.PI);
-          e ? ctx.translate(2, 22) : ctx.translate(-2, 22);
+          if (e) ctx.translate(2, 22);
+          else ctx.translate(-2, 22);
           O = s = Math.sin(R) / Math.sin(S);
           t = true;
           if (K) {
@@ -3273,10 +3376,10 @@ class Plane {
   }
   drawReflection(ctx: CanvasRenderingContext2D, deltatime: number) {
     if (this.inGame && this.#pa && this.#g != undefined) {
-      let b = room_height / 2,
-        d = b - this.y;
+      let b = room_height / 2;
+      const d = b - this.y;
       if (!(0 > d || 170 < d)) {
-        let h = d / 170;
+        const h = d / 170;
         ctx.save();
         ctx.translate(this.x, b + d - 25);
         ctx.scale(0.8, 0.8 * -this.flipLastImage * (1 + 4 * h));
@@ -3285,7 +3388,7 @@ class Plane {
         else ctx.rotate(this.angle - Math.PI / 2);
         b = 1;
         if (30 > d && 15 <= d) b = (d - 15) / 15;
-        else 15 > d && (b = 0);
+        else if (15 > d) b = 0;
         ctx.globalAlpha = 0.7 * (1 - h) * b;
         this.lastImageReflex?.draw(ctx);
         ctx.restore();
@@ -3294,8 +3397,8 @@ class Plane {
   }
   drawInput(ctx: CanvasRenderingContext2D) {
     if (this.inGame) {
-      let c = -objG_inputManager.angle + Math.PI;
-      let b = objG_inputManager.hover ? 0.3 : 1;
+      const c = -objG_inputManager.angle + Math.PI;
+      const b = objG_inputManager.hover ? 0.3 : 1;
       ctx.save();
       ctx.translate(this.x, this.y);
       ctx.rotate(c);
@@ -3307,10 +3410,10 @@ class Plane {
       ctx.lineTo(0, -22 * b);
       ctx.fill();
       ctx.restore();
-      let obj_plane = objD_planes[gb];
+      const obj_plane = objD_planes[gb];
       if (2 != ha && obj_plane)
         this.DrawLockCrosshair(ctx, obj_plane.x, obj_plane.y, this.#w, ha);
-      0 < ma && this.DrawLockCrosshair(ctx, this.x, this.y, 1, 1);
+      if (0 < ma) this.DrawLockCrosshair(ctx, this.x, this.y, 1, 1);
       ctx.lineWidth = 1;
       ctx.beginPath();
       if (objG_eventManager.isSpaceWars())
@@ -3332,7 +3435,7 @@ class Plane {
       a.lineWidth = 4;
       a.save();
       let h = 1;
-      0 == ha && (h = 1 + 2 * (1 - width));
+      if (0 == ha) h = 1 + 2 * (1 - width);
       a.beginPath();
       let color = "hsla(43,100%," + (100 - 40 * width) + "%,1.0)";
       if (1 == height) color = "rgba(255,0,0,1.0)";
@@ -3374,7 +3477,7 @@ class Plane {
         ctx.textBaseline = "hanging";
         c = ctx.measureText(this.name).width;
         d = 38;
-        objG_eventManager.isInstagib() && (d = 20);
+        if (objG_eventManager.isInstagib()) d = 20;
         ctx.fillText(this.name, -c / 2, d);
       }
       ctx.restore();
@@ -3424,18 +3527,18 @@ class Plane {
     }
     if (!this.inGame) {
       this.inGame = true;
-      this.#obj_particleTrails && this.#obj_particleTrails.clear();
-      this.#obj_particleFlags && this.#obj_particleFlags.clear();
+      if (this.#obj_particleTrails) this.#obj_particleTrails.clear();
+      if (this.#obj_particleFlags) this.#obj_particleFlags.clear();
     }
   }
   trailEffect() {
-    wa && this.#obj_particleTrails && this.#obj_particleTrails.trailEffect();
+    if (wa && this.#obj_particleTrails) this.#obj_particleTrails.trailEffect();
   }
   hit(a: number) {
-    func_isTimeElapsed_50ms() && (this.highlightValue = 1);
+    if (func_isTimeElapsed_50ms()) this.highlightValue = 1;
   }
   setScore(score: number) {
-    let diff = score - this.score;
+    const diff = score - this.score;
     if (0 < diff && this == objG_player_plane) {
       if (!this.#obj_scoreAccumInfo)
         this.#obj_scoreAccumInfo = new ScoreAccumInfo();
@@ -3457,12 +3560,12 @@ class Plane {
   }
   setFlagInfo(uint32_flaginfo: number) {
     if (0 < uint32_flaginfo) {
-      let stringScale = uint32_flaginfo & 255;
+      const stringScale = uint32_flaginfo & 255;
       uint32_flaginfo >>= 8;
-      let scale = uint32_flaginfo & 255;
+      const scale = uint32_flaginfo & 255;
       uint32_flaginfo >>= 8;
-      let flipY = 0 < (uint32_flaginfo & 4) ? true : false;
-      let flipX = 0 < (uint32_flaginfo & 2) ? true : false;
+      const flipY = 0 < (uint32_flaginfo & 4) ? true : false;
+      const flipX = 0 < (uint32_flaginfo & 2) ? true : false;
       this.#G = 0 < (uint32_flaginfo & 8) ? true : false;
       this.#obj_particleFlags = new ParticleFlags();
       this.#obj_particleFlags.flipX = flipX;
@@ -3524,8 +3627,8 @@ class Plane {
     this.weapon = flag_weapon;
   }
   cleanup() {
-    ia && objG_sfxManager.sound.stop(ia);
-    na && objG_sfxManager.sound.stop(na);
+    if (ia) objG_sfxManager.sound.stop(ia);
+    if (na) objG_sfxManager.sound.stop(na);
     this.stopLaserSound();
     na = ia = undefined;
     this.first_set = true;
@@ -3565,7 +3668,7 @@ class Plane {
     }
   }
   dash() {
-    this == objG_player_plane &&
+    if (this == objG_player_plane)
       objG_sfxManager.playSound(str_sfxid_woosh, 0.15, 1, const_Q_0);
     this.#q = 300;
   }
@@ -3573,7 +3676,7 @@ class Plane {
     return 0 < this.#q;
   }
   clearTrail() {
-    this.#obj_particleTrails && this.#obj_particleTrails.clear();
+    if (this.#obj_particleTrails) this.#obj_particleTrails.clear();
   }
 }
 class WaterSea {
@@ -3594,7 +3697,7 @@ class WaterSea {
     }
   }
   #b(a: number, c: number) {
-    0 <= a && 24 > a && (this.#f[a] += c);
+    if (0 <= a && 24 > a) this.#f[a] += c;
   }
   update(deltatime: number) {
     let k, m, l, y;
@@ -3670,10 +3773,15 @@ class WaterSea {
         }
       }
       l = [];
-      for (y = 0; y < k; y++)
-        (m = this.#h[y]), m.update(deltatime), m.deleting && l.push(m);
-      for (deltatime = 0; deltatime < l.length; deltatime++)
-        (k = this.#h.indexOf(l[deltatime])), this.#h.splice(k, 1);
+      for (y = 0; y < k; y++) {
+        m = this.#h[y];
+        m.update(deltatime);
+        if (m.deleting) l.push(m);
+      }
+      for (deltatime = 0; deltatime < l.length; deltatime++) {
+        k = this.#h.indexOf(l[deltatime]);
+        this.#h.splice(k, 1);
+      }
       l.length = 0;
     }
   }
@@ -3689,9 +3797,9 @@ class WaterSea {
   drawFront(ctx: CanvasRenderingContext2D) {
     if (this.#a == undefined || this.#g == undefined || this.#c == undefined)
       return;
-    let d = room_height / 2 - H.y,
-      e = this.#a * this.#g,
-      f = room_height / 2 + -30,
+    let e = this.#a * this.#g,
+      f = room_height / 2 + -30;
+    const d = room_height / 2 - H.y,
       q = ctx.createLinearGradient(0, f, 0, f + (600 + 2 * d));
     q.addColorStop(0, "rgba(7,142,252,1.0)");
     q.addColorStop(0.55, "rgba(0,132,232,1.0)");
@@ -3719,13 +3827,13 @@ class WaterSea {
     if (this.#a == undefined || this.#g == undefined || this.#c == undefined)
       return;
     K = this.#a * this.#g;
-    let p = room_height / 2 + -30;
+    const p = room_height / 2 + -30;
     ctx.save();
     ctx.fillStyle = fill_color;
     ctx.beginPath();
     ctx.moveTo(K + this.#g - this.#c / 2, this.#f[0] * r + p + d);
     for (let i = 1; 25 > i; i++) {
-      let s = (i + Math.floor(25 * q)) % 25;
+      const s = (i + Math.floor(25 * q)) % 25;
       ctx.lineTo(K + (i + 1) * this.#g - this.#c / 2, this.#f[s] * r + d + p);
     }
     ctx.lineTo(K + 25 * this.#g - this.#c / 2, e + d + p);
@@ -3735,7 +3843,7 @@ class WaterSea {
   }
   disturbSurface(c: number, d: number) {
     if (this.#a == undefined || this.#g == undefined) return;
-    let h = Math.floor(c / this.#g) - this.#a + 12.5;
+    const h = Math.floor(c / this.#g) - this.#a + 12.5;
     this.#b(h - 2, d / 2);
     this.#b(h - 1, d / 2);
     this.#b(h, d);
@@ -3764,11 +3872,11 @@ class WaterSeaRipple {
   }
   update(deltatime: number) {
     this.#c += (deltatime / 1e3) * this.speed * 60;
-    this.#c >= Math.PI && (this.deleting = true);
+    if (this.#c >= Math.PI) this.deleting = true;
   }
   draw(ctx: CanvasRenderingContext2D, h: number) {
     if (!this.deleting) {
-      let q, n;
+      let q;
       ctx.save();
       q = Math.sin(this.#c);
       ctx.globalAlpha = Math.sqrt(q);
@@ -3777,7 +3885,8 @@ class WaterSeaRipple {
       ctx.translate(0, -20);
       ctx.fillStyle = "#b3dff9";
       ctx.beginPath();
-      (q = this.#bezier.length), (n = 0.1 + 0.9 * this.#a);
+      q = this.#bezier.length;
+      const n = 0.1 + 0.9 * this.#a;
       ctx.moveTo(this.#bezier[0] * n + 0, this.#bezier[1] * n + 0);
       for (let k = 2; k < q; k += 6)
         ctx.bezierCurveTo(
@@ -3926,15 +4035,15 @@ class Clouds {
   #d: number[][] = [];
   constructor() {
     for (let a = 0; a < this.#cloud_bezier.length; a++) {
-      let c = this.#cloud_bezier[a],
-        e = c.length,
-        h = 9999,
+      const c = this.#cloud_bezier[a],
+        e = c.length;
+      let h = 9999,
         f = 9999,
         n = -9999,
         k = -9999,
         m = true;
       for (let l = 0; l < e; l++) {
-        let y = c[l];
+        const y = c[l];
         if (m) {
           if (y < h) h = y;
           if (y > n) n = y;
@@ -3956,7 +4065,7 @@ class Clouds {
     e: number,
   ) {
     ctx.beginPath();
-    let f = d.length;
+    const f = d.length;
     ctx.moveTo(d[0] * e + c, d[1] * e + b);
     for (let k = 2; k < f; k += 6)
       ctx.bezierCurveTo(
@@ -3983,12 +4092,12 @@ class Clouds {
       c = (-c + 7e3) % 14e3;
       c = 7e3 - c;
     }
-    let l = c + this.#d[h][0] * e,
+    const l = c + this.#d[h][0] * e,
       y = g + this.#d[h][1] * e,
       r = c + this.#d[h][2] * e,
       K = g + this.#d[h][3] * e,
       p = objGUI_anchor.getBounds();
-    let bl =
+    const bl =
       l > p[1].x || r < p[0].x || y > p[1].y || K < p[0].y ? false : true;
     if (bl) {
       ctx.save();
@@ -4012,14 +4121,14 @@ class Clouds {
       c = (-c + 7e3) % 14e3;
       c = 7e3 - c;
     }
-    let k = this.#d[q][0],
+    const k = this.#d[q][0],
       m = this.#d[q][1],
       l = c + k * n,
       y = b + m * n,
       r = c + this.#d[q][2] * n;
     q = b + this.#d[q][3] * n;
-    let K = objGUI_anchor.getBounds();
-    let bl =
+    const K = objGUI_anchor.getBounds();
+    const bl =
       l > K[1].x || r < K[0].x || y > K[1].y || q < K[0].y ? false : true;
     if (bl) a.drawImage(this.#rendered[e], c + k * n, b + m * n);
   }
@@ -4061,8 +4170,8 @@ class Clouds {
     }
   }
   drawPreRenderedClouds(ctx: CanvasRenderingContext2D) {
-    let count = this.#cloud_positions.length,
-      b = cloud_pos_time,
+    const count = this.#cloud_positions.length;
+    let b = cloud_pos_time,
       d = cloud_sprange_start_Y;
     if (!xa) {
       d = 0.6;
@@ -4091,15 +4200,14 @@ class Clouds {
     }
   }
   preRender() {
-    let count = this.#cloud_positions.length;
+    const count = this.#cloud_positions.length;
     for (let c = 1, i = 0; i < count; i++) {
-      let h = this.#cloud_positions[i][2],
+      const h = this.#cloud_positions[i][2],
         q = -this.#d[h][0] + this.#d[h][2],
         n = -this.#d[h][1] + this.#d[h][3],
-        k;
-      k = document.createElement("canvas");
-      let ctx = k.getContext("2d")!,
-        l = (c = 1),
+        k = document.createElement("canvas");
+      const ctx = k.getContext("2d")!;
+      let l = (c = 1),
         y = 3,
         r = 9;
       if (0 == i % 2 && 7 != this.#cloud_positions[i][2]) {
@@ -4109,7 +4217,7 @@ class Clouds {
         r = 3;
       } else if (7 == this.#cloud_positions[i][2]) c = 0.8;
       l = this.#cloud_positions[i][3] * l;
-      let K = -this.#d[h][0] * l,
+      const K = -this.#d[h][0] * l,
         p = -this.#d[h][1] * l;
       k.width = q * l;
       k.height = n * l;
@@ -4211,27 +4319,27 @@ class Backgrounds {
   //   for (let c = this.#b.length, d = 0; d < c; d++) this.#b[d].draw(a, 3);
   // }
   drawGradient(ctx: CanvasRenderingContext2D) {
-    let c, b, d, f, m;
-    c =
+    let d;
+    const c =
       (canvas.width / 2 +
         (objGUI_anchor.x * objGUI_anchor.zoom - canvas.width / 2)) /
       objGUI_anchor.zoom;
-    b =
+    const b =
       (canvas.height / 2 +
         (objGUI_anchor.y * objGUI_anchor.zoom - canvas.height / 2)) /
       objGUI_anchor.zoom;
     d = 0.75 * room_height;
-    objG_eventManager.isSpaceWars() && (d = room_height);
+    if (objG_eventManager.isSpaceWars()) d = room_height;
     d = ctx.createLinearGradient(0, -d, 0, d);
-    f = 39;
-    m = 161;
+    let f = 39;
+    let m = 161;
     if (objG_eventManager.isSpaceWars()) {
       f = 0;
       m = 55;
     }
     if (0 < this.#e) {
       let l = this.#e / 2500;
-      1 < l && (l = 1);
+      if (1 < l) l = 1;
       f += (255 - f) * l;
       m += (255 - m) * l;
     }
@@ -4254,13 +4362,13 @@ class Backgrounds {
     );
   }
   drawWaterBehind(ctx: CanvasRenderingContext2D) {
-    bool_drawWater && this.waves.drawBehind(ctx);
+    if (bool_drawWater) this.waves.drawBehind(ctx);
   }
   drawWaterFront(ctx: CanvasRenderingContext2D) {
-    bool_drawWater && this.waves.drawFront(ctx);
+    if (bool_drawWater) this.waves.drawFront(ctx);
   }
   drawLimits(ctx: CanvasRenderingContext2D) {
-    let c =
+    const c =
         (canvas.width / 2 +
           (objGUI_anchor.x * objGUI_anchor.zoom - canvas.width / 2)) /
         objGUI_anchor.zoom,
@@ -4268,8 +4376,8 @@ class Backgrounds {
         (canvas.height / 2 +
           (objGUI_anchor.y * objGUI_anchor.zoom - canvas.height / 2)) /
         objGUI_anchor.zoom,
-      d = 500,
-      e = 2 * room_height,
+      e = 2 * room_height;
+    let d = 500,
       f = 0,
       l = 0,
       y = 0,
@@ -4293,11 +4401,17 @@ class Backgrounds {
       if (0 > b) {
         p = room_height / 2;
         p += b;
-        p < d && ((y = Math.min(1 - p / d, 1)), (y *= 0.2));
+        if (p < d) {
+          y = Math.min(1 - p / d, 1);
+          y *= 0.2;
+        }
       } else {
         p = room_height / 2;
         p -= b;
-        p < d && ((r = Math.min(1 - p / d, 1)), (r *= 0.2));
+        if (p < d) {
+          r = Math.min(1 - p / d, 1);
+          r *= 0.2;
+        }
       }
     }
     if (0 < c) {
@@ -4338,7 +4452,7 @@ class Backgrounds {
   }
   draw(ctx: CanvasRenderingContext2D) {
     if (bool_drawSun && !objG_eventManager.isSpaceWars()) {
-      let c = 0.97 * objGUI_anchor.x + 450,
+      const c = 0.97 * objGUI_anchor.x + 450,
         b = 0.97 * objGUI_anchor.y - 100,
         d = ctx.createRadialGradient(c, b, 70, c, b, 350);
       d.addColorStop(0, "rgba(255,255,255,0.4)");
@@ -4377,7 +4491,7 @@ class Backgrounds {
           }
           this.#e += deltatime;
         } else {
-          0 < this.#e && objGUI_gameInfo.clearWarningMessage();
+          if (0 < this.#e) objGUI_gameInfo.clearWarningMessage();
           this.#e = 0;
         }
       }
@@ -4453,13 +4567,11 @@ class PickupItem {
   fadingOut = false;
   grabbing = false;
   constructor() {
-    objG_eventManager.isSpaceWars() && (this.#inSpace = true);
+    if (objG_eventManager.isSpaceWars()) this.#inSpace = true;
   }
   update(deltatime: number) {
-    let p = 0.06 * deltatime,
-      s,
-      v,
-      plane;
+    const p = 0.06 * deltatime;
+    let s, v, plane;
     if (64 != this.type) {
       if (!objG_eventManager.isSpaceWars()) {
         s = room_height / 2 - 20;
@@ -4502,7 +4614,7 @@ class PickupItem {
         this.y = this.#y + (plane.y - this.#y) * s;
         this.#n = 1 - s;
         this.#g += 0.07 * p;
-        1 < this.#g && delete objD_pickups[this.id];
+        if (1 < this.#g) delete objD_pickups[this.id];
       } else delete objD_pickups[this.id];
     }
   }
@@ -4552,7 +4664,7 @@ class PickupItem {
           this.type == id_weapon_bombs)
       )
         g = 0.3;
-      let h = objG_assets.frames.parachute;
+      const h = objG_assets.frames.parachute;
       h.y = -h.height / 2 + 100 * (1 - this.#m);
       ctx.save();
       if (this.grabbing) ctx.translate(this.x, this.y);
@@ -4626,7 +4738,7 @@ class PickupItem {
   setPosition(x_gu: number, y_gu: number) {
     this.x = this.#x = 10 * x_gu;
     this.y = this.#y = 10 * y_gu;
-    this.y > -room_height / 2 && (this.alpha = 1);
+    if (this.y > -room_height / 2) this.alpha = 1;
     this.#b = +new Date();
   }
 }
@@ -4634,7 +4746,7 @@ class WS_Connection {
   #ws_conn?: WebSocket;
   func_process_msg_extra(
     data_view: DataView,
-    msg_type: number,
+    msg_type: 162 | 178 | 169 | 172 | 163 | 179,
     bool_something: boolean,
   ) {
     if (
@@ -4653,24 +4765,24 @@ class WS_Connection {
       objG_wsConnection.lastUpdateBool = !objG_wsConnection.lastUpdateBool;
     while (true) {
       n++;
-      let id_plane = data_view.getUint32(offset, true);
+      const id_plane = data_view.getUint32(offset, true);
       offset = offset + 4;
       if (0 == id_plane) {
-        let count = data_view.getUint8(offset);
+        const count = data_view.getUint8(offset);
         offset += 1;
         for (let i = 0; i < count; i++) {
-          let id_missile = data_view.getUint32(offset, true);
+          const id_missile = data_view.getUint32(offset, true);
           offset = offset + 4;
           let flag_type_missile;
           if (163 == msg_type || 162 == msg_type || 169 == msg_type) {
             flag_type_missile = data_view.getUint8(offset);
             offset = offset + 1;
           }
-          let x_gu = data_view.getFloat32(offset, true);
+          const x_gu = data_view.getFloat32(offset, true);
           offset = offset + 4;
-          let y_gu = -data_view.getFloat32(offset, true);
+          const y_gu = -data_view.getFloat32(offset, true);
           offset = offset + 4;
-          let id_launched_by = data_view.getUint32(offset, true);
+          const id_launched_by = data_view.getUint32(offset, true);
           offset = offset + 4;
           let obj_missile = objD_missiles[id_missile];
           if (null == obj_missile) {
@@ -4689,7 +4801,7 @@ class WS_Connection {
               let volume = 1;
               if (isSpecialEntity) {
                 max_parallel = const_Sa_3;
-                let dist = func_calculateDistance2D(
+                const dist = func_calculateDistance2D(
                   obj_plane.x,
                   obj_plane.y,
                   H.x,
@@ -4709,7 +4821,7 @@ class WS_Connection {
                   !(objG_player_plane && id_launched_by == objG_player_plane.id)
                 ) {
                   max_parallel = const_Sa_3;
-                  let dist = func_calculateDistance2D(
+                  const dist = func_calculateDistance2D(
                     obj_plane.x,
                     obj_plane.y,
                     H.x,
@@ -4741,12 +4853,12 @@ class WS_Connection {
           172 == msg_type
         )
           while (true) {
-            let bool_something = data_view.getUint32(offset, true);
+            const bool_something = data_view.getUint32(offset, true);
             offset += 4;
             if (0 == bool_something) break;
             let spc_entity = objD_specialEntities[bool_something];
             if (178 == msg_type || 162 == msg_type) {
-              let type_spcentity = data_view.getUint8(offset);
+              const type_spcentity = data_view.getUint8(offset);
               offset += 1;
               if (null == spc_entity) {
                 spc_entity = new SpecialEntity();
@@ -4756,20 +4868,20 @@ class WS_Connection {
             }
             spc_entity.id = bool_something;
             spc_entity.lastUpdate = frametime_millis;
-            let x_gu = data_view.getFloat32(offset, true);
+            const x_gu = data_view.getFloat32(offset, true);
             offset += 4;
-            let y_gu = -data_view.getFloat32(offset, true);
+            const y_gu = -data_view.getFloat32(offset, true);
             offset += 4;
-            let angle = data_view.getFloat32(offset, true);
+            const angle = data_view.getFloat32(offset, true);
             offset += 4;
-            let energy = data_view.getUint16(offset, true);
+            const energy = data_view.getUint16(offset, true);
             offset += 2;
-            let spc_entity_state = data_view.getUint8(offset);
+            const spc_entity_state = data_view.getUint8(offset);
             offset += 1;
             if (spc_entity.type == id_entity_warship) {
-              let float_val = -data_view.getFloat32(offset, true);
+              const float_val = -data_view.getFloat32(offset, true);
               offset += 4;
-              let cannon_angle = data_view.getFloat32(offset, true);
+              const cannon_angle = data_view.getFloat32(offset, true);
               offset += 4;
               spc_entity.setCannonAngle(cannon_angle);
               spc_entity.setFloatValue(float_val);
@@ -4777,7 +4889,7 @@ class WS_Connection {
               spc_entity.type == id_entity_asteroid &&
               (162 == msg_type || 178 == msg_type)
             ) {
-              let r = data_view.getUint8(offset);
+              const r = data_view.getUint8(offset);
               offset += 1;
               spc_entity.setFragment(r);
             }
@@ -4787,23 +4899,14 @@ class WS_Connection {
           }
         break;
       }
-      let flag_bonus = data_view.getUint16(offset, true);
+      const flag_bonus = data_view.getUint16(offset, true);
       offset = offset + 2;
-      let isPlane,
-        is_hovering,
-        flagPaused,
-        is_bot,
-        is_shooting,
-        x_gu,
-        y_gu,
-        angle,
-        energy,
-        score;
-      isPlane = flag_bonus & 1;
-      is_hovering = flag_bonus & 2;
-      flagPaused = flag_bonus & 4;
-      is_bot = flag_bonus & 1024;
-      is_shooting = flag_bonus & 2048;
+      let x_gu, y_gu, angle, energy, score;
+      const isPlane = flag_bonus & 1,
+        is_hovering = flag_bonus & 2,
+        flagPaused = flag_bonus & 4,
+        is_bot = flag_bonus & 1024,
+        is_shooting = flag_bonus & 2048;
       if (1 == n && (163 == msg_type || 179 == msg_type))
         qa = flag_bonus & 512 ? id_plane : 0;
       if (isPlane) {
@@ -4817,17 +4920,17 @@ class WS_Connection {
         offset += 1;
       }
       let obj_plane = objD_planes[id_plane];
-      let P = flag_bonus & 256;
+      const P = flag_bonus & 256;
       if (obj_plane && P) {
         obj_plane.setFrenzy();
         obj_plane.setPaused(flagPaused);
       }
       if (objG_player_plane == obj_plane) {
-        let z = flag_bonus & 8;
-        let R = flag_bonus & 16;
-        let S = flag_bonus & 32;
-        let O = flag_bonus & 128;
-        let G = flag_bonus & 4096;
+        const z = flag_bonus & 8,
+          R = flag_bonus & 16,
+          S = flag_bonus & 32,
+          O = flag_bonus & 128,
+          G = flag_bonus & 4096;
         if (flag_bonus & 64) objGUI_gameInfo.addBonus(64, 0);
         else if (S) objGUI_gameInfo.addBonus(32, 0);
         else if (R) objGUI_gameInfo.addBonus(16, 0);
@@ -4863,17 +4966,17 @@ class WS_Connection {
           type_weapon = data_view.getUint8(offset);
           offset += 1;
         }
-        let ammo = data_view.getUint16(offset, true);
+        const ammo = data_view.getUint16(offset, true);
         offset += 2;
-        let id_color = data_view.getUint8(offset);
+        const id_color = data_view.getUint8(offset);
         offset += 1;
-        let id_decal = data_view.getUint8(offset);
+        const id_decal = data_view.getUint8(offset);
         offset += 1;
-        let flag_info = data_view.getUint32(offset, true);
+        const flag_info = data_view.getUint32(offset, true);
         offset += 4;
         let name = "";
         while (true) {
-          let uint16_char = data_view.getUint16(offset, true);
+          const uint16_char = data_view.getUint16(offset, true);
           offset += 2;
           if (0 == uint16_char) break;
           name += String.fromCharCode(uint16_char);
@@ -4925,13 +5028,13 @@ class WS_Connection {
         }
       }
     }
-    cond_refresh_lb && objGUI_gameInfo.refreshLeaderboard(listG_plane_ids);
+    if (cond_refresh_lb) objGUI_gameInfo.refreshLeaderboard(listG_plane_ids);
   }
-  func_process_msg_grab(data_view: DataView, msg_type: number) {
+  func_process_msg_grab(data_view: DataView, msg_type: 168 | 173) {
     let offset = 1;
-    let id_pickup = data_view.getUint16(offset, true);
+    const id_pickup = data_view.getUint16(offset, true);
     offset = offset + 2;
-    let id_plane = data_view.getUint32(offset, true);
+    const id_plane = data_view.getUint32(offset, true);
     offset = offset + 4;
     let flag_type_pickup;
     if (168 == msg_type) {
@@ -4956,7 +5059,7 @@ class WS_Connection {
         objD_planes[id_plane].trailEffect();
         id_sfx = str_sfxid_winggrab;
         if (null != this.lastGrabbedWingTime) {
-          let time_since_last_grab =
+          const time_since_last_grab =
             frametime_millis - this.lastGrabbedWingTime;
           if (1e3 > time_since_last_grab) objG_wsConnection.wingsInARow++;
           else objG_wsConnection.wingsInARow = 0;
@@ -5047,7 +5150,7 @@ class WS_Connection {
       console.log("fullhost: " + b);
       if (bool_isHttps) {
         b = objG_wsConnection.remoteHost!.split(":")[0].split(".");
-        let port = Math.floor(objG_wsConnection.roomNumber) + 8079 + 1e3;
+        const port = Math.floor(objG_wsConnection.roomNumber) + 8079 + 1e3;
         b =
           "wss://ip-" +
           b[0] +
@@ -5094,7 +5197,7 @@ class WS_Connection {
     objG_wsConnection.connectRetry = 0;
     objG_wsConnection.hasConnection = true;
     objG_wsConnection.directed = false;
-    objG_assets.loaded && objG_wsConnection.hello();
+    if (objG_assets.loaded) objG_wsConnection.hello();
   }
   onSocketClose(ev: CloseEvent) {
     objG_wsConnection.connectionClosed();
@@ -5117,17 +5220,18 @@ class WS_Connection {
     $("#nick").focus();
   }
   processMessage(array_buffer: ArrayBuffer) {
-    let data_view = new DataView(array_buffer),
+    const data_view = new DataView(array_buffer),
       msg_type = data_view.getUint8(0);
     if (0 != msg_type)
       if (160 == msg_type) {
+        // 0b 1010 0000
         let offset = 1;
         cloud_pos_time = -data_view.getUint32(offset, true);
         offset = offset + 4;
-        let room_width_gu = data_view.getFloat32(offset, true);
+        const room_width_gu = data_view.getFloat32(offset, true);
         offset = offset + 4;
         Gborder_X = 10 * room_width_gu;
-        let room_height_gu = data_view.getFloat32(offset, true);
+        const room_height_gu = data_view.getFloat32(offset, true);
         offset = offset + 4;
         room_height = 10 * room_height_gu;
         cloud_sprange_start_Y = room_height / 2 / 650;
@@ -5147,22 +5251,23 @@ class WS_Connection {
         score_weapon_pickup = data_view.getFloat32(offset, true);
         diff_kills = data_view.getFloat32(offset + 4, true);
       } else if (161 == msg_type || 171 == msg_type) {
+        // 0b 1010 0001 // 0b 1010 1011
         // processGlobal player plane //161 no revenge //171 revenge
         xa = true;
         let offset = 1;
-        let id_plane = data_view.getUint32(offset, true);
+        const id_plane = data_view.getUint32(offset, true);
         offset += 4;
-        let x_gu = data_view.getFloat32(offset, true);
+        const x_gu = data_view.getFloat32(offset, true);
         offset += 4;
-        let y_gu = -data_view.getFloat32(offset, true);
+        const y_gu = -data_view.getFloat32(offset, true);
         offset += 4;
-        let angle = data_view.getFloat32(offset, true);
+        const angle = data_view.getFloat32(offset, true);
         offset += 4;
-        let id_color = data_view.getUint8(offset);
+        const id_color = data_view.getUint8(offset);
         offset += 1;
-        let id_decal = data_view.getUint8(offset);
+        const id_decal = data_view.getUint8(offset);
         offset += 1;
-        let uint32_flag_info = data_view.getUint32(offset, true);
+        const uint32_flag_info = data_view.getUint32(offset, true);
         objG_player_plane = new Plane();
         objG_player_plane.id = id_plane;
         objG_player_plane.setColorID(id_color);
@@ -5178,35 +5283,41 @@ class WS_Connection {
         func_setPlayerCount();
         if (161 == msg_type) plane_last_killed_by[id_plane] = 0;
       } else if (162 == msg_type || 178 == msg_type) {
+        // 0b 1010 0010 // 0b 1011 0010
         this.func_process_msg_extra(data_view, msg_type, false);
         this.firstClientListing = false;
         func_setPlayerCount();
       } else if (169 == msg_type || 172 == msg_type) {
+        // 0b 1010 1001 // 0b 1010 1100
         this.func_process_msg_extra(data_view, msg_type, false);
         func_setPlayerCount();
       } else if (163 == msg_type || 179 == msg_type) {
+        // 0b 1010 0011 // 0b 1011 0011
         this.func_process_msg_extra(data_view, msg_type, false);
       } else if (164 == msg_type || 180 == msg_type) {
+        // 0b 1010 0100 // 0b 1011 0100
         if (164 == msg_type) this.func_process_msg_extra(data_view, 162, true);
         else {
           this.func_process_msg_extra(data_view, 178, true);
           func_setPlayerCount();
         }
       } else if (165 == msg_type) {
+        // 0b 1010 0101
+        // all death logging
         let offset2 = 1;
-        let msg_type = data_view.getUint32(offset2, true);
+        const msg_type = data_view.getUint32(offset2, true);
         offset2 += 4;
-        let obj_plane = objD_planes[msg_type];
+        const obj_plane = objD_planes[msg_type];
         if (obj_plane) {
-          let id_plane = data_view.getUint32(offset2, true);
+          const id_plane = data_view.getUint32(offset2, true);
           offset2 += 4;
-          let flag_demise_type = data_view.getUint8(offset2);
-          let was_killed = data_view.getUint32(offset2 + 1, true);
+          const flag_demise_type = data_view.getUint8(offset2);
+          const was_killed = data_view.getUint32(offset2 + 1, true);
           let plane_player = objG_player_plane;
           if (!plane_player && objG_player_plane_temp)
             plane_player = objG_player_plane_temp;
           if (plane_player && id_plane == plane_player.id) {
-            let other_plane_name = func_renameBlankPlayerNames(
+            const other_plane_name = func_renameBlankPlayerNames(
               objD_planes[msg_type].name,
             );
             objGUI_gameInfo.addMessage("You killed", true, other_plane_name);
@@ -5216,7 +5327,7 @@ class WS_Connection {
             }
           }
           if (0 < id_plane) {
-            let obj_plane_other = objD_planes[id_plane];
+            const obj_plane_other = objD_planes[id_plane];
             if (obj_plane_other) {
               objGUI_gameInfo.addActivityMessage(
                 func_renameBlankPlayerNames(obj_plane.name) +
@@ -5321,7 +5432,7 @@ class WS_Connection {
             console.log("ERROR: Trying to remove a player that didnt exist!");
           else objD_planes[msg_type].cleanup();
         } else {
-          let obj_spcentity = objD_specialEntities[msg_type];
+          const obj_spcentity = objD_specialEntities[msg_type];
           if (obj_spcentity) {
             if (
               obj_spcentity.type == id_entity_asteroid &&
@@ -5334,7 +5445,7 @@ class WS_Connection {
                 0,
               );
               if (3 != obj_spcentity.fragment) {
-                let volume =
+                const volume =
                   1 -
                   func_calculateDistance2D(
                     obj_spcentity.x,
@@ -5358,13 +5469,14 @@ class WS_Connection {
         }
         func_setPlayerCount();
       } else if (166 == msg_type || 176 == msg_type) {
+        // 0b 1010 0110 // 0b 1011 0000
         // player's bullet hit
         let offset = 1;
-        let count = data_view.getUint16(offset, true);
+        const count = data_view.getUint16(offset, true);
         offset += 2;
         for (let i = 0; i < count; i++) {
           let id_weapon;
-          let id_gameobj = data_view.getUint32(offset, true);
+          const id_gameobj = data_view.getUint32(offset, true);
           offset += 4;
           if (176 == msg_type) {
             id_weapon = data_view.getUint16(offset, true);
@@ -5395,9 +5507,9 @@ class WS_Connection {
                 pitch = 1.3;
               } else id_sfx = str_sfxid_rail;
           }
-          let obj_plane = objD_planes[id_gameobj];
+          const obj_plane = objD_planes[id_gameobj];
           if (!obj_plane && 0 < id_gameobj) {
-            let obj_spc = objD_specialEntities[id_gameobj];
+            const obj_spc = objD_specialEntities[id_gameobj];
             if (obj_spc) console.log("specialEntity did shoot: " + obj_spc.id);
           }
           let max_parallel = const_Q_0;
@@ -5414,28 +5526,28 @@ class WS_Connection {
           }
           if (0.01 < volume && id_sfx != str_sfxid_empty)
             objG_sfxManager.playSound(id_sfx, volume, pitch, max_parallel);
-          let ammo = data_view.getUint16(offset, true);
+          const ammo = data_view.getUint16(offset, true);
           offset += 2;
-          id_weapon == id_weapon_punch && obj_plane.dash();
-          let len2 = data_view.getUint8(offset);
+          if (id_weapon == id_weapon_punch) obj_plane.dash();
+          const len2 = data_view.getUint8(offset);
           offset += 1;
           for (let j = 0; j < len2; j++) {
-            let x_gu = data_view.getFloat32(offset, true);
+            const x_gu = data_view.getFloat32(offset, true);
             offset = offset + 4;
-            let y_gu = -data_view.getFloat32(offset, true);
+            const y_gu = -data_view.getFloat32(offset, true);
             offset = offset + 4;
             let missile_hit = false;
             if (id_weapon != id_weapon_missile && id_weapon != id_weapon_bombs)
               obj_particleImpacts.addShot(id_gameobj, x_gu, y_gu, id_weapon);
             else {
-              let id_missile = data_view.getUint32(offset, true);
+              const id_missile = data_view.getUint32(offset, true);
               offset = offset + 4;
-              objD_missiles[id_missile] && delete objD_missiles[id_missile];
+              if (objD_missiles[id_missile]) delete objD_missiles[id_missile];
               missile_hit = true;
             }
             let sw_hit = false;
             while (true) {
-              let id_gobj = data_view.getUint32(offset, true);
+              const id_gobj = data_view.getUint32(offset, true);
               offset = offset + 4;
               if (0 == id_gobj) break;
               let obj_gameentity: Plane | SpecialEntity = objD_planes[id_gobj];
@@ -5463,7 +5575,7 @@ class WS_Connection {
             if (missile_hit) obj_particleImpacts.addMissileImpact(x_gu, y_gu);
           }
           if (0 < id_gameobj) {
-            let loc_plane = objD_planes[id_gameobj];
+            const loc_plane = objD_planes[id_gameobj];
             if (
               loc_plane &&
               id_weapon != id_weapon_missile &&
@@ -5475,10 +5587,11 @@ class WS_Connection {
           }
         }
       } else if (167 == msg_type || 174 == msg_type) {
+        // 0b 1010 0111 // 0b 1010 1110
         // process pickupItem list
         let offset = 1;
         while (true) {
-          let id_pickup = data_view.getUint16(offset, true);
+          const id_pickup = data_view.getUint16(offset, true);
           let pickup_type: number;
           if (0 == id_pickup) break;
           offset += 2;
@@ -5489,21 +5602,24 @@ class WS_Connection {
             pickup_type = data_view.getUint8(offset);
             offset += 1;
           }
-          let x_gu = data_view.getFloat32(offset, true);
+          const x_gu = data_view.getFloat32(offset, true);
           offset += 4;
-          let y_gu = -data_view.getFloat32(offset, true);
+          const y_gu = -data_view.getFloat32(offset, true);
           offset += 4;
-          let obj_pickupItem = new PickupItem();
+          const obj_pickupItem = new PickupItem();
           objD_pickups[id_pickup] = obj_pickupItem;
           obj_pickupItem.id = id_pickup;
           obj_pickupItem.setPosition(x_gu, y_gu);
           obj_pickupItem.type = pickup_type;
         }
       } else if (168 == msg_type || 173 == msg_type) {
+        // 0b 1010 1000 // 0b 1010 1101
+        //player pickup item
         this.func_process_msg_grab(data_view, msg_type);
       } else if (170 == msg_type) {
-        let offset = 1;
-        let dat = data_view.getUint8(offset);
+        // 0b 1010 1010
+        const offset = 1;
+        const dat = data_view.getUint8(offset);
         if (3 == dat) ma++;
         else if (4 == dat) ma--;
         else {
@@ -5512,34 +5628,37 @@ class WS_Connection {
           ha = dat;
         }
       } else if (16 == msg_type) {
+        // 0b 0001 0000
         // event upcoming
-        let flag_event_type: EventManager.eventType = data_view.getUint8(1);
-        let time_s_until_start = data_view.getUint32(2, true);
+        const flag_event_type: EventManager.eventType = data_view.getUint8(1);
+        const time_s_until_start = data_view.getUint32(2, true);
         objG_eventManager.type = flag_event_type;
         objG_eventManager.waiting = true;
         objG_eventManager.endTime = +new Date() + 1e3 * time_s_until_start;
       } else if (17 == msg_type) {
+        // 0b 0001 0001
         // no event?
         objG_eventManager.type = objG_eventManager.eventType.EVENT_NONE;
         objG_eventManager.waiting = false;
         objG_eventManager.endTime = 0;
       } else if (18 == msg_type || 19 == msg_type) {
+        // 0b 0001 0010 // 0b 0001 0011
         // event start
         let offset = 1;
-        let event_type: EventManager.eventType = data_view.getUint8(offset);
+        const event_type: EventManager.eventType = data_view.getUint8(offset);
         offset++;
-        let time_s_until_end = data_view.getUint32(offset, true);
+        const time_s_until_end = data_view.getUint32(offset, true);
         offset += 4;
         objG_eventManager.waiting = false;
         objG_eventManager.setType(event_type);
         if (
           objG_eventManager.type == objG_eventManager.eventType.EVENT_WARSHIP
         ) {
-          let warships_left = data_view.getUint8(offset);
+          const warships_left = data_view.getUint8(offset);
           offset++;
-          let warships_destroyed = data_view.getUint8(offset);
+          const warships_destroyed = data_view.getUint8(offset);
           offset++;
-          let warships_escaped = data_view.getUint8(offset);
+          const warships_escaped = data_view.getUint8(offset);
           objG_eventManager.setWarshipInfo(
             warships_left,
             warships_destroyed,
@@ -5553,6 +5672,7 @@ class WS_Connection {
         else if (objG_eventManager.isSpaceWars())
           objG_assets.loadAsteroidEvent();
       } else if (20 == msg_type) {
+        // 0b 0001 0100
         // event end?
         if (objG_eventManager.type != objG_eventManager.eventType.EVENT_WARSHIP)
           objG_followMode.whiteFlash = 1;
@@ -5561,6 +5681,7 @@ class WS_Connection {
           objG_eventManager.machinegunSwitch = true;
         objG_eventManager.setType(objG_eventManager.eventType.EVENT_NONE);
       } else if (22 == msg_type) {
+        // 0b 0001 0110
         // event end
         objG_eventManager.waiting = false;
         if (objG_eventManager.type != objG_eventManager.eventType.EVENT_NONE) {
@@ -5571,34 +5692,36 @@ class WS_Connection {
           objG_eventManager.setType(objG_eventManager.eventType.EVENT_NONE);
         }
       } else if (23 == msg_type) {
+        // 0b 0001 0111
         // warship deleted
         let offset = 1;
-        let plane_id = data_view.getUint32(offset, true);
+        const plane_id = data_view.getUint32(offset, true);
         offset += 4;
         if (0 < plane_id) {
-          let plane = objD_planes[plane_id];
+          const plane = objD_planes[plane_id];
           if (plane) {
-            let warship_killer_name = func_renameBlankPlayerNames(plane.name);
+            const warship_killer_name = func_renameBlankPlayerNames(plane.name);
             objGUI_gameInfo.setWarshipRemoved(warship_killer_name);
           }
         } else objGUI_gameInfo.setWarshipRemoved();
-        let warships_left = data_view.getUint8(offset);
+        const warships_left = data_view.getUint8(offset);
         offset += 1;
-        let warships_destroyed = data_view.getUint8(offset);
+        const warships_destroyed = data_view.getUint8(offset);
         offset += 1;
-        let warships_escaped = data_view.getUint8(offset);
+        const warships_escaped = data_view.getUint8(offset);
         objG_eventManager.setWarshipInfo(
           warships_left,
           warships_destroyed,
           warships_escaped,
         );
       } else if (21 == msg_type) {
+        // 0b 0001 0101
         // event winner - sudden death
-        let event_type = data_view.getUint8(1);
+        const event_type = data_view.getUint8(1);
         let name = "";
         let offset = 2;
         while (true) {
-          let utf16_char = data_view.getUint16(offset, true);
+          const utf16_char = data_view.getUint16(offset, true);
           offset += 2;
           if (0 == utf16_char) break;
           name += String.fromCharCode(utf16_char);
@@ -5623,16 +5746,15 @@ class WS_Connection {
     objG_wsConnection.connectRetry++;
   }
   sendSingleByte(byte: number) {
-    let arr = new ArrayBuffer(1);
+    const arr = new ArrayBuffer(1);
     new DataView(arr).setUint8(0, byte);
     this.#ws_conn?.send(arr);
   }
   sendNick(name: string, continue_game: boolean) {
     myName = name;
-    let arr = new ArrayBuffer(3 + 2 * name.length),
+    const arr = new ArrayBuffer(3 + 2 * name.length),
       datv = new DataView(arr),
-      flag_contiue_game = 2;
-    continue_game && (flag_contiue_game = 8);
+      flag_contiue_game = continue_game ? 8 : 2;
     datv.setUint8(0, flag_contiue_game);
     datv.setUint8(1, intG_color_id);
     datv.setUint8(2, intG_decal_id);
@@ -5641,7 +5763,7 @@ class WS_Connection {
     this.#ws_conn?.send(arr);
   }
   sendInput() {
-    let arr = new ArrayBuffer(10),
+    const arr = new ArrayBuffer(10),
       datv = new DataView(arr);
     datv.setUint8(0, 3);
     datv.setFloat64(1, objG_inputManager.angle, true);
@@ -5652,41 +5774,44 @@ class WS_Connection {
     this.#ws_conn?.send(arr);
   }
   sendDirection() {
-    let arr = new ArrayBuffer(9),
+    const arr = new ArrayBuffer(9),
       datv = new DataView(arr);
     datv.setUint8(0, 4);
     datv.setFloat64(1, objG_inputManager.angle, true);
     this.#ws_conn?.send(arr);
   }
   sendThrottle() {
-    let arr = new ArrayBuffer(2),
+    const arr = new ArrayBuffer(2),
       datv = new DataView(arr);
     datv.setUint8(0, 6);
-    1 == objG_inputManager.throttle ? datv.setUint8(1, 1) : datv.setUint8(1, 0);
+    if (1 == objG_inputManager.throttle) datv.setUint8(1, 1);
+    else datv.setUint8(1, 0);
     this.#ws_conn?.send(arr);
   }
   sendBraking(isBraking: boolean) {
-    let arr = new ArrayBuffer(2),
+    const arr = new ArrayBuffer(2),
       datv = new DataView(arr);
     datv.setUint8(0, 4);
-    isBraking ? datv.setUint8(1, 1) : datv.setUint8(1, 0);
+    if (isBraking) datv.setUint8(1, 1);
+    else datv.setUint8(1, 0);
     this.#ws_conn?.send(arr);
   }
   sendShooting(isShooting: boolean) {
-    let arr = new ArrayBuffer(2),
+    const arr = new ArrayBuffer(2),
       datv = new DataView(arr);
     datv.setUint8(0, 5);
-    isShooting ? datv.setUint8(1, 1) : datv.setUint8(1, 0);
+    if (isShooting) datv.setUint8(1, 1);
+    else datv.setUint8(1, 0);
     this.#ws_conn?.send(arr);
   }
   leave() {
-    let arr = new ArrayBuffer(1);
+    const arr = new ArrayBuffer(1);
     new DataView(arr).setUint8(0, 7);
     this.#ws_conn?.send(arr);
   }
   ping() {
     if (this.hasConnection) {
-      let arr = new ArrayBuffer(1);
+      const arr = new ArrayBuffer(1);
       new DataView(arr).setUint8(0, 0);
       this.#ws_conn?.send(arr);
     }
@@ -5721,11 +5846,11 @@ class FollowMode_R {
     this.resize = () => {
       this.C();
       if (objG_eventManager.isSpaceWars()) {
-        this.#N && clearTimeout(this.#N);
+        if (this.#N) clearTimeout(this.#N);
         this.#N = setTimeout(this.respawnParticles, 200);
       }
     };
-    let e = () => {
+    const e = () => {
       if (Z && objG_wsConnection.hasConnection) objG_wsConnection.sendInput();
     };
     this.whiteFlash = 0;
@@ -5762,9 +5887,9 @@ class FollowMode_R {
   followTopPlayer() {
     let max_score = -1;
     let max_score_plane_id = 0;
-    for (let id in objD_planes)
+    for (const id in objD_planes)
       if (objD_planes[id].inGame) {
-        let score = objD_planes[id].score;
+        const score = objD_planes[id].score;
         if (max_score < score) {
           max_score = score;
           max_score_plane_id = parseInt(id);
@@ -5784,7 +5909,7 @@ class FollowMode_R {
       objG_player_plane = undefined;
     } else {
       b = false;
-      0 == Oa && (b = true);
+      if (0 == Oa) b = true;
       if (!b) {
         b = false;
         for (const ds in listG_plane_ids) {
@@ -5802,7 +5927,7 @@ class FollowMode_R {
             if (isFollowing) b = true;
             else {
               d--;
-              0 > d && (d = listG_plane_ids.length - 1);
+              if (0 > d) d = listG_plane_ids.length - 1;
               e = objD_planes[listG_plane_ids[d]];
               current_following_plane_id = listG_plane_ids[d];
               objG_player_plane = e;
@@ -5850,7 +5975,7 @@ class FollowMode_R {
       if (missile_index) delete objD_missiles[missile_index];
       let e: Plane | undefined;
       for (const bs in objD_planes) {
-        let b = parseInt(bs);
+        const b = parseInt(bs);
         if (objD_planes[b].updateBool != objG_wsConnection.lastUpdateBool) {
           if (objD_planes[b] == objG_player_plane)
             current_following_plane_id = 0;
@@ -5861,10 +5986,10 @@ class FollowMode_R {
             objD_planes[b].weapon == id_weapon_superweapon &&
             objD_planes[b].inGame
           ) {
-            (La = true),
-              (str_name_superweapon_holder = func_renameBlankPlayerNames(
-                objD_planes[b].name,
-              ));
+            La = true;
+            str_name_superweapon_holder = func_renameBlankPlayerNames(
+              objD_planes[b].name,
+            );
           }
           if (sc == b && objD_planes[b].inGame) e = objD_planes[b];
           if (objG_eventManager.railSwitch) {
@@ -5893,7 +6018,7 @@ class FollowMode_R {
           break;
         }
       if (objG_eventManager.isSpaceWars()) {
-        for (let i in list_particleDust) {
+        for (const i in list_particleDust) {
           list_particleDust[i].update(
             objGUI_anchor.getBounds(),
             //objGUI_anchor.zoom,
@@ -5924,7 +6049,7 @@ class FollowMode_R {
       if (null != objG_player_plane)
         if (objG_inputManager.mouseMoved) {
           deltatime = 1;
-          bool_setting_highQuality || (deltatime = 2);
+          if (!bool_setting_highQuality) deltatime = 2;
           Zb =
             (qc +
               (objGUI_anchor.x * objGUI_anchor.zoom -
@@ -5948,7 +6073,7 @@ class FollowMode_R {
           }
           if (0 != f) {
             deltatime = Math.atan(t / f);
-            0 > f && (deltatime = Math.PI + deltatime);
+            if (0 > f) deltatime = Math.PI + deltatime;
             deltatime += Math.PI / 2;
             objG_inputManager.angle = deltatime;
           }
@@ -5964,14 +6089,14 @@ class FollowMode_R {
       if (e && !func_isInsideBox(e.x, e.y, 30)) {
         w = H.x - e.x;
         D = H.y - e.y;
-        let hyp = Math.sqrt(w * w + D * D);
+        const hyp = Math.sqrt(w * w + D * D);
         this.#n = 1;
         if (1300 < hyp) {
           this.#n = 1300 / hyp;
           if (0.4 > this.#n) this.#n = 0.4;
         }
         D /= w;
-        let C = H.y - D * H.x;
+        const C = H.y - D * H.x;
         this.#h = 0 > w ? D * deltatime + C : D * f + C;
         if (this.#h < s) this.#h = s;
         else if (this.#h > t) this.#h = t;
@@ -5999,7 +6124,7 @@ class FollowMode_R {
           if (0.4 > this.#r) this.#r = 0.4;
         }
         D /= w;
-        let C = H.y - D * H.x;
+        const C = H.y - D * H.x;
         this.#l = 0 > w ? D * deltatime + C : D * f + C;
         if (this.#l < s) this.#l = s;
         else if (this.#l > t) this.#l = t;
@@ -6018,8 +6143,8 @@ class FollowMode_R {
           N = 1,
           Y = 1;
         for (const bs in objD_specialEntities) {
-          let b = parseInt(bs);
-          let C = objD_specialEntities[b];
+          const b = parseInt(bs);
+          const C = objD_specialEntities[b];
           if (C.state == const_Ic_0 && C.x > -Gborder_X && C.x < Gborder_X) {
             w = H.x - C.x;
             D = H.y - C.y;
@@ -6042,7 +6167,7 @@ class FollowMode_R {
               if (0.3 > this.#Ca) this.#Ca = 0.3;
             }
             D = Y / N;
-            let C = H.y - D * H.x;
+            const C = H.y - D * H.x;
             this.#L = 0 > N ? D * deltatime + C : D * f + C;
             if (this.#L < s) this.#L = s;
             else if (this.#L > t) this.#L = t;
@@ -6062,52 +6187,53 @@ class FollowMode_R {
       objGUI_anchor.setupContext();
       objG_backgrounds.drawGradient(this.#ctx_canvas);
       objG_backgrounds.draw(this.#ctx_canvas);
-      let c = objGUI_anchor.getBounds()[1].y,
-        e = false,
-        f;
+      const c = objGUI_anchor.getBounds()[1].y;
+      let e = false;
       if (objG_eventManager.isSpaceWars())
-        for (let i in list_particleDust)
+        for (const i in list_particleDust)
           list_particleDust[i].draw(this.#ctx_canvas);
-      else
-        c > room_height / 2 - 25 &&
-          ((e = true), objG_backgrounds.drawWaterBehind(this.#ctx_canvas));
+      else if (c > room_height / 2 - 25) {
+        e = true;
+        objG_backgrounds.drawWaterBehind(this.#ctx_canvas);
+      }
       if (xa) {
-        for (f in objD_pickups) objD_pickups[f].draw(this.#ctx_canvas);
+        for (const f in objD_pickups) objD_pickups[f].draw(this.#ctx_canvas);
         obj_particleImpacts.draw(this.#ctx_canvas);
-        for (f in objD_missiles)
+        for (const f in objD_missiles)
           objD_missiles[f].draw(this.#ctx_canvas, deltatime);
-        for (f in objD_planes) objD_planes[f].draw(this.#ctx_canvas, deltatime);
-        for (f in objD_planes) objD_planes[f].drawInfo(this.#ctx_canvas);
-        Z && objG_player_plane?.drawInput(this.#ctx_canvas);
-        for (f in objD_specialEntities)
+        for (const f in objD_planes)
+          objD_planes[f].draw(this.#ctx_canvas, deltatime);
+        for (const f in objD_planes) objD_planes[f].drawInfo(this.#ctx_canvas);
+        if (Z) objG_player_plane?.drawInput(this.#ctx_canvas);
+        for (const f in objD_specialEntities)
           objD_specialEntities[f].draw(this.#ctx_canvas);
         objG_animationManager.drawExplosions(this.#ctx_canvas);
         objG_animationManager.drawBehind(this.#ctx_canvas);
       }
-      e && objG_backgrounds.drawWaterFront(this.#ctx_canvas);
+      if (e) objG_backgrounds.drawWaterFront(this.#ctx_canvas);
       if (xa) {
         if (!objG_eventManager.isSpaceWars()) {
-          for (f in objD_planes)
+          for (const f in objD_planes)
             objD_planes[f].drawReflection(this.#ctx_canvas, deltatime);
-          for (f in objD_missiles)
+          for (const f in objD_missiles)
             objD_missiles[f].drawReflection(this.#ctx_canvas, deltatime);
-          for (f in objD_specialEntities)
+          for (const f in objD_specialEntities)
             objD_specialEntities[f].drawReflection(this.#ctx_canvas, deltatime);
         }
         objG_animationManager.drawLayer2(this.#ctx_canvas);
         objG_animationManager.draw(this.#ctx_canvas);
-        for (f in objD_specialEntities)
+        for (const f in objD_specialEntities)
           objD_specialEntities[f].drawInfo(this.#ctx_canvas);
         objG_backgrounds.drawLimits(this.#ctx_canvas);
         if (this.#q) {
           deltatime = 1;
-          let c = 0 < qa;
+          const c = 0 < qa;
           this.#ctx_canvas.save();
           this.#ctx_canvas.translate(this.#g, this.#h);
           this.#ctx_canvas.scale(this.#n, this.#n);
           if (c) {
             this.#ctx_canvas.save();
-            let e = func_rotatePoint(0, 50, -this.#k);
+            const e = func_rotatePoint(0, 50, -this.#k);
             this.#ctx_canvas.translate(e.x, e.y);
             objG_assets.frames.crown.draw(this.#ctx_canvas);
             this.#ctx_canvas.restore();
@@ -6132,13 +6258,13 @@ class FollowMode_R {
           this.#ctx_canvas.translate(this.#m, this.#l);
           this.#ctx_canvas.scale(this.#r, this.#r);
           this.#ctx_canvas.save();
-          let pt = func_rotatePoint(0, 50, -this.#x);
+          const pt = func_rotatePoint(0, 50, -this.#x);
           this.#ctx_canvas.translate(pt.x, pt.y);
           objG_assets.frames.revengeIcon.draw(this.#ctx_canvas);
           this.#ctx_canvas.restore();
           this.#ctx_canvas.rotate(-this.#x);
           this.#ctx_canvas.translate(0, -(-20 - 10 * deltatime));
-          let e = 0.9;
+          const e = 0.9;
           this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)";
           this.#ctx_canvas.beginPath();
           this.#ctx_canvas.moveTo(-8 * deltatime * e, 0);
@@ -6153,7 +6279,7 @@ class FollowMode_R {
           this.#ctx_canvas.translate(this.#pa, this.#L);
           this.#ctx_canvas.scale(this.#Ca, this.#Ca);
           this.#ctx_canvas.save();
-          let pt = func_rotatePoint(0, 80, -this.#ta);
+          const pt = func_rotatePoint(0, 80, -this.#ta);
           this.#ctx_canvas.translate(pt.x, pt.y);
           this.#ctx_canvas.drawImage(
             objG_assets.warshipIcon,
@@ -6162,7 +6288,7 @@ class FollowMode_R {
           );
           this.#ctx_canvas.restore();
           this.#ctx_canvas.rotate(-this.#ta);
-          let e = 0.9;
+          const e = 0.9;
           this.#ctx_canvas.translate(0, -(-20 - 10 * deltatime));
           this.#ctx_canvas.fillStyle = "rgba(255,102,0,0.8)";
           this.#ctx_canvas.beginPath();
@@ -6174,7 +6300,7 @@ class FollowMode_R {
         }
       }
       objGUI_anchor.startUILayer();
-      bool_drawUI && objGUI_gameInfo.draw(this.#ctx_canvas);
+      if (bool_drawUI) objGUI_gameInfo.draw(this.#ctx_canvas);
       if (0 < this.whiteFlash) {
         this.#ctx_canvas.save();
         this.#ctx_canvas.globalAlpha = this.whiteFlash;
@@ -6195,35 +6321,30 @@ class FollowMode_R {
     current_following_plane_id = 0;
     Z = false;
     gb = ma = 0;
-    objGUI_gameInfo && objGUI_gameInfo.clearBonusDisplay();
-    for (let id in objD_pickups) delete objD_pickups[id];
+    if (objGUI_gameInfo) objGUI_gameInfo.clearBonusDisplay();
+    for (const id in objD_pickups) delete objD_pickups[id];
     objD_pickups = {};
-    for (let id in objD_missiles) delete objD_missiles[id];
+    for (const id in objD_missiles) delete objD_missiles[id];
     objD_missiles = {};
-    for (let id in objD_planes) delete objD_planes[id];
+    for (const id in objD_planes) delete objD_planes[id];
     objD_planes = {};
-    for (let id in objD_specialEntities) delete objD_specialEntities[id];
+    for (const id in objD_specialEntities) delete objD_specialEntities[id];
     objD_specialEntities = {};
   }
   C() {
     let scale_factor = 2,
-      b,
-      c;
-    bool_setting_highQuality && (scale_factor = 1);
+      b;
+    if (bool_setting_highQuality) scale_factor = 1;
     this.#html_canvas.width = window.innerWidth / scale_factor;
     this.#html_canvas.height = window.innerHeight / scale_factor;
     canvas_width = this.#html_canvas.width;
     canvas_height = this.#html_canvas.height;
     b = canvas_height * scale_factor;
-    c = -50 + 50 * scale_factor + "%";
-    let a = "translate(" + c + "," + c + ") scale(" + scale_factor + ")";
+    const c = -50 + 50 * scale_factor + "%";
+    const a = "translate(" + c + "," + c + ") scale(" + scale_factor + ")";
     $("#canvas").css({
       transform: a,
-    });
-    $("#canvas").css({
       "-ms-transform": a,
-    });
-    $("#canvas").css({
       "-webkit-transform": a,
     });
     num_scale_factor =
@@ -6234,14 +6355,8 @@ class FollowMode_R {
       b = "translate(-50%,0%) scale(" + b + ")";
       $("#mainDialog").css({
         transform: b,
-      });
-      $("#mainDialog").css({
         "-ms-transform": b,
-      });
-      $("#mainDialog").css({
         "-webkit-transform": b,
-      });
-      $("#mainDialog").css({
         top: "25%",
       });
     }
@@ -6281,7 +6396,7 @@ class UI_Anchor {
   }
 
   setupContext() {
-    let c = this.zoom,
+    const c = this.zoom,
       d = this.#html_canvas.width / 2 - this.x * c,
       f = this.#html_canvas.height / 2 - this.y * c;
     this.#ctx_canvas.setTransform(1, 0, 0, 1, 0, 0);
@@ -6291,12 +6406,11 @@ class UI_Anchor {
   applyShake(deltatime: number) {
     if (xa)
       if (0 < this.#c) {
-        let b = this.#g,
-          d;
+        let b = this.#g;
         if (250 > this.#c) b = (this.#c / 1e3 / 0.5) * this.#g;
         this.#h += 1;
         this.#q += 1.1;
-        d = Math.sin(this.#h) * (b / 4);
+        const d = Math.sin(this.#h) * (b / 4);
         b = Math.cos(this.#q) * b;
         this.#n = d;
         this.#k = b;
@@ -6412,39 +6526,40 @@ class FrameImage {
     this.#draw_height = -this.height * this.#u2;
   }
   draw(ctx: CanvasRenderingContext2D) {
-    this.#image
-      ? ctx.drawImage(
-          this.#image,
-          this.#x,
-          this.#y,
-          this.width,
-          this.height,
-          this.#draw_width + this.x,
-          this.#draw_height + this.y,
-          this.width,
-          this.height,
-        )
-      : ctx.drawImage(
-          this.canvas,
-          0,
-          0,
-          this.width,
-          this.height,
-          this.#draw_width + this.x,
-          this.#draw_height + this.y,
-          this.width,
-          this.height,
-        );
+    if (this.#image) {
+      ctx.drawImage(
+        this.#image,
+        this.#x,
+        this.#y,
+        this.width,
+        this.height,
+        this.#draw_width + this.x,
+        this.#draw_height + this.y,
+        this.width,
+        this.height,
+      );
+    } else
+      ctx.drawImage(
+        this.canvas,
+        0,
+        0,
+        this.width,
+        this.height,
+        this.#draw_width + this.x,
+        this.#draw_height + this.y,
+        this.width,
+        this.height,
+      );
   }
   renderTintedFrame(tint_color: string) {
-    let f = document.createElement("canvas"),
+    const f = document.createElement("canvas"),
       n = f.getContext("2d")!;
     f.width = this.width;
     f.height = this.height;
-    let k = document.createElement("canvas");
+    const k = document.createElement("canvas");
     k.width = this.width;
     k.height = this.height;
-    let m = k.getContext("2d")!;
+    const m = k.getContext("2d")!;
     m.fillStyle = tint_color;
     m.fillRect(0, 0, k.width, k.height);
     m.globalCompositeOperation = "destination-atop";
@@ -6461,15 +6576,15 @@ class FrameImage {
     );
     n.globalAlpha = 1;
     n.drawImage(k, 0, 0);
-    let tinted_frame_image = new FrameImage();
+    const tinted_frame_image = new FrameImage();
     tinted_frame_image.frameWithCanvas(f, this.#draw_width, this.#draw_height);
     return tinted_frame_image;
   }
   getImageCopy() {
-    let c = document.createElement("canvas");
+    const c = document.createElement("canvas");
     c.width = this.width;
     c.height = this.height;
-    let d = c.getContext("2d")!;
+    const d = c.getContext("2d")!;
     d.drawImage(
       this.#image,
       this.#x,
@@ -6481,7 +6596,7 @@ class FrameImage {
       this.width,
       this.height,
     );
-    let f = d.getImageData(0, 0, this.width, this.height);
+    const f = d.getImageData(0, 0, this.width, this.height);
     return {
       canvas: c,
       ctx: d,
@@ -6490,10 +6605,10 @@ class FrameImage {
     };
   }
   generateTintImage2(r: number, g: number, b: number, a: number) {
-    let canvas = document.createElement("canvas");
+    const canvas = document.createElement("canvas");
     canvas.width = this.width;
     canvas.height = this.height;
-    let ctx = canvas.getContext("2d")!;
+    const ctx = canvas.getContext("2d")!;
     ctx.drawImage(
       this.#image,
       this.#x,
@@ -6505,7 +6620,7 @@ class FrameImage {
       this.width,
       this.height,
     );
-    let p = ctx.getImageData(0, 0, this.width, this.height),
+    const p = ctx.getImageData(0, 0, this.width, this.height),
       image_raw = p.data,
       size = image_raw.length;
     for (let t = 0; t < size; ) {
@@ -6515,7 +6630,7 @@ class FrameImage {
       image_raw[t] = 0.8 * image_raw[t++];
     }
     ctx.putImageData(p, 0, 0);
-    let tinted_frame_image = new FrameImage();
+    const tinted_frame_image = new FrameImage();
     tinted_frame_image.frameWithCanvas(
       canvas,
       this.#draw_width,
@@ -6529,10 +6644,10 @@ class FrameImage {
     g: number,
     b: number,
   ) {
-    let canvas = document.createElement("canvas");
+    const canvas = document.createElement("canvas");
     canvas.width = this.width;
     canvas.height = this.height;
-    let ctx = canvas.getContext("2d")!;
+    const ctx = canvas.getContext("2d")!;
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = "copy";
     ctx.drawImage(img_rgbk[3], 0, 0);
@@ -6549,15 +6664,15 @@ class FrameImage {
       ctx.globalAlpha = b / 255;
       ctx.drawImage(img_rgbk[2], 0, 0);
     }
-    let frame_image = new FrameImage();
+    const frame_image = new FrameImage();
     frame_image.frameWithCanvas(canvas, this.#draw_width, this.#draw_height);
     return frame_image;
   }
   generateRGBKs(): FrameImage.ImgRGBK {
-    let canvas = document.createElement("canvas");
+    const canvas = document.createElement("canvas");
     canvas.width = this.width;
     canvas.height = this.height;
-    let ctx = canvas.getContext("2d")!;
+    const ctx = canvas.getContext("2d")!;
     ctx.drawImage(
       this.#image,
       this.#x,
@@ -6569,12 +6684,12 @@ class FrameImage {
       this.width,
       this.height,
     );
-    let image_data = ctx.getImageData(0, 0, this.width, this.height).data;
-    let size = image_data.length;
-    let img_R = this.getImageCopy();
-    let img_G = this.getImageCopy();
-    let img_B = this.getImageCopy();
-    let img_K = this.getImageCopy();
+    const image_data = ctx.getImageData(0, 0, this.width, this.height).data;
+    const size = image_data.length;
+    const img_R = this.getImageCopy();
+    const img_G = this.getImageCopy();
+    const img_B = this.getImageCopy();
+    const img_K = this.getImageCopy();
     for (let i = 0; i < size; i += 4) {
       img_R.toData[i] = image_data[i];
       img_R.toData[i + 1] = 0;
@@ -6597,10 +6712,10 @@ class FrameImage {
     img_G.ctx.putImageData(img_G.to, 0, 0);
     img_B.ctx.putImageData(img_B.to, 0, 0);
     img_K.ctx.putImageData(img_K.to, 0, 0);
-    let R = new Image();
-    let G = new Image();
-    let B = new Image();
-    let K = new Image();
+    const R = new Image();
+    const G = new Image();
+    const B = new Image();
+    const K = new Image();
     R.src = img_R.canvas.toDataURL();
     G.src = img_G.canvas.toDataURL();
     B.src = img_B.canvas.toDataURL();
@@ -6608,11 +6723,11 @@ class FrameImage {
     return [R, G, B, K];
   }
   renderToCanvas() {
-    let c = document.createElement("canvas"),
+    const c = document.createElement("canvas"),
       d = c.getContext("2d")!;
     c.width = this.width;
     c.height = this.height;
-    let f = document.createElement("canvas");
+    const f = document.createElement("canvas");
     f.width = this.width;
     f.height = this.height;
     f.getContext("2d");
@@ -6666,8 +6781,8 @@ class AnimationManager {
   //   this.#animations[a].setInterval(d);
   // }
   createAnimation(id_anim: string) {
-    let obj_anim = this.#animations[id_anim];
-    let d = new DrawAnimation();
+    const obj_anim = this.#animations[id_anim];
+    const d = new DrawAnimation();
     d.setup(obj_anim);
     return d;
   }
@@ -6687,7 +6802,7 @@ class AnimationManager {
     max_parallel: number,
     strength: number,
   ) {
-    let k = objG_animationManager.createAnimation("explosion");
+    const k = objG_animationManager.createAnimation("explosion");
     k.setScale(size);
     k.posX = x;
     k.posY = y;
@@ -6708,7 +6823,7 @@ class AnimationManager {
       func_isTimeElapsed_50ms()
     ) {
       if (1 >= this.#instances_DebrisMan.length) {
-        let n = new ParticleDebrisManager();
+        const n = new ParticleDebrisManager();
         n.init(x, y, v_x, v_y);
         this.#instances_DebrisMan.push(n);
       }
@@ -6736,8 +6851,8 @@ class AnimationManager {
     }
   }
   drawBehind(ctx: CanvasRenderingContext2D) {
-    for (let b in this.#runBG) {
-      let e = this.#runBG[b];
+    for (const b in this.#runBG) {
+      const e = this.#runBG[b];
       ctx.save();
       ctx.translate(e.posX, e.posY);
       ctx.scale(e.scaleX, e.scaleY);
@@ -6747,8 +6862,8 @@ class AnimationManager {
     }
   }
   drawLayer2(ctx: CanvasRenderingContext2D) {
-    for (let b in this.#runL2) {
-      let d = this.#runL2[b];
+    for (const b in this.#runL2) {
+      const d = this.#runL2[b];
       ctx.save();
       ctx.translate(d.posX, d.posY);
       ctx.scale(d.scaleX, d.scaleY);
@@ -6758,8 +6873,8 @@ class AnimationManager {
     }
   }
   draw(ctx: CanvasRenderingContext2D) {
-    for (let b in this.#runL1) {
-      let d = this.#runL1[b];
+    for (const b in this.#runL1) {
+      const d = this.#runL1[b];
       ctx.save();
       ctx.translate(d.posX, d.posY);
       ctx.scale(d.scaleX, d.scaleY);
@@ -6769,7 +6884,7 @@ class AnimationManager {
     }
   }
   drawExplosions(ctx: CanvasRenderingContext2D) {
-    for (let d in this.#instances_DebrisMan)
+    for (const d in this.#instances_DebrisMan)
       this.#instances_DebrisMan[d].draw(ctx);
   }
 }
@@ -6862,7 +6977,7 @@ class ParticleU_R {
     ctx.translate(this.pos.x, this.pos.y);
     ctx.scale(this.scale, this.scale);
     ctx.rotate(this.rotation);
-    let e =
+    const e =
       "hsla(" +
       this.color.h +
       "," +
@@ -6905,7 +7020,7 @@ class ParticleManager {
     this.#e = y;
     q = this.life / this.#d;
     for (let i = 0; i < this.#d; i++) {
-      let j = new ParticleU_R();
+      const j = new ParticleU_R();
       this.resetParticle(j);
       j.active = false;
       j.time = q * i;
@@ -6981,7 +7096,7 @@ class ParticleManager {
       g.time += deltatime;
       if (g.active) {
         h = g.time / this.life;
-        1 < h && (h = 1);
+        if (1 < h) h = 1;
         g.pos.x += 1 * g.speed.x;
         g.pos.y += 1 * g.speed.y;
         if (0 <= h && 0.1 > h) {
@@ -7070,7 +7185,7 @@ class ParticleManager {
   }
   draw(ctx: CanvasRenderingContext2D) {
     for (let i = this.#d - 1; 0 <= i; i--) {
-      let particle = this.#f[i];
+      const particle = this.#f[i];
       if (particle.active) particle.draw(ctx);
     }
   }
@@ -7085,24 +7200,24 @@ class ParticleDebrisManager {
     return Math.random() * a - a / 2;
   }
   init(x: number, y: number, v_x: number, v_y: number) {
-    let q, n, k, m, l, p, r;
+    let n, k, m, p;
     this.#x = x;
     this.#y = y;
 
     x = 2 + 4 * Math.random();
     y = 2 + 4 * Math.random();
-    q = 2 + 4 * Math.random();
+    const q = 2 + 4 * Math.random();
     Math.random();
 
     n = Math.PI / 4;
     k = this.#gen_random(Math.PI / 2);
 
     m = this.#gen_random(n) + k;
-    l = Math.cos(m);
+    const l = Math.cos(m);
     m = Math.sin(m);
 
     p = (2 / 3) * Math.PI + this.#gen_random(n) + k;
-    r = Math.cos(p);
+    const r = Math.cos(p);
     p = Math.sin(p);
 
     k = (4 / 3) * Math.PI + this.#gen_random(n) + k;
@@ -7114,23 +7229,23 @@ class ParticleDebrisManager {
     this.addDebree(n * q + v_x, k * q + v_y);
   }
   addDebree(x: number, y: number) {
-    let debris = new ParticleDebris();
+    const debris = new ParticleDebris();
     debris.init(this.#x, this.#y);
     debris.setSpeed(x, y);
     this.#debris_instances.push(debris);
   }
   update(deltatime: number) {
     let b = 0;
-    for (let debreeID in this.#debris_instances) {
-      let d = this.#debris_instances[debreeID];
+    for (const debreeID in this.#debris_instances) {
+      const d = this.#debris_instances[debreeID];
       d.update(deltatime);
       if (d.deleting) this.#debris_instances.splice(parseInt(debreeID), 1);
       b++;
     }
-    0 == b && (this.deleting = true);
+    if (0 == b) this.deleting = true;
   }
   draw(ctx: CanvasRenderingContext2D) {
-    for (let debreeID in this.#debris_instances)
+    for (const debreeID in this.#debris_instances)
       this.#debris_instances[debreeID].draw(ctx);
   }
 }
@@ -7265,7 +7380,7 @@ class Missile {
       this.timeToNextFrame = this.frameSwitchTime;
     }
     let e = 0.7;
-    this.flameState && (e = 1);
+    if (this.flameState) e = 1;
     if (0 == this.type) {
       this.#obj_particleTrails.width = 1.5 * e;
       this.#obj_particleTrails.style = "rgba(247, 189, 57, 1.0)";
@@ -7275,7 +7390,8 @@ class Missile {
       this.#obj_particleTrails.draw(ctx);
       ctx.save();
       ctx.translate(this.x, this.y);
-      this.flameState ? ctx.scale(0.7, 0.7) : ctx.scale(0.9, 0.9);
+      if (this.flameState) ctx.scale(0.7, 0.7);
+      else ctx.scale(0.9, 0.9);
       ctx.rotate(this.angle);
       ctx.translate(-27, 0);
       objG_assets.frames.throttleFlame.draw(ctx);
@@ -7284,7 +7400,7 @@ class Missile {
     ctx.save();
     ctx.translate(this.x, this.y);
     if (2 != this.type) {
-      1 == this.type && (c = 1.4);
+      if (1 == this.type) c = 1.4;
       ctx.scale(c, c);
       if (
         1 == this.type &&
@@ -7303,7 +7419,8 @@ class Missile {
       if (0 == this.type) objG_assets.frames.missile_attack.draw(ctx);
       else objG_assets.frames.bomb.draw(ctx);
     } else {
-      ctx.beginPath(), (ctx.fillStyle = "#FF0000");
+      ctx.beginPath();
+      ctx.fillStyle = "#FF0000";
       ctx.arc(0, 0, 6, 0, 2 * Math.PI);
       ctx.fill();
       ctx.beginPath();
@@ -7314,14 +7431,17 @@ class Missile {
     ctx.restore();
   }
   drawReflection(ctx: CanvasRenderingContext2D, deltatime: number) {
-    let c = room_height / 2,
-      e = c - this.y;
+    let c = room_height / 2;
+    const e = c - this.y;
     if (!(0 > e || 170 < e)) {
-      let f = e / 170;
+      const f = e / 170;
       ctx.save();
       ctx.translate(this.x, c + e - 25);
       c = 1;
-      30 > e && 15 <= e ? (c = (e - 15) / 15) : 15 > e && (c = 0);
+      if (30 > e) {
+        if (15 <= e) c = (e - 15) / 15;
+        else if (15 > e) c = 0;
+      }
       ctx.globalAlpha = 0.7 * (1 - f) * c;
       ctx.scale(1.1, 0.6);
       ctx.beginPath();
@@ -7337,7 +7457,7 @@ class Missile {
     this.dstX = 10 * x_gu;
     this.dstY = 10 * y_gu;
     if (this.first_set) {
-      let obj_plane = objD_planes[id_plane];
+      const obj_plane = objD_planes[id_plane];
       if (obj_plane) {
         y_gu = 5 * Math.abs(Math.cos(obj_plane.angle + Math.PI / 2));
         this.origX = obj_plane.x;
@@ -7351,7 +7471,7 @@ class Missile {
         this.origY = this.dstY;
       }
       this.first_set = false;
-      1 == this.type && (this.angle = Math.PI / 2);
+      if (1 == this.type) this.angle = Math.PI / 2;
     }
     if (0 == this.type) {
       x_gu = this.dstX - this.origX;
@@ -7406,13 +7526,13 @@ class ParticleTrails {
           c = frametime_millis - this.tailJoints[i][0].t;
           if (c > this.trailTime) {
             this.tailJoints[i].splice(0, 1);
-            0 == this.tailJoints[i].length && this.tailJoints.splice(i, 1);
+            if (0 == this.tailJoints[i].length) this.tailJoints.splice(i, 1);
           }
           break;
         }
       }
     }
-    let tail_remain = this.timeToNextJoint / 50;
+    const tail_remain = this.timeToNextJoint / 50;
     d = this.tailJoints.length - 1;
     for (let i = 0; i <= d; i++) {
       let c = this.tailJoints[i].length;
@@ -7439,7 +7559,7 @@ class ParticleTrails {
         for (let c = this.tailJoints[a].length, e = 0; e < c - 1; e++) {
           ctx.strokeStyle = this.tailJoints[a][e].style!;
           let h = (e / c) * (8 + 8 * this.tailJoints[a][e].fx);
-          0 == h && (h = 0.1);
+          if (0 == h) h = 0.1;
           ctx.lineWidth = h * this.width;
           ctx.beginPath();
           ctx.lineTo(this.tailJoints[a][e].x, this.tailJoints[a][e].y);
@@ -7500,17 +7620,17 @@ class ParticleFlags {
   }
   update(deltatime: number) {
     let complete = false;
-    let count = this.tailJoints[0].length;
+    const count = this.tailJoints[0].length;
     if (0 == count) complete = true;
     else {
-      let tail_segment = this.tailJoints[0][count - 1];
+      const tail_segment = this.tailJoints[0][count - 1];
       let c = Math.sqrt(
         Math.pow(tail_segment.x - this.#x, 2) +
           Math.pow(tail_segment.y - this.#y, 2),
       );
-      let c_old = c;
+      const c_old = c;
       if (1 < count) {
-        let tail_segment = this.tailJoints[0][count - 2];
+        const tail_segment = this.tailJoints[0][count - 2];
         c = Math.sqrt(
           Math.pow(tail_segment.x - this.#x, 2) +
             Math.pow(tail_segment.y - this.#y, 2),
@@ -7547,15 +7667,15 @@ class ParticleFlags {
         p = 0,
         r = 0;
       for (let s = this.tailJoints[0].length - 2; 0 <= s; s--) {
-        let t = this.tailJoints[0][s].x,
-          w = this.tailJoints[0][s].y,
-          u;
+        const t = this.tailJoints[0][s].x,
+          w = this.tailJoints[0][s].y;
+        let u;
         if (g) {
           d = this.#x;
           a = this.#y;
         }
-        let vp = t - d,
-          x = w - a,
+        const vp = t - d;
+        let x = w - a,
           A = 0,
           C = 0,
           z = 0,
@@ -7575,7 +7695,7 @@ class ParticleFlags {
           c = this.letterMinDistance;
           if (0 < h) {
             if (q < this.flagDivisions) {
-              let flag_height = this.flagHeight;
+              const flag_height = this.flagHeight;
               n = z - n;
               k = B - k;
               n /= this.letterMinDistance;
@@ -7586,8 +7706,8 @@ class ParticleFlags {
               let v = B + n;
               x = z - k;
               E = B - n;
-              let tex_width = this.textureWidth;
-              let tex_height = this.textureHeight;
+              const tex_width = this.textureWidth;
+              const tex_height = this.textureHeight;
               let F, G, H, J;
               if (this.flipY && 0 < A) {
                 F = 0;
@@ -7603,9 +7723,9 @@ class ParticleFlags {
                 H = tex_width * (1 - q / this.flagDivisions);
                 J = tex_width * (1 - (q + 1) / this.flagDivisions);
               }
-              let ctx_r = ctx;
-              let tex_r = this.texture;
-              let list_vertices = [
+              const ctx_r = ctx;
+              const tex_r = this.texture;
+              const list_vertices = [
                 {
                   x: p,
                   y: r,
@@ -7631,12 +7751,12 @@ class ParticleFlags {
                   v: F,
                 },
               ];
-              let list_triangles = [
+              const list_triangles = [
                 [0, 1, 2],
                 [2, 3, 0],
               ];
               for (p = 0; 2 > p; p++) {
-                let triangle = list_triangles[p];
+                const triangle = list_triangles[p];
                 r = list_vertices[triangle[0]].x;
                 u = list_vertices[triangle[1]].x;
                 v = list_vertices[triangle[2]].x;
@@ -7646,9 +7766,9 @@ class ParticleFlags {
                 G = list_vertices[triangle[0]].u;
                 H = list_vertices[triangle[1]].u;
                 J = list_vertices[triangle[2]].u;
-                let L = list_vertices[triangle[0]].v;
-                let M = list_vertices[triangle[1]].v;
-                let D = list_vertices[triangle[2]].v;
+                const L = list_vertices[triangle[0]].v;
+                const M = list_vertices[triangle[1]].v;
+                const D = list_vertices[triangle[2]].v;
                 ctx_r.save();
                 ctx_r.beginPath();
                 ctx_r.moveTo(r, x);
@@ -7656,7 +7776,7 @@ class ParticleFlags {
                 ctx_r.lineTo(v, F);
                 ctx_r.closePath();
                 ctx_r.clip();
-                let N = G * M + L * J + H * D - M * J - L * H - G * D;
+                const N = G * M + L * J + H * D - M * J - L * H - G * D;
                 ctx_r.transform(
                   (r * M + L * v + u * D - M * v - L * u - r * D) / N,
                   (x * M + L * F + E * D - M * F - L * E - x * D) / N,
@@ -7762,8 +7882,8 @@ class ScoreAccumInfo {
   }
   draw(ctx: CanvasRenderingContext2D) {
     ctx.globalAlpha = 1;
-    for (let i in this.#drawable_canvas_img) {
-      let canvas_img = this.#drawable_canvas_img[i],
+    for (const i in this.#drawable_canvas_img) {
+      const canvas_img = this.#drawable_canvas_img[i],
         f = Math.sqrt(
           (frametime_millis - this.#inst_create_time_list[i]) / 2e3,
         ),
@@ -7832,7 +7952,7 @@ class SFXmanager {
   };
   sound!: SFXmanager.Howl;
   load(callback: () => void) {
-    // @ts-ignore old version types unavailable
+    // @ts-expect-error old version types unavailable
     this.sound = new Howl({
       urls: [
         "sounds/out.mp3",
@@ -7843,7 +7963,7 @@ class SFXmanager {
       sprite: this.#clip_info,
       onload: () => {
         this.#isLoaded = true;
-        callback && callback();
+        callback?.();
       },
     });
   }
@@ -7856,14 +7976,14 @@ class SFXmanager {
   ) {
     if (this.#isLoaded && 0 != num_setting_muteVol && wa) {
       volume *= num_max_volume;
-      let q = this.#clip_info[sfx_name];
+      const q = this.#clip_info[sfx_name];
       if (!this.#instance_tracker[sfx_name])
         this.#instance_tracker[sfx_name] = 0;
       if (
         !(0 < max_parallel && this.#instance_tracker[sfx_name] >= max_parallel)
       ) {
         this.sound.play(sfx_name, (nodeId: number) => {
-          let gameNode = objG_sfxManager.sound._nodeById(nodeId);
+          const gameNode = objG_sfxManager.sound._nodeById(nodeId);
           if (gameNode?.bufferSource)
             gameNode.bufferSource.playbackRate.value = speed;
           objG_sfxManager.sound.volume(volume, nodeId);
@@ -7897,11 +8017,11 @@ namespace SFXmanager {
     };
   }
   export interface Howl {
-    constructor(options: {
-      urls: string[];
-      sprite: SoundSpriteDefinitions;
-      onload?: () => void;
-    }): Howl;
+    // constructor(options: {
+    //   urls: string[];
+    //   sprite: SoundSpriteDefinitions;
+    //   onload?: () => void;
+    // }): Howl;
     play(sfx_name: string, callback?: (end: number) => void): number;
     stop(id: number): number;
     volume(volume: number, nodeId?: number): number;
@@ -7970,7 +8090,8 @@ class UI_KillStatus {
     }
   }
   replaceCode(flag_streak: number) {
-    for (let c in this.#b) {
+    for (const sc in this.#b) {
+      const c = parseInt(sc);
       if (64 >= this.#b[c] && 64 >= flag_streak)
         return this.#b[c] < flag_streak ? ((this.#b[c] = flag_streak), c) : -2;
       if (
@@ -7984,7 +8105,7 @@ class UI_KillStatus {
   }
   push(flag_streak: number, kills: number) {
     if (256 == flag_streak) this.#l = kills;
-    let d = this.replaceCode(flag_streak);
+    const d = this.replaceCode(flag_streak);
     if (-1 == d) {
       this.#b.push(flag_streak);
       if (1 == this.#b.length) this.processCode(flag_streak);
@@ -8050,7 +8171,7 @@ class UI_KillStatus {
     }
   }
   clearNearMiss() {
-    for (let i in this.#b)
+    for (const i in this.#b)
       if (128 == this.#b[i]) {
         if (i == "0") {
           this.#h = this.#e;
@@ -8124,9 +8245,9 @@ class SpecialEntity {
       this.prevX = this.x;
       this.prevY = this.y;
       this.prevFloatValue = this.floatValue;
-      let h = g * (this.dstY - this.origY) + this.origY,
-        q =
-          g * (this.dstFloatValue - this.origFloatValue) + this.origFloatValue;
+      let h = g * (this.dstY - this.origY) + this.origY;
+      const q =
+        g * (this.dstFloatValue - this.origFloatValue) + this.origFloatValue;
       this.x = g * (this.dstX - this.origX) + this.origX;
       this.y = h;
       this.floatValue = q;
@@ -8170,7 +8291,7 @@ class SpecialEntity {
     }
   }
   loadWarshipCanvas() {
-    let a = document.createElement("canvas"),
+    const a = document.createElement("canvas"),
       b = a.getContext("2d")!,
       d = objG_assets.warshipImage.height;
     a.width = objG_assets.warshipImage.width;
@@ -8196,8 +8317,8 @@ class SpecialEntity {
             this.warshipCanvas.width,
             this.warshipCanvas.height,
           );
-          let d = 0.267 * this.warshipCanvas.width,
-            e = 0.63 * this.warshipCanvas.height;
+          let d = 0.267 * this.warshipCanvas.width;
+          const e = 0.63 * this.warshipCanvas.height;
           this.warshipContext.save();
           this.warshipContext.translate(0, this.floatValue + 4);
           this.warshipContext.translate(
@@ -8384,7 +8505,7 @@ class SpecialEntity {
   }
   setFragment(frag: number) {
     this.fragment = frag;
-    3 != frag && 1 == frag && (this.#a = 0);
+    if (3 != frag && 1 == frag) this.#a = 0;
   }
   setCannonAngle(angle: number) {
     this.origCannonAngle = this.cannonAngle;
@@ -8410,9 +8531,9 @@ let search_params = window.location.search;
 if ("?" == search_params.charAt(0)) {
   search_params = search_params.slice(1);
 }
-let param = search_params.split("&");
+const param = search_params.split("&");
 for (let e = 0; e < param.length; e++) {
-  let f = param[e].split("=");
+  const f = param[e].split("=");
   obj_browserQueryParams[f[0]] = f[1];
 }
 
@@ -8439,7 +8560,7 @@ if (0 == num_setting_muteVol || bool_internet_explorer) {
   func_displayMuteAudio();
 }
 
-bool_internet_explorer && $("#sndIcon").hide();
+if (bool_internet_explorer) $("#sndIcon").hide();
 
 if (window.localStorage.nick && $("#nick")[0]) {
   ($("#nick")[0] as HTMLInputElement).value = window.localStorage.nick;
@@ -8453,7 +8574,7 @@ document.oncontextmenu = (ev: MouseEvent) => {
 };
 
 window.onload = () => {
-  // @ts-ignore Modernizr dynamically loaded
+  // @ts-expect-error Modernizr dynamically loaded
   if (Modernizr.canvas && Modernizr.websockets) {
     if (objG_followMode == null) {
       if (window.devicePixelRatio) {
