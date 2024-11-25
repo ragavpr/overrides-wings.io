@@ -7350,7 +7350,7 @@ class Missile {
         this.#e = 5;
         g = Math.random() / 2;
         c = (0.2 + (0.5 - ((a - this.y) / (a - c)) * 0.5)) * (0.95 + g);
-        g = 20 * Math.sin(this.angle);
+        g = 20 * Math.sin(this.angle + Math.PI/2);
         obj_particleImpacts.addSplash(
           this.x - g,
           a + 5 * Math.random(),
