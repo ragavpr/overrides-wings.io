@@ -2,6 +2,7 @@ import ads from "./lib/ads";
 import tracking from "./lib/tracking";
 import { EventManager } from "./lib/EventManager";
 import { ParticleDust } from "./lib/ParticleDust";
+
 type GameSheetMapping = [
   id: string,
   x: number,
@@ -362,20 +363,14 @@ function func_displaySelectedColor(int_color_id: number) {
         break;
       }
     }
-    if (css_style.addRule)
-      css_style.addRule(
-        ".btn-decal" + (i + 1) + ":before",
-        "background-image: url(" + image_str + ")",
-      );
-    else
-      css_style.insertRule(
-        ".btn-decal" +
-          (i + 1) +
-          ":before{background-image: url(" +
-          image_str +
-          ")}",
-        css_style.cssRules.length,
-      );
+    css_style.insertRule(
+      ".btn-decal" +
+        (i + 1) +
+        ":before{background-image: url(" +
+        image_str +
+        ")}",
+      css_style.cssRules.length,
+    );
   }
   for (let i = 0; 5 >= i; i++) $("#check" + i).hide();
   $("#check" + int_color_id).show();
@@ -1528,13 +1523,11 @@ class InputManager {
       }
     };
     const mousemove = (ev: MouseEvent) => {
-      if (
-        !bool_following_plane &&
-        ((this.mouseMoved = true),
-        (qc = ev.clientX),
-        (rc = ev.clientY),
-        bool_isLeftMousePressed)
-      ) {
+      this.mouseMoved = true;
+      qc = ev.clientX;
+      rc = ev.clientY;
+
+      if (!bool_following_plane && bool_isLeftMousePressed) {
         const c = ev.clientY - d;
         let g = objGUI_anchor.x - (ev.clientX - f),
           h = objGUI_anchor.y - c;
@@ -3035,17 +3028,17 @@ class Plane {
         !this.isInvulnerable() &&
         !g2;
       if (k2) {
-        if (false == this.hadHover) {
+        if (!this.hadHover) {
           this.hadHover = true;
           this.#obj_particleTrails.push();
         }
       } else this.hadHover = false;
       if (this.#obj_particleTrails) {
-        this.#obj_particleTrails.enabled = !!k2;
+        this.#obj_particleTrails.enabled = k2;
         this.#obj_particleTrails.update(deltatime);
       }
       if (this.#obj_particleFlags) {
-        this.#obj_particleFlags.enabled = !!k2;
+        this.#obj_particleFlags.enabled = k2;
         this.#obj_particleFlags.update(deltatime);
       }
       const k3 = room_height / 2;
@@ -3185,8 +3178,8 @@ class Plane {
   }
   getCurrentFrameNum(ctx: CanvasRenderingContext2D) {
     if (this.#g == undefined) return 0;
-    let a = Math.floor(this.#g / ((2 * Math.PI) / 28)) + 1;
-    return (a = this.#r[(a - 1) % 14]);
+    const a = Math.floor(this.#g / ((2 * Math.PI) / 28)) + 1;
+    return this.#r[(a - 1) % 14];
   }
   draw(ctx: CanvasRenderingContext2D, deltatime: number) {
     if (this.inGame && this.#pa) {
@@ -3256,9 +3249,11 @@ class Plane {
       f = this.decalFrames[e - 1] ?? this.decalFrames[0];
       f.draw(ctx);
       if (16 < this.speed) {
-        if (((this.#C += 0.06), 0.9 < this.#C)) this.#C = 0.9;
+        this.#C += 0.06;
+        if (0.9 < this.#C) this.#C = 0.9;
       } else {
-        if (((this.#C -= 0.06), 0 > this.#C)) this.#C = 0;
+        this.#C -= 0.06;
+        if (0 > this.#C) this.#C = 0;
       }
       ctx.rotate(-Math.PI / 2);
       ctx.translate(0, 8);
@@ -3290,9 +3285,7 @@ class Plane {
       }
       if (this.#obj_particleManager) this.#obj_particleManager.draw(ctx);
       if (this.weapon == id_weapon_superweapon) {
-        e = false;
-        if (!(this.#g > 0.5 * Math.PI && this.#g < 0.5 * Math.PI + Math.PI))
-          e = true;
+        e = !(this.#g > 0.5 * Math.PI && this.#g < 0.5 * Math.PI + Math.PI);
         if (this.isShooting) {
           ctx.save();
           K = this.x - 10 * this.#Ga;
@@ -3465,7 +3458,7 @@ class Plane {
         if (127.5 > this.energy && 63.75 < this.energy) d = 30;
         else if (63.75 > this.energy) d = 0;
         ctx.fillStyle = "hsl(" + d + ", 100%, 50%)";
-        ctx.fillRect(-c / 2 + 0, 20, (this.energy / 255) * c, 8);
+        ctx.fillRect(-c / 2, 20, (this.energy / 255) * c, 8);
         ctx.strokeStyle = "rgba(255,255,255,1.0)";
         ctx.strokeRect(-c / 2, 20, c, 8);
       }
@@ -3481,10 +3474,10 @@ class Plane {
         ctx.fillText(this.name, -c / 2, d);
       }
       ctx.restore();
-      c = false;
-      if (qa == this.id) c = true;
-      d = false;
-      if (ub == this.id) d = true;
+
+      c = qa == this.id;
+
+      d = ub == this.id;
       if (c || 0 < this.#R || this.#O || d) {
         ctx.save();
         ctx.translate(this.x, this.y - 30);
@@ -3564,9 +3557,9 @@ class Plane {
       uint32_flaginfo >>= 8;
       const scale = uint32_flaginfo & 255;
       uint32_flaginfo >>= 8;
-      const flipY = 0 < (uint32_flaginfo & 4) ? true : false;
-      const flipX = 0 < (uint32_flaginfo & 2) ? true : false;
-      this.#G = 0 < (uint32_flaginfo & 8) ? true : false;
+      const flipY = 0 < (uint32_flaginfo & 4);
+      const flipX = 0 < (uint32_flaginfo & 2);
+      this.#G = 0 < (uint32_flaginfo & 8);
       this.#obj_particleFlags = new ParticleFlags();
       this.#obj_particleFlags.flipX = flipX;
       this.#obj_particleFlags.flipY = flipY;
@@ -3646,14 +3639,14 @@ class Plane {
     return this.#S;
   }
   setPaused(flag_4: number) {
-    this.#O = flag_4 ? true : false;
+    this.#O = !!flag_4;
   }
   setIsBot(flag_1024: number) {
-    this.isBot = flag_1024 ? true : false;
+    this.isBot = !!flag_1024;
   }
   setIsShooting(flag_2048: number) {
     if (!flag_2048 && this.isShooting) this.laserTimer = this.#Fa = 0;
-    this.isShooting = flag_2048 ? true : false;
+    this.isShooting = !!flag_2048;
   }
   laserHit(a: number, c: number, b: boolean) {
     this.#Ga = a;
@@ -3881,21 +3874,21 @@ class WaterSeaRipple {
       q = Math.sin(this.#c);
       ctx.globalAlpha = Math.sqrt(q);
       ctx.translate(this.#x, this.#y - 4 * this.#c + (h / 500) * 150 * this.#a);
-      ctx.scale(0 + 1 * q, 0 + 0.8 * q);
+      ctx.scale(1 * q, 0.8 * q);
       ctx.translate(0, -20);
       ctx.fillStyle = "#b3dff9";
       ctx.beginPath();
       q = this.#bezier.length;
       const n = 0.1 + 0.9 * this.#a;
-      ctx.moveTo(this.#bezier[0] * n + 0, this.#bezier[1] * n + 0);
+      ctx.moveTo(this.#bezier[0] * n, this.#bezier[1] * n);
       for (let k = 2; k < q; k += 6)
         ctx.bezierCurveTo(
-          this.#bezier[k] * n + 0,
-          this.#bezier[k + 1] * n + 0,
-          this.#bezier[k + 2] * n + 0,
-          this.#bezier[k + 3] * n + 0,
-          this.#bezier[k + 4] * n + 0,
-          this.#bezier[k + 5] * n + 0,
+          this.#bezier[k] * n,
+          this.#bezier[k + 1] * n,
+          this.#bezier[k + 2] * n,
+          this.#bezier[k + 3] * n,
+          this.#bezier[k + 4] * n,
+          this.#bezier[k + 5] * n,
         );
       ctx.fill();
       ctx.restore();
@@ -4097,8 +4090,7 @@ class Clouds {
       r = c + this.#d[h][2] * e,
       K = g + this.#d[h][3] * e,
       p = objGUI_anchor.getBounds();
-    const bl =
-      l > p[1].x || r < p[0].x || y > p[1].y || K < p[0].y ? false : true;
+    const bl = !(l > p[1].x || r < p[0].x || y > p[1].y || K < p[0].y);
     if (bl) {
       ctx.save();
       ctx.fillStyle = "rgba(190,227,249," + opacity + ")";
@@ -4128,8 +4120,7 @@ class Clouds {
       r = c + this.#d[q][2] * n;
     q = b + this.#d[q][3] * n;
     const K = objGUI_anchor.getBounds();
-    const bl =
-      l > K[1].x || r < K[0].x || y > K[1].y || q < K[0].y ? false : true;
+    const bl = !(l > K[1].x || r < K[0].x || y > K[1].y || q < K[0].y);
     if (bl) a.drawImage(this.#rendered[e], c + k * n, b + m * n);
   }
   update(deltatime: number) {
@@ -4470,13 +4461,11 @@ class Backgrounds {
       this.#obj_clouds.drawPreRenderedClouds(ctx);
   }
   update(deltatime: number) {
-    if (xa || !this.#c)
-      if (
-        ((this.#c = true),
-        this.waves.update(deltatime),
-        this.#obj_clouds.update(deltatime),
-        null != objG_player_plane)
-      ) {
+    if (xa || !this.#c) {
+      this.#c = true;
+      this.waves.update(deltatime);
+      this.#obj_clouds.update(deltatime);
+      if (null != objG_player_plane) {
         let b =
           objG_player_plane.x < -Gborder_X || objG_player_plane.x > Gborder_X;
         if (objG_eventManager.isSpaceWars())
@@ -4495,6 +4484,7 @@ class Backgrounds {
           this.#e = 0;
         }
       }
+    }
   }
 }
 // namespace Backgrounds {
@@ -4670,12 +4660,12 @@ class PickupItem {
       if (this.grabbing) ctx.translate(this.x, this.y);
       else ctx.translate(this.x, this.y + this.#e);
       ctx.rotate(0.2 * Math.sin(this.#l + this.#f) * this.#d);
-      ctx.scale(1 * this.#n, 1 * this.#n);
+      ctx.scale(this.#n, this.#n);
       ctx.translate(0, 10);
-      ctx.globalAlpha = this.alpha * g * 1;
+      ctx.globalAlpha = this.alpha * g;
       ctx.save();
-      if (0 < this.#a) ctx.globalAlpha = this.#m * g * 1;
-      ctx.scale(1 * (1 + (1 - this.#m)), 1 * this.#m);
+      if (0 < this.#a) ctx.globalAlpha = this.#m * g;
+      ctx.scale(1 + (1 - this.#m), this.#m);
       h.draw(ctx);
       ctx.restore();
       g = 0;
@@ -5307,7 +5297,7 @@ class WS_Connection {
         let offset2 = 1;
         const msg_type = data_view.getUint32(offset2, true);
         offset2 += 4;
-        const obj_plane = objD_planes[msg_type];
+        const obj_plane: Plane | undefined = objD_planes[msg_type];
         if (obj_plane) {
           const id_plane = data_view.getUint32(offset2, true);
           offset2 += 4;
@@ -5908,8 +5898,7 @@ class FollowMode_R {
       current_following_plane_id = 0;
       objG_player_plane = undefined;
     } else {
-      b = false;
-      if (0 == Oa) b = true;
+      b = 0 == Oa;
       if (!b) {
         b = false;
         for (const ds in listG_plane_ids) {
@@ -7076,8 +7065,8 @@ class ParticleManager {
           g.color.s = 100 * (1 - l) + "%";
           g.color.l = 100 * (0.4 + 0.1 * (1 - l)) + "%";
         }
-        g.speed.x += 1 * this.#a;
-        g.speed.y += 1 * this.#c;
+        g.speed.x += this.#a;
+        g.speed.y += this.#c;
       }
     }
   }
@@ -7126,8 +7115,8 @@ class ParticleManager {
           g.color.s = h.toFixed(2) + "%";
           g.color.l = (100 * (0.4 + 0.1 * (1 - l))).toFixed(2) + "%";
         }
-        g.speed.x += 1 * this.#a;
-        g.speed.y += 1 * this.#c;
+        g.speed.x += this.#a;
+        g.speed.y += this.#c;
       }
     }
   }
@@ -7171,8 +7160,8 @@ class ParticleManager {
           if (10 > h) h = 10;
           g.color.l = h + "%";
         }
-        g.speed.x += 1 * this.#a;
-        g.speed.y += 1 * this.#c;
+        g.speed.x += this.#a;
+        g.speed.y += this.#c;
       }
     }
   }
@@ -7886,9 +7875,8 @@ class ScoreAccumInfo {
       const canvas_img = this.#drawable_canvas_img[i],
         f = Math.sqrt(
           (frametime_millis - this.#inst_create_time_list[i]) / 2e3,
-        ),
-        h = 0.8 >= f ? f / 0.8 : 1 - (f - 0.8) / 0.2;
-      ctx.globalAlpha = h;
+        );
+      ctx.globalAlpha = 0.8 >= f ? f / 0.8 : 1 - (f - 0.8) / 0.2;
       ctx.drawImage(canvas_img, -canvas_img.width / 2, 40 * -f - 10);
     }
     ctx.globalAlpha = 1;
@@ -8093,7 +8081,12 @@ class UI_KillStatus {
     for (const sc in this.#b) {
       const c = parseInt(sc);
       if (64 >= this.#b[c] && 64 >= flag_streak)
-        return this.#b[c] < flag_streak ? ((this.#b[c] = flag_streak), c) : -2;
+        if (this.#b[c] < flag_streak) {
+          this.#b[c] = flag_streak;
+          return c;
+        } else {
+          return -2;
+        }
       if (
         (256 == this.#b[c] && 256 == flag_streak) ||
         (128 == this.#b[c] && 128 == flag_streak) ||
@@ -8453,7 +8446,7 @@ class SpecialEntity {
       if (32767.5 > this.energy && 16383.75 < this.energy) f = 30;
       else if (16383.75 > this.energy) f = 0;
       ctx.fillStyle = "hsl(" + f + ", 100%, 50%)";
-      ctx.fillRect(-d / 2 + 0, e + 0, (this.energy / 65535) * d, 8);
+      ctx.fillRect(-d / 2, e + 0, (this.energy / 65535) * d, 8);
       ctx.strokeStyle = "rgba(255,255,255,1.0)";
       ctx.strokeRect(-d / 2, e, d, 8);
       ctx.restore();
@@ -8562,7 +8555,7 @@ if (0 == num_setting_muteVol || bool_internet_explorer) {
 
 if (bool_internet_explorer) $("#sndIcon").hide();
 
-if (window.localStorage.nick && $("#nick")[0]) {
+if (window.localStorage.nick) {
   ($("#nick")[0] as HTMLInputElement).value = window.localStorage.nick;
 }
 
