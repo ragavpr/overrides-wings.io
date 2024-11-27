@@ -58,7 +58,7 @@ let Zb,
   num_scale_factor = 1,
   kb = 0,
   zc = 0,
-  Ac = 0.3,
+  pickup_fall_speed = 0.3,
   La = false,
   str_name_superweapon_holder: string | undefined,
   bool_setting_highQuality = true,
@@ -4573,7 +4573,7 @@ class PickupItem {
             this.alpha += deltatime / 1e3;
             if (1 < this.alpha) this.alpha = 1;
           }
-          this.#e = ((frametime_millis - this.#b) / 1e3) * Ac * 60;
+          this.#e = ((frametime_millis - this.#b) / 1e3) * pickup_fall_speed * 60;
         } else {
           this.#a += 0.1 * p;
           this.#e += 0.1;
@@ -4780,20 +4780,21 @@ class WS_Connection {
             objD_missiles[id_missile] = obj_missile;
             if (163 == msg_type || 162 == msg_type || 169 == msg_type)
               obj_missile.setType(flag_type_missile!);
-            let obj_plane: Plane | SpecialEntity = objD_planes[id_launched_by];
+            let obj_launcher: Plane | SpecialEntity =
+              objD_planes[id_launched_by];
             let isSpecialEntity = false;
-            if (!obj_plane) {
+            if (!obj_launcher) {
               isSpecialEntity = true;
-              obj_plane = objD_specialEntities[id_launched_by];
+              obj_launcher = objD_specialEntities[id_launched_by];
             }
-            if (obj_plane) {
+            if (obj_launcher) {
               let max_parallel = const_Q_0;
               let volume = 1;
               if (isSpecialEntity) {
                 max_parallel = const_Sa_3;
                 const dist = func_calculateDistance2D(
-                  obj_plane.x,
-                  obj_plane.y,
+                  obj_launcher.x,
+                  obj_launcher.y,
                   H.x,
                   H.y,
                 );
@@ -4805,15 +4806,15 @@ class WS_Connection {
                     1,
                     max_parallel,
                   );
-                (obj_plane as SpecialEntity).cannonShoot();
+                (obj_launcher as SpecialEntity).cannonShoot();
               } else {
                 if (
                   !(objG_player_plane && id_launched_by == objG_player_plane.id)
                 ) {
                   max_parallel = const_Sa_3;
                   const dist = func_calculateDistance2D(
-                    obj_plane.x,
-                    obj_plane.y,
+                    obj_launcher.x,
+                    obj_launcher.y,
                     H.x,
                     H.y,
                   );
@@ -4826,7 +4827,7 @@ class WS_Connection {
                     1,
                     max_parallel,
                   );
-                  (obj_plane as Plane).ammo--;
+                  (obj_launcher as Plane).ammo--;
                 }
               }
             }
@@ -4889,16 +4890,16 @@ class WS_Connection {
           }
         break;
       }
-      const flag_bonus = data_view.getUint16(offset, true);
+      const flag_plane_info = data_view.getUint16(offset, true);
       offset = offset + 2;
       let x_gu, y_gu, angle, energy, score;
-      const isPlane = flag_bonus & 1,
-        is_hovering = flag_bonus & 2,
-        flagPaused = flag_bonus & 4,
-        is_bot = flag_bonus & 1024,
-        is_shooting = flag_bonus & 2048;
+      const isPlane = flag_plane_info & 1,
+        is_hovering = flag_plane_info & 2,
+        flagPaused = flag_plane_info & 4,
+        is_bot = flag_plane_info & 1024,
+        is_shooting = flag_plane_info & 2048;
       if (1 == n && (163 == msg_type || 179 == msg_type))
-        qa = flag_bonus & 512 ? id_plane : 0;
+        qa = flag_plane_info & 512 ? id_plane : 0;
       if (isPlane) {
         x_gu = data_view.getFloat32(offset, true);
         offset += 4;
@@ -4910,18 +4911,18 @@ class WS_Connection {
         offset += 1;
       }
       let obj_plane = objD_planes[id_plane];
-      const P = flag_bonus & 256;
+      const P = flag_plane_info & 256;
       if (obj_plane && P) {
         obj_plane.setFrenzy();
         obj_plane.setPaused(flagPaused);
       }
       if (objG_player_plane == obj_plane) {
-        const z = flag_bonus & 8,
-          R = flag_bonus & 16,
-          S = flag_bonus & 32,
-          O = flag_bonus & 128,
-          G = flag_bonus & 4096;
-        if (flag_bonus & 64) objGUI_gameInfo.addBonus(64, 0);
+        const z = flag_plane_info & 8,
+          R = flag_plane_info & 16,
+          S = flag_plane_info & 32,
+          O = flag_plane_info & 128,
+          G = flag_plane_info & 4096;
+        if (flag_plane_info & 64) objGUI_gameInfo.addBonus(64, 0);
         else if (S) objGUI_gameInfo.addBonus(32, 0);
         else if (R) objGUI_gameInfo.addBonus(16, 0);
         else if (z) objGUI_gameInfo.addBonus(8, 0);
@@ -5215,6 +5216,7 @@ class WS_Connection {
     if (0 != msg_type)
       if (160 == msg_type) {
         // 0b 1010 0000
+        // 160 - initialize game variables
         let offset = 1;
         cloud_pos_time = -data_view.getUint32(offset, true);
         offset = offset + 4;
@@ -5232,7 +5234,7 @@ class WS_Connection {
         offset = offset + 4;
         ads.next_adTimeout_6s = data_view.getFloat32(offset, true);
         offset = offset + 4;
-        Ac = data_view.getFloat32(offset, true);
+        pickup_fall_speed = data_view.getFloat32(offset, true);
         offset = offset + 4;
         diff_score = data_view.getFloat32(offset, true);
         offset = offset + 4;
@@ -5242,7 +5244,9 @@ class WS_Connection {
         diff_kills = data_view.getFloat32(offset + 4, true);
       } else if (161 == msg_type || 171 == msg_type) {
         // 0b 1010 0001 // 0b 1010 1011
-        // processGlobal player plane //161 no revenge //171 revenge
+        // processGlobal player plane 
+        // - 161 no revenge
+        // - 171 revenge
         xa = true;
         let offset = 1;
         const id_plane = data_view.getUint32(offset, true);
@@ -5274,18 +5278,26 @@ class WS_Connection {
         if (161 == msg_type) plane_last_killed_by[id_plane] = 0;
       } else if (162 == msg_type || 178 == msg_type) {
         // 0b 1010 0010 // 0b 1011 0010
+        // 162 - initialize players, missiles, special_entities
+        // 178 - ????
         this.func_process_msg_extra(data_view, msg_type, false);
         this.firstClientListing = false;
         func_setPlayerCount();
       } else if (169 == msg_type || 172 == msg_type) {
         // 0b 1010 1001 // 0b 1010 1100
+        // 169 - update players, missiles, special_entities
+        // 172 - ????
         this.func_process_msg_extra(data_view, msg_type, false);
         func_setPlayerCount();
       } else if (163 == msg_type || 179 == msg_type) {
         // 0b 1010 0011 // 0b 1011 0011
+        // 163 - update players, missiles, special_entities (only status, positions, and energy)
+        // 179 - ????
         this.func_process_msg_extra(data_view, msg_type, false);
       } else if (164 == msg_type || 180 == msg_type) {
         // 0b 1010 0100 // 0b 1011 0100
+        // 164 - new player spawn (full info)
+        // 180 - ????
         if (164 == msg_type) this.func_process_msg_extra(data_view, 162, true);
         else {
           this.func_process_msg_extra(data_view, 178, true);
@@ -5302,7 +5314,7 @@ class WS_Connection {
           const id_plane = data_view.getUint32(offset2, true);
           offset2 += 4;
           const flag_demise_type = data_view.getUint8(offset2);
-          const was_killed = data_view.getUint32(offset2 + 1, true);
+          const final_score = data_view.getUint32(offset2 + 1, true);
           let plane_player = objG_player_plane;
           if (!plane_player && objG_player_plane_temp)
             plane_player = objG_player_plane_temp;
@@ -5349,8 +5361,8 @@ class WS_Connection {
                 objG_player_plane_temp = objG_player_plane;
                 objG_player_plane = undefined;
                 ka = 1;
-                W_wasKilled(was_killed);
-                func_displayGameoverScore(was_killed);
+                W_wasKilled(final_score);
+                func_displayGameoverScore(final_score);
               } else {
                 objG_player_plane = undefined;
                 objG_followMode.waitUntilNextFollow();
@@ -5396,8 +5408,8 @@ class WS_Connection {
                 objG_player_plane = undefined;
                 ma = 0;
                 ka = 1;
-                W_wasKilled(was_killed);
-                func_displayGameoverScore(was_killed);
+                W_wasKilled(final_score);
+                func_displayGameoverScore(final_score);
               } else {
                 objG_player_plane = undefined;
                 objG_followMode.waitUntilNextFollow();
@@ -5460,6 +5472,8 @@ class WS_Connection {
         func_setPlayerCount();
       } else if (166 == msg_type || 176 == msg_type) {
         // 0b 1010 0110 // 0b 1011 0000
+        // 166 - ????
+        // 176 - player's bullet hit
         // player's bullet hit
         let offset = 1;
         const count = data_view.getUint16(offset, true);
@@ -5578,7 +5592,7 @@ class WS_Connection {
         }
       } else if (167 == msg_type || 174 == msg_type) {
         // 0b 1010 0111 // 0b 1010 1110
-        // process pickupItem list
+        // new pickupItem(s)
         let offset = 1;
         while (true) {
           const id_pickup = data_view.getUint16(offset, true);
@@ -7350,7 +7364,7 @@ class Missile {
         this.#e = 5;
         g = Math.random() / 2;
         c = (0.2 + (0.5 - ((a - this.y) / (a - c)) * 0.5)) * (0.95 + g);
-        g = 20 * Math.sin(this.angle + Math.PI/2);
+        g = 20 * Math.sin(this.angle + Math.PI / 2);
         obj_particleImpacts.addSplash(
           this.x - g,
           a + 5 * Math.random(),
